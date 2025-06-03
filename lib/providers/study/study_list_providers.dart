@@ -6,7 +6,7 @@ import '/providers/core/core_providers.dart';
 import '../../models/study_list.dart';
 import '../../models/term.dart';
 import '../core/navigation_provider.dart';
-import '../study_list_form_state.dart';
+import '../immutables/study_list_form_state.dart';
 
 part 'study_list_providers.g.dart';
 

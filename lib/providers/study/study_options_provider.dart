@@ -1,18 +1,13 @@
 import 'package:logging/logging.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../models/enums/enums.dart';
 import '../../models/study_list.dart';
 import '../../services/database_service.dart';
 import '../core/core_providers.dart';
 import 'study_list_providers.dart';
 
 part 'study_options_provider.g.dart';
-
-enum FlashcardStartSide { term, definition }
-
-enum StudyQuestionType { term, definition }
-
-enum TestFormat { written, mc }
 
 final _log = Logger("StudyOptionsProvider");
 

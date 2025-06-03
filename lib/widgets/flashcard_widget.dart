@@ -2,8 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
+import '../models/enums/enums.dart';
 import '../models/term.dart';
-import '../providers/study/study_options_provider.dart';
 
 class FlashcardWidget extends StatefulWidget {
   final Term term;

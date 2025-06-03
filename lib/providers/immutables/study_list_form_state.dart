@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-import '../models/study_list.dart';
+import '../../models/study_list.dart';
 
 @immutable
 class StudyListFormState {

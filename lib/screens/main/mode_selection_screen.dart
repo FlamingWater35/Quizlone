@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 
+import '../../models/enums/enums.dart';
 import '../../models/study_list.dart';
 import '../../providers/core/navigation_provider.dart';
 import '../../providers/study/study_list_providers.dart';

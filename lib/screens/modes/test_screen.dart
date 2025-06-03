@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 
+import '../../models/enums/enums.dart';
 import '../../providers/controllers/test_controller.dart';
 import '../../providers/core/navigation_provider.dart';
-import '../../providers/study/study_options_provider.dart';
 
 class TestScreen extends ConsumerStatefulWidget {
   const TestScreen({super.key});

@@ -1,7 +1,7 @@
 import 'package:isar/isar.dart';
 
-import '../providers/study/study_options_provider.dart';
 import './term.dart';
+import 'enums/enums.dart';
 
 part 'study_list.g.dart';
 
