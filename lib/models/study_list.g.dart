@@ -52,6 +52,7 @@ const StudyListSchema = CollectionSchema(
       id: 6,
       name: r'testFormat',
       type: IsarType.string,
+      enumMap: _StudyListtestFormatEnumValueMap,
     ),
     r'testStudyLength': PropertySchema(
       id: 7,
@@ -107,7 +108,7 @@ int _studyListEstimateSize(
       bytesCount += TermSchema.estimateSize(value, offsets, allOffsets);
     }
   }
-  bytesCount += 3 + object.testFormat.length * 3;
+  bytesCount += 3 + object.testFormat.name.length * 3;
   return bytesCount;
 }
 
@@ -128,7 +129,7 @@ void _studyListSerialize(
     TermSchema.serialize,
     object.terms,
   );
-  writer.writeString(offsets[6], object.testFormat);
+  writer.writeString(offsets[6], object.testFormat.name);
   writer.writeLong(offsets[7], object.testStudyLength);
 }
 
@@ -152,7 +153,9 @@ StudyList _studyListDeserialize(
         Term(),
       ) ??
       [];
-  object.testFormat = reader.readString(offsets[6]);
+  object.testFormat =
+      _StudyListtestFormatValueEnumMap[reader.readStringOrNull(offsets[6])] ??
+          TestFormat.written;
   object.testStudyLength = reader.readLongOrNull(offsets[7]);
   return object;
 }
@@ -183,13 +186,24 @@ P _studyListDeserializeProp<P>(
           ) ??
           []) as P;
     case 6:
-      return (reader.readString(offset)) as P;
+      return (_StudyListtestFormatValueEnumMap[
+              reader.readStringOrNull(offset)] ??
+          TestFormat.written) as P;
     case 7:
       return (reader.readLongOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
 }
+
+const _StudyListtestFormatEnumValueMap = {
+  r'written': r'written',
+  r'mc': r'mc',
+};
+const _StudyListtestFormatValueEnumMap = {
+  r'written': TestFormat.written,
+  r'mc': TestFormat.mc,
+};
 
 Id _studyListGetId(StudyList object) {
   return object.id;
@@ -814,7 +828,7 @@ extension StudyListQueryFilter
   }
 
   QueryBuilder<StudyList, StudyList, QAfterFilterCondition> testFormatEqualTo(
-    String value, {
+    TestFormat value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -828,7 +842,7 @@ extension StudyListQueryFilter
 
   QueryBuilder<StudyList, StudyList, QAfterFilterCondition>
       testFormatGreaterThan(
-    String value, {
+    TestFormat value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -843,7 +857,7 @@ extension StudyListQueryFilter
   }
 
   QueryBuilder<StudyList, StudyList, QAfterFilterCondition> testFormatLessThan(
-    String value, {
+    TestFormat value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -858,8 +872,8 @@ extension StudyListQueryFilter
   }
 
   QueryBuilder<StudyList, StudyList, QAfterFilterCondition> testFormatBetween(
-    String lower,
-    String upper, {
+    TestFormat lower,
+    TestFormat upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -1323,7 +1337,7 @@ extension StudyListQueryProperty
     });
   }
 
-  QueryBuilder<StudyList, String, QQueryOperations> testFormatProperty() {
+  QueryBuilder<StudyList, TestFormat, QQueryOperations> testFormatProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'testFormat');
     });

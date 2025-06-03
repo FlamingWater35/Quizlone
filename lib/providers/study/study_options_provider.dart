@@ -143,7 +143,7 @@ class TestQuestionFormat extends _$TestQuestionFormat {
     final isarService = ref.read(isarServiceProvider);
 
     if (activeList != null) {
-      activeList.testFormat = (format == TestFormat.mc) ? 'mc' : 'written';
+      activeList.testFormat = format;
       _updateListOptionInIsar(isarService, activeList).then((_) {
         state = format;
       });
@@ -162,9 +162,7 @@ class TestQuestionFormat extends _$TestQuestionFormat {
           _log.fine(
             "[TestQuestionFormat] Initializing from activeList data: ${activeList.testFormat}",
           );
-          return activeList.testFormat == 'mc'
-              ? TestFormat.mc
-              : TestFormat.written;
+          return activeList.testFormat;
         }
         _log.fine(
           "[TestQuestionFormat] activeList data is null, defaulting to written",

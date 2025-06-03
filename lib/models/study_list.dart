@@ -1,5 +1,6 @@
 import 'package:isar/isar.dart';
 
+import '../providers/study/study_options_provider.dart';
 import './term.dart';
 
 part 'study_list.g.dart';
@@ -18,8 +19,10 @@ class StudyList {
 
   bool flashcardShowTermFirst = true;
   bool studyShowDefinitionAskTerm = true;
-  String testFormat = 'written';
   int? testStudyLength;
+
+  @Enumerated(EnumType.name)
+  TestFormat testFormat = TestFormat.written;
 
   void updateLastUsed() {
     lastUsedAt = DateTime.now();
