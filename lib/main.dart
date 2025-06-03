@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
@@ -13,7 +14,7 @@ void main() {
 }
 
 void _setupLogging() {
-  Logger.root.level = Level.ALL;
+  Logger.root.level = kDebugMode ? Level.ALL : Level.WARNING;
   Logger.root.onRecord.listen((record) {
     debugPrint(
       '${record.level.name}: ${record.time}: ${record.loggerName}: ${record.message}',
