@@ -31,7 +31,7 @@ class StartScreen extends ConsumerWidget {
                 const SizedBox(height: 30),
                 ElevatedButton(
                   onPressed: () {
-                    ref.invalidate(studyListFormProvider);
+                    ref.invalidate(studyListFormNotifierProvider);
                     ref
                         .read(currentScreenProvider.notifier)
                         .goTo(AppScreen.input);

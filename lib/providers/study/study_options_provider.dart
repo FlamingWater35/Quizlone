@@ -2,7 +2,6 @@ import 'package:logging/logging.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../models/study_list.dart';
-import '../../models/term.dart';
 import '../../services/database_service.dart';
 import '../core/core_providers.dart';
 import 'study_list_providers.dart';
@@ -42,6 +41,7 @@ class FlashcardStartWith extends _$FlashcardStartWith {
           })
           .catchError((e) {
             _log.warning("[FlashcardStartWith] Error updating Isar: $e");
+            state = side;
           });
     } else {
       state = side;
@@ -162,10 +162,12 @@ class TestQuestionFormat extends _$TestQuestionFormat {
           _log.fine(
             "[TestQuestionFormat] Initializing from activeList data: ${activeList.testFormat}",
           );
-          activeList.testFormat == 'mc' ? TestFormat.mc : TestFormat.written;
+          return activeList.testFormat == 'mc'
+              ? TestFormat.mc
+              : TestFormat.written;
         }
         _log.fine(
-          "[TestQuestionFormat] activeList data is null, defaulting to term",
+          "[TestQuestionFormat] activeList data is null, defaulting to written",
         );
         return TestFormat.written;
       },
@@ -177,7 +179,7 @@ class TestQuestionFormat extends _$TestQuestionFormat {
       },
       error: (err, stack) {
         _log.warning(
-          "[TestQuestionFormat] Error in activeStudyListProvider: $err. Defaulting to term.",
+          "[TestQuestionFormat] Error in activeStudyListProvider: $err. Defaulting to written.",
         );
         return TestFormat.written;
       },
@@ -233,109 +235,6 @@ class StudyLength extends _$StudyLength {
         );
         return null;
       },
-    );
-  }
-}
-
-@riverpod
-class FlashcardOptions extends _$FlashcardOptions {
-  void setStartSide(FlashcardStartSide side) => state = side;
-
-  @override
-  FlashcardStartSide build() => FlashcardStartSide.term;
-}
-
-@riverpod
-class LearnModeController extends _$LearnModeController {
-  void answerCorrectly() {
-    final current = state.remainingTerms[state.currentTermIndex];
-    final newRemaining = List<Term>.from(state.remainingTerms)..remove(current);
-    if (newRemaining.isEmpty) {
-      state = state.copyWith(
-        remainingTerms: [],
-        feedback: "Cycle Complete!",
-        isFinished: true,
-      );
-    } else {
-      state = state.copyWith(
-        remainingTerms: newRemaining,
-        currentTermIndex: (state.currentTermIndex % newRemaining.length),
-        feedback: "Correct!",
-      );
-    }
-  }
-
-  void answerIncorrectly(String userAnswer) {
-    final term = state.remainingTerms[state.currentTermIndex];
-    state = state.copyWith(
-      currentTermIndex:
-          (state.currentTermIndex + 1) % state.remainingTerms.length,
-      feedback: "Incorrect. Correct: ${term.definitionText}",
-      incorrectAnswersThisCycle: [...state.incorrectAnswersThisCycle, term],
-    );
-  }
-
-  void nextQuestion() {
-    if (state.remainingTerms.isEmpty) return;
-    state = state.copyWith(
-      currentTermIndex:
-          (state.currentTermIndex + 1) % state.remainingTerms.length,
-      feedback: "",
-    );
-  }
-
-  @override
-  LearnModeState build(List<Term> initialTerms) {
-    return LearnModeState(
-      allTerms: initialTerms,
-      remainingTerms: List.from(initialTerms),
-      currentTermIndex: 0,
-    );
-  }
-}
-
-class LearnModeState {
-  LearnModeState({
-    required this.allTerms,
-    required this.remainingTerms,
-    this.incorrectAnswersThisCycle = const [],
-    required this.currentTermIndex,
-    this.feedback = "",
-    this.cycleCount = 1,
-    this.isFinished = false,
-  });
-
-  final List<Term> allTerms;
-  final int currentTermIndex;
-  final int cycleCount;
-  final String feedback;
-  final List<Term> incorrectAnswersThisCycle;
-  final bool isFinished;
-  final List<Term> remainingTerms;
-
-  Term? get currentTerm =>
-      remainingTerms.isNotEmpty && currentTermIndex < remainingTerms.length
-          ? remainingTerms[currentTermIndex]
-          : null;
-
-  LearnModeState copyWith({
-    List<Term>? allTerms,
-    List<Term>? remainingTerms,
-    List<Term>? incorrectAnswersThisCycle,
-    int? currentTermIndex,
-    String? feedback,
-    int? cycleCount,
-    bool? isFinished,
-  }) {
-    return LearnModeState(
-      allTerms: allTerms ?? this.allTerms,
-      remainingTerms: remainingTerms ?? this.remainingTerms,
-      incorrectAnswersThisCycle:
-          incorrectAnswersThisCycle ?? this.incorrectAnswersThisCycle,
-      currentTermIndex: currentTermIndex ?? this.currentTermIndex,
-      feedback: feedback ?? this.feedback,
-      cycleCount: cycleCount ?? this.cycleCount,
-      isFinished: isFinished ?? this.isFinished,
     );
   }
 }

@@ -49,58 +49,6 @@ Future<StudyList?> activeStudyList(ActiveStudyListRef ref) async {
 }
 
 @riverpod
-class StudyListForm extends _$StudyListForm {
-  void setName(String name) {
-    state =
-        StudyList()
-          ..name = name
-          ..terms = state.terms;
-  }
-
-  void parseAndSetTerms(String rawTermsInput) {
-    final parsedTerms = <Term>[];
-    final lines =
-        rawTermsInput
-            .split('\n')
-            .map((e) => e.trim())
-            .where((e) => e.isNotEmpty)
-            .toList();
-    if (lines.length >= 2 && lines.length % 2 == 0) {
-      for (int i = 0; i < lines.length; i += 2) {
-        parsedTerms.add(
-          Term()
-            ..termText = lines[i]
-            ..definitionText = lines[i + 1],
-        );
-      }
-    }
-    state =
-        StudyList()
-          ..name = state.name
-          ..terms = parsedTerms;
-  }
-
-  Future<void> saveList() async {
-    final isarService = ref.read(isarServiceProvider);
-    if (state.name != null &&
-        state.name!.isNotEmpty &&
-        state.terms.isNotEmpty) {
-      await isarService.saveStudyList(state);
-      ref.read(activeStudyListIdProvider.notifier).set(state.id);
-    } else {
-      throw Exception("List name and terms cannot be empty.");
-    }
-  }
-
-  @override
-  StudyList build() {
-    return StudyList()
-      ..name = ''
-      ..terms = [];
-  }
-}
-
-@riverpod
 class StudyListFormNotifier extends _$StudyListFormNotifier {
   void setListName(String name) {
     state = state.copyWith(listNameInput: name, clearError: true);

@@ -51,22 +51,6 @@ final activeStudyListIdProvider =
 );
 
 typedef _$ActiveStudyListId = Notifier<int?>;
-String _$studyListFormHash() => r'f407bc38b7b1b453783e84340152c045af87c713';
-
-/// See also [StudyListForm].
-@ProviderFor(StudyListForm)
-final studyListFormProvider =
-    AutoDisposeNotifierProvider<StudyListForm, StudyList>.internal(
-  StudyListForm.new,
-  name: r'studyListFormProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$studyListFormHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$StudyListForm = AutoDisposeNotifier<StudyList>;
 String _$studyListFormNotifierHash() =>
     r'27f87e996a02ec570e84254650083e0c569b5ea9';
 

@@ -162,7 +162,6 @@ class TestController extends _$TestController {
               return text;
             })
             .where((text) => text.toLowerCase() != correctAnswer.toLowerCase())
-            .cast<String>()
             .toList();
 
     potentialDistractors.shuffle(Random());
@@ -171,8 +170,14 @@ class TestController extends _$TestController {
       if (choices.length >= count) break;
       choices.add(distractor);
     }
+    int fillerIndex = 1;
     while (choices.length < count) {
-      choices.add("Option ${choices.length + 1}");
+      String fillerOption = "Option ${choices.length + fillerIndex}";
+      while (choices.contains(fillerOption) || fillerOption == correctAnswer) {
+        fillerIndex++;
+        fillerOption = "Option ${choices.length + fillerIndex}";
+      }
+      choices.add(fillerOption);
     }
     final finalChoices = choices.toList();
     finalChoices.shuffle(Random());
@@ -189,7 +194,7 @@ class TestController extends _$TestController {
 
     StudyList? activeList;
     try {
-      activeList = await ref.watch(activeStudyListProvider.future);
+      activeList = await ref.read(activeStudyListProvider.future);
     } catch (e) {
       _log.warning("[TestController] Error fetching active list: $e");
       return TestScreenState(
@@ -228,36 +233,32 @@ class TestController extends _$TestController {
     }
 
     final List<TestQuestion> testQuestions =
-        termsForTest
-            .map((term) {
-              final bool isQuestionDef =
-                  questionTypeOption == StudyQuestionType.definition;
-              List<String>? mcOptions;
+        termsForTest.map((term) {
+          final bool isQuestionDef =
+              questionTypeOption == StudyQuestionType.definition;
+          List<String>? mcOptions;
 
-              final termText = term.termText;
-              final definitionText = term.definitionText;
+          final termText = term.termText;
+          final definitionText = term.definitionText;
 
-              if (testFormatOption == TestFormat.mc) {
-                mcOptions = _generateMultipleChoices(
-                  isQuestionDef ? termText : definitionText,
-                  activeList!.terms,
-                  isQuestionDef ? false : true,
-                  4,
-                );
-              }
+          if (testFormatOption == TestFormat.mc) {
+            mcOptions = _generateMultipleChoices(
+              isQuestionDef ? termText : definitionText,
+              activeList!.terms,
+              isQuestionDef ? false : true,
+              4,
+            );
+          }
 
-              return TestQuestion(
-                originalTerm: term,
-                questionText:
-                    (isQuestionDef ? term.definitionText : term.termText),
-                correctAnswerText:
-                    (isQuestionDef ? term.termText : term.definitionText),
-                isQuestionDefinition: isQuestionDef,
-                multipleChoiceOptions: mcOptions,
-              );
-            })
-            .whereType<TestQuestion>()
-            .toList();
+          return TestQuestion(
+            originalTerm: term,
+            questionText: (isQuestionDef ? term.definitionText : term.termText),
+            correctAnswerText:
+                (isQuestionDef ? term.termText : term.definitionText),
+            isQuestionDefinition: isQuestionDef,
+            multipleChoiceOptions: mcOptions,
+          );
+        }).toList();
 
     _log.fine(
       "[TestController] Test questions generated: ${testQuestions.length}",
