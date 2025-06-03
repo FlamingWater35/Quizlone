@@ -116,8 +116,8 @@ class LearnModeScreenState {
   }
 }
 
-const int LEARN_MAX_CYCLES = 5;
-const int LEARN_FEEDBACK_DELAY_MS = 1500;
+const int learnMaxCycles = 5;
+const int learnFeedbackDelayMS = 1500;
 
 @riverpod
 class LearnController extends _$LearnController {
@@ -174,7 +174,7 @@ class LearnController extends _$LearnController {
       ),
     );
 
-    await Future.delayed(const Duration(milliseconds: LEARN_FEEDBACK_DELAY_MS));
+    await Future.delayed(const Duration(milliseconds: learnFeedbackDelayMS));
     _moveToNextStep();
   }
 
@@ -227,7 +227,7 @@ class LearnController extends _$LearnController {
     );
 
     await Future.delayed(
-      const Duration(milliseconds: LEARN_FEEDBACK_DELAY_MS + 500),
+      const Duration(milliseconds: learnFeedbackDelayMS + 500),
     );
     _moveToNextStep();
   }
@@ -305,7 +305,7 @@ class LearnController extends _$LearnController {
             setNullCurrentQuestion: true,
           ),
         );
-      } else if (currentVal.cycleCount >= LEARN_MAX_CYCLES) {
+      } else if (currentVal.cycleCount >= learnMaxCycles) {
         state = AsyncData(
           currentVal.copyWith(
             isSessionComplete: true,

@@ -39,7 +39,7 @@ final studyAskWithProvider =
 
 typedef _$StudyAskWith = AutoDisposeNotifier<StudyQuestionType>;
 String _$testQuestionFormatHash() =>
-    r'b63cf006e7005291c1d64990de5107bd9104baba';
+    r'd3f09e8bdac9a33c70ee4f3b710708b13f680db8';
 
 /// See also [TestQuestionFormat].
 @ProviderFor(TestQuestionFormat)
