@@ -4,6 +4,7 @@ import os
 import platform
 import sys
 import threading
+import py7zr
 from colorama import Fore, Style, init as colorama_init
 
 colorama_init(autoreset=True)
@@ -14,7 +15,7 @@ PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir
 FLUTTER_WEB_BUILD_DIR = os.path.join(PROJECT_ROOT, "build", "web")
 DOCS_DIR = os.path.join(PROJECT_ROOT, "docs")
 APK_OUTPUT_DIR = os.path.join(PROJECT_ROOT, "build", "app", "outputs", "apk", "release")
-WINDOWS_OUTPUT_DIR = os.path.join(PROJECT_ROOT, "build", "windows", "runner", "Release")
+WINDOWS_OUTPUT_DIR = os.path.join(PROJECT_ROOT, "build", "windows", "x64", "runner", "Release")
 
 
 def stream_pipe(pipe, prefix, color, encoding='utf-8'):
@@ -57,7 +58,6 @@ def run_command_realtime_colored(command_parts, step_name, CWD=PROJECT_ROOT):
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             shell=use_shell,
-            bufsize=1
         )
 
         pipe_encoding = 'utf-8'
@@ -86,6 +86,7 @@ def run_command_realtime_colored(command_parts, step_name, CWD=PROJECT_ROOT):
     except Exception as e:
         print(Fore.RED + Style.BRIGHT + f"ERROR: An unexpected error occurred during {step_name}: {e}")
         exit(1)
+
 
 print(Style.BRIGHT + Fore.MAGENTA + "=" * 60)
 print(Style.BRIGHT + Fore.MAGENTA + "Starting full build process for Quizlone...")
@@ -124,10 +125,21 @@ if os.path.exists(FLUTTER_WEB_BUILD_DIR):
 else:
     print(Fore.RED + Style.BRIGHT + f"ERROR: Web build directory {FLUTTER_WEB_BUILD_DIR} not found. Skipping copy.")
 
+
 no_jekyll_path = os.path.join(DOCS_DIR, ".nojekyll")
 print(Fore.GREEN + f"Creating {no_jekyll_path}...")
 with open(no_jekyll_path, "w") as f:
     pass
+
+output_archive = os.path.join(os.path.join(WINDOWS_OUTPUT_DIR, os.pardir), "Windows-release.7z")
+distpath = WINDOWS_OUTPUT_DIR
+compression_filters = [{'id': py7zr.FILTER_LZMA2, 'preset': py7zr.PRESET_DEFAULT}]
+
+print(Fore.GREEN + f"Extracting Windows build to {output_archive}...")
+with py7zr.SevenZipFile(output_archive, mode='w', filters=compression_filters) as archive:
+    archive.writeall(path=distpath, arcname="")
+print(Style.BRIGHT + Fore.CYAN + f"Windows build extracted.")
+
 
 print(Style.BRIGHT + Fore.MAGENTA + "=" * 60)
 print(Style.BRIGHT + Fore.MAGENTA + "All build steps completed!")
