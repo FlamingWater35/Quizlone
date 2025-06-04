@@ -15,6 +15,7 @@ class IsarService {
       final dir = await getApplicationDocumentsDirectory();
       return await Isar.open(
         [StudyListSchema],
+        name: "quizlone",
         directory: dir.path,
         inspector: false,
       );
