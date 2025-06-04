@@ -1,4 +1,3 @@
-import 'package:isar/isar.dart';
 import 'package:logging/logging.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -14,20 +13,20 @@ final _log = Logger("StudyListProviders");
 
 @riverpod
 Stream<List<StudyList>> studyLists(StudyListsRef ref) {
-  final isarService = ref.watch(isarServiceProvider);
-  return isarService.listenToStudyLists();
+  final dbService = ref.watch(databaseServiceProvider);
+  return dbService.listenToStudyLists();
 }
 
 @Riverpod(keepAlive: true)
 class ActiveStudyListId extends _$ActiveStudyListId {
-  void set(int? id) {
+  void set(String? id) {
     _log.fine("[ActiveStudyListIdProvider] set() called with id: $id.");
     state = id;
     _log.fine("[ActiveStudyListIdProvider] state is now: $state.");
   }
 
   @override
-  int? build() {
+  String? build() {
     _log.fine(
       "[ActiveStudyListIdProvider] build() called. Initializing state to null.",
     );
@@ -40,8 +39,8 @@ Future<StudyList?> activeStudyList(ActiveStudyListRef ref) async {
   final activeId = ref.watch(activeStudyListIdProvider);
   _log.fine("[activeStudyListProvider] Executing. Watched activeId: $activeId");
   if (activeId == null) return null;
-  final isarService = ref.watch(isarServiceProvider);
-  final list = await isarService.getStudyListById(activeId);
+  final dbService = ref.watch(databaseServiceProvider);
+  final list = await dbService.getStudyListById(activeId);
   _log.fine(
     "[activeStudyListProvider] Fetched list: ${list?.name ?? 'NOT FOUND'} for ID $activeId",
   );
@@ -66,29 +65,16 @@ class StudyListFormNotifier extends _$StudyListFormNotifier {
       return;
     }
 
-    final isarService = ref.read(isarServiceProvider);
+    final dbService = ref.read(databaseServiceProvider);
     final listToSave = state.studyList;
 
     try {
-      StudyList? existingList = await isarService.getStudyListByName(
-        listToSave.name!,
-      );
-      Id savedId;
+      _log.fine("Saving list (create/update): ${listToSave.name}");
+      String savedKey = await dbService.saveStudyList(listToSave);
 
-      if (existingList != null) {
-        _log.fine(
-          "Overwriting existing list: ${existingList.name} with ID: ${existingList.id}",
-        );
-        listToSave.id = existingList.id;
-        savedId = await isarService.saveStudyList(listToSave);
-      } else {
-        _log.fine("Saving new list: ${listToSave.name}");
-        savedId = await isarService.saveStudyList(listToSave);
-      }
-
-      ref.read(activeStudyListIdProvider.notifier).set(savedId);
+      ref.read(activeStudyListIdProvider.notifier).set(savedKey);
       _log.fine(
-        "StudyListFormNotifier: Set activeStudyListIdProvider to $savedId",
+        "StudyListFormNotifier: Set activeStudyListIdProvider to $savedKey",
       );
       ref.read(currentScreenProvider.notifier).goTo(AppScreen.modeSelection);
       state = state.copyWith(isLoading: false, clearError: true);

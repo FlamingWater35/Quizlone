@@ -6,7 +6,7 @@ part of 'study_list_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$studyListsHash() => r'c245424422e179d3b7f08a43d1fb74e60dcef76b';
+String _$studyListsHash() => r'302d9b18680e3f159fc368d401cd38361501424a';
 
 /// See also [studyLists].
 @ProviderFor(studyLists)
@@ -19,8 +19,10 @@ final studyListsProvider = AutoDisposeStreamProvider<List<StudyList>>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef StudyListsRef = AutoDisposeStreamProviderRef<List<StudyList>>;
-String _$activeStudyListHash() => r'd2215d67ff039ddc8ec75bc8f9fdcb9c5841cc13';
+String _$activeStudyListHash() => r'a3393ecf9347e0a655658fb3cff6fec0cc207758';
 
 /// See also [activeStudyList].
 @ProviderFor(activeStudyList)
@@ -34,13 +36,15 @@ final activeStudyListProvider = AutoDisposeFutureProvider<StudyList?>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef ActiveStudyListRef = AutoDisposeFutureProviderRef<StudyList?>;
-String _$activeStudyListIdHash() => r'131d36182b513ada0fc9279d6dabda9d7b2d5978';
+String _$activeStudyListIdHash() => r'f3833c1ea6945c33f2319bea9f04e52090cfae14';
 
 /// See also [ActiveStudyListId].
 @ProviderFor(ActiveStudyListId)
 final activeStudyListIdProvider =
-    NotifierProvider<ActiveStudyListId, int?>.internal(
+    NotifierProvider<ActiveStudyListId, String?>.internal(
   ActiveStudyListId.new,
   name: r'activeStudyListIdProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -50,9 +54,9 @@ final activeStudyListIdProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$ActiveStudyListId = Notifier<int?>;
+typedef _$ActiveStudyListId = Notifier<String?>;
 String _$studyListFormNotifierHash() =>
-    r'27f87e996a02ec570e84254650083e0c569b5ea9';
+    r'b7010c252c524314b4ed722bd132e404ab1ec329';
 
 /// See also [StudyListFormNotifier].
 @ProviderFor(StudyListFormNotifier)
@@ -69,4 +73,4 @@ final studyListFormNotifierProvider = AutoDisposeNotifierProvider<
 
 typedef _$StudyListFormNotifier = AutoDisposeNotifier<StudyListFormState>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

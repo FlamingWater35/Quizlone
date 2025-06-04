@@ -11,32 +11,32 @@ part 'study_options_provider.g.dart';
 
 final _log = Logger("StudyOptionsProvider");
 
-Future<void> _updateListOptionInIsar(
-  IsarService isarService,
+Future<void> _updateListOptionInHive(
+  DatabaseService dbService,
   StudyList list,
 ) async {
   list.updateLastUsed();
-  await isarService.saveStudyList(list);
+  await dbService.saveStudyList(list);
 }
 
 @riverpod
 class FlashcardStartWith extends _$FlashcardStartWith {
   void set(FlashcardStartSide side) {
     final activeList = ref.read(activeStudyListProvider).asData?.value;
-    final isarService = ref.read(isarServiceProvider);
+    final dbService = ref.read(databaseServiceProvider);
 
     if (activeList != null) {
       activeList.flashcardShowTermFirst = (side == FlashcardStartSide.term);
-      _updateListOptionInIsar(isarService, activeList)
+      _updateListOptionInHive(dbService, activeList)
           .then((_) {
             state = side;
             _log.fine(
-              "[FlashcardStartWith] Set to $side and updated Isar for ${activeList.name}",
+              "[FlashcardStartWith] Set to $side and updated Hive for ${activeList.name}",
             );
           })
           .catchError((e, s) {
             _log.warning(
-              "[FlashcardStartWith] Error updating Isar for list ${activeList.name}",
+              "[FlashcardStartWith] Error updating Hive for list ${activeList.name}",
               e,
               s,
             );
@@ -91,12 +91,12 @@ class FlashcardStartWith extends _$FlashcardStartWith {
 class StudyAskWith extends _$StudyAskWith {
   void set(StudyQuestionType type) {
     final activeList = ref.read(activeStudyListProvider).asData?.value;
-    final isarService = ref.read(isarServiceProvider);
+    final dbService = ref.read(databaseServiceProvider);
 
     if (activeList != null) {
       activeList.studyShowDefinitionAskTerm =
           (type == StudyQuestionType.definition);
-      _updateListOptionInIsar(isarService, activeList).then((_) {
+      _updateListOptionInHive(dbService, activeList).then((_) {
         state = type;
       });
     } else {
@@ -143,11 +143,11 @@ class StudyAskWith extends _$StudyAskWith {
 class TestQuestionFormat extends _$TestQuestionFormat {
   void set(TestFormat format) {
     final activeList = ref.read(activeStudyListProvider).asData?.value;
-    final isarService = ref.read(isarServiceProvider);
+    final dbService = ref.read(databaseServiceProvider);
 
     if (activeList != null) {
       activeList.testFormat = format;
-      _updateListOptionInIsar(isarService, activeList).then((_) {
+      _updateListOptionInHive(dbService, activeList).then((_) {
         state = format;
       });
     } else {
@@ -195,11 +195,11 @@ class StudyLength extends _$StudyLength {
   void set(int? length) {
     final newLength = (length != null && length <= 0) ? null : length;
     final activeList = ref.read(activeStudyListProvider).asData?.value;
-    final isarService = ref.read(isarServiceProvider);
+    final dbService = ref.read(databaseServiceProvider);
 
     if (activeList != null) {
       activeList.testStudyLength = newLength;
-      _updateListOptionInIsar(isarService, activeList).then((_) {
+      _updateListOptionInHive(dbService, activeList).then((_) {
         state = newLength;
       });
     } else {

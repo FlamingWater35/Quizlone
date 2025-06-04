@@ -1,65 +1,63 @@
-import 'package:isar/isar.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 import '../models/study_list.dart';
+import '../models/term.dart';
 
-class IsarService {
-  IsarService() {
-    db = openDB();
+class DatabaseService {
+  static const String _studyListBoxName = 'studyListsBox';
+  static late Box<StudyList> _studyListBox;
+
+  DatabaseService();
+
+  static Future<void> init() async {
+    await Hive.initFlutter();
+
+    Hive.registerAdapter(TermAdapter());
+    Hive.registerAdapter(StudyListAdapter());
+
+    _studyListBox = await Hive.openBox<StudyList>(_studyListBoxName);
   }
 
-  late Future<Isar> db;
+  Box<StudyList> get _box => _studyListBox;
 
-  Future<Isar> openDB() async {
-    if (Isar.instanceNames.isEmpty) {
-      final dir = await getApplicationDocumentsDirectory();
-      return await Isar.open(
-        [StudyListSchema],
-        name: "quizlone",
-        directory: dir.path,
-        inspector: false,
-      );
-    }
-    return Future.value(Isar.getInstance());
-  }
-
-  Future<Id> saveStudyList(StudyList list) async {
-    final isar = await db;
-    Id newId = 0;
-    await isar.writeTxn(() async {
-      newId = await isar.studyLists.put(list);
-    });
-    return newId;
+  Future<String> saveStudyList(StudyList list) async {
+    await _box.put(list.name, list);
+    return list.name;
   }
 
   Future<List<StudyList>> getAllStudyLists() async {
-    final isar = await db;
-    return await isar.studyLists.where().sortByCreatedAtDesc().findAll();
+    final lists = _box.values.toList();
+    lists.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    return lists;
   }
 
   Stream<List<StudyList>> listenToStudyLists() async* {
-    final isar = await db;
-    yield* isar.studyLists.where().sortByCreatedAtDesc().watch(
-      fireImmediately: true,
-    );
+    List<StudyList> getSortedLists() {
+      final lists = _box.values.toList();
+      lists.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+      return lists;
+    }
+
+    yield getSortedLists();
+
+    yield* _box.watch().map((event) {
+      return getSortedLists();
+    });
   }
 
   Future<StudyList?> getStudyListByName(String name) async {
-    final isar = await db;
-    return await isar.studyLists.filter().nameEqualTo(name).findFirst();
+    return _box.get(name);
   }
 
-  Future<StudyList?> getStudyListById(Id id) async {
-    final isar = await db;
-    return await isar.studyLists.get(id);
+  Future<StudyList?> getStudyListById(String nameKey) async {
+    return _box.get(nameKey);
   }
 
-  Future<bool> deleteStudyList(Id id) async {
-    final isar = await db;
-    bool success = false;
-    await isar.writeTxn(() async {
-      success = await isar.studyLists.delete(id);
-    });
-    return success;
+  Future<bool> deleteStudyList(String nameKey) async {
+    if (_box.containsKey(nameKey)) {
+      await _box.delete(nameKey);
+      return true;
+    }
+    return false;
   }
 }

@@ -17,7 +17,7 @@ class StartScreen extends ConsumerWidget {
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (context.mounted) {
-        await Future.delayed(Duration(milliseconds: 100));
+        await Future.delayed(const Duration(milliseconds: 100));
         if (ref.read(activeStudyListIdProvider) != null) {
           _log.fine(
             "StartScreen: Clearing activeStudyListIdProvider as it's not null on screen display.",
@@ -69,7 +69,7 @@ class StartScreen extends ConsumerWidget {
                           return Card(
                             margin: const EdgeInsets.symmetric(vertical: 4),
                             child: ListTile(
-                              title: Text(list.name ?? "Unnamed List"),
+                              title: Text(list.name),
                               subtitle: Text(
                                 "${list.terms.length} terms - Created: ${list.createdAt.toLocal().toString().substring(0, 16)}",
                               ),
@@ -84,9 +84,9 @@ class StartScreen extends ConsumerWidget {
                                           .read(
                                             activeStudyListIdProvider.notifier,
                                           )
-                                          .set(list.id);
+                                          .set(list.name);
                                       _log.fine(
-                                        "StartScreen: Set activeStudyListIdProvider to ${list.id}",
+                                        "StartScreen: Set activeStudyListIdProvider to ${list.name}",
                                       );
                                       ref
                                           .read(currentScreenProvider.notifier)
@@ -139,8 +139,8 @@ class StartScreen extends ConsumerWidget {
                                       );
                                       if (confirm == true) {
                                         await ref
-                                            .read(isarServiceProvider)
-                                            .deleteStudyList(list.id);
+                                            .read(databaseServiceProvider)
+                                            .deleteStudyList(list.name);
                                       }
                                     },
                                   ),

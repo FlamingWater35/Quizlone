@@ -6,19 +6,22 @@ part of 'core_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$isarServiceHash() => r'387dee19a962ae3db2a26dfa59c946285a539ac1';
+String _$databaseServiceHash() => r'6c4dbe5519a778834a2cfaa3700e5a6df24e6d9f';
 
-/// See also [isarService].
-@ProviderFor(isarService)
-final isarServiceProvider = Provider<IsarService>.internal(
-  isarService,
-  name: r'isarServiceProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$isarServiceHash,
+/// See also [databaseService].
+@ProviderFor(databaseService)
+final databaseServiceProvider = Provider<DatabaseService>.internal(
+  databaseService,
+  name: r'databaseServiceProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$databaseServiceHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef IsarServiceRef = ProviderRef<IsarService>;
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef DatabaseServiceRef = ProviderRef<DatabaseService>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

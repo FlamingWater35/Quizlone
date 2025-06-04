@@ -6,7 +6,7 @@ part of 'test_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$testControllerHash() => r'f54a8f25416f39537af23e5ea1da40dd5a29aaa9';
+String _$testControllerHash() => r'c77763c801505abe63a76e1756ac0e321d0d8efe';
 
 /// See also [TestController].
 @ProviderFor(TestController)
@@ -23,4 +23,4 @@ final testControllerProvider =
 
 typedef _$TestController = AutoDisposeAsyncNotifier<TestScreenState>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

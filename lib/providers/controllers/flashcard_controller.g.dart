@@ -7,7 +7,7 @@ part of 'flashcard_controller.dart';
 // **************************************************************************
 
 String _$flashcardControllerHash() =>
-    r'3524f903e84c87ddea57a0d5e982f1df7f0d7d1c';
+    r'9420a47f3d905975cfbfa8d0153a5b8b3c874590';
 
 /// See also [FlashcardController].
 @ProviderFor(FlashcardController)
@@ -24,4 +24,4 @@ final flashcardControllerProvider = AutoDisposeAsyncNotifierProvider<
 
 typedef _$FlashcardController = AutoDisposeAsyncNotifier<FlashcardScreenState>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
