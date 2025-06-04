@@ -288,13 +288,18 @@ class _TestScreenState extends ConsumerState<TestScreen> {
             );
           },
           loading: () => const Center(child: CircularProgressIndicator()),
-          error:
-              (err, stack) => Center(
+          error: (err, stack) {
+            _log.severe("Error in testControllerProvider", err, stack);
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
                 child: Text(
                   "Error: $err",
                   style: TextStyle(color: Theme.of(context).colorScheme.error),
                 ),
               ),
+            );
+          },
         ),
       ),
     );

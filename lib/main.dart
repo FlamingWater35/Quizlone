@@ -70,6 +70,11 @@ class MyApp extends StatelessWidget {
                 if (snapshot.hasData) {
                   return const MainScreen();
                 } else if (snapshot.hasError) {
+                  _log.severe(
+                    "Error initializing Isar database",
+                    snapshot.error,
+                    snapshot.stackTrace,
+                  );
                   return Center(
                     child: Text(
                       'Error initializing database: ${snapshot.error}',

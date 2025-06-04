@@ -161,7 +161,9 @@ class FlashcardController extends _$FlashcardController {
     final startSideOption = ref.watch(flashcardStartWithProvider);
 
     if (activeList == null || activeList.terms.isEmpty) {
-      _log.warning("[FlashcardController] No active list or terms empty");
+      _log.warning(
+        "[FlashcardController] No active list or terms empty for build. Active ID: ${ref.read(activeStudyListIdProvider)}",
+      );
       return FlashcardScreenState(
         originalTerms: [],
         displayTerms: [],

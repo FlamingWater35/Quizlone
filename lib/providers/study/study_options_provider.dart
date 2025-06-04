@@ -34,8 +34,12 @@ class FlashcardStartWith extends _$FlashcardStartWith {
               "[FlashcardStartWith] Set to $side and updated Isar for ${activeList.name}",
             );
           })
-          .catchError((e) {
-            _log.warning("[FlashcardStartWith] Error updating Isar: $e");
+          .catchError((e, s) {
+            _log.warning(
+              "[FlashcardStartWith] Error updating Isar for list ${activeList.name}",
+              e,
+              s,
+            );
             state = side;
           });
     } else {
@@ -73,7 +77,9 @@ class FlashcardStartWith extends _$FlashcardStartWith {
       },
       error: (err, stack) {
         _log.warning(
-          "[FlashcardStartWith] Error in activeStudyListProvider: $err. Defaulting to term.",
+          "[FlashcardStartWith] Error in activeStudyListProvider. Defaulting to term.",
+          err,
+          stack,
         );
         return FlashcardStartSide.term;
       },
@@ -123,7 +129,9 @@ class StudyAskWith extends _$StudyAskWith {
       },
       error: (err, stack) {
         _log.warning(
-          "[StudyAskWith] Error in activeStudyListProvider: $err. Defaulting to term.",
+          "[StudyAskWith] Error in activeStudyListProvider. Defaulting to definition.",
+          err,
+          stack,
         );
         return StudyQuestionType.definition;
       },
@@ -172,7 +180,9 @@ class TestQuestionFormat extends _$TestQuestionFormat {
       },
       error: (err, stack) {
         _log.warning(
-          "[TestQuestionFormat] Error in activeStudyListProvider: $err. Defaulting to written.",
+          "[TestQuestionFormat] Error in activeStudyListProvider. Defaulting to written.",
+          err,
+          stack,
         );
         return TestFormat.written;
       },
@@ -224,7 +234,9 @@ class StudyLength extends _$StudyLength {
       },
       error: (err, stack) {
         _log.warning(
-          "[StudyLength] Error in activeStudyListProvider: $err. Defaulting to null.",
+          "[StudyLength] Error in activeStudyListProvider. Defaulting to null.",
+          err,
+          stack,
         );
         return null;
       },

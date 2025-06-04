@@ -164,7 +164,6 @@ class ModeSelectionScreen extends ConsumerWidget {
                                     ref
                                         .read(studyLengthProvider.notifier)
                                         .set(totalTerms);
-                                    // Consider updating the text field value here if it gets clamped
                                   } else {
                                     ref
                                         .read(studyLengthProvider.notifier)
@@ -247,7 +246,6 @@ class ModeSelectionScreen extends ConsumerWidget {
                   Center(
                     child: OutlinedButton(
                       onPressed: () {
-                        ref.read(activeStudyListIdProvider.notifier).set(null);
                         ref
                             .read(currentScreenProvider.notifier)
                             .goTo(AppScreen.start);
@@ -261,8 +259,14 @@ class ModeSelectionScreen extends ConsumerWidget {
             );
           },
           loading: () => const Center(child: CircularProgressIndicator()),
-          error:
-              (err, stack) => Center(child: Text("Error loading list: $err")),
+          error: (err, stack) {
+            _log.severe(
+              "Error in activeStudyListProvider for ModeSelectionScreen",
+              err,
+              stack,
+            );
+            return Center(child: Text("Error loading list: $err"));
+          },
         ),
       ),
     );

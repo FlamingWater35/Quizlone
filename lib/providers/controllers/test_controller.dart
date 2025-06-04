@@ -196,8 +196,8 @@ class TestController extends _$TestController {
     StudyList? activeList;
     try {
       activeList = await ref.read(activeStudyListProvider.future);
-    } catch (e) {
-      _log.warning("[TestController] Error fetching active list: $e");
+    } catch (e, s) {
+      _log.warning("[TestController] Error fetching active list", e, s);
       return TestScreenState(
         isLoading: false,
         errorMessage: "Error loading study list for test.",

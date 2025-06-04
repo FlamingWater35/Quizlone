@@ -15,6 +15,18 @@ class StartScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final studyListsAsync = ref.watch(studyListsProvider);
 
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (context.mounted) {
+        await Future.delayed(Duration(milliseconds: 100));
+        if (ref.read(activeStudyListIdProvider) != null) {
+          _log.fine(
+            "StartScreen: Clearing activeStudyListIdProvider as it's not null on screen display.",
+          );
+          ref.read(activeStudyListIdProvider.notifier).set(null);
+        }
+      }
+    });
+
     return Scaffold(
       appBar: AppBar(title: const Text("Quizlone")),
       body: SafeArea(
@@ -141,7 +153,14 @@ class StartScreen extends ConsumerWidget {
                     },
                     loading:
                         () => const Center(child: CircularProgressIndicator()),
-                    error: (err, stack) => Center(child: Text("Error: $err")),
+                    error: (err, stack) {
+                      _log.severe(
+                        "Error in studyListsProvider for StartScreen",
+                        err,
+                        stack,
+                      );
+                      return Center(child: Text("Error: $err"));
+                    },
                   ),
                 ),
               ],

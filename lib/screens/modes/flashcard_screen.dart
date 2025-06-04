@@ -27,91 +27,6 @@ class _FlashcardScreenState extends ConsumerState<FlashcardScreen> {
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final flashcardStateAsync = ref.watch(flashcardControllerProvider);
-    final flashcardNotifier = ref.read(flashcardControllerProvider.notifier);
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Flashcards"),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            ref
-                .read(currentScreenProvider.notifier)
-                .goTo(AppScreen.modeSelection);
-          },
-        ),
-      ),
-      body: SafeArea(
-        child: flashcardStateAsync.when(
-          data: (state) {
-            if (state.errorMessage != null) {
-              return Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    state.errorMessage!,
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.error,
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
-              );
-            }
-            if (state.currentCard == null) {
-              return const Center(child: Text("No flashcards to display."));
-            }
-
-            return Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  Text(
-                    state.currentProgress,
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  const SizedBox(height: 16),
-                  Expanded(
-                    child: Center(
-                      child: FlashcardWidget(
-                        key: ValueKey(state.currentCard!.termText),
-                        term: state.currentCard!,
-                        isFlipped: state.isFlipped,
-                        onTap: flashcardNotifier.flipCard,
-                        startSide: state.startSide,
-                        height: 300,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  _buildNavigationControls(context, flashcardNotifier, state),
-                  const SizedBox(height: 24),
-                  _buildBottomControls(context, ref),
-                ],
-              ),
-            );
-          },
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error:
-              (err, stack) => Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    "Error: $err\n$stack",
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.error,
-                    ),
-                  ),
-                ),
-              ),
-        ),
-      ),
-    );
-  }
-
   Widget _buildNavigationControls(
     BuildContext context,
     FlashcardController notifier,
@@ -206,6 +121,91 @@ class _FlashcardScreenState extends ConsumerState<FlashcardScreen> {
           child: const Text("Start Test"),
         ),
       ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final flashcardStateAsync = ref.watch(flashcardControllerProvider);
+    final flashcardNotifier = ref.read(flashcardControllerProvider.notifier);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Flashcards"),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            ref
+                .read(currentScreenProvider.notifier)
+                .goTo(AppScreen.modeSelection);
+          },
+        ),
+      ),
+      body: SafeArea(
+        child: flashcardStateAsync.when(
+          data: (state) {
+            if (state.errorMessage != null) {
+              return Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    state.errorMessage!,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.error,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              );
+            }
+            if (state.currentCard == null) {
+              return const Center(child: Text("No flashcards to display."));
+            }
+
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  Text(
+                    state.currentProgress,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  const SizedBox(height: 16),
+                  Expanded(
+                    child: Center(
+                      child: FlashcardWidget(
+                        key: ValueKey(state.currentCard!.termText),
+                        term: state.currentCard!,
+                        isFlipped: state.isFlipped,
+                        onTap: flashcardNotifier.flipCard,
+                        startSide: state.startSide,
+                        height: 300,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  _buildNavigationControls(context, flashcardNotifier, state),
+                  const SizedBox(height: 24),
+                  _buildBottomControls(context, ref),
+                ],
+              ),
+            );
+          },
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (err, stack) {
+            _log.severe("Error in flashcardControllerProvider", err, stack);
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  "Error: $err",
+                  style: TextStyle(color: Theme.of(context).colorScheme.error),
+                ),
+              ),
+            );
+          },
+        ),
+      ),
     );
   }
 }

@@ -280,13 +280,18 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error:
-            (err, stack) => Center(
+        error: (err, stack) {
+          _log.severe("Error in learnControllerProvider", err, stack);
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
               child: Text(
                 "Error in Learn Mode: $err",
                 style: TextStyle(color: Theme.of(context).colorScheme.error),
               ),
             ),
+          );
+        },
       ),
     );
   }

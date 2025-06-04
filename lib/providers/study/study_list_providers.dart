@@ -92,12 +92,12 @@ class StudyListFormNotifier extends _$StudyListFormNotifier {
       );
       ref.read(currentScreenProvider.notifier).goTo(AppScreen.modeSelection);
       state = state.copyWith(isLoading: false, clearError: true);
-    } catch (e) {
+    } catch (e, s) {
       state = state.copyWith(
         errorMessage: "Failed to save list: $e",
         isLoading: false,
       );
-      _log.warning("Error saving list: $e");
+      _log.severe("Error saving list", e, s);
     }
   }
 
