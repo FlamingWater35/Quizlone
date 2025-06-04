@@ -6,7 +6,7 @@ part of 'study_list_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$studyListsHash() => r'302d9b18680e3f159fc368d401cd38361501424a';
+String _$studyListsHash() => r'877d41e1c024fb1bf75c2bbe9562e3fec837f9c3';
 
 /// See also [studyLists].
 @ProviderFor(studyLists)
@@ -22,7 +22,7 @@ final studyListsProvider = AutoDisposeStreamProvider<List<StudyList>>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef StudyListsRef = AutoDisposeStreamProviderRef<List<StudyList>>;
-String _$activeStudyListHash() => r'a3393ecf9347e0a655658fb3cff6fec0cc207758';
+String _$activeStudyListHash() => r'3df167782cfd80839f69822a2ddc6d4b6e5392af';
 
 /// See also [activeStudyList].
 @ProviderFor(activeStudyList)

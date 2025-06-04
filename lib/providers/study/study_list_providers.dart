@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -12,7 +13,7 @@ part 'study_list_providers.g.dart';
 final _log = Logger("StudyListProviders");
 
 @riverpod
-Stream<List<StudyList>> studyLists(StudyListsRef ref) {
+Stream<List<StudyList>> studyLists(Ref ref) {
   final dbService = ref.watch(databaseServiceProvider);
   return dbService.listenToStudyLists();
 }
@@ -35,7 +36,7 @@ class ActiveStudyListId extends _$ActiveStudyListId {
 }
 
 @riverpod
-Future<StudyList?> activeStudyList(ActiveStudyListRef ref) async {
+Future<StudyList?> activeStudyList(Ref ref) async {
   final activeId = ref.watch(activeStudyListIdProvider);
   _log.fine("[activeStudyListProvider] Executing. Watched activeId: $activeId");
   if (activeId == null) return null;
