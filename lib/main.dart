@@ -6,10 +6,12 @@ import 'package:logging/logging.dart';
 
 import 'providers/core/core_providers.dart';
 import 'screens/main/main_screen.dart';
+import 'services/window_manager.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   _setupLogging();
+  setupWindow();
   runApp(const ProviderScope(child: MyApp()));
 }
 
