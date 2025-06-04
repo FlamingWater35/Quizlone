@@ -116,7 +116,7 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("5. Learn"),
+        title: const Text("Learn"),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {

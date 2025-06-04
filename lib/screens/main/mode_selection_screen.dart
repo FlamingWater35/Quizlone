@@ -31,7 +31,7 @@ class ModeSelectionScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("3. Options & Mode"),
+        title: const Text("Options & Mode"),
         automaticallyImplyLeading: false,
       ),
       body: SafeArea(

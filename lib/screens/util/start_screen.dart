@@ -16,7 +16,7 @@ class StartScreen extends ConsumerWidget {
     final studyListsAsync = ref.watch(studyListsProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Flashcard & Test Maker")),
+      appBar: AppBar(title: const Text("Quizlone")),
       body: SafeArea(
         child: Center(
           child: Padding(

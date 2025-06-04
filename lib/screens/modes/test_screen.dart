@@ -207,7 +207,7 @@ class _TestScreenState extends ConsumerState<TestScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("6. Test"),
+        title: const Text("Test"),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {

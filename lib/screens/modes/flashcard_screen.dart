@@ -34,7 +34,7 @@ class _FlashcardScreenState extends ConsumerState<FlashcardScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("4. Flashcards"),
+        title: const Text("Flashcards"),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {

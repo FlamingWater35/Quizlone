@@ -40,7 +40,7 @@ class _InputScreenState extends ConsumerState<InputScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("2. Enter Terms & Definitions"),
+        title: const Text("Enter Terms & Definitions"),
         automaticallyImplyLeading: false,
       ),
       body: SafeArea(
