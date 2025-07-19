@@ -8,7 +8,7 @@ part of 'study_list.dart';
 
 class StudyListAdapter extends TypeAdapter<StudyList> {
   @override
-  final int typeId = 0;
+  final typeId = 0;
 
   @override
   StudyList read(BinaryReader reader) {
@@ -23,7 +23,7 @@ class StudyListAdapter extends TypeAdapter<StudyList> {
       ..lastUsedAt = fields[3] as DateTime
       ..flashcardShowTermFirst = fields[4] as bool
       ..studyShowDefinitionAskTerm = fields[5] as bool
-      ..testStudyLength = fields[6] as int?
+      ..testStudyLength = (fields[6] as num?)?.toInt()
       .._testFormatString = fields[7] as String;
   }
 

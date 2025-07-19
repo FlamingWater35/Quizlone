@@ -12,12 +12,15 @@ String _$flashcardStartWithHash() =>
 /// See also [FlashcardStartWith].
 @ProviderFor(FlashcardStartWith)
 final flashcardStartWithProvider = AutoDisposeNotifierProvider<
-    FlashcardStartWith, FlashcardStartSide>.internal(
+  FlashcardStartWith,
+  FlashcardStartSide
+>.internal(
   FlashcardStartWith.new,
   name: r'flashcardStartWithProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$flashcardStartWithHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$flashcardStartWithHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -29,13 +32,15 @@ String _$studyAskWithHash() => r'6392df28f266056f3067df3376b74352ae417c86';
 @ProviderFor(StudyAskWith)
 final studyAskWithProvider =
     AutoDisposeNotifierProvider<StudyAskWith, StudyQuestionType>.internal(
-  StudyAskWith.new,
-  name: r'studyAskWithProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$studyAskWithHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      StudyAskWith.new,
+      name: r'studyAskWithProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$studyAskWithHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$StudyAskWith = AutoDisposeNotifier<StudyQuestionType>;
 String _$testQuestionFormatHash() =>
@@ -45,14 +50,15 @@ String _$testQuestionFormatHash() =>
 @ProviderFor(TestQuestionFormat)
 final testQuestionFormatProvider =
     AutoDisposeNotifierProvider<TestQuestionFormat, TestFormat>.internal(
-  TestQuestionFormat.new,
-  name: r'testQuestionFormatProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$testQuestionFormatHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      TestQuestionFormat.new,
+      name: r'testQuestionFormatProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$testQuestionFormatHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$TestQuestionFormat = AutoDisposeNotifier<TestFormat>;
 String _$studyLengthHash() => r'a97c783785f889d8ee4cf0060fe4f0edc8cc23af';
@@ -61,13 +67,15 @@ String _$studyLengthHash() => r'a97c783785f889d8ee4cf0060fe4f0edc8cc23af';
 @ProviderFor(StudyLength)
 final studyLengthProvider =
     AutoDisposeNotifierProvider<StudyLength, int?>.internal(
-  StudyLength.new,
-  name: r'studyLengthProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$studyLengthHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      StudyLength.new,
+      name: r'studyLengthProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$studyLengthHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$StudyLength = AutoDisposeNotifier<int?>;
 // ignore_for_file: type=lint

@@ -8,7 +8,7 @@ part of 'term.dart';
 
 class TermAdapter extends TypeAdapter<Term> {
   @override
-  final int typeId = 1;
+  final typeId = 1;
 
   @override
   Term read(BinaryReader reader) {

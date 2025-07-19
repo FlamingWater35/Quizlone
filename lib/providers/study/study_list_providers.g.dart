@@ -29,9 +29,10 @@ String _$activeStudyListHash() => r'3df167782cfd80839f69822a2ddc6d4b6e5392af';
 final activeStudyListProvider = AutoDisposeFutureProvider<StudyList?>.internal(
   activeStudyList,
   name: r'activeStudyListProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$activeStudyListHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$activeStudyListHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -45,14 +46,15 @@ String _$activeStudyListIdHash() => r'f3833c1ea6945c33f2319bea9f04e52090cfae14';
 @ProviderFor(ActiveStudyListId)
 final activeStudyListIdProvider =
     NotifierProvider<ActiveStudyListId, String?>.internal(
-  ActiveStudyListId.new,
-  name: r'activeStudyListIdProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$activeStudyListIdHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ActiveStudyListId.new,
+      name: r'activeStudyListIdProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$activeStudyListIdHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ActiveStudyListId = Notifier<String?>;
 String _$studyListFormNotifierHash() =>
@@ -61,12 +63,15 @@ String _$studyListFormNotifierHash() =>
 /// See also [StudyListFormNotifier].
 @ProviderFor(StudyListFormNotifier)
 final studyListFormNotifierProvider = AutoDisposeNotifierProvider<
-    StudyListFormNotifier, StudyListFormState>.internal(
+  StudyListFormNotifier,
+  StudyListFormState
+>.internal(
   StudyListFormNotifier.new,
   name: r'studyListFormNotifierProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$studyListFormNotifierHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$studyListFormNotifierHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );

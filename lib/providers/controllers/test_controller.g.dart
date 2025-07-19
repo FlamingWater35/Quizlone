@@ -12,14 +12,15 @@ String _$testControllerHash() => r'c77763c801505abe63a76e1756ac0e321d0d8efe';
 @ProviderFor(TestController)
 final testControllerProvider =
     AutoDisposeAsyncNotifierProvider<TestController, TestScreenState>.internal(
-  TestController.new,
-  name: r'testControllerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$testControllerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      TestController.new,
+      name: r'testControllerProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$testControllerHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$TestController = AutoDisposeAsyncNotifier<TestScreenState>;
 // ignore_for_file: type=lint

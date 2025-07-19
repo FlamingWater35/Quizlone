@@ -12,12 +12,15 @@ String _$flashcardControllerHash() =>
 /// See also [FlashcardController].
 @ProviderFor(FlashcardController)
 final flashcardControllerProvider = AutoDisposeAsyncNotifierProvider<
-    FlashcardController, FlashcardScreenState>.internal(
+  FlashcardController,
+  FlashcardScreenState
+>.internal(
   FlashcardController.new,
   name: r'flashcardControllerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$flashcardControllerHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$flashcardControllerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );

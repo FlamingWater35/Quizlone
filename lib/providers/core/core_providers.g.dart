@@ -13,9 +13,10 @@ String _$databaseServiceHash() => r'323927c4138725be4427216964fece6d70043b46';
 final databaseServiceProvider = Provider<DatabaseService>.internal(
   databaseService,
   name: r'databaseServiceProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$databaseServiceHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$databaseServiceHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );

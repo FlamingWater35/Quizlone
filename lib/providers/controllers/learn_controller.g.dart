@@ -11,12 +11,15 @@ String _$learnControllerHash() => r'ee8d43c2ef068adf15434cd0ac6c3e0875f9f4dc';
 /// See also [LearnController].
 @ProviderFor(LearnController)
 final learnControllerProvider = AutoDisposeAsyncNotifierProvider<
-    LearnController, LearnModeScreenState>.internal(
+  LearnController,
+  LearnModeScreenState
+>.internal(
   LearnController.new,
   name: r'learnControllerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$learnControllerHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$learnControllerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );

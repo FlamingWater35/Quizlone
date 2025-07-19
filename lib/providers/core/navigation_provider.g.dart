@@ -12,14 +12,15 @@ String _$currentScreenHash() => r'25d36e2585f1e448ed36d6355df7024ec246ea54';
 @ProviderFor(CurrentScreen)
 final currentScreenProvider =
     AutoDisposeNotifierProvider<CurrentScreen, AppScreen>.internal(
-  CurrentScreen.new,
-  name: r'currentScreenProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$currentScreenHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      CurrentScreen.new,
+      name: r'currentScreenProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$currentScreenHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$CurrentScreen = AutoDisposeNotifier<AppScreen>;
 // ignore_for_file: type=lint
