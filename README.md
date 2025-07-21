@@ -1,3 +1,3 @@
 # Quizlone
 
-An app with multiple modes to efficiently memorize term-difinition pairs. Inspired from Quizlet.
+An app with multiple modes to efficiently memorize term-definition pairs. Inspired from Quizlet.
