@@ -62,6 +62,10 @@ class DatabaseService {
     return false;
   }
 
+  Future<void> deleteAllStudyLists() async {
+    await _studyListBox.clear();
+  }
+
   // Methods for settings
   Future<void> saveTheme(String themeName) async {
     await _settingsBox.put('theme', themeName);

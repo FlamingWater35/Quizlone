@@ -59,3 +59,30 @@ class StudyListAdapter extends TypeAdapter<StudyList> {
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+StudyList _$StudyListFromJson(Map<String, dynamic> json) =>
+    StudyList()
+      ..createdAt = DateTime.parse(json['createdAt'] as String)
+      ..flashcardShowTermFirst = json['flashcardShowTermFirst'] as bool
+      ..lastUsedAt = DateTime.parse(json['lastUsedAt'] as String)
+      ..name = json['name'] as String
+      ..studyShowDefinitionAskTerm = json['studyShowDefinitionAskTerm'] as bool
+      ..terms =
+          (json['terms'] as List<dynamic>)
+              .map((e) => Term.fromJson(e as Map<String, dynamic>))
+              .toList()
+      ..testStudyLength = (json['testStudyLength'] as num?)?.toInt();
+
+Map<String, dynamic> _$StudyListToJson(StudyList instance) => <String, dynamic>{
+  'createdAt': instance.createdAt.toIso8601String(),
+  'flashcardShowTermFirst': instance.flashcardShowTermFirst,
+  'lastUsedAt': instance.lastUsedAt.toIso8601String(),
+  'name': instance.name,
+  'studyShowDefinitionAskTerm': instance.studyShowDefinitionAskTerm,
+  'terms': instance.terms.map((e) => e.toJson()).toList(),
+  'testStudyLength': instance.testStudyLength,
+};

@@ -41,3 +41,17 @@ class TermAdapter extends TypeAdapter<Term> {
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+Term _$TermFromJson(Map<String, dynamic> json) =>
+    Term()
+      ..definitionText = json['definitionText'] as String
+      ..termText = json['termText'] as String;
+
+Map<String, dynamic> _$TermToJson(Term instance) => <String, dynamic>{
+  'definitionText': instance.definitionText,
+  'termText': instance.termText,
+};

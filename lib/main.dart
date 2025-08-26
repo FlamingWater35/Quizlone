@@ -34,6 +34,8 @@ void _setupLogging() {
 class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
+  static final appRouter = AppRouter();
+
   static final _log = Logger('MyApp');
 
   @override
@@ -41,7 +43,21 @@ class MyApp extends ConsumerWidget {
     MyApp._log.info("Building MyApp widget");
     final themeMode = ref.watch(appThemeProvider);
     const seedColor = Colors.blueAccent;
-    final appRouter = AppRouter();
+
+    SnackBarThemeData buildSnackBarTheme(ColorScheme colorScheme) {
+      return SnackBarThemeData(
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+        backgroundColor: colorScheme.inverseSurface,
+        contentTextStyle: TextStyle(
+          color: colorScheme.onInverseSurface,
+          fontSize: 14,
+        ),
+        actionTextColor: colorScheme.inversePrimary,
+        insetPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+        elevation: 4.0,
+      );
+    }
 
     return MaterialApp.router(
       title: 'Quizlone',
@@ -52,6 +68,12 @@ class MyApp extends ConsumerWidget {
           brightness: Brightness.light,
         ),
         useMaterial3: true,
+        snackBarTheme: buildSnackBarTheme(
+          ColorScheme.fromSeed(
+            seedColor: seedColor,
+            brightness: Brightness.dark,
+          ),
+        ),
       ),
 
       darkTheme: ThemeData(
@@ -60,6 +82,12 @@ class MyApp extends ConsumerWidget {
           brightness: Brightness.dark,
         ),
         useMaterial3: true,
+        snackBarTheme: buildSnackBarTheme(
+          ColorScheme.fromSeed(
+            seedColor: seedColor,
+            brightness: Brightness.light,
+          ),
+        ),
       ),
 
       themeMode: themeMode,
