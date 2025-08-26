@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizlone/routing/app_router.dart';
 
 import '../../providers/study/study_list_providers.dart';
+import '../../widgets/centered_view.dart';
 
 @RoutePage()
 class InputScreen extends ConsumerStatefulWidget {
@@ -47,100 +48,102 @@ class _InputScreenState extends ConsumerState<InputScreen> {
         automaticallyImplyLeading: false,
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              TextField(
-                controller: _listNameController,
-                decoration: InputDecoration(
-                  labelText: "List Name",
-                  hintText: "e.g., Chapter 1 Vocabulary",
-                  border: const OutlineInputBorder(),
-                  errorText:
-                      (formState.errorMessage != null &&
-                              formState.errorMessage!.toLowerCase().contains(
-                                "list name",
-                              ))
-                          ? formState.errorMessage
-                          : null,
+        child: CenteredView(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                TextField(
+                  controller: _listNameController,
+                  decoration: InputDecoration(
+                    labelText: "List Name",
+                    hintText: "e.g., Chapter 1 Vocabulary",
+                    border: const OutlineInputBorder(),
+                    errorText:
+                        (formState.errorMessage != null &&
+                                formState.errorMessage!.toLowerCase().contains(
+                                  "list name",
+                                ))
+                            ? formState.errorMessage
+                            : null,
+                  ),
+                  onChanged: formNotifier.setListName,
+                  enabled: !formState.isLoading,
                 ),
-                onChanged: formNotifier.setListName,
-                enabled: !formState.isLoading,
-              ),
-              const SizedBox(height: 24),
-              Text(
-                "Paste your terms below (Term on one line, Definition on the next):",
-                style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                const SizedBox(height: 24),
+                Text(
+                  "Paste your terms below (Term on one line, Definition on the next):",
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 8),
-              TextField(
-                controller: _termsInputController,
-                decoration: InputDecoration(
-                  hintText:
-                      "Example:\nHTML\nHyperText Markup Language\nCSS\nCascading Style Sheets",
-                  border: const OutlineInputBorder(),
-                  alignLabelWithHint: true,
-                  errorText:
-                      (formState.errorMessage != null &&
-                              !formState.errorMessage!.toLowerCase().contains(
-                                "list name",
-                              ))
-                          ? formState.errorMessage
-                          : null,
+                const SizedBox(height: 8),
+                TextField(
+                  controller: _termsInputController,
+                  decoration: InputDecoration(
+                    hintText:
+                        "Example:\nHTML\nHyperText Markup Language\nCSS\nCascading Style Sheets",
+                    border: const OutlineInputBorder(),
+                    alignLabelWithHint: true,
+                    errorText:
+                        (formState.errorMessage != null &&
+                                !formState.errorMessage!.toLowerCase().contains(
+                                  "list name",
+                                ))
+                            ? formState.errorMessage
+                            : null,
+                  ),
+                  maxLines: 10,
+                  minLines: 5,
+                  keyboardType: TextInputType.multiline,
+                  onChanged: formNotifier.setRawTerms,
+                  enabled: !formState.isLoading,
                 ),
-                maxLines: 10,
-                minLines: 5,
-                keyboardType: TextInputType.multiline,
-                onChanged: formNotifier.setRawTerms,
-                enabled: !formState.isLoading,
-              ),
-              const SizedBox(height: 24),
-              if (formState.isLoading)
-                const Center(child: CircularProgressIndicator())
-              else
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    OutlinedButton.icon(
-                      icon: const Icon(Icons.arrow_back),
-                      label: const Text("Back"),
-                      onPressed:
-                          formState.isLoading
-                              ? null
-                              : () {
-                                formNotifier.goBackToStart();
-                                context.router.pop();
-                              },
-                      style: OutlinedButton.styleFrom(
-                        side: BorderSide(
-                          color: Theme.of(context).colorScheme.outline,
+                const SizedBox(height: 24),
+                if (formState.isLoading)
+                  const Center(child: CircularProgressIndicator())
+                else
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      OutlinedButton.icon(
+                        icon: const Icon(Icons.arrow_back),
+                        label: const Text("Back"),
+                        onPressed:
+                            formState.isLoading
+                                ? null
+                                : () {
+                                  formNotifier.goBackToStart();
+                                  context.router.pop();
+                                },
+                        style: OutlinedButton.styleFrom(
+                          side: BorderSide(
+                            color: Theme.of(context).colorScheme.outline,
+                          ),
                         ),
                       ),
-                    ),
-                    ElevatedButton.icon(
-                      icon: const Icon(Icons.save_alt),
-                      label: const Text("Save and Continue"),
-                      onPressed:
-                          formState.isLoading
-                              ? null
-                              : () async {
-                                FocusScope.of(context).unfocus();
-                                final success =
-                                    await formNotifier.saveListAndContinue();
-                                if (success && context.mounted) {
-                                  context.router.replace(
-                                    const ModeSelectionRoute(),
-                                  );
-                                }
-                              },
-                    ),
-                  ],
-                ),
-            ],
+                      ElevatedButton.icon(
+                        icon: const Icon(Icons.save_alt),
+                        label: const Text("Save and Continue"),
+                        onPressed:
+                            formState.isLoading
+                                ? null
+                                : () async {
+                                  FocusScope.of(context).unfocus();
+                                  final success =
+                                      await formNotifier.saveListAndContinue();
+                                  if (success && context.mounted) {
+                                    context.router.replace(
+                                      const ModeSelectionRoute(),
+                                    );
+                                  }
+                                },
+                      ),
+                    ],
+                  ),
+              ],
+            ),
           ),
         ),
       ),

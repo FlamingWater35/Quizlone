@@ -9,6 +9,7 @@ import '../../models/enums/enums.dart';
 import '../../models/study_list.dart';
 import '../../providers/study/study_list_providers.dart';
 import '../../providers/study/study_options_provider.dart';
+import '../../widgets/centered_view.dart';
 
 final _log = Logger("ModeSelectionScreen");
 
@@ -38,212 +39,225 @@ class ModeSelectionScreen extends ConsumerWidget {
           data: (StudyList? list) {
             if (list == null) {
               return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      "No active study list found or list could not be loaded.",
+                child: CenteredView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          "No active study list found or list could not be loaded.",
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 10),
+                        Text("Debug: Current Active ID is $activeId"),
+                        const SizedBox(height: 20),
+                        ElevatedButton(
+                          onPressed: () {
+                            ref
+                                .read(activeStudyListIdProvider.notifier)
+                                .set(null);
+                            context.router.replace(const StartRoute());
+                          },
+                          child: const Text("Go to Start Screen"),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 10),
-                    Text("Debug: Current Active ID is $activeId"),
-                    const SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: () {
-                        ref.read(activeStudyListIdProvider.notifier).set(null);
-                        context.router.replace(const StartRoute());
-                      },
-                      child: const Text("Go to Start Screen"),
-                    ),
-                  ],
+                  ),
                 ),
               );
             }
 
             final int totalTerms = list.terms.length;
 
-            return SingleChildScrollView(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Text(
-                    "${list.terms.length} term${list.terms.length == 1 ? '' : 's'} loaded from \"${list.name}\".",
-                    style: textTheme.titleMedium?.copyWith(
-                      color: colorScheme.primary,
+            return CenteredView(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      "${list.terms.length} term${list.terms.length == 1 ? '' : 's'} loaded from \"${list.name}\".",
+                      style: textTheme.titleMedium?.copyWith(
+                        color: colorScheme.primary,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 24),
+                    const SizedBox(height: 24),
 
-                  _OptionGroup(
-                    title: "Flashcard Options",
-                    children: [
-                      RadioListTile<FlashcardStartSide>(
-                        title: const Text("Show Term First"),
-                        value: FlashcardStartSide.term,
-                        groupValue: fcStartWith,
-                        onChanged:
-                            (value) => ref
-                                .read(flashcardStartWithProvider.notifier)
-                                .set(value!),
-                      ),
-                      RadioListTile<FlashcardStartSide>(
-                        title: const Text("Show Definition First"),
-                        value: FlashcardStartSide.definition,
-                        groupValue: fcStartWith,
-                        onChanged:
-                            (value) => ref
-                                .read(flashcardStartWithProvider.notifier)
-                                .set(value!),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-
-                  _OptionGroup(
-                    title: "Study Options",
-                    children: [
-                      RadioListTile<StudyQuestionType>(
-                        title: const Text("Show Definition, Ask for Term"),
-                        value: StudyQuestionType.definition,
-                        groupValue: studyAskWith,
-                        onChanged:
-                            (value) => ref
-                                .read(studyAskWithProvider.notifier)
-                                .set(value!),
-                      ),
-                      RadioListTile<StudyQuestionType>(
-                        title: const Text("Show Term, Ask for Definition"),
-                        value: StudyQuestionType.term,
-                        groupValue: studyAskWith,
-                        onChanged:
-                            (value) => ref
-                                .read(studyAskWithProvider.notifier)
-                                .set(value!),
-                      ),
-                      const Divider(height: 20),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16.0,
-                          vertical: 8.0,
+                    _OptionGroup(
+                      title: "Flashcard Options",
+                      children: [
+                        RadioListTile<FlashcardStartSide>(
+                          title: const Text("Show Term First"),
+                          value: FlashcardStartSide.term,
+                          groupValue: fcStartWith,
+                          onChanged:
+                              (value) => ref
+                                  .read(flashcardStartWithProvider.notifier)
+                                  .set(value!),
                         ),
-                        child: Row(
-                          children: [
-                            const Text("Study Length: "),
-                            const SizedBox(width: 10),
-                            SizedBox(
-                              width: 80,
-                              child: TextFormField(
-                                initialValue: studyLength?.toString() ?? '',
-                                decoration: InputDecoration(
-                                  hintText: "All",
-                                  border: const OutlineInputBorder(),
-                                  contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 10,
-                                    vertical: 8,
+                        RadioListTile<FlashcardStartSide>(
+                          title: const Text("Show Definition First"),
+                          value: FlashcardStartSide.definition,
+                          groupValue: fcStartWith,
+                          onChanged:
+                              (value) => ref
+                                  .read(flashcardStartWithProvider.notifier)
+                                  .set(value!),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+
+                    _OptionGroup(
+                      title: "Study Options",
+                      children: [
+                        RadioListTile<StudyQuestionType>(
+                          title: const Text("Show Definition, Ask for Term"),
+                          value: StudyQuestionType.definition,
+                          groupValue: studyAskWith,
+                          onChanged:
+                              (value) => ref
+                                  .read(studyAskWithProvider.notifier)
+                                  .set(value!),
+                        ),
+                        RadioListTile<StudyQuestionType>(
+                          title: const Text("Show Term, Ask for Definition"),
+                          value: StudyQuestionType.term,
+                          groupValue: studyAskWith,
+                          onChanged:
+                              (value) => ref
+                                  .read(studyAskWithProvider.notifier)
+                                  .set(value!),
+                        ),
+                        const Divider(height: 20),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16.0,
+                            vertical: 8.0,
+                          ),
+                          child: Row(
+                            children: [
+                              const Text("Study Length: "),
+                              const SizedBox(width: 10),
+                              SizedBox(
+                                width: 80,
+                                child: TextFormField(
+                                  initialValue: studyLength?.toString() ?? '',
+                                  decoration: InputDecoration(
+                                    hintText: "All",
+                                    border: const OutlineInputBorder(),
+                                    contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 10,
+                                      vertical: 8,
+                                    ),
+                                    isDense: true,
+                                    suffixText:
+                                        totalTerms > 0 ? "/ $totalTerms" : null,
                                   ),
-                                  isDense: true,
-                                  suffixText:
-                                      totalTerms > 0 ? "/ $totalTerms" : null,
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.digitsOnly,
+                                  ],
+                                  onChanged: (value) {
+                                    final intVal = int.tryParse(value);
+                                    if (value.isEmpty || intVal == null) {
+                                      ref
+                                          .read(studyLengthProvider.notifier)
+                                          .clear();
+                                    } else if (intVal > totalTerms &&
+                                        totalTerms > 0) {
+                                      ref
+                                          .read(studyLengthProvider.notifier)
+                                          .set(totalTerms);
+                                    } else {
+                                      ref
+                                          .read(studyLengthProvider.notifier)
+                                          .set(intVal);
+                                    }
+                                  },
+                                  textAlign: TextAlign.center,
                                 ),
-                                keyboardType: TextInputType.number,
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.digitsOnly,
-                                ],
-                                onChanged: (value) {
-                                  final intVal = int.tryParse(value);
-                                  if (value.isEmpty || intVal == null) {
-                                    ref
-                                        .read(studyLengthProvider.notifier)
-                                        .clear();
-                                  } else if (intVal > totalTerms &&
-                                      totalTerms > 0) {
-                                    ref
-                                        .read(studyLengthProvider.notifier)
-                                        .set(totalTerms);
-                                  } else {
-                                    ref
-                                        .read(studyLengthProvider.notifier)
-                                        .set(intVal);
-                                  }
-                                },
-                                textAlign: TextAlign.center,
                               ),
-                            ),
-                            const SizedBox(width: 8),
-                            const Expanded(
-                              child: Text(
-                                "(For Learn & Test modes)",
-                                style: TextStyle(fontSize: 12),
+                              const SizedBox(width: 8),
+                              const Expanded(
+                                child: Text(
+                                  "(For Learn & Test modes)",
+                                  style: TextStyle(fontSize: 12),
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                      const Divider(height: 20),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        child: Text("Test Format", style: textTheme.titleSmall),
-                      ),
-                      RadioListTile<TestFormat>(
-                        title: const Text("Written Answer"),
-                        value: TestFormat.written,
-                        groupValue: testFormat,
-                        onChanged:
-                            (value) => ref
-                                .read(testQuestionFormatProvider.notifier)
-                                .set(value!),
-                      ),
-                      RadioListTile<TestFormat>(
-                        title: const Text("Multiple Choice (4 options)"),
-                        value: TestFormat.mc,
-                        groupValue: testFormat,
-                        onChanged:
-                            (value) => ref
-                                .read(testQuestionFormatProvider.notifier)
-                                .set(value!),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 24),
-
-                  Wrap(
-                    alignment: WrapAlignment.center,
-                    spacing: 12.0,
-                    runSpacing: 12.0,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          context.router.push(const FlashcardRoute());
-                        },
-                        child: const Text("Flashcards"),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          context.router.push(const LearnRoute());
-                        },
-                        child: const Text("Learn"),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          context.router.push(const TestModeRoute());
-                        },
-                        child: const Text("Test"),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 30),
-
-                  Center(
-                    child: OutlinedButton(
-                      onPressed: () {
-                        context.router.pop();
-                      },
-                      child: const Text("Change List / Go to Start"),
+                        const Divider(height: 20),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Text(
+                            "Test Format",
+                            style: textTheme.titleSmall,
+                          ),
+                        ),
+                        RadioListTile<TestFormat>(
+                          title: const Text("Written Answer"),
+                          value: TestFormat.written,
+                          groupValue: testFormat,
+                          onChanged:
+                              (value) => ref
+                                  .read(testQuestionFormatProvider.notifier)
+                                  .set(value!),
+                        ),
+                        RadioListTile<TestFormat>(
+                          title: const Text("Multiple Choice (4 options)"),
+                          value: TestFormat.mc,
+                          groupValue: testFormat,
+                          onChanged:
+                              (value) => ref
+                                  .read(testQuestionFormatProvider.notifier)
+                                  .set(value!),
+                        ),
+                      ],
                     ),
-                  ),
-                  const SizedBox(height: 20),
-                ],
+                    const SizedBox(height: 24),
+
+                    Wrap(
+                      alignment: WrapAlignment.center,
+                      spacing: 12.0,
+                      runSpacing: 12.0,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            context.router.push(const FlashcardRoute());
+                          },
+                          child: const Text("Flashcards"),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            context.router.push(const LearnRoute());
+                          },
+                          child: const Text("Learn"),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            context.router.push(const TestModeRoute());
+                          },
+                          child: const Text("Test"),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 30),
+
+                    Center(
+                      child: OutlinedButton(
+                        onPressed: () {
+                          context.router.pop();
+                        },
+                        child: const Text("Change List / Go to Start"),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                  ],
+                ),
               ),
             );
           },

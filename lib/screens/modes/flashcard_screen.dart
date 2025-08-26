@@ -5,6 +5,7 @@ import 'package:logging/logging.dart';
 import 'package:quizlone/routing/app_router.dart';
 
 import '../../providers/controllers/flashcard_controller.dart';
+import '../../widgets/centered_view.dart';
 import '../../widgets/flashcard_widget.dart';
 
 @RoutePage()
@@ -140,13 +141,16 @@ class _FlashcardScreenState extends ConsumerState<FlashcardScreen> {
           data: (state) {
             if (state.errorMessage != null) {
               return Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    state.errorMessage!,
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.error,
-                      fontSize: 16,
+                child: CenteredView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text(
+                      state.errorMessage!,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.error,
+                        fontSize: 16,
+                      ),
                     ),
                   ),
                 ),
@@ -156,32 +160,34 @@ class _FlashcardScreenState extends ConsumerState<FlashcardScreen> {
               return const Center(child: Text("No flashcards to display."));
             }
 
-            return Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  Text(
-                    state.currentProgress,
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  const SizedBox(height: 16),
-                  Expanded(
-                    child: Center(
-                      child: FlashcardWidget(
-                        key: ValueKey(state.currentCard!.termText),
-                        term: state.currentCard!,
-                        isFlipped: state.isFlipped,
-                        onTap: flashcardNotifier.flipCard,
-                        startSide: state.startSide,
-                        height: 300,
+            return CenteredView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    Text(
+                      state.currentProgress,
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: 16),
+                    Expanded(
+                      child: Center(
+                        child: FlashcardWidget(
+                          key: ValueKey(state.currentCard!.termText),
+                          term: state.currentCard!,
+                          isFlipped: state.isFlipped,
+                          onTap: flashcardNotifier.flipCard,
+                          startSide: state.startSide,
+                          height: 300,
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 24),
-                  _buildNavigationControls(context, flashcardNotifier, state),
-                  const SizedBox(height: 24),
-                  _buildBottomControls(context, ref),
-                ],
+                    const SizedBox(height: 24),
+                    _buildNavigationControls(context, flashcardNotifier, state),
+                    const SizedBox(height: 24),
+                    _buildBottomControls(context, ref),
+                  ],
+                ),
               ),
             );
           },
@@ -189,11 +195,16 @@ class _FlashcardScreenState extends ConsumerState<FlashcardScreen> {
           error: (err, stack) {
             _log.severe("Error in flashcardControllerProvider", err, stack);
             return Center(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  "Error: $err",
-                  style: TextStyle(color: Theme.of(context).colorScheme.error),
+              child: CenteredView(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    "Error: $err",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.error,
+                    ),
+                  ),
                 ),
               ),
             );

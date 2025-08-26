@@ -6,6 +6,7 @@ import 'package:quizlone/routing/app_router.dart';
 
 import '../../providers/controllers/flashcard_controller.dart';
 import '../../providers/controllers/test_controller.dart';
+import '../../widgets/centered_view.dart';
 
 @RoutePage()
 class ResultsScreen extends ConsumerWidget {
@@ -39,133 +40,137 @@ class ResultsScreen extends ConsumerWidget {
             final percentage = total > 0 ? (score / total * 100).round() : 0;
             final incorrectAnswers = state.incorrectAnswers;
 
-            return SingleChildScrollView(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Text(
-                    "Your Score: $score / $total ($percentage%)",
-                    style: Theme.of(context).textTheme.headlineMedium,
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 24),
-                  if (incorrectAnswers.isNotEmpty) ...[
+            return CenteredView(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
                     Text(
-                      "Review Incorrect Answers:",
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                    const SizedBox(height: 8),
-                    ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: incorrectAnswers.length,
-                      itemBuilder: (context, index) {
-                        final item = incorrectAnswers[index];
-                        return Card(
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.errorContainer.withAlpha(45),
-                          margin: const EdgeInsets.symmetric(vertical: 4.0),
-                          child: Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  item.isQuestionDefinition
-                                      ? "Definition Shown:"
-                                      : "Term Shown:",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onErrorContainer
-                                        .withAlpha(210),
-                                  ),
-                                ),
-                                Text(
-                                  item.questionText,
-                                  style: TextStyle(
-                                    color:
-                                        Theme.of(
-                                          context,
-                                        ).colorScheme.onErrorContainer,
-                                  ),
-                                ),
-                                const SizedBox(height: 6),
-                                Text(
-                                  "Your Answer: ${item.userAnswerText ?? "(No answer)"}",
-                                  style: TextStyle(
-                                    fontStyle: FontStyle.italic,
-                                    color:
-                                        Theme.of(
-                                          context,
-                                        ).colorScheme.onErrorContainer,
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  "Correct Answer: ${item.correctAnswerText}",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.green.shade800,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                    const SizedBox(height: 24),
-                  ] else if (total > 0) ...[
-                    Text(
-                      "Congratulations! You got everything right!",
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        color: Colors.green.shade700,
-                      ),
+                      "Your Score: $score / $total ($percentage%)",
+                      style: Theme.of(context).textTheme.headlineMedium,
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 24),
-                  ],
-
-                  Wrap(
-                    alignment: WrapAlignment.center,
-                    spacing: 12.0,
-                    runSpacing: 12.0,
-                    children: [
-                      OutlinedButton(
-                        onPressed: () {
-                          context.router.popUntilRouteWithName(StartRoute.name);
-                        },
-                        child: const Text("Start Screen"),
+                    if (incorrectAnswers.isNotEmpty) ...[
+                      Text(
+                        "Review Incorrect Answers:",
+                        style: Theme.of(context).textTheme.titleLarge,
                       ),
-                      ElevatedButton(
-                        onPressed: () {
-                          ref.invalidate(flashcardControllerProvider);
-                          context.router.replace(const FlashcardRoute());
+                      const SizedBox(height: 8),
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: incorrectAnswers.length,
+                        itemBuilder: (context, index) {
+                          final item = incorrectAnswers[index];
+                          return Card(
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.errorContainer.withAlpha(45),
+                            margin: const EdgeInsets.symmetric(vertical: 4.0),
+                            child: Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    item.isQuestionDefinition
+                                        ? "Definition Shown:"
+                                        : "Term Shown:",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onErrorContainer
+                                          .withAlpha(210),
+                                    ),
+                                  ),
+                                  Text(
+                                    item.questionText,
+                                    style: TextStyle(
+                                      color:
+                                          Theme.of(
+                                            context,
+                                          ).colorScheme.onErrorContainer,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 6),
+                                  Text(
+                                    "Your Answer: ${item.userAnswerText ?? "(No answer)"}",
+                                    style: TextStyle(
+                                      fontStyle: FontStyle.italic,
+                                      color:
+                                          Theme.of(
+                                            context,
+                                          ).colorScheme.onErrorContainer,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    "Correct Answer: ${item.correctAnswerText}",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.green.shade800,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
                         },
-                        child: const Text("Review Flashcards"),
                       ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              Theme.of(context).colorScheme.secondary,
-                          foregroundColor:
-                              Theme.of(context).colorScheme.onSecondary,
+                      const SizedBox(height: 24),
+                    ] else if (total > 0) ...[
+                      Text(
+                        "Congratulations! You got everything right!",
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          color: Colors.green.shade700,
                         ),
-                        onPressed: () async {
-                          await testNotifier.restartTest();
-                          if (context.mounted) {
-                            context.router.replace(const TestModeRoute());
-                          }
-                        },
-                        child: const Text("Retry Test"),
+                        textAlign: TextAlign.center,
                       ),
+                      const SizedBox(height: 24),
                     ],
-                  ),
-                ],
+
+                    Wrap(
+                      alignment: WrapAlignment.center,
+                      spacing: 12.0,
+                      runSpacing: 12.0,
+                      children: [
+                        OutlinedButton(
+                          onPressed: () {
+                            context.router.popUntilRouteWithName(
+                              StartRoute.name,
+                            );
+                          },
+                          child: const Text("Start Screen"),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            ref.invalidate(flashcardControllerProvider);
+                            context.router.replace(const FlashcardRoute());
+                          },
+                          child: const Text("Review Flashcards"),
+                        ),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                Theme.of(context).colorScheme.secondary,
+                            foregroundColor:
+                                Theme.of(context).colorScheme.onSecondary,
+                          ),
+                          onPressed: () async {
+                            await testNotifier.restartTest();
+                            if (context.mounted) {
+                              context.router.replace(const TestModeRoute());
+                            }
+                          },
+                          child: const Text("Retry Test"),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             );
           },
@@ -177,11 +182,15 @@ class ResultsScreen extends ConsumerWidget {
               stack,
             );
             return Center(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  "Error displaying results: $err",
-                  style: TextStyle(color: Theme.of(context).colorScheme.error),
+              child: CenteredView(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    "Error displaying results: $err",
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.error,
+                    ),
+                  ),
                 ),
               ),
             );

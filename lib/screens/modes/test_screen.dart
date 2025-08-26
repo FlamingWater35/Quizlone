@@ -6,6 +6,7 @@ import 'package:quizlone/routing/app_router.dart';
 
 import '../../models/enums/enums.dart';
 import '../../providers/controllers/test_controller.dart';
+import '../../widgets/centered_view.dart';
 
 @RoutePage(name: "TestModeRoute")
 class TestScreen extends ConsumerStatefulWidget {
@@ -214,9 +215,13 @@ class _TestScreenState extends ConsumerState<TestScreen> {
           data: (state) {
             if (state.errorMessage != null) {
               return Center(
-                child: Text(
-                  state.errorMessage!,
-                  style: TextStyle(color: Theme.of(context).colorScheme.error),
+                child: CenteredView(
+                  child: Text(
+                    state.errorMessage!,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.error,
+                    ),
+                  ),
                 ),
               );
             }
@@ -235,57 +240,63 @@ class _TestScreenState extends ConsumerState<TestScreen> {
               });
             }
 
-            return Column(
-              children: [
-                Expanded(
-                  child: ListView.builder(
-                    padding: const EdgeInsets.all(16.0),
-                    itemCount: state.questions.length,
-                    itemBuilder: (context, index) {
-                      final question = state.questions[index];
-                      return _buildQuestionItem(
-                        context,
-                        question,
-                        index,
-                        testNotifier,
-                        state,
-                      );
-                    },
+            return CenteredView(
+              child: Column(
+                children: [
+                  Expanded(
+                    child: ListView.builder(
+                      padding: const EdgeInsets.all(16.0),
+                      itemCount: state.questions.length,
+                      itemBuilder: (context, index) {
+                        final question = state.questions[index];
+                        return _buildQuestionItem(
+                          context,
+                          question,
+                          index,
+                          testNotifier,
+                          state,
+                        );
+                      },
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child:
-                      state.isSubmitted
-                          ? ElevatedButton(
-                            onPressed: () {
-                              context.router.push(const ResultsRoute());
-                            },
-                            child: const Text("View Results"),
-                          )
-                          : ElevatedButton(
-                            onPressed:
-                                state.questions.isEmpty
-                                    ? null
-                                    : () {
-                                      FocusScope.of(context).unfocus();
-                                      testNotifier.submitTest();
-                                    },
-                            child: const Text("Submit Test"),
-                          ),
-                ),
-              ],
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child:
+                        state.isSubmitted
+                            ? ElevatedButton(
+                              onPressed: () {
+                                context.router.push(const ResultsRoute());
+                              },
+                              child: const Text("View Results"),
+                            )
+                            : ElevatedButton(
+                              onPressed:
+                                  state.questions.isEmpty
+                                      ? null
+                                      : () {
+                                        FocusScope.of(context).unfocus();
+                                        testNotifier.submitTest();
+                                      },
+                              child: const Text("Submit Test"),
+                            ),
+                  ),
+                ],
+              ),
             );
           },
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (err, stack) {
             _log.severe("Error in testControllerProvider", err, stack);
             return Center(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  "Error: $err",
-                  style: TextStyle(color: Theme.of(context).colorScheme.error),
+              child: CenteredView(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    "Error: $err",
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.error,
+                    ),
+                  ),
                 ),
               ),
             );
