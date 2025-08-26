@@ -59,7 +59,7 @@ class ModeSelectionScreen extends ConsumerWidget {
                                 .set(null);
                             context.router.replace(const StartRoute());
                           },
-                          child: const Text("Go to Start Screen"),
+                          child: const Text("Return to Welcome Screen"),
                         ),
                       ],
                     ),
