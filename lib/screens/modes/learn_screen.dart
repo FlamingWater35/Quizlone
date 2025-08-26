@@ -158,14 +158,16 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
                   const SizedBox(height: 20),
                   Card(
                     child: Padding(
-                      padding: const EdgeInsets.all(20.0),
+                      padding: const EdgeInsets.all(16.0),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           Text(
                             questionState.questionLabel,
                             style: textTheme.labelLarge?.copyWith(
                               color: Theme.of(context).colorScheme.outline,
                             ),
+                            textAlign: TextAlign.center,
                           ),
                           const SizedBox(height: 8),
                           Text(
@@ -174,90 +176,92 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
                             textAlign: TextAlign.center,
                             softWrap: true,
                           ),
+                          const SizedBox(height: 20),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: TextField(
+                                  controller: _answerController,
+                                  decoration: InputDecoration(
+                                    hintText: "Type your answer here...",
+                                    errorText:
+                                        (questionState.feedbackType ==
+                                                    LearnFeedbackType
+                                                        .incorrect &&
+                                                questionState.answerSubmitted)
+                                            ? "Incorrect"
+                                            : null,
+                                  ),
+                                  onChanged: learnNotifier.updateUserAnswer,
+                                  onSubmitted: (_) => _onSubmit(learnNotifier),
+                                  readOnly: questionState.answerSubmitted,
+                                  autofocus: true,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              ElevatedButton(
+                                onPressed:
+                                    questionState.answerSubmitted
+                                        ? null
+                                        : () => _onSubmit(learnNotifier),
+                                child: const Text("Submit"),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 16),
+                          if (questionState.feedbackMessage.isNotEmpty)
+                            Container(
+                              padding: const EdgeInsets.all(12.0),
+                              decoration: BoxDecoration(
+                                color: _getFeedbackColor(
+                                  context,
+                                  questionState.feedbackType,
+                                ).withAlpha(12),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Text(
+                                questionState.feedbackMessage,
+                                textAlign: TextAlign.center,
+                                style: textTheme.titleMedium?.copyWith(
+                                  color: _getFeedbackColor(
+                                    context,
+                                    questionState.feedbackType,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          const SizedBox(height: 24),
+                          if (!questionState.answerSubmitted)
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                OutlinedButton.icon(
+                                  icon: const Icon(Icons.lightbulb_outline),
+                                  label: const Text("Hint"),
+                                  onPressed: learnNotifier.showHint,
+                                  style: OutlinedButton.styleFrom(
+                                    foregroundColor:
+                                        Theme.of(context).colorScheme.secondary,
+                                    side: BorderSide(
+                                      color:
+                                          Theme.of(
+                                            context,
+                                          ).colorScheme.secondary,
+                                    ),
+                                  ),
+                                ),
+                                OutlinedButton.icon(
+                                  icon: const Icon(Icons.skip_next),
+                                  label: const Text("Show & Skip"),
+                                  onPressed:
+                                      learnNotifier.skipQuestionAndShowAnswer,
+                                ),
+                              ],
+                            ),
                         ],
                       ),
                     ),
                   ),
-                  const SizedBox(height: 20),
-
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          controller: _answerController,
-                          decoration: InputDecoration(
-                            hintText: "Type your answer here...",
-                            errorText:
-                                (questionState.feedbackType ==
-                                            LearnFeedbackType.incorrect &&
-                                        questionState.answerSubmitted)
-                                    ? "Incorrect"
-                                    : null,
-                          ),
-                          onChanged: learnNotifier.updateUserAnswer,
-                          onSubmitted: (_) => _onSubmit(learnNotifier),
-                          readOnly: questionState.answerSubmitted,
-                          autofocus: true,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      ElevatedButton(
-                        onPressed:
-                            questionState.answerSubmitted
-                                ? null
-                                : () => _onSubmit(learnNotifier),
-                        child: const Text("Submit"),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-
-                  if (questionState.feedbackMessage.isNotEmpty)
-                    Container(
-                      padding: const EdgeInsets.all(12.0),
-                      decoration: BoxDecoration(
-                        color: _getFeedbackColor(
-                          context,
-                          questionState.feedbackType,
-                        ).withAlpha(12),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Text(
-                        questionState.feedbackMessage,
-                        textAlign: TextAlign.center,
-                        style: textTheme.titleMedium?.copyWith(
-                          color: _getFeedbackColor(
-                            context,
-                            questionState.feedbackType,
-                          ),
-                        ),
-                      ),
-                    ),
-                  const SizedBox(height: 24),
-
-                  if (!questionState.answerSubmitted)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        OutlinedButton.icon(
-                          icon: const Icon(Icons.lightbulb_outline),
-                          label: const Text("Hint"),
-                          onPressed: learnNotifier.showHint,
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor:
-                                Theme.of(context).colorScheme.secondary,
-                            side: BorderSide(
-                              color: Theme.of(context).colorScheme.secondary,
-                            ),
-                          ),
-                        ),
-                        OutlinedButton.icon(
-                          icon: const Icon(Icons.skip_next),
-                          label: const Text("Show & Skip"),
-                          onPressed: learnNotifier.skipQuestionAndShowAnswer,
-                        ),
-                      ],
-                    ),
                   const SizedBox(height: 40),
                   Center(
                     child: TextButton(
