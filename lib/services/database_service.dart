@@ -10,7 +10,7 @@ class DatabaseService {
   DatabaseService();
 
   static Future<void> init() async {
-    await Hive.initFlutter();
+    await Hive.initFlutter('Quizlone');
 
     Hive.registerAdapter(TermAdapter());
     Hive.registerAdapter(StudyListAdapter());
