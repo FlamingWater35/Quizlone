@@ -19,7 +19,7 @@ class StartScreen extends ConsumerWidget {
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (context.mounted) {
-        await Future.delayed(const Duration(milliseconds: 100));
+        await Future.delayed(Duration.zero);
         if (ref.read(activeStudyListIdProvider) != null) {
           _log.fine(
             "StartScreen: Clearing activeStudyListIdProvider as it's not null on screen display.",
