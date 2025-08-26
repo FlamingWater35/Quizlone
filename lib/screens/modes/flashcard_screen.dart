@@ -18,6 +18,7 @@ class FlashcardScreen extends ConsumerStatefulWidget {
 
 class _FlashcardScreenState extends ConsumerState<FlashcardScreen> {
   static final _log = Logger("FlashcardScreen");
+  var _slideFromRight = true;
 
   @override
   void initState() {
@@ -126,6 +127,22 @@ class _FlashcardScreenState extends ConsumerState<FlashcardScreen> {
     final flashcardStateAsync = ref.watch(flashcardControllerProvider);
     final flashcardNotifier = ref.read(flashcardControllerProvider.notifier);
 
+    ref.listen<AsyncValue<FlashcardScreenState>>(flashcardControllerProvider, (
+      prev,
+      next,
+    ) {
+      final prevData = prev?.asData?.value;
+      final nextData = next.asData?.value;
+
+      if (prevData != null && nextData != null) {
+        if (nextData.currentIndex > prevData.currentIndex) {
+          if (mounted) setState(() => _slideFromRight = true);
+        } else if (nextData.currentIndex < prevData.currentIndex) {
+          if (mounted) setState(() => _slideFromRight = false);
+        }
+      }
+    });
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Flashcards"),
@@ -173,13 +190,49 @@ class _FlashcardScreenState extends ConsumerState<FlashcardScreen> {
                       ),
                       const SizedBox(height: 16),
                       Center(
-                        child: FlashcardWidget(
-                          key: ValueKey(state.currentCard!.termText),
-                          term: state.currentCard!,
-                          isFlipped: state.isFlipped,
-                          onTap: flashcardNotifier.flipCard,
-                          startSide: state.startSide,
-                          height: 300,
+                        child: AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 400),
+                          transitionBuilder: (
+                            Widget child,
+                            Animation<double> animation,
+                          ) {
+                            final curvedAnimation = CurvedAnimation(
+                              parent: animation,
+                              curve: Curves.easeInOut,
+                            );
+
+                            final offsetAnimation = Tween<Offset>(
+                              begin:
+                                  _slideFromRight
+                                      ? const Offset(1.0, 0.0)
+                                      : const Offset(-1.0, 0.0),
+                              end: Offset.zero,
+                            ).animate(curvedAnimation);
+
+                            final scaleAnimation = Tween<double>(
+                              begin: 0.8,
+                              end: 1.0,
+                            ).animate(curvedAnimation);
+
+                            return FadeTransition(
+                              opacity: curvedAnimation,
+                              child: ScaleTransition(
+                                scale: scaleAnimation,
+                                child: SlideTransition(
+                                  position: offsetAnimation,
+                                  child: child,
+                                ),
+                              ),
+                            );
+                          },
+                          child: FlashcardWidget(
+                            key: ValueKey(state.currentIndex),
+                            term: state.currentCard!,
+                            isFlipped: state.isFlipped,
+                            onTap: flashcardNotifier.flipCard,
+                            startSide: state.startSide,
+                            height: 300,
+                          ),
                         ),
                       ),
                       const SizedBox(height: 24),

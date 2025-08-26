@@ -74,7 +74,7 @@ class _FlashcardWidgetState extends State<FlashcardWidget>
     final transform =
         Matrix4.identity()
           ..setEntry(3, 2, 0.001)
-          ..rotateY(angle);
+          ..rotateX(angle);
 
     final String frontText =
         widget.startSide == FlashcardStartSide.term
@@ -95,7 +95,7 @@ class _FlashcardWidgetState extends State<FlashcardWidget>
     } else {
       cardFaceToShow = Transform(
         alignment: Alignment.center,
-        transform: Matrix4.identity()..rotateY(pi),
+        transform: Matrix4.identity()..rotateX(pi),
         child: _buildCardFace(
           backText,
           Theme.of(context).colorScheme.secondaryContainer,
