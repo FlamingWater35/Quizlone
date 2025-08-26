@@ -3,8 +3,12 @@ import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:universal_html/html.dart' as html;
 
 import '../../models/study_list.dart';
 import '../../providers/core/core_providers.dart';
@@ -27,24 +31,51 @@ class SettingsScreen extends ConsumerWidget {
       return;
     }
 
-    final String? outputFile = await FilePicker.platform.saveFile(
-      dialogTitle: 'Please select an output file:',
-      fileName: 'quizlone_backup.json',
-    );
+    final jsonString = jsonEncode(lists.map((l) => l.toJson()).toList());
 
-    if (outputFile != null) {
-      try {
-        final jsonString = jsonEncode(lists.map((l) => l.toJson()).toList());
-        final file = File(outputFile);
+    try {
+      if (kIsWeb) {
+        final bytes = utf8.encode(jsonString);
+        final blob = html.Blob([bytes]);
+        final url = html.Url.createObjectUrlFromBlob(blob);
+        final anchor =
+            html.document.createElement('a') as html.AnchorElement
+              ..href = url
+              ..style.display = 'none'
+              ..download = 'quizlone_backup.json';
+        html.document.body?.children.add(anchor);
+        anchor.click();
+        html.document.body?.children.remove(anchor);
+        html.Url.revokeObjectUrl(url);
+      } else if (Platform.isAndroid || Platform.isIOS) {
+        final tempDir = await getTemporaryDirectory();
+        final filePath = '${tempDir.path}/quizlone_backup.json';
+        final file = File(filePath);
         await file.writeAsString(jsonString);
-        scaffoldMessenger.showSnackBar(
-          const SnackBar(content: Text('Data exported successfully!')),
+        await SharePlus.instance.share(
+          ShareParams(
+            files: [XFile(filePath)],
+            text: 'Here is your Quizlone backup.',
+          ),
         );
-      } catch (e) {
-        scaffoldMessenger.showSnackBar(
-          SnackBar(content: Text('Error exporting data: $e')),
+      } else {
+        final String? outputFile = await FilePicker.platform.saveFile(
+          dialogTitle: 'Please select an output file:',
+          fileName: 'quizlone_backup.json',
         );
+
+        if (outputFile != null) {
+          final file = File(outputFile);
+          await file.writeAsString(jsonString);
+          scaffoldMessenger.showSnackBar(
+            const SnackBar(content: Text('Data exported successfully!')),
+          );
+        }
       }
+    } catch (e) {
+      scaffoldMessenger.showSnackBar(
+        SnackBar(content: Text('Error exporting data: $e')),
+      );
     }
   }
 
