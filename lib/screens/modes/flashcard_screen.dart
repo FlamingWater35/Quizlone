@@ -162,17 +162,17 @@ class _FlashcardScreenState extends ConsumerState<FlashcardScreen> {
             }
 
             return CenteredView(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    Text(
-                      state.currentProgress,
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                    const SizedBox(height: 16),
-                    Expanded(
-                      child: Center(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    children: [
+                      Text(
+                        state.currentProgress,
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      const SizedBox(height: 16),
+                      Center(
                         child: FlashcardWidget(
                           key: ValueKey(state.currentCard!.termText),
                           term: state.currentCard!,
@@ -182,12 +182,16 @@ class _FlashcardScreenState extends ConsumerState<FlashcardScreen> {
                           height: 300,
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 24),
-                    _buildNavigationControls(context, flashcardNotifier, state),
-                    const SizedBox(height: 24),
-                    _buildBottomControls(context, ref),
-                  ],
+                      const SizedBox(height: 24),
+                      _buildNavigationControls(
+                        context,
+                        flashcardNotifier,
+                        state,
+                      ),
+                      const SizedBox(height: 24),
+                      _buildBottomControls(context, ref),
+                    ],
+                  ),
                 ),
               ),
             );

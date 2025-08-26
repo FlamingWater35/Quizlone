@@ -229,19 +229,43 @@ class ModeSelectionScreen extends ConsumerWidget {
                           onPressed: () {
                             context.router.push(const FlashcardRoute());
                           },
-                          child: const Text("Flashcards"),
+                          child: Text(
+                            "Flashcards",
+                            style: Theme.of(
+                              context,
+                            ).textTheme.headlineSmall?.copyWith(
+                              color: Theme.of(context).colorScheme.primary,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
                         ElevatedButton(
                           onPressed: () {
                             context.router.push(const LearnRoute());
                           },
-                          child: const Text("Learn"),
+                          child: Text(
+                            "Learn",
+                            style: Theme.of(
+                              context,
+                            ).textTheme.headlineSmall?.copyWith(
+                              color: Theme.of(context).colorScheme.primary,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
                         ElevatedButton(
                           onPressed: () {
                             context.router.push(const TestModeRoute());
                           },
-                          child: const Text("Test"),
+                          child: Text(
+                            "Test",
+                            style: Theme.of(
+                              context,
+                            ).textTheme.headlineSmall?.copyWith(
+                              color: Theme.of(context).colorScheme.primary,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
                       ],
                     ),
@@ -252,7 +276,7 @@ class ModeSelectionScreen extends ConsumerWidget {
                         onPressed: () {
                           context.router.pop();
                         },
-                        child: const Text("Change List / Go to Start"),
+                        child: const Text("Return to welcome screen"),
                       ),
                     ),
                     const SizedBox(height: 20),

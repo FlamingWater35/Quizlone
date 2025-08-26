@@ -262,11 +262,13 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
                       ],
                     ),
                   const SizedBox(height: 40),
-                  OutlinedButton(
-                    onPressed: () {
-                      context.router.pop();
-                    },
-                    child: const Text("Change Mode / Options"),
+                  Center(
+                    child: OutlinedButton(
+                      onPressed: () {
+                        context.router.pop();
+                      },
+                      child: const Text("Return to options screen"),
+                    ),
                   ),
                 ],
               ),
