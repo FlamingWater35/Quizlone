@@ -214,8 +214,8 @@ class _FlashcardScreenState extends ConsumerState<FlashcardScreen> {
                                     final offsetAnimation = Tween<Offset>(
                                       begin:
                                           _slideFromRight
-                                              ? const Offset(1.0, 0.0)
-                                              : const Offset(-1.0, 0.0),
+                                              ? const Offset(0.3, 0.0)
+                                              : const Offset(-0.3, 0.0),
                                       end: Offset.zero,
                                     ).animate(curvedAnimation);
 

@@ -7,6 +7,7 @@ import 'package:quizlone/routing/app_router.dart';
 import '../../providers/core/core_providers.dart';
 import '../../providers/study/study_list_providers.dart';
 import '../../widgets/centered_view.dart';
+import '../../widgets/sidebar_widget.dart';
 
 final _log = Logger("StartScreen");
 
@@ -21,6 +22,7 @@ class StartScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(title: const Text("Quizlone"), centerTitle: true),
+      drawer: const AppDrawer(),
       body: SafeArea(
         child: CenteredView(
           child: Padding(
