@@ -54,12 +54,13 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 30),
-              ElevatedButton(
+              ElevatedButton.icon(
+                icon: const Icon(Icons.restart_alt),
                 onPressed: notifier.refreshAndRestart,
-                child: const Text("Restart Learn Session"),
+                label: const Text("Restart Learn Session"),
               ),
               const SizedBox(height: 12),
-              OutlinedButton(
+              TextButton(
                 onPressed: () => context.router.pop(),
                 child: const Text("Back to Options"),
               ),
@@ -71,17 +72,18 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
   }
 
   Color _getFeedbackColor(BuildContext context, LearnFeedbackType type) {
+    final colorScheme = Theme.of(context).colorScheme;
     switch (type) {
       case LearnFeedbackType.correct:
         return Colors.green.shade700;
       case LearnFeedbackType.incorrect:
-        return Theme.of(context).colorScheme.error;
+        return colorScheme.error;
       case LearnFeedbackType.hint:
-        return Colors.orange.shade700;
+        return colorScheme.secondary;
       case LearnFeedbackType.skipped:
-        return Theme.of(context).colorScheme.outline;
+        return colorScheme.outline;
       default:
-        return Theme.of(context).textTheme.bodyLarge?.color ?? Colors.black;
+        return colorScheme.onSurface;
     }
   }
 
@@ -155,7 +157,6 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
                   ),
                   const SizedBox(height: 20),
                   Card(
-                    elevation: 2,
                     child: Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: Column(
@@ -186,7 +187,6 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
                           controller: _answerController,
                           decoration: InputDecoration(
                             hintText: "Type your answer here...",
-                            border: const OutlineInputBorder(),
                             errorText:
                                 (questionState.feedbackType ==
                                             LearnFeedbackType.incorrect &&
@@ -219,14 +219,8 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
                         color: _getFeedbackColor(
                           context,
                           questionState.feedbackType,
-                        ).withAlpha(15),
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(
-                          color: _getFeedbackColor(
-                            context,
-                            questionState.feedbackType,
-                          ).withAlpha(45),
-                        ),
+                        ).withAlpha(12),
+                        borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
                         questionState.feedbackMessage,
@@ -245,16 +239,16 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        OutlinedButton.icon(
+                        TextButton.icon(
                           icon: const Icon(Icons.lightbulb_outline),
                           label: const Text("Hint"),
                           onPressed: learnNotifier.showHint,
-                          style: OutlinedButton.styleFrom(
+                          style: TextButton.styleFrom(
                             foregroundColor:
                                 Theme.of(context).colorScheme.secondary,
                           ),
                         ),
-                        OutlinedButton.icon(
+                        TextButton.icon(
                           icon: const Icon(Icons.skip_next),
                           label: const Text("Show & Skip"),
                           onPressed: learnNotifier.skipQuestionAndShowAnswer,
@@ -263,11 +257,11 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
                     ),
                   const SizedBox(height: 40),
                   Center(
-                    child: OutlinedButton(
+                    child: TextButton(
                       onPressed: () {
                         context.router.pop();
                       },
-                      child: const Text("Mode Selection"),
+                      child: const Text("Back to Mode Selection"),
                     ),
                   ),
                 ],

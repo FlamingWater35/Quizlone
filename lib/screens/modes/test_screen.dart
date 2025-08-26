@@ -57,62 +57,35 @@ class _TestScreenState extends ConsumerState<TestScreen> {
     TestScreenState screenState,
   ) {
     final bool isSubmitted = screenState.isSubmitted;
-    InputDecoration? inputDecoration;
+    final colorScheme = Theme.of(context).colorScheme;
+    Color? cardColor;
+    InputDecoration inputDecoration;
 
     if (isSubmitted) {
       if (question.isCorrect == true) {
+        cardColor = Colors.green.withAlpha(12);
         inputDecoration = InputDecoration(
-          border: const OutlineInputBorder(),
           enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.green.shade700, width: 2),
+            borderSide: BorderSide(color: Colors.green.shade700, width: 1.5),
           ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.green.shade700, width: 2),
-          ),
-          filled: true,
-          fillColor: Colors.green.withAlpha(15),
         );
       } else {
+        cardColor = colorScheme.errorContainer.withAlpha(24);
         inputDecoration = InputDecoration(
-          border: const OutlineInputBorder(),
           enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: Theme.of(context).colorScheme.error,
-              width: 2,
-            ),
+            borderSide: BorderSide(color: colorScheme.error, width: 1.5),
           ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: Theme.of(context).colorScheme.error,
-              width: 2,
-            ),
-          ),
-          filled: true,
-          fillColor: Theme.of(context).colorScheme.error.withAlpha(15),
         );
       }
     } else {
-      inputDecoration = const InputDecoration(border: OutlineInputBorder());
+      inputDecoration = const InputDecoration();
     }
 
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 8.0),
-      elevation: isSubmitted ? 0 : 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
-        side:
-            isSubmitted
-                ? BorderSide(
-                  color:
-                      question.isCorrect == true
-                          ? Colors.green.shade300
-                          : Theme.of(context).colorScheme.errorContainer,
-                  width: 1.5,
-                )
-                : BorderSide.none,
-      ),
+      color: cardColor,
       child: Padding(
-        padding: const EdgeInsets.all(12.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -126,13 +99,11 @@ class _TestScreenState extends ConsumerState<TestScreen> {
                 Expanded(child: Text(question.questionText)),
               ],
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 12),
             if (screenState.testFormat == TestFormat.written)
               TextField(
                 controller: _writtenAnswerControllers[index],
-                decoration: inputDecoration.copyWith(
-                  hintText: "Your answer...",
-                ),
+                decoration: inputDecoration,
                 onChanged: (value) => notifier.updateUserAnswer(index, value),
                 readOnly: isSubmitted,
               )
@@ -145,23 +116,29 @@ class _TestScreenState extends ConsumerState<TestScreen> {
                       bool isActuallyCorrect =
                           option == question.correctAnswerText;
                       Color? tileColor;
-                      TextStyle? textStyle;
+                      Color? textColor;
 
                       if (isSubmitted) {
                         if (isActuallyCorrect) {
-                          tileColor = Colors.green.withAlpha(30);
-                          textStyle = const TextStyle(
-                            fontWeight: FontWeight.bold,
-                          );
+                          tileColor = Colors.green.withAlpha(20);
+                          textColor = Colors.green.shade900;
                         } else if (isSelected && !isActuallyCorrect) {
-                          tileColor = Theme.of(
-                            context,
-                          ).colorScheme.error.withAlpha(30);
+                          tileColor = colorScheme.error.withAlpha(20);
+                          textColor = colorScheme.error;
                         }
                       }
 
                       return RadioListTile<String>(
-                        title: Text(option, style: textStyle),
+                        title: Text(
+                          option,
+                          style: TextStyle(
+                            color: textColor,
+                            fontWeight:
+                                isActuallyCorrect && isSubmitted
+                                    ? FontWeight.bold
+                                    : FontWeight.normal,
+                          ),
+                        ),
                         value: option,
                         groupValue: question.userAnswerText,
                         onChanged:
@@ -173,19 +150,29 @@ class _TestScreenState extends ConsumerState<TestScreen> {
                                   }
                                 },
                         tileColor: tileColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                         dense: true,
-                        contentPadding: EdgeInsets.zero,
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 4,
+                        ),
                       );
                     }).toList(),
               ),
             if (isSubmitted && question.isCorrect == false)
               Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: Text(
-                  "Correct: ${question.correctAnswerText}",
-                  style: TextStyle(
-                    color: Colors.green.shade800,
-                    fontWeight: FontWeight.w500,
+                padding: const EdgeInsets.only(top: 10.0),
+                child: Text.rich(
+                  TextSpan(
+                    text: "Correct Answer: ",
+                    style: TextStyle(color: Colors.green.shade800),
+                    children: [
+                      TextSpan(
+                        text: question.correctAnswerText,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -262,24 +249,29 @@ class _TestScreenState extends ConsumerState<TestScreen> {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child:
-                        state.isSubmitted
-                            ? ElevatedButton(
-                              onPressed: () {
-                                context.router.push(const ResultsRoute());
-                              },
-                              child: const Text("View Results"),
-                            )
-                            : ElevatedButton(
-                              onPressed:
-                                  state.questions.isEmpty
-                                      ? null
-                                      : () {
-                                        FocusScope.of(context).unfocus();
-                                        testNotifier.submitTest();
-                                      },
-                              child: const Text("Submit Test"),
-                            ),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child:
+                          state.isSubmitted
+                              ? ElevatedButton.icon(
+                                icon: const Icon(Icons.bar_chart),
+                                onPressed: () {
+                                  context.router.push(const ResultsRoute());
+                                },
+                                label: const Text("View Results"),
+                              )
+                              : ElevatedButton.icon(
+                                icon: const Icon(Icons.check_circle_outline),
+                                onPressed:
+                                    state.questions.isEmpty
+                                        ? null
+                                        : () {
+                                          FocusScope.of(context).unfocus();
+                                          testNotifier.submitTest();
+                                        },
+                                label: const Text("Submit Test"),
+                              ),
+                    ),
                   ),
                 ],
               ),

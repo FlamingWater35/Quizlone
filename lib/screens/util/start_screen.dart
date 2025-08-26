@@ -17,6 +17,7 @@ class StartScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final studyListsAsync = ref.watch(studyListsProvider);
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
       appBar: AppBar(title: const Text("Quizlone"), centerTitle: true),
@@ -32,12 +33,13 @@ class StartScreen extends ConsumerWidget {
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
                 const SizedBox(height: 30),
-                ElevatedButton(
+                ElevatedButton.icon(
+                  icon: const Icon(Icons.add_circle_outline),
                   onPressed: () {
                     ref.invalidate(studyListFormNotifierProvider);
                     context.router.push(const InputRoute());
                   },
-                  child: const Text("Create New List"),
+                  label: const Text("Create New List"),
                 ),
                 const SizedBox(height: 40),
                 Text(
@@ -56,84 +58,72 @@ class StartScreen extends ConsumerWidget {
                         itemBuilder: (context, index) {
                           final list = lists[index];
                           return Card(
-                            margin: const EdgeInsets.symmetric(vertical: 4),
+                            margin: const EdgeInsets.symmetric(vertical: 6),
                             child: ListTile(
-                              title: Text(list.name),
-                              subtitle: Text(
-                                "${list.terms.length} terms - Created: ${list.createdAt.toLocal().toString().substring(0, 16)}",
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 8,
                               ),
-                              trailing: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  IconButton(
-                                    icon: const Icon(Icons.play_arrow),
-                                    tooltip: "Load",
-                                    onPressed: () {
-                                      ref
-                                          .read(
-                                            activeStudyListIdProvider.notifier,
-                                          )
-                                          .set(list.name);
-                                      _log.fine(
-                                        "StartScreen: Set activeStudyListIdProvider to ${list.name}",
-                                      );
-                                      context.router.push(
-                                        const ModeSelectionRoute(),
-                                      );
-                                    },
-                                  ),
-                                  IconButton(
-                                    icon: Icon(
-                                      Icons.delete,
-                                      color:
-                                          Theme.of(context).colorScheme.error,
-                                    ),
-                                    tooltip: "Delete",
-                                    onPressed: () async {
-                                      final confirm = await showDialog<bool>(
-                                        context: context,
-                                        builder:
-                                            (ctx) => AlertDialog(
-                                              title: const Text(
-                                                "Confirm Delete",
-                                              ),
-                                              content: Text(
-                                                "Are you sure you want to delete '${list.name}'?",
-                                              ),
-                                              actions: [
-                                                TextButton(
-                                                  onPressed:
-                                                      () => Navigator.of(
-                                                        ctx,
-                                                      ).pop(false),
-                                                  child: const Text("Cancel"),
-                                                ),
-                                                TextButton(
-                                                  onPressed:
-                                                      () => Navigator.of(
-                                                        ctx,
-                                                      ).pop(true),
-                                                  child: Text(
-                                                    "Delete",
-                                                    style: TextStyle(
-                                                      color:
-                                                          Theme.of(
-                                                            context,
-                                                          ).colorScheme.error,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
+                              title: Text(
+                                list.name,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              subtitle: Text("${list.terms.length} terms"),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              onTap: () {
+                                ref
+                                    .read(activeStudyListIdProvider.notifier)
+                                    .set(list.name);
+                                context.router.push(const ModeSelectionRoute());
+                              },
+                              trailing: IconButton(
+                                icon: Icon(
+                                  Icons.delete_outline,
+                                  color: colorScheme.error,
+                                ),
+                                tooltip: "Delete",
+                                onPressed: () async {
+                                  final confirm = await showDialog<bool>(
+                                    context: context,
+                                    builder:
+                                        (ctx) => AlertDialog(
+                                          title: const Text("Confirm Delete"),
+                                          content: Text(
+                                            "Are you sure you want to delete '${list.name}'?",
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed:
+                                                  () => Navigator.of(
+                                                    ctx,
+                                                  ).pop(false),
+                                              child: const Text("Cancel"),
                                             ),
-                                      );
-                                      if (confirm == true) {
-                                        await ref
-                                            .read(databaseServiceProvider)
-                                            .deleteStudyList(list.name);
-                                      }
-                                    },
-                                  ),
-                                ],
+                                            TextButton(
+                                              onPressed:
+                                                  () => Navigator.of(
+                                                    ctx,
+                                                  ).pop(true),
+                                              child: Text(
+                                                "Delete",
+                                                style: TextStyle(
+                                                  color: colorScheme.error,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                  );
+                                  if (confirm == true) {
+                                    await ref
+                                        .read(databaseServiceProvider)
+                                        .deleteStudyList(list.name);
+                                  }
+                                },
                               ),
                             ),
                           );

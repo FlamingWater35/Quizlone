@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     MyApp._log.info("Building MyApp widget");
     final themeMode = ThemeMode.system;
-    const seedColor = Colors.greenAccent;
+    const seedColor = Colors.blueAccent;
     final appRouter = AppRouter();
 
     return MaterialApp.router(

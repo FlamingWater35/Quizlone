@@ -2,7 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
-import 'package:quizlone/routing/app_router.dart';
 
 import '../../providers/controllers/flashcard_controller.dart';
 import '../../widgets/centered_view.dart';
@@ -33,90 +32,46 @@ class _FlashcardScreenState extends ConsumerState<FlashcardScreen> {
     final bool canGoPrev = state.currentIndex > 0;
     final bool canGoNext = state.currentIndex < state.displayTerms.length - 1;
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        if (constraints.maxWidth < 550) {
-          return Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      icon: const Icon(Icons.restart_alt),
-                      label: const Text("Restart"),
-                      onPressed: notifier.restart,
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      icon: const Icon(Icons.shuffle),
-                      label: const Text("Shuffle"),
-                      onPressed: notifier.shuffleCards,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: canGoPrev ? notifier.previousCard : null,
-                      child: const Text("Previous"),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: canGoNext ? notifier.nextCard : null,
-                      child: const Text("Next"),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          );
-        } else {
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              OutlinedButton.icon(
-                icon: const Icon(Icons.restart_alt),
-                label: const Text("Restart"),
-                onPressed: notifier.restart,
-              ),
-              OutlinedButton(
-                onPressed: canGoPrev ? notifier.previousCard : null,
-                child: const Text("Previous"),
-              ),
-              OutlinedButton(
-                onPressed: canGoNext ? notifier.nextCard : null,
-                child: const Text("Next"),
-              ),
-              OutlinedButton.icon(
-                icon: const Icon(Icons.shuffle),
-                label: const Text("Shuffle"),
-                onPressed: notifier.shuffleCards,
-              ),
-            ],
-          );
-        }
-      },
-    );
-  }
-
-  Widget _buildBottomControls(BuildContext context, WidgetRef ref) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+    return Column(
       children: [
-        ElevatedButton(
-          onPressed: () {
-            context.router.push(const TestModeRoute());
-          },
-          child: const Text("Start Test"),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.shuffle),
+              tooltip: "Shuffle",
+              onPressed: notifier.shuffleCards,
+              iconSize: 28,
+            ),
+            const SizedBox(width: 40),
+            IconButton(
+              icon: const Icon(Icons.restart_alt),
+              tooltip: "Restart",
+              onPressed: notifier.restart,
+              iconSize: 28,
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: OutlinedButton.icon(
+                icon: const Icon(Icons.arrow_back),
+                label: const Text("Previous"),
+                onPressed: canGoPrev ? notifier.previousCard : null,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: ElevatedButton.icon(
+                icon: const Icon(Icons.arrow_forward),
+                label: const Text("Next"),
+                onPressed: canGoNext ? notifier.nextCard : null,
+              ),
+            ),
+          ],
         ),
       ],
     );
@@ -179,17 +134,17 @@ class _FlashcardScreenState extends ConsumerState<FlashcardScreen> {
             }
 
             return CenteredView(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    children: [
-                      Text(
-                        state.currentProgress,
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                      const SizedBox(height: 16),
-                      Center(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    Text(
+                      state.currentProgress,
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: 16),
+                    Expanded(
+                      child: Center(
                         child: AnimatedSwitcher(
                           duration: const Duration(milliseconds: 400),
                           transitionBuilder: (
@@ -235,16 +190,11 @@ class _FlashcardScreenState extends ConsumerState<FlashcardScreen> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 24),
-                      _buildNavigationControls(
-                        context,
-                        flashcardNotifier,
-                        state,
-                      ),
-                      const SizedBox(height: 24),
-                      _buildBottomControls(context, ref),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(height: 24),
+                    _buildNavigationControls(context, flashcardNotifier, state),
+                    const SizedBox(height: 16),
+                  ],
                 ),
               ),
             );

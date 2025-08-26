@@ -41,10 +41,11 @@ class _InputScreenState extends ConsumerState<InputScreen> {
   Widget build(BuildContext context) {
     final formState = ref.watch(studyListFormNotifierProvider);
     final formNotifier = ref.read(studyListFormNotifierProvider.notifier);
+    final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Enter Terms & Definitions"),
+        title: const Text("Create New List"),
         centerTitle: true,
         automaticallyImplyLeading: false,
       ),
@@ -73,18 +74,20 @@ class _InputScreenState extends ConsumerState<InputScreen> {
                   enabled: !formState.isLoading,
                 ),
                 const SizedBox(height: 24),
+                Text("Paste your terms below:", style: textTheme.titleMedium),
+                const SizedBox(height: 4),
                 Text(
-                  "Paste your terms below (Term on one line, Definition on the next):",
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                  "(Term on one line, Definition on the next)",
+                  style: textTheme.bodySmall?.copyWith(
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 12),
                 TextField(
                   controller: _termsInputController,
                   decoration: InputDecoration(
                     hintText:
-                        "EXAMPLE:\nJustice\nThe principle of moral rightness\nSun\nA star that is the center of a planetary system",
+                        "Justice\nThe principle of moral rightness\nSun\nA star that is the center of a planetary system",
                     border: const OutlineInputBorder(),
                     alignLabelWithHint: true,
                     errorText:
@@ -118,15 +121,10 @@ class _InputScreenState extends ConsumerState<InputScreen> {
                                   formNotifier.goBackToStart();
                                   context.router.pop();
                                 },
-                        style: OutlinedButton.styleFrom(
-                          side: BorderSide(
-                            color: Theme.of(context).colorScheme.outline,
-                          ),
-                        ),
                       ),
                       ElevatedButton.icon(
                         icon: const Icon(Icons.save_alt),
-                        label: const Text("Save and Continue"),
+                        label: const Text("Save List"),
                         onPressed:
                             formState.isLoading
                                 ? null

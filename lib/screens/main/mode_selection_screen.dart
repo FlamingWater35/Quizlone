@@ -77,9 +77,17 @@ class ModeSelectionScreen extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Text(
-                      "${list.terms.length} term${list.terms.length == 1 ? '' : 's'} loaded from \"${list.name}\".",
+                      list.name,
+                      style: textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      "${list.terms.length} term${list.terms.length == 1 ? '' : 's'}",
                       style: textTheme.titleMedium?.copyWith(
-                        color: colorScheme.primary,
+                        color: colorScheme.onSurfaceVariant,
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -111,7 +119,7 @@ class ModeSelectionScreen extends ConsumerWidget {
                     const SizedBox(height: 16),
 
                     _OptionGroup(
-                      title: "Study Options",
+                      title: "Learn & Test Options",
                       children: [
                         RadioListTile<StudyQuestionType>(
                           title: const Text("Show Definition, Ask for Term"),
@@ -180,13 +188,6 @@ class ModeSelectionScreen extends ConsumerWidget {
                                   textAlign: TextAlign.center,
                                 ),
                               ),
-                              const SizedBox(width: 8),
-                              const Expanded(
-                                child: Text(
-                                  "(For Learn & Test modes)",
-                                  style: TextStyle(fontSize: 12),
-                                ),
-                              ),
                             ],
                           ),
                         ),
@@ -208,7 +209,7 @@ class ModeSelectionScreen extends ConsumerWidget {
                                   .set(value!),
                         ),
                         RadioListTile<TestFormat>(
-                          title: const Text("Multiple Choice (4 options)"),
+                          title: const Text("Multiple Choice"),
                           value: TestFormat.mc,
                           groupValue: testFormat,
                           onChanged:
@@ -220,63 +221,44 @@ class ModeSelectionScreen extends ConsumerWidget {
                     ),
                     const SizedBox(height: 24),
 
-                    Wrap(
-                      alignment: WrapAlignment.center,
-                      spacing: 12.0,
-                      runSpacing: 12.0,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            context.router.push(const FlashcardRoute());
-                          },
-                          child: Text(
-                            "Flashcards",
-                            style: Theme.of(
-                              context,
-                            ).textTheme.headlineSmall?.copyWith(
-                              color: Theme.of(context).colorScheme.primary,
-                              fontWeight: FontWeight.bold,
-                            ),
+                    ...[
+                      (
+                        label: "Flashcards",
+                        icon: Icons.style,
+                        route: const FlashcardRoute(),
+                      ),
+                      (
+                        label: "Learn",
+                        icon: Icons.school,
+                        route: const LearnRoute(),
+                      ),
+                      (
+                        label: "Test",
+                        icon: Icons.quiz,
+                        route: const TestModeRoute(),
+                      ),
+                    ].map((mode) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 6.0),
+                        child: ElevatedButton.icon(
+                          icon: Icon(mode.icon),
+                          label: Text(mode.label),
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            textStyle: textTheme.titleLarge,
+                            shape: const StadiumBorder(),
                           ),
+                          onPressed: () => context.router.push(mode.route),
                         ),
-                        ElevatedButton(
-                          onPressed: () {
-                            context.router.push(const LearnRoute());
-                          },
-                          child: Text(
-                            "Learn",
-                            style: Theme.of(
-                              context,
-                            ).textTheme.headlineSmall?.copyWith(
-                              color: Theme.of(context).colorScheme.primary,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            context.router.push(const TestModeRoute());
-                          },
-                          child: Text(
-                            "Test",
-                            style: Theme.of(
-                              context,
-                            ).textTheme.headlineSmall?.copyWith(
-                              color: Theme.of(context).colorScheme.primary,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                      );
+                    }),
+
                     const SizedBox(height: 30),
 
                     Center(
-                      child: OutlinedButton(
-                        onPressed: () {
-                          context.router.pop();
-                        },
-                        child: const Text("Welcome Screen"),
+                      child: TextButton(
+                        onPressed: () => context.router.pop(),
+                        child: const Text("Back to Welcome Screen"),
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -317,12 +299,7 @@ class _OptionGroup extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.only(left: 16.0, top: 8.0, bottom: 4.0),
-              child: Text(
-                title,
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
-              ),
+              child: Text(title, style: Theme.of(context).textTheme.titleLarge),
             ),
             const Divider(),
             ...children,

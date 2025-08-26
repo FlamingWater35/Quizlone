@@ -17,6 +17,8 @@ class ResultsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final testStateAsync = ref.watch(testControllerProvider);
     final testNotifier = ref.read(testControllerProvider.notifier);
+    final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
       appBar: AppBar(
@@ -48,15 +50,30 @@ class ResultsScreen extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Text(
-                      "Your Score: $score / $total ($percentage%)",
-                      style: Theme.of(context).textTheme.headlineMedium,
+                      "Your Score",
+                      style: textTheme.titleLarge,
                       textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 24),
+                    Text(
+                      "$percentage%",
+                      style: textTheme.displayLarge?.copyWith(
+                        color: colorScheme.primary,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    Text(
+                      "$score / $total Correct",
+                      style: textTheme.titleMedium?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 32),
                     if (incorrectAnswers.isNotEmpty) ...[
                       Text(
                         "Review Incorrect Answers:",
-                        style: Theme.of(context).textTheme.titleLarge,
+                        style: textTheme.titleLarge,
                       ),
                       const SizedBox(height: 8),
                       ListView.builder(
@@ -66,45 +83,26 @@ class ResultsScreen extends ConsumerWidget {
                         itemBuilder: (context, index) {
                           final item = incorrectAnswers[index];
                           return Card(
-                            color: Theme.of(
-                              context,
-                            ).colorScheme.errorContainer.withAlpha(45),
-                            margin: const EdgeInsets.symmetric(vertical: 4.0),
+                            color: colorScheme.errorContainer.withAlpha(38),
+                            margin: const EdgeInsets.symmetric(vertical: 6.0),
                             child: Padding(
                               padding: const EdgeInsets.all(12.0),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    item.isQuestionDefinition
-                                        ? "Definition Shown:"
-                                        : "Term Shown:",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onErrorContainer
-                                          .withAlpha(210),
-                                    ),
-                                  ),
-                                  Text(
                                     item.questionText,
-                                    style: TextStyle(
-                                      color:
-                                          Theme.of(
-                                            context,
-                                          ).colorScheme.onErrorContainer,
+                                    style: textTheme.bodyLarge?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: colorScheme.onErrorContainer,
                                     ),
                                   ),
-                                  const SizedBox(height: 6),
+                                  const SizedBox(height: 8),
                                   Text(
                                     "Your Answer: ${item.userAnswerText ?? "(No answer)"}",
                                     style: TextStyle(
                                       fontStyle: FontStyle.italic,
-                                      color:
-                                          Theme.of(
-                                            context,
-                                          ).colorScheme.onErrorContainer,
+                                      color: colorScheme.onErrorContainer,
                                     ),
                                   ),
                                   const SizedBox(height: 4),
@@ -125,7 +123,7 @@ class ResultsScreen extends ConsumerWidget {
                     ] else if (total > 0) ...[
                       Text(
                         "Congratulations! You got everything right!",
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        style: textTheme.titleLarge?.copyWith(
                           color: Colors.green.shade700,
                         ),
                         textAlign: TextAlign.center,
@@ -133,42 +131,37 @@ class ResultsScreen extends ConsumerWidget {
                       const SizedBox(height: 24),
                     ],
 
-                    Wrap(
-                      alignment: WrapAlignment.center,
-                      spacing: 12.0,
-                      runSpacing: 12.0,
-                      children: [
-                        OutlinedButton(
-                          onPressed: () {
-                            context.router.popUntilRouteWithName(
-                              StartRoute.name,
-                            );
-                          },
-                          child: const Text("Welcome Screen"),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            ref.invalidate(flashcardControllerProvider);
-                            context.router.replace(const FlashcardRoute());
-                          },
-                          child: const Text("Review Flashcards"),
-                        ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                Theme.of(context).colorScheme.secondary,
-                            foregroundColor:
-                                Theme.of(context).colorScheme.onSecondary,
-                          ),
-                          onPressed: () async {
-                            await testNotifier.restartTest();
-                            if (context.mounted) {
-                              context.router.replace(const TestModeRoute());
-                            }
-                          },
-                          child: const Text("Retry Test"),
-                        ),
-                      ],
+                    ElevatedButton.icon(
+                      icon: const Icon(Icons.restart_alt),
+                      label: const Text("Retry Test"),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: colorScheme.primary,
+                        foregroundColor: colorScheme.onPrimary,
+                      ),
+                      onPressed: () async {
+                        await testNotifier.restartTest();
+                        if (context.mounted) {
+                          context.router.replace(const TestModeRoute());
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 12),
+                    OutlinedButton.icon(
+                      icon: const Icon(Icons.style_outlined),
+                      label: const Text("Review with Flashcards"),
+                      onPressed: () {
+                        ref.invalidate(flashcardControllerProvider);
+                        context.router.replace(const FlashcardRoute());
+                      },
+                    ),
+                    const SizedBox(height: 24),
+                    Center(
+                      child: TextButton(
+                        onPressed: () {
+                          context.router.popUntilRouteWithName(StartRoute.name);
+                        },
+                        child: const Text("Back to Welcome Screen"),
+                      ),
                     ),
                   ],
                 ),
@@ -188,9 +181,7 @@ class ResultsScreen extends ConsumerWidget {
                   padding: const EdgeInsets.all(16.0),
                   child: Text(
                     "Error displaying results: $err",
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.error,
-                    ),
+                    style: TextStyle(color: colorScheme.error),
                   ),
                 ),
               ),
