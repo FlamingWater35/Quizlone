@@ -252,7 +252,7 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
                                 ),
                                 OutlinedButton.icon(
                                   icon: const Icon(Icons.skip_next),
-                                  label: const Text("Show & Skip"),
+                                  label: const Text("Skip"),
                                   onPressed:
                                       learnNotifier.skipQuestionAndShowAnswer,
                                 ),
