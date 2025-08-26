@@ -1,17 +1,9 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 
 import '../models/enums/enums.dart';
 import '../models/term.dart';
 
 class FlashcardWidget extends StatefulWidget {
-  final Term term;
-  final bool isFlipped;
-  final VoidCallback onTap;
-  final FlashcardStartSide startSide;
-  final double height;
-
   const FlashcardWidget({
     super.key,
     required this.term,
@@ -21,6 +13,12 @@ class FlashcardWidget extends StatefulWidget {
     this.height = 250.0,
   });
 
+  final double height;
+  final bool isFlipped;
+  final VoidCallback onTap;
+  final FlashcardStartSide startSide;
+  final Term term;
+
   @override
   State<FlashcardWidget> createState() => _FlashcardWidgetState();
 }
@@ -28,22 +26,8 @@ class FlashcardWidget extends StatefulWidget {
 class _FlashcardWidgetState extends State<FlashcardWidget>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
-  late Animation<double> _animation;
-
-  @override
-  void initState() {
-    super.initState();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 400),
-    );
-    _animation =
-        Tween<double>(begin: 0, end: 1).animate(_animationController)
-          ..addListener(() {
-            setState(() {});
-          })
-          ..addStatusListener((status) {});
-  }
+  late Animation<double> _backScaleAnimation;
+  late Animation<double> _frontScaleAnimation;
 
   @override
   void didUpdateWidget(covariant FlashcardWidget oldWidget) {
@@ -69,51 +53,24 @@ class _FlashcardWidgetState extends State<FlashcardWidget>
   }
 
   @override
-  Widget build(BuildContext context) {
-    final angle = _animation.value * pi;
-    final transform =
-        Matrix4.identity()
-          ..setEntry(3, 2, 0.001)
-          ..rotateX(angle);
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 400),
+    );
 
-    final String frontText =
-        widget.startSide == FlashcardStartSide.term
-            ? widget.term.termText
-            : widget.term.definitionText;
-    final String backText =
-        widget.startSide == FlashcardStartSide.term
-            ? widget.term.definitionText
-            : widget.term.termText;
+    _frontScaleAnimation = Tween<double>(begin: 1.0, end: 0.7).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: const Interval(0.0, 0.5, curve: Curves.easeIn),
+      ),
+    );
 
-    Widget cardFaceToShow;
-    if (_animationController.value < 0.5) {
-      cardFaceToShow = _buildCardFace(
-        frontText,
-        Theme.of(context).colorScheme.primaryContainer,
-        true,
-      );
-    } else {
-      cardFaceToShow = Transform(
-        alignment: Alignment.center,
-        transform: Matrix4.identity()..rotateX(pi),
-        child: _buildCardFace(
-          backText,
-          Theme.of(context).colorScheme.secondaryContainer,
-          false,
-        ),
-      );
-    }
-
-    return GestureDetector(
-      onTap: widget.onTap,
-      child: Transform(
-        transform: transform,
-        alignment: Alignment.center,
-        child: SizedBox(
-          height: widget.height,
-          width: double.infinity,
-          child: cardFaceToShow,
-        ),
+    _backScaleAnimation = Tween<double>(begin: 0.7, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: const Interval(0.5, 1.0, curve: Curves.easeOut),
       ),
     );
   }
@@ -136,6 +93,49 @@ class _FlashcardWidgetState extends State<FlashcardWidget>
                       : Theme.of(context).colorScheme.onSecondaryContainer,
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final String frontText =
+        widget.startSide == FlashcardStartSide.term
+            ? widget.term.termText
+            : widget.term.definitionText;
+    final String backText =
+        widget.startSide == FlashcardStartSide.term
+            ? widget.term.definitionText
+            : widget.term.termText;
+
+    return GestureDetector(
+      onTap: widget.onTap,
+      child: SizedBox(
+        height: widget.height,
+        width: double.infinity,
+        child: AnimatedBuilder(
+          animation: _animationController,
+          builder: (context, child) {
+            final isFrontVisible = _animationController.value < 0.5;
+            final scale =
+                isFrontVisible
+                    ? _frontScaleAnimation.value
+                    : _backScaleAnimation.value;
+            final text = isFrontVisible ? frontText : backText;
+            final isFrontCard = isFrontVisible;
+
+            return Transform.scale(
+              scale: scale,
+              child: _buildCardFace(
+                text,
+                isFrontCard
+                    ? Theme.of(context).colorScheme.primaryContainer
+                    : Theme.of(context).colorScheme.secondaryContainer,
+                isFrontCard,
+              ),
+            );
+          },
         ),
       ),
     );
