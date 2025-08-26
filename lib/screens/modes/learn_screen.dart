@@ -239,16 +239,19 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        TextButton.icon(
+                        OutlinedButton.icon(
                           icon: const Icon(Icons.lightbulb_outline),
                           label: const Text("Hint"),
                           onPressed: learnNotifier.showHint,
-                          style: TextButton.styleFrom(
+                          style: OutlinedButton.styleFrom(
                             foregroundColor:
                                 Theme.of(context).colorScheme.secondary,
+                            side: BorderSide(
+                              color: Theme.of(context).colorScheme.secondary,
+                            ),
                           ),
                         ),
-                        TextButton.icon(
+                        OutlinedButton.icon(
                           icon: const Icon(Icons.skip_next),
                           label: const Text("Show & Skip"),
                           onPressed: learnNotifier.skipQuestionAndShowAnswer,

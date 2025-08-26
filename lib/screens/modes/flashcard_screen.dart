@@ -17,6 +17,7 @@ class FlashcardScreen extends ConsumerStatefulWidget {
 
 class _FlashcardScreenState extends ConsumerState<FlashcardScreen> {
   static final _log = Logger("FlashcardScreen");
+
   var _slideFromRight = true;
 
   @override
@@ -35,25 +36,6 @@ class _FlashcardScreenState extends ConsumerState<FlashcardScreen> {
     return Column(
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            IconButton(
-              icon: const Icon(Icons.shuffle),
-              tooltip: "Shuffle",
-              onPressed: notifier.shuffleCards,
-              iconSize: 28,
-            ),
-            const SizedBox(width: 40),
-            IconButton(
-              icon: const Icon(Icons.restart_alt),
-              tooltip: "Restart",
-              onPressed: notifier.restart,
-              iconSize: 28,
-            ),
-          ],
-        ),
-        const SizedBox(height: 16),
-        Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
@@ -70,6 +52,25 @@ class _FlashcardScreenState extends ConsumerState<FlashcardScreen> {
                 label: const Text("Next"),
                 onPressed: canGoNext ? notifier.nextCard : null,
               ),
+            ),
+          ],
+        ),
+        const Divider(height: 24),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.shuffle),
+              tooltip: "Shuffle",
+              onPressed: notifier.shuffleCards,
+              iconSize: 28,
+            ),
+            const SizedBox(width: 40),
+            IconButton(
+              icon: const Icon(Icons.restart_alt),
+              tooltip: "Restart",
+              onPressed: notifier.restart,
+              iconSize: 28,
             ),
           ],
         ),
@@ -134,7 +135,7 @@ class _FlashcardScreenState extends ConsumerState<FlashcardScreen> {
             }
 
             return CenteredView(
-              child: Padding(
+              child: SingleChildScrollView(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   children: [
@@ -143,57 +144,65 @@ class _FlashcardScreenState extends ConsumerState<FlashcardScreen> {
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
                     const SizedBox(height: 16),
-                    Expanded(
-                      child: Center(
-                        child: AnimatedSwitcher(
-                          duration: const Duration(milliseconds: 400),
-                          transitionBuilder: (
-                            Widget child,
-                            Animation<double> animation,
-                          ) {
-                            final curvedAnimation = CurvedAnimation(
-                              parent: animation,
-                              curve: Curves.easeInOut,
-                            );
+                    Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          children: [
+                            AnimatedSwitcher(
+                              duration: const Duration(milliseconds: 400),
+                              transitionBuilder: (
+                                Widget child,
+                                Animation<double> animation,
+                              ) {
+                                final curvedAnimation = CurvedAnimation(
+                                  parent: animation,
+                                  curve: Curves.easeInOut,
+                                );
 
-                            final offsetAnimation = Tween<Offset>(
-                              begin:
-                                  _slideFromRight
-                                      ? const Offset(1.0, 0.0)
-                                      : const Offset(-1.0, 0.0),
-                              end: Offset.zero,
-                            ).animate(curvedAnimation);
+                                final offsetAnimation = Tween<Offset>(
+                                  begin:
+                                      _slideFromRight
+                                          ? const Offset(1.0, 0.0)
+                                          : const Offset(-1.0, 0.0),
+                                  end: Offset.zero,
+                                ).animate(curvedAnimation);
 
-                            final scaleAnimation = Tween<double>(
-                              begin: 0.8,
-                              end: 1.0,
-                            ).animate(curvedAnimation);
+                                final scaleAnimation = Tween<double>(
+                                  begin: 0.8,
+                                  end: 1.0,
+                                ).animate(curvedAnimation);
 
-                            return FadeTransition(
-                              opacity: curvedAnimation,
-                              child: ScaleTransition(
-                                scale: scaleAnimation,
-                                child: SlideTransition(
-                                  position: offsetAnimation,
-                                  child: child,
-                                ),
+                                return FadeTransition(
+                                  opacity: curvedAnimation,
+                                  child: ScaleTransition(
+                                    scale: scaleAnimation,
+                                    child: SlideTransition(
+                                      position: offsetAnimation,
+                                      child: child,
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: FlashcardWidget(
+                                key: ValueKey(state.currentIndex),
+                                term: state.currentCard!,
+                                isFlipped: state.isFlipped,
+                                onTap: flashcardNotifier.flipCard,
+                                startSide: state.startSide,
+                                height: 300,
                               ),
-                            );
-                          },
-                          child: FlashcardWidget(
-                            key: ValueKey(state.currentIndex),
-                            term: state.currentCard!,
-                            isFlipped: state.isFlipped,
-                            onTap: flashcardNotifier.flipCard,
-                            startSide: state.startSide,
-                            height: 300,
-                          ),
+                            ),
+                            const SizedBox(height: 24),
+                            _buildNavigationControls(
+                              context,
+                              flashcardNotifier,
+                              state,
+                            ),
+                          ],
                         ),
                       ),
                     ),
-                    const SizedBox(height: 24),
-                    _buildNavigationControls(context, flashcardNotifier, state),
-                    const SizedBox(height: 16),
                   ],
                 ),
               ),

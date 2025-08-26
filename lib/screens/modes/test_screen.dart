@@ -68,11 +68,17 @@ class _TestScreenState extends ConsumerState<TestScreen> {
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(color: Colors.green.shade700, width: 1.5),
           ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.green.shade700, width: 1.5),
+          ),
         );
       } else {
         cardColor = colorScheme.errorContainer.withAlpha(24);
         inputDecoration = InputDecoration(
           enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: colorScheme.error, width: 1.5),
+          ),
+          focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(color: colorScheme.error, width: 1.5),
           ),
         );
