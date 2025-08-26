@@ -18,19 +18,6 @@ class StartScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final studyListsAsync = ref.watch(studyListsProvider);
 
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final route = ModalRoute.of(context);
-      if (context.mounted && route != null && route.isCurrent) {
-        await Future.delayed(Duration.zero);
-        if (ref.read(activeStudyListIdProvider) != null) {
-          _log.fine(
-            "StartScreen: Clearing activeStudyListIdProvider as it's the current route.",
-          );
-          ref.read(activeStudyListIdProvider.notifier).set(null);
-        }
-      }
-    });
-
     return Scaffold(
       appBar: AppBar(title: const Text("Quizlone"), centerTitle: true),
       body: SafeArea(
