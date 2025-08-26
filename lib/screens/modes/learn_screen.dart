@@ -27,14 +27,6 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
   void initState() {
     super.initState();
     _answerController = TextEditingController();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
-        _log.fine(
-          "[LearnScreen] initState: Invalidating LearnController to start session.",
-        );
-        ref.invalidate(learnControllerProvider);
-      }
-    });
   }
 
   void _onSubmit(LearnController notifier) {

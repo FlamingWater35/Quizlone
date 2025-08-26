@@ -31,14 +31,6 @@ class _TestScreenState extends ConsumerState<TestScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
-        _log.fine(
-          "[TestScreen] initState: invalidating TestController to get fresh questions.",
-        );
-        ref.invalidate(testControllerProvider);
-      }
-    });
   }
 
   void _initializeControllers(List<TestQuestion> questions) {

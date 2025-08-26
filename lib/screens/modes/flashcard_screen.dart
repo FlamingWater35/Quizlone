@@ -21,12 +21,6 @@ class _FlashcardScreenState extends ConsumerState<FlashcardScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
-        _log.fine("[FlashcardScreen] initState: Triggering refreshWithOptions");
-        ref.read(flashcardControllerProvider.notifier).refreshWithOptions();
-      }
-    });
   }
 
   Widget _buildNavigationControls(
