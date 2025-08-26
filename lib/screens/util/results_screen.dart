@@ -144,7 +144,7 @@ class ResultsScreen extends ConsumerWidget {
                               StartRoute.name,
                             );
                           },
-                          child: const Text("Start Screen"),
+                          child: const Text("Welcome Screen"),
                         ),
                         ElevatedButton(
                           onPressed: () {

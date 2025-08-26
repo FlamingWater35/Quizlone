@@ -267,7 +267,7 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
                       onPressed: () {
                         context.router.pop();
                       },
-                      child: const Text("Return to options screen"),
+                      child: const Text("Study Options"),
                     ),
                   ),
                 ],

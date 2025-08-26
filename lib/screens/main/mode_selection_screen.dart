@@ -276,7 +276,7 @@ class ModeSelectionScreen extends ConsumerWidget {
                         onPressed: () {
                           context.router.pop();
                         },
-                        child: const Text("Return to welcome screen"),
+                        child: const Text("Welcome Screen"),
                       ),
                     ),
                     const SizedBox(height: 20),
