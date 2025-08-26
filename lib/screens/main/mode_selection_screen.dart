@@ -1,16 +1,18 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
+import 'package:quizlone/routing/app_router.dart';
 
 import '../../models/enums/enums.dart';
 import '../../models/study_list.dart';
-import '../../providers/core/navigation_provider.dart';
 import '../../providers/study/study_list_providers.dart';
 import '../../providers/study/study_options_provider.dart';
 
 final _log = Logger("ModeSelectionScreen");
 
+@RoutePage()
 class ModeSelectionScreen extends ConsumerWidget {
   const ModeSelectionScreen({super.key});
 
@@ -30,10 +32,7 @@ class ModeSelectionScreen extends ConsumerWidget {
     final testFormat = ref.watch(testQuestionFormatProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Options & Mode"),
-        automaticallyImplyLeading: false,
-      ),
+      appBar: AppBar(title: const Text("Options & Mode")),
       body: SafeArea(
         child: activeStudyListAsync.when(
           data: (StudyList? list) {
@@ -51,9 +50,7 @@ class ModeSelectionScreen extends ConsumerWidget {
                     ElevatedButton(
                       onPressed: () {
                         ref.read(activeStudyListIdProvider.notifier).set(null);
-                        ref
-                            .read(currentScreenProvider.notifier)
-                            .goTo(AppScreen.start);
+                        context.router.replace(const StartRoute());
                       },
                       child: const Text("Go to Start Screen"),
                     ),
@@ -217,25 +214,19 @@ class ModeSelectionScreen extends ConsumerWidget {
                     children: [
                       ElevatedButton(
                         onPressed: () {
-                          ref
-                              .read(currentScreenProvider.notifier)
-                              .goTo(AppScreen.flashcards);
+                          context.router.push(const FlashcardRoute());
                         },
                         child: const Text("Flashcards"),
                       ),
                       ElevatedButton(
                         onPressed: () {
-                          ref
-                              .read(currentScreenProvider.notifier)
-                              .goTo(AppScreen.learn);
+                          context.router.push(const LearnRoute());
                         },
                         child: const Text("Learn"),
                       ),
                       ElevatedButton(
                         onPressed: () {
-                          ref
-                              .read(currentScreenProvider.notifier)
-                              .goTo(AppScreen.test);
+                          context.router.push(const TestModeRoute());
                         },
                         child: const Text("Test"),
                       ),
@@ -246,9 +237,7 @@ class ModeSelectionScreen extends ConsumerWidget {
                   Center(
                     child: OutlinedButton(
                       onPressed: () {
-                        ref
-                            .read(currentScreenProvider.notifier)
-                            .goTo(AppScreen.start);
+                        context.router.pop();
                       },
                       child: const Text("Change List / Go to Start"),
                     ),

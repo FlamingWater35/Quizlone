@@ -1,8 +1,11 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quizlone/routing/app_router.dart';
 
 import '../../providers/study/study_list_providers.dart';
 
+@RoutePage()
 class InputScreen extends ConsumerStatefulWidget {
   const InputScreen({super.key});
 
@@ -108,7 +111,10 @@ class _InputScreenState extends ConsumerState<InputScreen> {
                       onPressed:
                           formState.isLoading
                               ? null
-                              : formNotifier.goBackToStart,
+                              : () {
+                                formNotifier.goBackToStart();
+                                context.router.pop();
+                              },
                       style: OutlinedButton.styleFrom(
                         side: BorderSide(
                           color: Theme.of(context).colorScheme.outline,
@@ -121,9 +127,15 @@ class _InputScreenState extends ConsumerState<InputScreen> {
                       onPressed:
                           formState.isLoading
                               ? null
-                              : () {
+                              : () async {
                                 FocusScope.of(context).unfocus();
-                                formNotifier.saveListAndContinue();
+                                final success =
+                                    await formNotifier.saveListAndContinue();
+                                if (success && context.mounted) {
+                                  context.router.replace(
+                                    const ModeSelectionRoute(),
+                                  );
+                                }
                               },
                     ),
                   ],

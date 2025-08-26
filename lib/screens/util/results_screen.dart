@@ -1,11 +1,13 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
+import 'package:quizlone/routing/app_router.dart';
 
 import '../../providers/controllers/flashcard_controller.dart';
 import '../../providers/controllers/test_controller.dart';
-import '../../providers/core/navigation_provider.dart';
 
+@RoutePage()
 class ResultsScreen extends ConsumerWidget {
   const ResultsScreen({super.key});
   static final _log = Logger("ResultScreen");
@@ -17,7 +19,7 @@ class ResultsScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("7. Test Results"),
+        title: const Text("Test Results"),
         automaticallyImplyLeading: false,
       ),
       body: SafeArea(
@@ -135,18 +137,14 @@ class ResultsScreen extends ConsumerWidget {
                     children: [
                       OutlinedButton(
                         onPressed: () {
-                          ref
-                              .read(currentScreenProvider.notifier)
-                              .goTo(AppScreen.start);
+                          context.router.popUntilRouteWithName(StartRoute.name);
                         },
                         child: const Text("Start Screen"),
                       ),
                       ElevatedButton(
                         onPressed: () {
                           ref.invalidate(flashcardControllerProvider);
-                          ref
-                              .read(currentScreenProvider.notifier)
-                              .goTo(AppScreen.flashcards);
+                          context.router.replace(const FlashcardRoute());
                         },
                         child: const Text("Review Flashcards"),
                       ),
@@ -157,12 +155,11 @@ class ResultsScreen extends ConsumerWidget {
                           foregroundColor:
                               Theme.of(context).colorScheme.onSecondary,
                         ),
-                        onPressed: () {
-                          testNotifier.restartTest().then((_) {
-                            ref
-                                .read(currentScreenProvider.notifier)
-                                .goTo(AppScreen.test);
-                          });
+                        onPressed: () async {
+                          await testNotifier.restartTest();
+                          if (context.mounted) {
+                            context.router.replace(const TestModeRoute());
+                          }
                         },
                         child: const Text("Retry Test"),
                       ),

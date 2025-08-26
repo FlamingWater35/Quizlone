@@ -58,7 +58,7 @@ final activeStudyListIdProvider =
 
 typedef _$ActiveStudyListId = Notifier<String?>;
 String _$studyListFormNotifierHash() =>
-    r'b7010c252c524314b4ed722bd132e404ab1ec329';
+    r'90364538f72f7ba7c5f68caa80d5e4f40558f321';
 
 /// See also [StudyListFormNotifier].
 @ProviderFor(StudyListFormNotifier)

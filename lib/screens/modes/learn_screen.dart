@@ -1,10 +1,11 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 
 import '../../providers/controllers/learn_controller.dart';
-import '../../providers/core/navigation_provider.dart';
 
+@RoutePage()
 class LearnScreen extends ConsumerStatefulWidget {
   const LearnScreen({super.key});
 
@@ -65,10 +66,7 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
             ),
             const SizedBox(height: 12),
             OutlinedButton(
-              onPressed:
-                  () => ref
-                      .read(currentScreenProvider.notifier)
-                      .goTo(AppScreen.modeSelection),
+              onPressed: () => context.router.pop(),
               child: const Text("Back to Options"),
             ),
           ],
@@ -120,9 +118,7 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            ref
-                .read(currentScreenProvider.notifier)
-                .goTo(AppScreen.modeSelection);
+            context.router.pop();
           },
         ),
       ),
@@ -269,9 +265,7 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
                 const SizedBox(height: 40),
                 OutlinedButton(
                   onPressed: () {
-                    ref
-                        .read(currentScreenProvider.notifier)
-                        .goTo(AppScreen.modeSelection);
+                    context.router.pop();
                   },
                   child: const Text("Change Mode / Options"),
                 ),

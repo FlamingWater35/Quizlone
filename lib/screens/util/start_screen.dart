@@ -1,13 +1,15 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
+import 'package:quizlone/routing/app_router.dart';
 
 import '../../providers/core/core_providers.dart';
-import '../../providers/core/navigation_provider.dart';
 import '../../providers/study/study_list_providers.dart';
 
 final _log = Logger("StartScreen");
 
+@RoutePage()
 class StartScreen extends ConsumerWidget {
   const StartScreen({super.key});
 
@@ -44,9 +46,7 @@ class StartScreen extends ConsumerWidget {
                 ElevatedButton(
                   onPressed: () {
                     ref.invalidate(studyListFormNotifierProvider);
-                    ref
-                        .read(currentScreenProvider.notifier)
-                        .goTo(AppScreen.input);
+                    context.router.push(const InputRoute());
                   },
                   child: const Text("Create New List"),
                 ),
@@ -88,9 +88,9 @@ class StartScreen extends ConsumerWidget {
                                       _log.fine(
                                         "StartScreen: Set activeStudyListIdProvider to ${list.name}",
                                       );
-                                      ref
-                                          .read(currentScreenProvider.notifier)
-                                          .goTo(AppScreen.modeSelection);
+                                      context.router.push(
+                                        const ModeSelectionRoute(),
+                                      );
                                     },
                                   ),
                                   IconButton(

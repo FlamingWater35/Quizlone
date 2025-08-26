@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
+import 'package:quizlone/routing/app_router.dart';
 
-import 'screens/main/main_screen.dart';
 import 'services/database_service.dart';
 import 'services/window_manager.dart';
 
@@ -40,8 +40,9 @@ class MyApp extends StatelessWidget {
     MyApp._log.info("Building MyApp widget");
     final themeMode = ThemeMode.system;
     const seedColor = Colors.greenAccent;
+    final appRouter = AppRouter();
 
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'Quizlone',
 
       theme: ThemeData(
@@ -62,7 +63,7 @@ class MyApp extends StatelessWidget {
 
       themeMode: themeMode,
       debugShowCheckedModeBanner: false,
-      home: const MainScreen(),
+      routerConfig: appRouter.config(),
     );
   }
 }

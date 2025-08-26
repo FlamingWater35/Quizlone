@@ -1,11 +1,13 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
+import 'package:quizlone/routing/app_router.dart';
 
 import '../../models/enums/enums.dart';
 import '../../providers/controllers/test_controller.dart';
-import '../../providers/core/navigation_provider.dart';
 
+@RoutePage(name: "TestModeRoute")
 class TestScreen extends ConsumerStatefulWidget {
   const TestScreen({super.key});
 
@@ -211,9 +213,7 @@ class _TestScreenState extends ConsumerState<TestScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            ref
-                .read(currentScreenProvider.notifier)
-                .goTo(AppScreen.modeSelection);
+            context.router.pop();
           },
         ),
       ),
@@ -267,9 +267,7 @@ class _TestScreenState extends ConsumerState<TestScreen> {
                       state.isSubmitted
                           ? ElevatedButton(
                             onPressed: () {
-                              ref
-                                  .read(currentScreenProvider.notifier)
-                                  .goTo(AppScreen.results);
+                              context.router.push(const ResultsRoute());
                             },
                             child: const Text("View Results"),
                           )

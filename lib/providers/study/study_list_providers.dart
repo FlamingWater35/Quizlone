@@ -5,7 +5,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '/providers/core/core_providers.dart';
 import '../../models/study_list.dart';
 import '../../models/term.dart';
-import '../core/navigation_provider.dart';
 import '../immutables/study_list_form_state.dart';
 
 part 'study_list_providers.g.dart';
@@ -58,12 +57,12 @@ class StudyListFormNotifier extends _$StudyListFormNotifier {
     state = state.copyWith(rawTermsInput: terms, clearError: true);
   }
 
-  Future<void> saveListAndContinue() async {
+  Future<bool> saveListAndContinue() async {
     state = state.copyWith(isLoading: true);
 
     if (!_parseAndValidateTerms()) {
       state = state.copyWith(isLoading: false);
-      return;
+      return false;
     }
 
     final dbService = ref.read(databaseServiceProvider);
@@ -77,20 +76,20 @@ class StudyListFormNotifier extends _$StudyListFormNotifier {
       _log.fine(
         "StudyListFormNotifier: Set activeStudyListIdProvider to $savedKey",
       );
-      ref.read(currentScreenProvider.notifier).goTo(AppScreen.modeSelection);
       state = state.copyWith(isLoading: false, clearError: true);
+      return true;
     } catch (e, s) {
       state = state.copyWith(
         errorMessage: "Failed to save list: $e",
         isLoading: false,
       );
       _log.severe("Error saving list", e, s);
+      return false;
     }
   }
 
   void goBackToStart() {
     ref.invalidateSelf();
-    ref.read(currentScreenProvider.notifier).goTo(AppScreen.start);
   }
 
   bool _parseAndValidateTerms() {

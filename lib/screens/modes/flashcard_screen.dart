@@ -1,11 +1,13 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
+import 'package:quizlone/routing/app_router.dart';
 
 import '../../providers/controllers/flashcard_controller.dart';
-import '../../providers/core/navigation_provider.dart';
 import '../../widgets/flashcard_widget.dart';
 
+@RoutePage()
 class FlashcardScreen extends ConsumerStatefulWidget {
   const FlashcardScreen({super.key});
 
@@ -116,7 +118,7 @@ class _FlashcardScreenState extends ConsumerState<FlashcardScreen> {
       children: [
         ElevatedButton(
           onPressed: () {
-            ref.read(currentScreenProvider.notifier).goTo(AppScreen.test);
+            context.router.push(const TestModeRoute());
           },
           child: const Text("Start Test"),
         ),
@@ -135,9 +137,7 @@ class _FlashcardScreenState extends ConsumerState<FlashcardScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            ref
-                .read(currentScreenProvider.notifier)
-                .goTo(AppScreen.modeSelection);
+            context.router.pop();
           },
         ),
       ),
