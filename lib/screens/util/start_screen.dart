@@ -19,11 +19,12 @@ class StartScreen extends ConsumerWidget {
     final studyListsAsync = ref.watch(studyListsProvider);
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      if (context.mounted) {
+      final route = ModalRoute.of(context);
+      if (context.mounted && route != null && route.isCurrent) {
         await Future.delayed(Duration.zero);
         if (ref.read(activeStudyListIdProvider) != null) {
           _log.fine(
-            "StartScreen: Clearing activeStudyListIdProvider as it's not null on screen display.",
+            "StartScreen: Clearing activeStudyListIdProvider as it's the current route.",
           );
           ref.read(activeStudyListIdProvider.notifier).set(null);
         }
