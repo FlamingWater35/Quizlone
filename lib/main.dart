@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
+import 'package:quizlone/providers/core/settings_provider.dart';
 import 'package:quizlone/routing/app_router.dart';
 
 import 'services/database_service.dart';
@@ -30,15 +31,15 @@ void _setupLogging() {
   });
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   static final _log = Logger('MyApp');
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     MyApp._log.info("Building MyApp widget");
-    final themeMode = ThemeMode.system;
+    final themeMode = ref.watch(appThemeProvider);
     const seedColor = Colors.blueAccent;
     final appRouter = AppRouter();
 

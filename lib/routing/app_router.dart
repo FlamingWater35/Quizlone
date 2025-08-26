@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 
 import '../screens/main/mode_selection_screen.dart';
+import '../screens/main/settings_screen.dart';
 import '../screens/modes/flashcard_screen.dart';
 import '../screens/modes/learn_screen.dart';
 import '../screens/modes/test_screen.dart';
@@ -21,5 +22,6 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: LearnRoute.page),
     AutoRoute(page: TestModeRoute.page),
     AutoRoute(page: ResultsRoute.page),
+    AutoRoute(page: SettingsRoute.page),
   ];
 }

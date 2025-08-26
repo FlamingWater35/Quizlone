@@ -1,5 +1,8 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+
+import '../routing/app_router.dart';
 
 class AppDrawer extends StatefulWidget {
   const AppDrawer({super.key});
@@ -66,6 +69,18 @@ class _AppDrawerState extends State<AppDrawer> {
               ),
             ),
           ),
+          ListTile(
+            leading: const Icon(Icons.settings_outlined),
+            title: const Text('Settings'),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            onTap: () {
+              Navigator.pop(context);
+              context.router.push(const SettingsRoute());
+            },
+          ),
+          const Divider(indent: 16, endIndent: 16),
           ListTile(
             leading: const Icon(Icons.info_outline),
             title: const Text('About'),

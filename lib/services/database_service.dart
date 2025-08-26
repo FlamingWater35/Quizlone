@@ -4,10 +4,12 @@ import '../models/study_list.dart';
 import '../models/term.dart';
 
 class DatabaseService {
-  static const String _studyListBoxName = 'studyListsBox';
-  static late Box<StudyList> _studyListBox;
-
   DatabaseService();
+
+  static late Box _settingsBox;
+  static const String _settingsBoxName = 'settingsBox';
+  static late Box<StudyList> _studyListBox;
+  static const String _studyListBoxName = 'studyListsBox';
 
   static Future<void> init() async {
     await Hive.initFlutter('Quizlone');
@@ -16,9 +18,8 @@ class DatabaseService {
     Hive.registerAdapter(StudyListAdapter());
 
     _studyListBox = await Hive.openBox<StudyList>(_studyListBoxName);
+    _settingsBox = await Hive.openBox(_settingsBoxName);
   }
-
-  Box<StudyList> get _box => _studyListBox;
 
   Future<String> saveStudyList(StudyList list) async {
     await _box.put(list.name, list);
@@ -60,4 +61,15 @@ class DatabaseService {
     }
     return false;
   }
+
+  // Methods for settings
+  Future<void> saveTheme(String themeName) async {
+    await _settingsBox.put('theme', themeName);
+  }
+
+  String getTheme() {
+    return _settingsBox.get('theme', defaultValue: 'system');
+  }
+
+  Box<StudyList> get _box => _studyListBox;
 }
