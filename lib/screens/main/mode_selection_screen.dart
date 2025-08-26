@@ -31,6 +31,9 @@ class ModeSelectionScreen extends ConsumerWidget {
     final studyAskWith = ref.watch(studyAskWithProvider);
     final studyLength = ref.watch(studyLengthProvider);
     final testFormat = ref.watch(testQuestionFormatProvider);
+    final roundedShape = RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(12),
+    );
 
     return Scaffold(
       appBar: AppBar(title: const Text("Options & Mode"), centerTitle: true),
@@ -97,6 +100,7 @@ class ModeSelectionScreen extends ConsumerWidget {
                       title: "Flashcard Options",
                       children: [
                         RadioListTile<FlashcardStartSide>(
+                          shape: roundedShape,
                           title: const Text("Show Term First"),
                           value: FlashcardStartSide.term,
                           groupValue: fcStartWith,
@@ -106,6 +110,7 @@ class ModeSelectionScreen extends ConsumerWidget {
                                   .set(value!),
                         ),
                         RadioListTile<FlashcardStartSide>(
+                          shape: roundedShape,
                           title: const Text("Show Definition First"),
                           value: FlashcardStartSide.definition,
                           groupValue: fcStartWith,
@@ -122,6 +127,7 @@ class ModeSelectionScreen extends ConsumerWidget {
                       title: "Learn & Test Options",
                       children: [
                         RadioListTile<StudyQuestionType>(
+                          shape: roundedShape,
                           title: const Text("Show Definition, Ask for Term"),
                           value: StudyQuestionType.definition,
                           groupValue: studyAskWith,
@@ -131,6 +137,7 @@ class ModeSelectionScreen extends ConsumerWidget {
                                   .set(value!),
                         ),
                         RadioListTile<StudyQuestionType>(
+                          shape: roundedShape,
                           title: const Text("Show Term, Ask for Definition"),
                           value: StudyQuestionType.term,
                           groupValue: studyAskWith,
@@ -199,7 +206,9 @@ class ModeSelectionScreen extends ConsumerWidget {
                             style: textTheme.titleSmall,
                           ),
                         ),
+                        const SizedBox(height: 4),
                         RadioListTile<TestFormat>(
+                          shape: roundedShape,
                           title: const Text("Written Answer"),
                           value: TestFormat.written,
                           groupValue: testFormat,
@@ -209,6 +218,7 @@ class ModeSelectionScreen extends ConsumerWidget {
                                   .set(value!),
                         ),
                         RadioListTile<TestFormat>(
+                          shape: roundedShape,
                           title: const Text("Multiple Choice"),
                           value: TestFormat.mc,
                           groupValue: testFormat,
