@@ -109,12 +109,27 @@ class SettingsScreen extends ConsumerWidget {
     final result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['json'],
+      withData: kIsWeb,
     );
 
-    if (result != null && result.files.single.path != null) {
+    if (result != null) {
       try {
-        final file = File(result.files.single.path!);
-        final jsonString = await file.readAsString();
+        String jsonString;
+        if (kIsWeb) {
+          final bytes = result.files.single.bytes;
+          if (bytes == null) {
+            throw Exception("Could not read file bytes on web.");
+          }
+          jsonString = utf8.decode(bytes);
+        } else {
+          final path = result.files.single.path;
+          if (path == null) {
+            throw Exception("File path is null on a non-web platform.");
+          }
+          final file = File(path);
+          jsonString = await file.readAsString();
+        }
+
         final List<dynamic> jsonList = jsonDecode(jsonString);
         final studyLists =
             jsonList.map((json) => StudyList.fromJson(json)).toList();
