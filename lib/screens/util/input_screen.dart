@@ -45,6 +45,7 @@ class _InputScreenState extends ConsumerState<InputScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Enter Terms & Definitions"),
+        centerTitle: true,
         automaticallyImplyLeading: false,
       ),
       body: SafeArea(
@@ -83,7 +84,7 @@ class _InputScreenState extends ConsumerState<InputScreen> {
                   controller: _termsInputController,
                   decoration: InputDecoration(
                     hintText:
-                        "Example:\nHTML\nHyperText Markup Language\nCSS\nCascading Style Sheets",
+                        "EXAMPLE:\nJustice\nThe principle of moral rightness\nSun\nA star that is the center of a planetary system",
                     border: const OutlineInputBorder(),
                     alignLabelWithHint: true,
                     errorText:

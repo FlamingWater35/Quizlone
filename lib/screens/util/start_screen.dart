@@ -31,7 +31,7 @@ class StartScreen extends ConsumerWidget {
     });
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Quizlone")),
+      appBar: AppBar(title: const Text("Quizlone"), centerTitle: true),
       body: SafeArea(
         child: CenteredView(
           child: Padding(

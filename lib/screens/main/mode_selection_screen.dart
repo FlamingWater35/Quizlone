@@ -33,7 +33,7 @@ class ModeSelectionScreen extends ConsumerWidget {
     final testFormat = ref.watch(testQuestionFormatProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Options & Mode")),
+      appBar: AppBar(title: const Text("Options & Mode"), centerTitle: true),
       body: SafeArea(
         child: activeStudyListAsync.when(
           data: (StudyList? list) {

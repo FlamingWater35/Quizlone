@@ -21,6 +21,7 @@ class ResultsScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Test Results"),
+        centerTitle: true,
         automaticallyImplyLeading: false,
       ),
       body: SafeArea(
