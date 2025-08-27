@@ -230,8 +230,8 @@ class _TranslationsSettingsScreenFi extends TranslationsSettingsScreenEn {
 	@override String get appearance => 'Ulkoasu';
 	@override String get language => 'Kieli';
 	@override String get languageDialogTitle => 'Valitse kieli';
-	@override String get uiScaling => 'Käyttöliittymän skaalaus';
-	@override String get uiScalingSubtitle => 'Säädä tekstin ja käyttöliittymän elementtien kokoa';
+	@override String get uiScaling => 'Näytön skaalaus';
+	@override String get uiScalingSubtitle => 'Säädä tekstin ja elementtien kokoa';
 	@override String get systemDefault => 'Järjestelmän oletus';
 	@override String get light => 'Vaalea';
 	@override String get dark => 'Tumma';
@@ -257,7 +257,7 @@ class _TranslationsControlsScreenFi extends TranslationsControlsScreenEn {
 
 	// Translations
 	@override String get title => 'Ohjaimet';
-	@override String get gesturesTitle => 'Eleet (Muistikortit)';
+	@override String get gesturesTitle => 'Liikkeet (Muistikortit)';
 	@override String get keyboardTitle => 'Näppäimistö (Muistikortit)';
 	@override String get nextCard => 'Seuraava kortti';
 	@override String get previousCard => 'Edellinen kortti';
@@ -529,8 +529,8 @@ extension on TranslationsFi {
 			case 'settingsScreen.appearance': return 'Ulkoasu';
 			case 'settingsScreen.language': return 'Kieli';
 			case 'settingsScreen.languageDialogTitle': return 'Valitse kieli';
-			case 'settingsScreen.uiScaling': return 'Käyttöliittymän skaalaus';
-			case 'settingsScreen.uiScalingSubtitle': return 'Säädä tekstin ja käyttöliittymän elementtien kokoa';
+			case 'settingsScreen.uiScaling': return 'Näytön skaalaus';
+			case 'settingsScreen.uiScalingSubtitle': return 'Säädä tekstin ja elementtien kokoa';
 			case 'settingsScreen.systemDefault': return 'Järjestelmän oletus';
 			case 'settingsScreen.light': return 'Vaalea';
 			case 'settingsScreen.dark': return 'Tumma';
@@ -560,7 +560,7 @@ extension on TranslationsFi {
 			case 'settingsScreen.snackbars.importError': return ({required Object error}) => 'Virhe tietojen tuonnissa: ${error}';
 			case 'settingsScreen.snackbars.allDeleted': return 'Kaikki opiskelulistat on poistettu.';
 			case 'controlsScreen.title': return 'Ohjaimet';
-			case 'controlsScreen.gesturesTitle': return 'Eleet (Muistikortit)';
+			case 'controlsScreen.gesturesTitle': return 'Liikkeet (Muistikortit)';
 			case 'controlsScreen.keyboardTitle': return 'Näppäimistö (Muistikortit)';
 			case 'controlsScreen.nextCard': return 'Seuraava kortti';
 			case 'controlsScreen.previousCard': return 'Edellinen kortti';
