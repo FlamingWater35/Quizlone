@@ -5,6 +5,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -32,26 +33,71 @@ class SettingsScreen extends ConsumerWidget {
     }
 
     final jsonString = jsonEncode(lists.map((l) => l.toJson()).toList());
+    final bytes = utf8.encode(jsonString);
+    const fileName = 'quizlone_backup.json';
 
     try {
       if (kIsWeb) {
-        final bytes = utf8.encode(jsonString);
         final blob = html.Blob([bytes]);
         final url = html.Url.createObjectUrlFromBlob(blob);
         final anchor =
             html.document.createElement('a') as html.AnchorElement
               ..href = url
               ..style.display = 'none'
-              ..download = 'quizlone_backup.json';
+              ..download = fileName;
         html.document.body?.children.add(anchor);
         anchor.click();
         html.document.body?.children.remove(anchor);
         html.Url.revokeObjectUrl(url);
-      } else if (Platform.isAndroid || Platform.isIOS) {
+      } else if (Platform.isAndroid && context.mounted) {
+        await showDialog(
+          context: context,
+          builder:
+              (context) => AlertDialog(
+                title: const Text('Export Data'),
+                content: const Text('How would you like to export your data?'),
+                actions: [
+                  TextButton(
+                    onPressed: () async {
+                      Navigator.of(context).pop();
+                      final tempDir = await getTemporaryDirectory();
+                      final filePath = '${tempDir.path}/$fileName';
+                      await File(filePath).writeAsBytes(bytes);
+                      await SharePlus.instance.share(
+                        ShareParams(
+                          files: [XFile(filePath)],
+                          text: 'Here is your Quizlone backup.',
+                        ),
+                      );
+                    },
+                    child: const Text('Share File'),
+                  ),
+                  TextButton(
+                    onPressed: () async {
+                      Navigator.of(context).pop();
+                      final filePath = await FlutterFileDialog.saveFile(
+                        params: SaveFileDialogParams(
+                          data: bytes,
+                          fileName: fileName,
+                        ),
+                      );
+                      if (filePath != null) {
+                        scaffoldMessenger.showSnackBar(
+                          const SnackBar(
+                            content: Text('File saved successfully!'),
+                          ),
+                        );
+                      }
+                    },
+                    child: const Text('Save to Device'),
+                  ),
+                ],
+              ),
+        );
+      } else if (Platform.isIOS) {
         final tempDir = await getTemporaryDirectory();
-        final filePath = '${tempDir.path}/quizlone_backup.json';
-        final file = File(filePath);
-        await file.writeAsString(jsonString);
+        final filePath = '${tempDir.path}/$fileName';
+        await File(filePath).writeAsBytes(bytes);
         await SharePlus.instance.share(
           ShareParams(
             files: [XFile(filePath)],
@@ -61,12 +107,10 @@ class SettingsScreen extends ConsumerWidget {
       } else {
         final String? outputFile = await FilePicker.platform.saveFile(
           dialogTitle: 'Please select an output file:',
-          fileName: 'quizlone_backup.json',
+          fileName: fileName,
         );
-
         if (outputFile != null) {
-          final file = File(outputFile);
-          await file.writeAsString(jsonString);
+          await File(outputFile).writeAsBytes(bytes);
           scaffoldMessenger.showSnackBar(
             const SnackBar(content: Text('Data exported successfully!')),
           );
