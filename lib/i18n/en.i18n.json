@@ -140,6 +140,7 @@
     "title": "Settings",
     "appearance": "Appearance",
     "language": "Language",
+    "languageDialogTitle": "Select Language",
     "systemDefault": "System Default",
     "light": "Light",
     "dark": "Dark",

@@ -226,6 +226,7 @@ class _TranslationsSettingsScreenFi extends TranslationsSettingsScreenEn {
 	@override String get title => 'Asetukset';
 	@override String get appearance => 'Ulkoasu';
 	@override String get language => 'Kieli';
+	@override String get languageDialogTitle => 'Valitse kieli';
 	@override String get systemDefault => 'Järjestelmän oletus';
 	@override String get light => 'Vaalea';
 	@override String get dark => 'Tumma';
@@ -499,6 +500,7 @@ extension on TranslationsFi {
 			case 'settingsScreen.title': return 'Asetukset';
 			case 'settingsScreen.appearance': return 'Ulkoasu';
 			case 'settingsScreen.language': return 'Kieli';
+			case 'settingsScreen.languageDialogTitle': return 'Valitse kieli';
 			case 'settingsScreen.systemDefault': return 'Järjestelmän oletus';
 			case 'settingsScreen.light': return 'Vaalea';
 			case 'settingsScreen.dark': return 'Tumma';

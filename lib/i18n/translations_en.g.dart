@@ -390,6 +390,9 @@ class TranslationsSettingsScreenEn {
 	/// en: 'Language'
 	String get language => 'Language';
 
+	/// en: 'Select Language'
+	String get languageDialogTitle => 'Select Language';
+
 	/// en: 'System Default'
 	String get systemDefault => 'System Default';
 
@@ -767,6 +770,7 @@ extension on Translations {
 			case 'settingsScreen.title': return 'Settings';
 			case 'settingsScreen.appearance': return 'Appearance';
 			case 'settingsScreen.language': return 'Language';
+			case 'settingsScreen.languageDialogTitle': return 'Select Language';
 			case 'settingsScreen.systemDefault': return 'System Default';
 			case 'settingsScreen.light': return 'Light';
 			case 'settingsScreen.dark': return 'Dark';

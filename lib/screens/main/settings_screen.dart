@@ -21,6 +21,58 @@ import '../../widgets/centered_view.dart';
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
+  String _getCurrentLanguageName(AppLanguage lang, Translations t) {
+    switch (lang) {
+      case AppLanguage.en:
+        return t.settingsScreen.english;
+      case AppLanguage.fi:
+        return t.settingsScreen.finnish;
+      case AppLanguage.system:
+      default:
+        return t.settingsScreen.systemDefault;
+    }
+  }
+
+  void _showLanguagePicker(BuildContext context, WidgetRef ref) {
+    final languageNotifier = ref.read(appLanguageNotifierProvider.notifier);
+    final currentLanguage = ref.read(appLanguageNotifierProvider);
+    final t = Translations.of(context);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(t.settingsScreen.languageDialogTitle),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children:
+                  AppLanguage.values.map((lang) {
+                    return RadioListTile<AppLanguage>(
+                      title: Text(_getCurrentLanguageName(lang, t)),
+                      value: lang,
+                      groupValue: currentLanguage,
+                      onChanged: (AppLanguage? newLang) {
+                        if (newLang != null) {
+                          languageNotifier.setLanguage(newLang);
+                          Navigator.of(context).pop();
+                        }
+                      },
+                    );
+                  }).toList(),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(t.general.cancel),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Future<void> _exportData(BuildContext context, WidgetRef ref) async {
     final dbService = ref.read(databaseServiceProvider);
     final scaffoldMessenger = ScaffoldMessenger.of(context);
@@ -247,7 +299,6 @@ class SettingsScreen extends ConsumerWidget {
     final currentTheme = ref.watch(appThemeProvider);
     final themeNotifier = ref.read(appThemeProvider.notifier);
     final currentLanguage = ref.watch(appLanguageNotifierProvider);
-    final languageNotifier = ref.read(appLanguageNotifierProvider.notifier);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final t = Translations.of(context);
@@ -286,35 +337,11 @@ class SettingsScreen extends ConsumerWidget {
               _SettingsGroup(
                 title: t.settingsScreen.language,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-                    child: DropdownButton<AppLanguage>(
-                      value: currentLanguage,
-                      isExpanded: true,
-                      underline: Container(
-                        height: 1,
-                        color: theme.colorScheme.outlineVariant,
-                      ),
-                      items: [
-                        DropdownMenuItem(
-                          value: AppLanguage.system,
-                          child: Text(t.settingsScreen.systemDefault),
-                        ),
-                        DropdownMenuItem(
-                          value: AppLanguage.en,
-                          child: Text(t.settingsScreen.english),
-                        ),
-                        DropdownMenuItem(
-                          value: AppLanguage.fi,
-                          child: Text(t.settingsScreen.finnish),
-                        ),
-                      ],
-                      onChanged: (AppLanguage? newLang) {
-                        if (newLang != null) {
-                          languageNotifier.setLanguage(newLang);
-                        }
-                      },
-                    ),
+                  ListTile(
+                    leading: const Icon(Icons.language_outlined),
+                    title: Text(t.settingsScreen.language),
+                    subtitle: Text(_getCurrentLanguageName(currentLanguage, t)),
+                    onTap: () => _showLanguagePicker(context, ref),
                   ),
                 ],
               ),

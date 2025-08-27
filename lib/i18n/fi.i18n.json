@@ -140,6 +140,7 @@
     "title": "Asetukset",
     "appearance": "Ulkoasu",
     "language": "Kieli",
+    "languageDialogTitle": "Valitse kieli",
     "systemDefault": "Järjestelmän oletus",
     "light": "Vaalea",
     "dark": "Tumma",
