@@ -11,9 +11,10 @@ class CenteredView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final uiScale = ref.watch(uiScaleNotifierProvider);
+    final adjustedMaxWidth = maxWidth * (1 + (uiScale - 1) * 0.3);
     return Center(
       child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: maxWidth * uiScale),
+        constraints: BoxConstraints(maxWidth: adjustedMaxWidth),
         child: child,
       ),
     );
