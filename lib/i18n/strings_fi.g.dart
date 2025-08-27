@@ -7,10 +7,10 @@
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:slang/generated.dart';
-import 'translations.g.dart';
+import 'strings.g.dart';
 
 // Path: <root>
-class TranslationsFi extends Translations {
+class TranslationsFi implements Translations {
 	/// You can call this constructor and build your own translation instance of this locale.
 	/// Constructing via the enum [AppLocale.build] is preferred.
 	TranslationsFi({Map<String, Node>? overrides, PluralResolver? cardinalResolver, PluralResolver? ordinalResolver, TranslationMetadata<AppLocale, Translations>? meta})
@@ -20,9 +20,7 @@ class TranslationsFi extends Translations {
 		    overrides: overrides ?? {},
 		    cardinalResolver: cardinalResolver,
 		    ordinalResolver: ordinalResolver,
-		  ),
-		  super(cardinalResolver: cardinalResolver, ordinalResolver: ordinalResolver) {
-		super.$meta.setFlatMapFunction($meta.getTranslation); // copy base translations to super.$meta
+		  ) {
 		$meta.setFlatMapFunction(_flatMapFunction);
 	}
 
@@ -30,7 +28,7 @@ class TranslationsFi extends Translations {
 	@override final TranslationMetadata<AppLocale, Translations> $meta;
 
 	/// Access flat map
-	@override dynamic operator[](String key) => $meta.getTranslation(key) ?? super.$meta.getTranslation(key);
+	@override dynamic operator[](String key) => $meta.getTranslation(key);
 
 	late final TranslationsFi _root = this; // ignore: unused_field
 
@@ -52,8 +50,8 @@ class TranslationsFi extends Translations {
 }
 
 // Path: general
-class _TranslationsGeneralFi extends TranslationsGeneralEn {
-	_TranslationsGeneralFi._(TranslationsFi root) : this._root = root, super.internal(root);
+class _TranslationsGeneralFi implements TranslationsGeneralEn {
+	_TranslationsGeneralFi._(this._root);
 
 	final TranslationsFi _root; // ignore: unused_field
 
@@ -73,8 +71,8 @@ class _TranslationsGeneralFi extends TranslationsGeneralEn {
 }
 
 // Path: drawer
-class _TranslationsDrawerFi extends TranslationsDrawerEn {
-	_TranslationsDrawerFi._(TranslationsFi root) : this._root = root, super.internal(root);
+class _TranslationsDrawerFi implements TranslationsDrawerEn {
+	_TranslationsDrawerFi._(this._root);
 
 	final TranslationsFi _root; // ignore: unused_field
 
@@ -85,8 +83,8 @@ class _TranslationsDrawerFi extends TranslationsDrawerEn {
 }
 
 // Path: startScreen
-class _TranslationsStartScreenFi extends TranslationsStartScreenEn {
-	_TranslationsStartScreenFi._(TranslationsFi root) : this._root = root, super.internal(root);
+class _TranslationsStartScreenFi implements TranslationsStartScreenEn {
+	_TranslationsStartScreenFi._(this._root);
 
 	final TranslationsFi _root; // ignore: unused_field
 
@@ -104,8 +102,8 @@ class _TranslationsStartScreenFi extends TranslationsStartScreenEn {
 }
 
 // Path: inputScreen
-class _TranslationsInputScreenFi extends TranslationsInputScreenEn {
-	_TranslationsInputScreenFi._(TranslationsFi root) : this._root = root, super.internal(root);
+class _TranslationsInputScreenFi implements TranslationsInputScreenEn {
+	_TranslationsInputScreenFi._(this._root);
 
 	final TranslationsFi _root; // ignore: unused_field
 
@@ -121,8 +119,8 @@ class _TranslationsInputScreenFi extends TranslationsInputScreenEn {
 }
 
 // Path: modeSelectionScreen
-class _TranslationsModeSelectionScreenFi extends TranslationsModeSelectionScreenEn {
-	_TranslationsModeSelectionScreenFi._(TranslationsFi root) : this._root = root, super.internal(root);
+class _TranslationsModeSelectionScreenFi implements TranslationsModeSelectionScreenEn {
+	_TranslationsModeSelectionScreenFi._(this._root);
 
 	final TranslationsFi _root; // ignore: unused_field
 
@@ -148,8 +146,8 @@ class _TranslationsModeSelectionScreenFi extends TranslationsModeSelectionScreen
 }
 
 // Path: flashcardScreen
-class _TranslationsFlashcardScreenFi extends TranslationsFlashcardScreenEn {
-	_TranslationsFlashcardScreenFi._(TranslationsFi root) : this._root = root, super.internal(root);
+class _TranslationsFlashcardScreenFi implements TranslationsFlashcardScreenEn {
+	_TranslationsFlashcardScreenFi._(this._root);
 
 	final TranslationsFi _root; // ignore: unused_field
 
@@ -162,8 +160,8 @@ class _TranslationsFlashcardScreenFi extends TranslationsFlashcardScreenEn {
 }
 
 // Path: learnScreen
-class _TranslationsLearnScreenFi extends TranslationsLearnScreenEn {
-	_TranslationsLearnScreenFi._(TranslationsFi root) : this._root = root, super.internal(root);
+class _TranslationsLearnScreenFi implements TranslationsLearnScreenEn {
+	_TranslationsLearnScreenFi._(this._root);
 
 	final TranslationsFi _root; // ignore: unused_field
 
@@ -183,8 +181,8 @@ class _TranslationsLearnScreenFi extends TranslationsLearnScreenEn {
 }
 
 // Path: testScreen
-class _TranslationsTestScreenFi extends TranslationsTestScreenEn {
-	_TranslationsTestScreenFi._(TranslationsFi root) : this._root = root, super.internal(root);
+class _TranslationsTestScreenFi implements TranslationsTestScreenEn {
+	_TranslationsTestScreenFi._(this._root);
 
 	final TranslationsFi _root; // ignore: unused_field
 
@@ -197,8 +195,8 @@ class _TranslationsTestScreenFi extends TranslationsTestScreenEn {
 }
 
 // Path: resultsScreen
-class _TranslationsResultsScreenFi extends TranslationsResultsScreenEn {
-	_TranslationsResultsScreenFi._(TranslationsFi root) : this._root = root, super.internal(root);
+class _TranslationsResultsScreenFi implements TranslationsResultsScreenEn {
+	_TranslationsResultsScreenFi._(this._root);
 
 	final TranslationsFi _root; // ignore: unused_field
 
@@ -218,8 +216,8 @@ class _TranslationsResultsScreenFi extends TranslationsResultsScreenEn {
 }
 
 // Path: settingsScreen
-class _TranslationsSettingsScreenFi extends TranslationsSettingsScreenEn {
-	_TranslationsSettingsScreenFi._(TranslationsFi root) : this._root = root, super.internal(root);
+class _TranslationsSettingsScreenFi implements TranslationsSettingsScreenEn {
+	_TranslationsSettingsScreenFi._(this._root);
 
 	final TranslationsFi _root; // ignore: unused_field
 
@@ -228,8 +226,8 @@ class _TranslationsSettingsScreenFi extends TranslationsSettingsScreenEn {
 	@override String get appearance => 'Ulkoasu';
 	@override String get language => 'Kieli';
 	@override String get languageDialogTitle => 'Valitse kieli';
-	@override String get uiScaling => 'Näytön skaalaus';
-	@override String get uiScalingSubtitle => 'Säädä tekstin ja elementtien kokoa';
+	@override String get uiScaling => 'Käyttöliittymän skaalaus';
+	@override String get uiScalingSubtitle => 'Säädä tekstin ja käyttöliittymän elementtien kokoa';
 	@override String get systemDefault => 'Järjestelmän oletus';
 	@override String get light => 'Vaalea';
 	@override String get dark => 'Tumma';
@@ -248,8 +246,8 @@ class _TranslationsSettingsScreenFi extends TranslationsSettingsScreenEn {
 }
 
 // Path: drawer.aboutDialog
-class _TranslationsDrawerAboutDialogFi extends TranslationsDrawerAboutDialogEn {
-	_TranslationsDrawerAboutDialogFi._(TranslationsFi root) : this._root = root, super.internal(root);
+class _TranslationsDrawerAboutDialogFi implements TranslationsDrawerAboutDialogEn {
+	_TranslationsDrawerAboutDialogFi._(this._root);
 
 	final TranslationsFi _root; // ignore: unused_field
 
@@ -259,8 +257,8 @@ class _TranslationsDrawerAboutDialogFi extends TranslationsDrawerAboutDialogEn {
 }
 
 // Path: startScreen.confirmDeleteDialog
-class _TranslationsStartScreenConfirmDeleteDialogFi extends TranslationsStartScreenConfirmDeleteDialogEn {
-	_TranslationsStartScreenConfirmDeleteDialogFi._(TranslationsFi root) : this._root = root, super.internal(root);
+class _TranslationsStartScreenConfirmDeleteDialogFi implements TranslationsStartScreenConfirmDeleteDialogEn {
+	_TranslationsStartScreenConfirmDeleteDialogFi._(this._root);
 
 	final TranslationsFi _root; // ignore: unused_field
 
@@ -270,8 +268,8 @@ class _TranslationsStartScreenConfirmDeleteDialogFi extends TranslationsStartScr
 }
 
 // Path: inputScreen.errors
-class _TranslationsInputScreenErrorsFi extends TranslationsInputScreenErrorsEn {
-	_TranslationsInputScreenErrorsFi._(TranslationsFi root) : this._root = root, super.internal(root);
+class _TranslationsInputScreenErrorsFi implements TranslationsInputScreenErrorsEn {
+	_TranslationsInputScreenErrorsFi._(this._root);
 
 	final TranslationsFi _root; // ignore: unused_field
 
@@ -285,8 +283,8 @@ class _TranslationsInputScreenErrorsFi extends TranslationsInputScreenErrorsEn {
 }
 
 // Path: learnScreen.errors
-class _TranslationsLearnScreenErrorsFi extends TranslationsLearnScreenErrorsEn {
-	_TranslationsLearnScreenErrorsFi._(TranslationsFi root) : this._root = root, super.internal(root);
+class _TranslationsLearnScreenErrorsFi implements TranslationsLearnScreenErrorsEn {
+	_TranslationsLearnScreenErrorsFi._(this._root);
 
 	final TranslationsFi _root; // ignore: unused_field
 
@@ -296,8 +294,8 @@ class _TranslationsLearnScreenErrorsFi extends TranslationsLearnScreenErrorsEn {
 }
 
 // Path: learnScreen.feedback
-class _TranslationsLearnScreenFeedbackFi extends TranslationsLearnScreenFeedbackEn {
-	_TranslationsLearnScreenFeedbackFi._(TranslationsFi root) : this._root = root, super.internal(root);
+class _TranslationsLearnScreenFeedbackFi implements TranslationsLearnScreenFeedbackEn {
+	_TranslationsLearnScreenFeedbackFi._(this._root);
 
 	final TranslationsFi _root; // ignore: unused_field
 
@@ -309,8 +307,8 @@ class _TranslationsLearnScreenFeedbackFi extends TranslationsLearnScreenFeedback
 }
 
 // Path: learnScreen.progress
-class _TranslationsLearnScreenProgressFi extends TranslationsLearnScreenProgressEn {
-	_TranslationsLearnScreenProgressFi._(TranslationsFi root) : this._root = root, super.internal(root);
+class _TranslationsLearnScreenProgressFi implements TranslationsLearnScreenProgressEn {
+	_TranslationsLearnScreenProgressFi._(this._root);
 
 	final TranslationsFi _root; // ignore: unused_field
 
@@ -326,8 +324,8 @@ class _TranslationsLearnScreenProgressFi extends TranslationsLearnScreenProgress
 }
 
 // Path: testScreen.errors
-class _TranslationsTestScreenErrorsFi extends TranslationsTestScreenErrorsEn {
-	_TranslationsTestScreenErrorsFi._(TranslationsFi root) : this._root = root, super.internal(root);
+class _TranslationsTestScreenErrorsFi implements TranslationsTestScreenErrorsEn {
+	_TranslationsTestScreenErrorsFi._(this._root);
 
 	final TranslationsFi _root; // ignore: unused_field
 
@@ -338,8 +336,8 @@ class _TranslationsTestScreenErrorsFi extends TranslationsTestScreenErrorsEn {
 }
 
 // Path: settingsScreen.exportDialog
-class _TranslationsSettingsScreenExportDialogFi extends TranslationsSettingsScreenExportDialogEn {
-	_TranslationsSettingsScreenExportDialogFi._(TranslationsFi root) : this._root = root, super.internal(root);
+class _TranslationsSettingsScreenExportDialogFi implements TranslationsSettingsScreenExportDialogEn {
+	_TranslationsSettingsScreenExportDialogFi._(this._root);
 
 	final TranslationsFi _root; // ignore: unused_field
 
@@ -351,8 +349,8 @@ class _TranslationsSettingsScreenExportDialogFi extends TranslationsSettingsScre
 }
 
 // Path: settingsScreen.importDialog
-class _TranslationsSettingsScreenImportDialogFi extends TranslationsSettingsScreenImportDialogEn {
-	_TranslationsSettingsScreenImportDialogFi._(TranslationsFi root) : this._root = root, super.internal(root);
+class _TranslationsSettingsScreenImportDialogFi implements TranslationsSettingsScreenImportDialogEn {
+	_TranslationsSettingsScreenImportDialogFi._(this._root);
 
 	final TranslationsFi _root; // ignore: unused_field
 
@@ -363,8 +361,8 @@ class _TranslationsSettingsScreenImportDialogFi extends TranslationsSettingsScre
 }
 
 // Path: settingsScreen.deleteDialog
-class _TranslationsSettingsScreenDeleteDialogFi extends TranslationsSettingsScreenDeleteDialogEn {
-	_TranslationsSettingsScreenDeleteDialogFi._(TranslationsFi root) : this._root = root, super.internal(root);
+class _TranslationsSettingsScreenDeleteDialogFi implements TranslationsSettingsScreenDeleteDialogEn {
+	_TranslationsSettingsScreenDeleteDialogFi._(this._root);
 
 	final TranslationsFi _root; // ignore: unused_field
 
@@ -375,8 +373,8 @@ class _TranslationsSettingsScreenDeleteDialogFi extends TranslationsSettingsScre
 }
 
 // Path: settingsScreen.snackbars
-class _TranslationsSettingsScreenSnackbarsFi extends TranslationsSettingsScreenSnackbarsEn {
-	_TranslationsSettingsScreenSnackbarsFi._(TranslationsFi root) : this._root = root, super.internal(root);
+class _TranslationsSettingsScreenSnackbarsFi implements TranslationsSettingsScreenSnackbarsEn {
+	_TranslationsSettingsScreenSnackbarsFi._(this._root);
 
 	final TranslationsFi _root; // ignore: unused_field
 
@@ -505,8 +503,8 @@ extension on TranslationsFi {
 			case 'settingsScreen.appearance': return 'Ulkoasu';
 			case 'settingsScreen.language': return 'Kieli';
 			case 'settingsScreen.languageDialogTitle': return 'Valitse kieli';
-			case 'settingsScreen.uiScaling': return 'Näytön skaalaus';
-			case 'settingsScreen.uiScalingSubtitle': return 'Säädä tekstin ja elementtien kokoa';
+			case 'settingsScreen.uiScaling': return 'Käyttöliittymän skaalaus';
+			case 'settingsScreen.uiScalingSubtitle': return 'Säädä tekstin ja käyttöliittymän elementtien kokoa';
 			case 'settingsScreen.systemDefault': return 'Järjestelmän oletus';
 			case 'settingsScreen.light': return 'Vaalea';
 			case 'settingsScreen.dark': return 'Tumma';

@@ -11,7 +11,8 @@
     "submit": "Lähetä",
     "all": "Kaikki",
     "loading": "Ladataan...",
-    "genericError": "Virhe: $error"
+    "genericError": "Virhe: $error",
+    "reset": "Nollaa"
   },
   "drawer": {
     "settings": "Asetukset",
@@ -141,6 +142,8 @@
     "appearance": "Ulkoasu",
     "language": "Kieli",
     "languageDialogTitle": "Valitse kieli",
+    "uiScaling": "Näytön skaalaus",
+    "uiScalingSubtitle": "Säädä tekstin ja elementtien kokoa",
     "systemDefault": "Järjestelmän oletus",
     "light": "Vaalea",
     "dark": "Tumma",

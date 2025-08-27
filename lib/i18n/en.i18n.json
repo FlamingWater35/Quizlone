@@ -11,7 +11,8 @@
     "submit": "Submit",
     "all": "All",
     "loading": "Loading...",
-    "genericError": "Error: $error"
+    "genericError": "Error: $error",
+    "reset": "Reset"
   },
   "drawer": {
     "settings": "Settings",
@@ -141,6 +142,8 @@
     "appearance": "Appearance",
     "language": "Language",
     "languageDialogTitle": "Select Language",
+    "uiScaling": "UI Scaling",
+    "uiScalingSubtitle": "Adjust the size of text and interface elements",
     "systemDefault": "System Default",
     "light": "Light",
     "dark": "Dark",

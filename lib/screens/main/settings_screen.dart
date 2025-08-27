@@ -299,6 +299,8 @@ class SettingsScreen extends ConsumerWidget {
     final currentTheme = ref.watch(appThemeProvider);
     final themeNotifier = ref.read(appThemeProvider.notifier);
     final currentLanguage = ref.watch(appLanguageNotifierProvider);
+    final uiScale = ref.watch(uiScaleNotifierProvider);
+    final uiScaleNotifier = ref.read(uiScaleNotifierProvider.notifier);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final t = Translations.of(context);
@@ -342,6 +344,43 @@ class SettingsScreen extends ConsumerWidget {
                     title: Text(t.settingsScreen.language),
                     subtitle: Text(_getCurrentLanguageName(currentLanguage, t)),
                     onTap: () => _showLanguagePicker(context, ref),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              _SettingsGroup(
+                title: t.settingsScreen.uiScaling,
+                children: [
+                  ListTile(subtitle: Text(t.settingsScreen.uiScalingSubtitle)),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0,
+                      vertical: 8.0,
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Slider(
+                            value: uiScale,
+                            min: 0.8,
+                            max: 1.5,
+                            divisions: 7,
+                            onChanged: (value) {
+                              uiScaleNotifier.setScale(value);
+                            },
+                          ),
+                        ),
+                        Text("${(uiScale * 100).toStringAsFixed(0)}%"),
+                        const SizedBox(width: 8),
+                        OutlinedButton(
+                          onPressed:
+                              uiScale == 1.0
+                                  ? null
+                                  : () => uiScaleNotifier.setScale(1.0),
+                          child: Text(t.general.reset),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),

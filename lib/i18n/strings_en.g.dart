@@ -95,6 +95,9 @@ class TranslationsGeneralEn {
 
 	/// en: 'Error: $error'
 	String genericError({required Object error}) => 'Error: ${error}';
+
+	/// en: 'Reset'
+	String get reset => 'Reset';
 }
 
 // Path: drawer
@@ -390,6 +393,15 @@ class TranslationsSettingsScreenEn {
 	/// en: 'Language'
 	String get language => 'Language';
 
+	/// en: 'Select Language'
+	String get languageDialogTitle => 'Select Language';
+
+	/// en: 'UI Scaling'
+	String get uiScaling => 'UI Scaling';
+
+	/// en: 'Adjust the size of text and interface elements'
+	String get uiScalingSubtitle => 'Adjust the size of text and interface elements';
+
 	/// en: 'System Default'
 	String get systemDefault => 'System Default';
 
@@ -671,6 +683,7 @@ extension on Translations {
 			case 'general.all': return 'All';
 			case 'general.loading': return 'Loading...';
 			case 'general.genericError': return ({required Object error}) => 'Error: ${error}';
+			case 'general.reset': return 'Reset';
 			case 'drawer.settings': return 'Settings';
 			case 'drawer.about': return 'About';
 			case 'drawer.aboutDialog.legalese': return '© 2025 Quizlone';
@@ -767,6 +780,9 @@ extension on Translations {
 			case 'settingsScreen.title': return 'Settings';
 			case 'settingsScreen.appearance': return 'Appearance';
 			case 'settingsScreen.language': return 'Language';
+			case 'settingsScreen.languageDialogTitle': return 'Select Language';
+			case 'settingsScreen.uiScaling': return 'UI Scaling';
+			case 'settingsScreen.uiScalingSubtitle': return 'Adjust the size of text and interface elements';
 			case 'settingsScreen.systemDefault': return 'System Default';
 			case 'settingsScreen.light': return 'Light';
 			case 'settingsScreen.dark': return 'Dark';

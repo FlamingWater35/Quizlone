@@ -56,6 +56,7 @@ class MyApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     MyApp._log.info("Building MyApp widget");
     final themeMode = ref.watch(appThemeProvider);
+    final uiScale = ref.watch(uiScaleNotifierProvider);
     const seedColor = Colors.blueAccent;
 
     SnackBarThemeData buildSnackBarTheme(ColorScheme colorScheme) {
@@ -105,6 +106,14 @@ class MyApp extends ConsumerWidget {
       ),
 
       themeMode: themeMode,
+      builder: (context, child) {
+        return MediaQuery(
+          data: MediaQuery.of(
+            context,
+          ).copyWith(textScaler: TextScaler.linear(uiScale)),
+          child: child!,
+        );
+      },
       debugShowCheckedModeBanner: false,
       routerConfig: _appRouter.config(),
     );

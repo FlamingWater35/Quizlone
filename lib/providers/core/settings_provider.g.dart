@@ -39,5 +39,22 @@ final appLanguageNotifierProvider =
     );
 
 typedef _$AppLanguageNotifier = AutoDisposeNotifier<AppLanguage>;
+String _$uiScaleNotifierHash() => r'c9be330a2643239bf400f3439c2a393ed3ab9f35';
+
+/// See also [UiScaleNotifier].
+@ProviderFor(UiScaleNotifier)
+final uiScaleNotifierProvider =
+    AutoDisposeNotifierProvider<UiScaleNotifier, double>.internal(
+      UiScaleNotifier.new,
+      name: r'uiScaleNotifierProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$uiScaleNotifierHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+typedef _$UiScaleNotifier = AutoDisposeNotifier<double>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

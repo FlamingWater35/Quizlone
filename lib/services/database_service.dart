@@ -83,5 +83,13 @@ class DatabaseService {
     return _settingsBox.get('language', defaultValue: 'system');
   }
 
+  Future<void> saveUiScale(double scale) async {
+    await _settingsBox.put('uiScale', scale);
+  }
+
+  double getUiScale() {
+    return _settingsBox.get('uiScale', defaultValue: 1.0);
+  }
+
   Box<StudyList> get _box => _studyListBox;
 }

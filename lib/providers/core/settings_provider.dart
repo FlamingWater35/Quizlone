@@ -22,6 +22,7 @@ class AppTheme extends _$AppTheme {
         themeName = 'dark';
         break;
       case ThemeMode.system:
+      default:
         themeName = 'system';
         break;
     }
@@ -82,5 +83,21 @@ class AppLanguageNotifier extends _$AppLanguageNotifier {
       default:
         return AppLanguage.system;
     }
+  }
+}
+
+@riverpod
+class UiScaleNotifier extends _$UiScaleNotifier {
+  Future<void> setScale(double newScale) async {
+    _log.fine("[UiScaleNotifier] Setting scale to $newScale");
+    await ref.read(databaseServiceProvider).saveUiScale(newScale);
+    state = newScale;
+  }
+
+  @override
+  double build() {
+    final scale = ref.watch(databaseServiceProvider).getUiScale();
+    _log.fine("[UiScaleNotifier] Initializing with scale: $scale");
+    return scale;
   }
 }
