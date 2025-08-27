@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:quizlone/i18n/translations.g.dart';
 
 import '../routing/app_router.dart';
 
@@ -30,9 +31,10 @@ class _AppDrawerState extends State<AppDrawer> {
   }
 
   void _showAbout(BuildContext context) {
+    final t = Translations.of(context);
     showAboutDialog(
       context: context,
-      applicationName: 'Quizlone',
+      applicationName: t.appName,
       applicationVersion: _version,
       children: <Widget>[
         Padding(
@@ -40,8 +42,8 @@ class _AppDrawerState extends State<AppDrawer> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Text(
-                'A modern study application built with Flutter.',
+              Text(
+                t.drawer.aboutDialog.description,
                 textAlign: TextAlign.center,
               ),
             ],
@@ -55,6 +57,7 @@ class _AppDrawerState extends State<AppDrawer> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final t = Translations.of(context);
 
     return Drawer(
       child: ListView(
@@ -63,7 +66,7 @@ class _AppDrawerState extends State<AppDrawer> {
           DrawerHeader(
             decoration: BoxDecoration(color: colorScheme.primary),
             child: Text(
-              'Quizlone',
+              t.appName,
               style: theme.textTheme.headlineMedium?.copyWith(
                 color: colorScheme.onPrimary,
               ),
@@ -71,7 +74,7 @@ class _AppDrawerState extends State<AppDrawer> {
           ),
           ListTile(
             leading: const Icon(Icons.settings_outlined),
-            title: const Text('Settings'),
+            title: Text(t.drawer.settings),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
@@ -83,7 +86,7 @@ class _AppDrawerState extends State<AppDrawer> {
           const Divider(indent: 16, endIndent: 16),
           ListTile(
             leading: const Icon(Icons.info_outline),
-            title: const Text('About'),
+            title: Text(t.drawer.about),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),

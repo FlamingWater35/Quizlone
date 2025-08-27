@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
+import 'package:quizlone/i18n/translations.g.dart';
 import 'package:quizlone/routing/app_router.dart';
 
 import '../../providers/core/core_providers.dart';
@@ -19,9 +20,10 @@ class StartScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final studyListsAsync = ref.watch(studyListsProvider);
     final colorScheme = Theme.of(context).colorScheme;
+    final t = Translations.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Quizlone"), centerTitle: true),
+      appBar: AppBar(title: Text(t.startScreen.title), centerTitle: true),
       drawer: const AppDrawer(),
       body: SafeArea(
         child: CenteredView(
@@ -31,7 +33,7 @@ class StartScreen extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  "Welcome!",
+                  t.startScreen.welcome,
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
                 const SizedBox(height: 30),
@@ -41,11 +43,11 @@ class StartScreen extends ConsumerWidget {
                     ref.invalidate(studyListFormNotifierProvider);
                     context.router.push(const InputRoute());
                   },
-                  label: const Text("Create New List"),
+                  label: Text(t.startScreen.createNewList),
                 ),
                 const SizedBox(height: 40),
                 Text(
-                  "Load Saved List",
+                  t.startScreen.loadSavedList,
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
                 const SizedBox(height: 10),
@@ -53,7 +55,7 @@ class StartScreen extends ConsumerWidget {
                   child: studyListsAsync.when(
                     data: (lists) {
                       if (lists.isEmpty) {
-                        return const Center(child: Text("No lists saved yet."));
+                        return Center(child: Text(t.startScreen.noLists));
                       }
                       return ListView.builder(
                         itemCount: lists.length,
@@ -72,7 +74,11 @@ class StartScreen extends ConsumerWidget {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              subtitle: Text("${list.terms.length} terms"),
+                              subtitle: Text(
+                                t.startScreen.termCount(
+                                  count: list.terms.length,
+                                ),
+                              ),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(16),
                               ),
@@ -87,15 +93,21 @@ class StartScreen extends ConsumerWidget {
                                   Icons.delete_outline,
                                   color: colorScheme.error,
                                 ),
-                                tooltip: "Delete",
+                                tooltip: t.general.delete,
                                 onPressed: () async {
                                   final confirm = await showDialog<bool>(
                                     context: context,
                                     builder:
                                         (ctx) => AlertDialog(
-                                          title: const Text("Confirm Delete"),
+                                          title: Text(
+                                            t
+                                                .startScreen
+                                                .confirmDeleteDialog
+                                                .title,
+                                          ),
                                           content: Text(
-                                            "Are you sure you want to delete '${list.name}'?",
+                                            t.startScreen.confirmDeleteDialog
+                                                .content(listName: list.name),
                                           ),
                                           actions: [
                                             TextButton(
@@ -103,7 +115,7 @@ class StartScreen extends ConsumerWidget {
                                                   () => Navigator.of(
                                                     ctx,
                                                   ).pop(false),
-                                              child: const Text("Cancel"),
+                                              child: Text(t.general.cancel),
                                             ),
                                             TextButton(
                                               onPressed:
@@ -111,7 +123,7 @@ class StartScreen extends ConsumerWidget {
                                                     ctx,
                                                   ).pop(true),
                                               child: Text(
-                                                "Delete",
+                                                t.general.delete,
                                                 style: TextStyle(
                                                   color: colorScheme.error,
                                                 ),
@@ -140,7 +152,11 @@ class StartScreen extends ConsumerWidget {
                         err,
                         stack,
                       );
-                      return Center(child: Text("Error: $err"));
+                      return Center(
+                        child: Text(
+                          t.general.genericError(error: err.toString()),
+                        ),
+                      );
                     },
                   ),
                 ),

@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:quizlone/i18n/translations.g.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:universal_html/html.dart' as html;
 
@@ -23,11 +24,12 @@ class SettingsScreen extends ConsumerWidget {
   Future<void> _exportData(BuildContext context, WidgetRef ref) async {
     final dbService = ref.read(databaseServiceProvider);
     final scaffoldMessenger = ScaffoldMessenger.of(context);
+    final t = Translations.of(context);
     final lists = await dbService.getAllStudyLists();
 
     if (lists.isEmpty) {
       scaffoldMessenger.showSnackBar(
-        const SnackBar(content: Text('There is no data to export.')),
+        SnackBar(content: Text(t.settingsScreen.snackbars.noDataToExport)),
       );
       return;
     }
@@ -54,8 +56,8 @@ class SettingsScreen extends ConsumerWidget {
           context: context,
           builder:
               (context) => AlertDialog(
-                title: const Text('Export Data'),
-                content: const Text('How would you like to export your data?'),
+                title: Text(t.settingsScreen.exportDialog.title),
+                content: Text(t.settingsScreen.exportDialog.content),
                 actions: [
                   TextButton(
                     onPressed: () async {
@@ -70,7 +72,7 @@ class SettingsScreen extends ConsumerWidget {
                         ),
                       );
                     },
-                    child: const Text('Share File'),
+                    child: Text(t.settingsScreen.exportDialog.share),
                   ),
                   TextButton(
                     onPressed: () async {
@@ -83,13 +85,13 @@ class SettingsScreen extends ConsumerWidget {
                       );
                       if (filePath != null) {
                         scaffoldMessenger.showSnackBar(
-                          const SnackBar(
-                            content: Text('File saved successfully!'),
+                          SnackBar(
+                            content: Text(t.settingsScreen.snackbars.fileSaved),
                           ),
                         );
                       }
                     },
-                    child: const Text('Save to Device'),
+                    child: Text(t.settingsScreen.exportDialog.save),
                   ),
                 ],
               ),
@@ -112,13 +114,17 @@ class SettingsScreen extends ConsumerWidget {
         if (outputFile != null) {
           await File(outputFile).writeAsBytes(bytes);
           scaffoldMessenger.showSnackBar(
-            const SnackBar(content: Text('Data exported successfully!')),
+            SnackBar(content: Text(t.settingsScreen.snackbars.exportSuccess)),
           );
         }
       }
     } catch (e) {
       scaffoldMessenger.showSnackBar(
-        SnackBar(content: Text('Error exporting data: $e')),
+        SnackBar(
+          content: Text(
+            t.settingsScreen.snackbars.exportError(error: e.toString()),
+          ),
+        ),
       );
     }
   }
@@ -126,23 +132,22 @@ class SettingsScreen extends ConsumerWidget {
   Future<void> _importData(BuildContext context, WidgetRef ref) async {
     final dbService = ref.read(databaseServiceProvider);
     final scaffoldMessenger = ScaffoldMessenger.of(context);
+    final t = Translations.of(context);
 
     final bool? confirm = await showDialog<bool>(
       context: context,
       builder:
           (context) => AlertDialog(
-            title: const Text('Confirm Import'),
-            content: const Text(
-              'This will import study lists from a file. Any existing lists with the same name will be overwritten. Continue?',
-            ),
+            title: Text(t.settingsScreen.importDialog.title),
+            content: Text(t.settingsScreen.importDialog.content),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(false),
-                child: const Text('Cancel'),
+                child: Text(t.general.cancel),
               ),
               TextButton(
                 onPressed: () => Navigator.of(context).pop(true),
-                child: const Text('Import'),
+                child: Text(t.settingsScreen.importDialog.import),
               ),
             ],
           ),
@@ -183,12 +188,20 @@ class SettingsScreen extends ConsumerWidget {
         }
         scaffoldMessenger.showSnackBar(
           SnackBar(
-            content: Text('${studyLists.length} lists imported successfully!'),
+            content: Text(
+              t.settingsScreen.snackbars.importSuccess(
+                count: studyLists.length,
+              ),
+            ),
           ),
         );
       } catch (e) {
         scaffoldMessenger.showSnackBar(
-          SnackBar(content: Text('Error importing data: $e')),
+          SnackBar(
+            content: Text(
+              t.settingsScreen.snackbars.importError(error: e.toString()),
+            ),
+          ),
         );
       }
     }
@@ -197,24 +210,23 @@ class SettingsScreen extends ConsumerWidget {
   Future<void> _deleteAllData(BuildContext context, WidgetRef ref) async {
     final dbService = ref.read(databaseServiceProvider);
     final scaffoldMessenger = ScaffoldMessenger.of(context);
+    final t = Translations.of(context);
 
     final bool? confirm = await showDialog<bool>(
       context: context,
       builder:
           (context) => AlertDialog(
-            title: const Text('Confirm Deletion'),
-            content: const Text(
-              'Are you sure you want to delete ALL study lists? This action cannot be undone.',
-            ),
+            title: Text(t.settingsScreen.deleteDialog.title),
+            content: Text(t.settingsScreen.deleteDialog.content),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(false),
-                child: const Text('Cancel'),
+                child: Text(t.general.cancel),
               ),
               TextButton(
                 onPressed: () => Navigator.of(context).pop(true),
                 child: Text(
-                  'Delete All',
+                  t.settingsScreen.deleteDialog.deleteAll,
                   style: TextStyle(color: Theme.of(context).colorScheme.error),
                 ),
               ),
@@ -225,7 +237,7 @@ class SettingsScreen extends ConsumerWidget {
     if (confirm == true) {
       await dbService.deleteAllStudyLists();
       scaffoldMessenger.showSnackBar(
-        const SnackBar(content: Text('All study lists have been deleted.')),
+        SnackBar(content: Text(t.settingsScreen.snackbars.allDeleted)),
       );
     }
   }
@@ -234,115 +246,142 @@ class SettingsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final currentTheme = ref.watch(appThemeProvider);
     final themeNotifier = ref.read(appThemeProvider.notifier);
+    final currentLanguage = ref.watch(appLanguageNotifierProvider);
+    final languageNotifier = ref.read(appLanguageNotifierProvider.notifier);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final roundedShape = RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(12),
-    );
+    final t = Translations.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings'), centerTitle: true),
+      appBar: AppBar(title: Text(t.settingsScreen.title), centerTitle: true),
       body: SafeArea(
         child: CenteredView(
           child: ListView(
             padding: const EdgeInsets.all(16.0),
             children: [
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          left: 16.0,
-                          top: 8.0,
-                          bottom: 4.0,
-                        ),
-                        child: Text(
-                          'Appearance',
-                          style: theme.textTheme.titleLarge,
-                        ),
-                      ),
-                      const Divider(),
-                      RadioListTile<ThemeMode>(
-                        shape: roundedShape,
-                        title: const Text('System Default'),
-                        value: ThemeMode.system,
-                        groupValue: currentTheme,
-                        onChanged: (value) => themeNotifier.setTheme(value!),
-                      ),
-                      RadioListTile<ThemeMode>(
-                        shape: roundedShape,
-                        title: const Text('Light'),
-                        value: ThemeMode.light,
-                        groupValue: currentTheme,
-                        onChanged: (value) => themeNotifier.setTheme(value!),
-                      ),
-                      RadioListTile<ThemeMode>(
-                        shape: roundedShape,
-                        title: const Text('Dark'),
-                        value: ThemeMode.dark,
-                        groupValue: currentTheme,
-                        onChanged: (value) => themeNotifier.setTheme(value!),
-                      ),
-                    ],
+              _SettingsGroup(
+                title: t.settingsScreen.appearance,
+                children: [
+                  RadioListTile<ThemeMode>(
+                    title: Text(t.settingsScreen.systemDefault),
+                    value: ThemeMode.system,
+                    groupValue: currentTheme,
+                    onChanged: (value) => themeNotifier.setTheme(value!),
                   ),
-                ),
+                  RadioListTile<ThemeMode>(
+                    title: Text(t.settingsScreen.light),
+                    value: ThemeMode.light,
+                    groupValue: currentTheme,
+                    onChanged: (value) => themeNotifier.setTheme(value!),
+                  ),
+                  RadioListTile<ThemeMode>(
+                    title: Text(t.settingsScreen.dark),
+                    value: ThemeMode.dark,
+                    groupValue: currentTheme,
+                    onChanged: (value) => themeNotifier.setTheme(value!),
+                  ),
+                ],
               ),
               const SizedBox(height: 16),
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          left: 16.0,
-                          top: 8.0,
-                          bottom: 4.0,
-                        ),
-                        child: Text(
-                          'Data Management',
-                          style: theme.textTheme.titleLarge,
-                        ),
+              _SettingsGroup(
+                title: t.settingsScreen.language,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+                    child: DropdownButton<AppLanguage>(
+                      value: currentLanguage,
+                      isExpanded: true,
+                      underline: Container(
+                        height: 1,
+                        color: theme.colorScheme.outlineVariant,
                       ),
-                      const Divider(),
-                      ListTile(
-                        shape: roundedShape,
-                        leading: const Icon(Icons.file_download_outlined),
-                        title: const Text('Export Data'),
-                        subtitle: const Text('Save all lists to a file'),
-                        onTap: () => _exportData(context, ref),
-                      ),
-                      ListTile(
-                        shape: roundedShape,
-                        leading: const Icon(Icons.file_upload_outlined),
-                        title: const Text('Import Data'),
-                        subtitle: const Text('Load lists from a file'),
-                        onTap: () => _importData(context, ref),
-                      ),
-                      const Divider(),
-                      ListTile(
-                        shape: roundedShape,
-                        leading: Icon(
-                          Icons.delete_forever_outlined,
-                          color: colorScheme.error,
+                      items: [
+                        DropdownMenuItem(
+                          value: AppLanguage.system,
+                          child: Text(t.settingsScreen.systemDefault),
                         ),
-                        title: Text(
-                          'Delete All Data',
-                          style: TextStyle(color: colorScheme.error),
+                        DropdownMenuItem(
+                          value: AppLanguage.en,
+                          child: Text(t.settingsScreen.english),
                         ),
-                        onTap: () => _deleteAllData(context, ref),
-                      ),
-                    ],
+                        DropdownMenuItem(
+                          value: AppLanguage.fi,
+                          child: Text(t.settingsScreen.finnish),
+                        ),
+                      ],
+                      onChanged: (AppLanguage? newLang) {
+                        if (newLang != null) {
+                          languageNotifier.setLanguage(newLang);
+                        }
+                      },
+                    ),
                   ),
-                ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              _SettingsGroup(
+                title: t.settingsScreen.dataManagement,
+                children: [
+                  ListTile(
+                    leading: const Icon(Icons.file_download_outlined),
+                    title: Text(t.settingsScreen.exportData),
+                    subtitle: Text(t.settingsScreen.exportDataSubtitle),
+                    onTap: () => _exportData(context, ref),
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.file_upload_outlined),
+                    title: Text(t.settingsScreen.importData),
+                    subtitle: Text(t.settingsScreen.importDataSubtitle),
+                    onTap: () => _importData(context, ref),
+                  ),
+                  const Divider(),
+                  ListTile(
+                    leading: Icon(
+                      Icons.delete_forever_outlined,
+                      color: colorScheme.error,
+                    ),
+                    title: Text(
+                      t.settingsScreen.deleteAllData,
+                      style: TextStyle(color: colorScheme.error),
+                    ),
+                    onTap: () => _deleteAllData(context, ref),
+                  ),
+                ],
               ),
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _SettingsGroup extends StatelessWidget {
+  const _SettingsGroup({required this.title, required this.children});
+
+  final List<Widget> children;
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final roundedShape = RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(12),
+    );
+
+    return Card(
+      shape: roundedShape,
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
+            child: Text(title, style: theme.textTheme.titleLarge),
+          ),
+          const Divider(),
+          ...children,
+        ],
       ),
     );
   }

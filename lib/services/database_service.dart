@@ -75,5 +75,13 @@ class DatabaseService {
     return _settingsBox.get('theme', defaultValue: 'system');
   }
 
+  Future<void> saveLanguage(String langCode) async {
+    await _settingsBox.put('language', langCode);
+  }
+
+  String getLanguage() {
+    return _settingsBox.get('language', defaultValue: 'system');
+  }
+
   Box<StudyList> get _box => _studyListBox;
 }

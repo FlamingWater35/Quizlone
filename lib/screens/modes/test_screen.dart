@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
+import 'package:quizlone/i18n/translations.g.dart';
 import 'package:quizlone/routing/app_router.dart';
 
 import '../../models/enums/enums.dart';
@@ -58,6 +59,7 @@ class _TestScreenState extends ConsumerState<TestScreen> {
   ) {
     final bool isSubmitted = screenState.isSubmitted;
     final colorScheme = Theme.of(context).colorScheme;
+    final t = Translations.of(context);
     Color? cardColor;
     InputDecoration inputDecoration;
 
@@ -171,7 +173,8 @@ class _TestScreenState extends ConsumerState<TestScreen> {
                 padding: const EdgeInsets.only(top: 10.0),
                 child: Text.rich(
                   TextSpan(
-                    text: "Correct Answer: ",
+                    text:
+                        "${t.resultsScreen.reviewIncorrect.split(':').first}: ",
                     style: TextStyle(color: Colors.green.shade800),
                     children: [
                       TextSpan(
@@ -192,10 +195,11 @@ class _TestScreenState extends ConsumerState<TestScreen> {
   Widget build(BuildContext context) {
     final testStateAsync = ref.watch(testControllerProvider);
     final testNotifier = ref.read(testControllerProvider.notifier);
+    final t = Translations.of(context);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Test"),
+        title: Text(t.testScreen.title),
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -220,7 +224,7 @@ class _TestScreenState extends ConsumerState<TestScreen> {
               );
             }
             if (state.questions.isEmpty && !state.isLoading) {
-              return const Center(child: Text("No questions for this test."));
+              return Center(child: Text(t.testScreen.noQuestions));
             }
 
             if (_writtenAnswerControllers.isEmpty &&
@@ -264,7 +268,7 @@ class _TestScreenState extends ConsumerState<TestScreen> {
                                 onPressed: () {
                                   context.router.push(const ResultsRoute());
                                 },
-                                label: const Text("View Results"),
+                                label: Text(t.testScreen.viewResults),
                               )
                               : ElevatedButton.icon(
                                 icon: const Icon(Icons.check_circle_outline),
@@ -275,7 +279,7 @@ class _TestScreenState extends ConsumerState<TestScreen> {
                                           FocusScope.of(context).unfocus();
                                           testNotifier.submitTest();
                                         },
-                                label: const Text("Submit Test"),
+                                label: Text(t.testScreen.submitTest),
                               ),
                     ),
                   ),
@@ -291,7 +295,7 @@ class _TestScreenState extends ConsumerState<TestScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Text(
-                    "Error: $err",
+                    t.general.genericError(error: err.toString()),
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.error,
                     ),

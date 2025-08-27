@@ -6,7 +6,7 @@ part of 'test_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$testControllerHash() => r'c77763c801505abe63a76e1756ac0e321d0d8efe';
+String _$testControllerHash() => r'f8016601057a64ea474f4458abe9bfc1bc00d9e0';
 
 /// See also [TestController].
 @ProviderFor(TestController)

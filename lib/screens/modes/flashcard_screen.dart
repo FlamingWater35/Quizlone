@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
+import 'package:quizlone/i18n/translations.g.dart';
 
 import '../../providers/controllers/flashcard_controller.dart';
 import '../../widgets/centered_view.dart';
@@ -43,6 +44,7 @@ class _FlashcardScreenState extends ConsumerState<FlashcardScreen> {
     FlashcardController notifier,
     FlashcardScreenState state,
   ) {
+    final t = Translations.of(context);
     final bool canGoPrev = state.currentIndex > 0;
     final bool canGoNext = state.currentIndex < state.displayTerms.length - 1;
 
@@ -54,7 +56,7 @@ class _FlashcardScreenState extends ConsumerState<FlashcardScreen> {
             Expanded(
               child: OutlinedButton.icon(
                 icon: const Icon(Icons.arrow_back),
-                label: const Text("Previous"),
+                label: Text(t.general.previous),
                 onPressed: canGoPrev ? notifier.previousCard : null,
               ),
             ),
@@ -62,7 +64,7 @@ class _FlashcardScreenState extends ConsumerState<FlashcardScreen> {
             Expanded(
               child: ElevatedButton.icon(
                 icon: const Icon(Icons.arrow_forward),
-                label: const Text("Next"),
+                label: Text(t.general.next),
                 onPressed: canGoNext ? notifier.nextCard : null,
               ),
             ),
@@ -74,14 +76,14 @@ class _FlashcardScreenState extends ConsumerState<FlashcardScreen> {
           children: [
             IconButton(
               icon: const Icon(Icons.shuffle),
-              tooltip: "Shuffle",
+              tooltip: t.flashcardScreen.shuffle,
               onPressed: notifier.shuffleCards,
               iconSize: 28,
             ),
             const SizedBox(width: 40),
             IconButton(
               icon: const Icon(Icons.restart_alt),
-              tooltip: "Restart",
+              tooltip: t.flashcardScreen.restart,
               onPressed: notifier.restart,
               iconSize: 28,
             ),
@@ -95,6 +97,7 @@ class _FlashcardScreenState extends ConsumerState<FlashcardScreen> {
   Widget build(BuildContext context) {
     final flashcardStateAsync = ref.watch(flashcardControllerProvider);
     final flashcardNotifier = ref.read(flashcardControllerProvider.notifier);
+    final t = Translations.of(context);
 
     ref.listen<AsyncValue<FlashcardScreenState>>(flashcardControllerProvider, (
       prev,
@@ -136,7 +139,7 @@ class _FlashcardScreenState extends ConsumerState<FlashcardScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("Flashcards"),
+          title: Text(t.flashcardScreen.title),
           centerTitle: true,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
@@ -166,7 +169,7 @@ class _FlashcardScreenState extends ConsumerState<FlashcardScreen> {
                 );
               }
               if (state.currentCard == null) {
-                return const Center(child: Text("No flashcards to display."));
+                return Center(child: Text(t.flashcardScreen.noCards));
               }
 
               return CenteredView(
@@ -268,7 +271,7 @@ class _FlashcardScreenState extends ConsumerState<FlashcardScreen> {
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Text(
-                      "Error: $err",
+                      t.general.genericError(error: err.toString()),
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.error,

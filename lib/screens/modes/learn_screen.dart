@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
+import 'package:quizlone/i18n/translations.g.dart';
 
 import '../../providers/controllers/learn_controller.dart';
 import '../../widgets/centered_view.dart';
@@ -41,6 +42,7 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
     LearnModeScreenState state,
     LearnController notifier,
   ) {
+    final t = Translations.of(context);
     return Center(
       child: CenteredView(
         child: Padding(
@@ -57,12 +59,12 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
               ElevatedButton.icon(
                 icon: const Icon(Icons.restart_alt),
                 onPressed: notifier.refreshAndRestart,
-                label: const Text("Restart Learn Session"),
+                label: Text(t.learnScreen.restartSession),
               ),
               const SizedBox(height: 12),
               TextButton(
                 onPressed: () => context.router.pop(),
-                child: const Text("Back to Options"),
+                child: Text(t.learnScreen.backToOptions),
               ),
             ],
           ),
@@ -92,6 +94,7 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
     final learnStateAsync = ref.watch(learnControllerProvider);
     final learnNotifier = ref.read(learnControllerProvider.notifier);
     final textTheme = Theme.of(context).textTheme;
+    final t = Translations.of(context);
 
     ref.listen<AsyncValue<LearnModeScreenState>>(learnControllerProvider, (
       prev,
@@ -111,7 +114,7 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Learn"),
+        title: Text(t.learnScreen.title),
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -136,7 +139,7 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
             return _buildSessionCompleteUI(context, state, learnNotifier);
           }
           if (state.currentQuestion == null && !state.isLoading) {
-            return const Center(child: Text("Preparing next question..."));
+            return Center(child: Text(t.learnScreen.preparing));
           }
           if (state.currentQuestion == null && state.isLoading) {
             return const Center(child: CircularProgressIndicator());
@@ -183,13 +186,13 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
                                 child: TextField(
                                   controller: _answerController,
                                   decoration: InputDecoration(
-                                    hintText: "Type your answer here...",
+                                    hintText: t.learnScreen.answerHint,
                                     errorText:
                                         (questionState.feedbackType ==
                                                     LearnFeedbackType
                                                         .incorrect &&
                                                 questionState.answerSubmitted)
-                                            ? "Incorrect"
+                                            ? t.learnScreen.incorrect
                                             : null,
                                   ),
                                   onChanged: learnNotifier.updateUserAnswer,
@@ -204,7 +207,7 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
                                     questionState.answerSubmitted
                                         ? null
                                         : () => _onSubmit(learnNotifier),
-                                child: const Text("Submit"),
+                                child: Text(t.general.submit),
                               ),
                             ],
                           ),
@@ -237,7 +240,7 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
                               children: [
                                 OutlinedButton.icon(
                                   icon: const Icon(Icons.lightbulb_outline),
-                                  label: const Text("Hint"),
+                                  label: Text(t.learnScreen.hint),
                                   onPressed: learnNotifier.showHint,
                                   style: OutlinedButton.styleFrom(
                                     foregroundColor:
@@ -252,7 +255,7 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
                                 ),
                                 OutlinedButton.icon(
                                   icon: const Icon(Icons.skip_next),
-                                  label: const Text("Skip"),
+                                  label: Text(t.learnScreen.skip),
                                   onPressed:
                                       learnNotifier.skipQuestionAndShowAnswer,
                                 ),
@@ -268,7 +271,7 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
                       onPressed: () {
                         context.router.pop();
                       },
-                      child: const Text("Back to Mode Selection"),
+                      child: Text(t.learnScreen.backToModeSelection),
                     ),
                   ),
                 ],
@@ -284,7 +287,7 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Text(
-                  "Error in Learn Mode: $err",
+                  t.general.genericError(error: err.toString()),
                   style: TextStyle(color: Theme.of(context).colorScheme.error),
                 ),
               ),

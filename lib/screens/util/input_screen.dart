@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quizlone/i18n/translations.g.dart';
 import 'package:quizlone/routing/app_router.dart';
 
 import '../../providers/study/study_list_providers.dart';
@@ -42,10 +43,11 @@ class _InputScreenState extends ConsumerState<InputScreen> {
     final formState = ref.watch(studyListFormNotifierProvider);
     final formNotifier = ref.read(studyListFormNotifierProvider.notifier);
     final textTheme = Theme.of(context).textTheme;
+    final t = Translations.of(context);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Create New List"),
+        title: Text(t.inputScreen.title),
         centerTitle: true,
         automaticallyImplyLeading: false,
       ),
@@ -59,8 +61,8 @@ class _InputScreenState extends ConsumerState<InputScreen> {
                 TextField(
                   controller: _listNameController,
                   decoration: InputDecoration(
-                    labelText: "List Name",
-                    hintText: "e.g., Chapter 1 Vocabulary",
+                    labelText: t.inputScreen.listName,
+                    hintText: t.inputScreen.listNameHint,
                     border: const OutlineInputBorder(),
                     errorText:
                         (formState.errorMessage != null &&
@@ -74,10 +76,10 @@ class _InputScreenState extends ConsumerState<InputScreen> {
                   enabled: !formState.isLoading,
                 ),
                 const SizedBox(height: 24),
-                Text("Paste your terms below:", style: textTheme.titleMedium),
+                Text(t.inputScreen.pasteTerms, style: textTheme.titleMedium),
                 const SizedBox(height: 4),
                 Text(
-                  "(Term on one line, Definition on the next)",
+                  t.inputScreen.pasteTermsHint,
                   style: textTheme.bodySmall?.copyWith(
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
@@ -86,8 +88,7 @@ class _InputScreenState extends ConsumerState<InputScreen> {
                 TextField(
                   controller: _termsInputController,
                   decoration: InputDecoration(
-                    hintText:
-                        "Justice\nThe principle of moral rightness\nSun\nA star that is the center of a planetary system",
+                    hintText: t.inputScreen.termsHint,
                     border: const OutlineInputBorder(),
                     alignLabelWithHint: true,
                     errorText:
@@ -113,7 +114,7 @@ class _InputScreenState extends ConsumerState<InputScreen> {
                     children: <Widget>[
                       OutlinedButton.icon(
                         icon: const Icon(Icons.arrow_back),
-                        label: const Text("Back"),
+                        label: Text(t.general.back),
                         onPressed:
                             formState.isLoading
                                 ? null
@@ -124,7 +125,7 @@ class _InputScreenState extends ConsumerState<InputScreen> {
                       ),
                       ElevatedButton.icon(
                         icon: const Icon(Icons.save_alt),
-                        label: const Text("Save List"),
+                        label: Text(t.inputScreen.saveList),
                         onPressed:
                             formState.isLoading
                                 ? null

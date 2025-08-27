@@ -1,0 +1,180 @@
+{
+  "appName": "Quizlone",
+  "general": {
+    "back": "Takaisin",
+    "cancel": "Peruuta",
+    "delete": "Poista",
+    "error": "Virhe",
+    "next": "Seuraava",
+    "previous": "Edellinen",
+    "saveAndContinue": "Tallenna ja jatka",
+    "submit": "Lähetä",
+    "all": "Kaikki",
+    "loading": "Ladataan...",
+    "genericError": "Virhe: $error"
+  },
+  "drawer": {
+    "settings": "Asetukset",
+    "about": "Tietoja",
+    "aboutDialog": {
+      "legalese": "© 2025 Quizlone",
+      "description": "Yksinkertainen ja moderni opiskelusovellus, joka on rakennettu Flutterilla."
+    }
+  },
+  "startScreen": {
+    "title": "Quizlone",
+    "welcome": "Tervetuloa!",
+    "createNewList": "Luo uusi lista",
+    "loadSavedList": "Lataa tallennettu lista",
+    "noLists": "Listoja ei ole vielä tallennettu.",
+    "termCount(param=count)": {
+      "one": "1 termi",
+      "other": "$count termiä"
+    },
+    "confirmDeleteDialog": {
+      "title": "Vahvista poisto",
+      "content": "Haluatko varmasti poistaa listan '$listName'?"
+    }
+  },
+  "inputScreen": {
+    "title": "Luo uusi lista",
+    "listName": "Listan nimi",
+    "listNameHint": "esim. Luvun 1 sanasto",
+    "pasteTerms": "Liitä termit alle:",
+    "pasteTermsHint": "(Termi yhdelle riville, määritelmä seuraavalle)",
+    "termsHint": "Oikeus\nMoraalisen oikeudenmukaisuuden periaate\nAurinko\nTähti, joka on planeettajärjestelmän keskus",
+    "saveList": "Tallenna lista",
+    "errors": {
+      "listNameEmpty": "Listan nimi ei voi olla tyhjä.",
+      "noTerms": "Termejä/määritelmiä ei ole syötetty.",
+      "invalidFormat": "Virheellinen muoto. Jokaisella termillä on oltava määritelmä seuraavalla rivillä.",
+      "emptyTerm": "Muotovirhe rivin $line lähellä. Löydettiin tyhjä termi tai määritelmä.",
+      "noValidPairs": "Kelvollisia termi/määritelmä-pareja ei löytynyt.",
+      "saveFailed": "Listan tallennus epäonnistui: $error"
+    }
+  },
+  "modeSelectionScreen": {
+    "title": "Valinnat & Tila",
+    "noActiveList": "Aktiivista opiskelulistaa ei löytynyt tai listaa ei voitu ladata.",
+    "debugActiveId": "Debug: Nykyinen aktiivinen ID on $id",
+    "returnToWelcome": "Palaa aloitusnäyttöön",
+    "flashcardOptions": "Muistikorttien asetukset",
+    "showTermFirst": "Näytä ensin termi",
+    "showDefFirst": "Näytä ensin määritelmä",
+    "studyOptions": "Oppimisen & Testin asetukset",
+    "askForTerm": "Näytä määritelmä, kysy termi",
+    "askForDef": "Näytä termi, kysy määritelmä",
+    "studyLength": "Opiskelun pituus:",
+    "testFormat": "Testin muoto",
+    "writtenAnswer": "Kirjallinen vastaus",
+    "multipleChoice": "Monivalinta",
+    "flashcards": "Muistikortit",
+    "learn": "Opi",
+    "test": "Testi",
+    "backToWelcome": "Takaisin aloitusnäyttöön"
+  },
+  "flashcardScreen": {
+    "title": "Muistikortit",
+    "noCards": "Ei näytettäviä muistikortteja.",
+    "noTerms": "Opiskeltavia termejä ei ole saatavilla.",
+    "shuffle": "Sekoita",
+    "restart": "Aloita alusta"
+  },
+  "learnScreen": {
+    "title": "Opi",
+    "restartSession": "Aloita oppimisistunto alusta",
+    "backToOptions": "Takaisin valintoihin",
+    "preparing": "Valmistellaan seuraavaa kysymystä...",
+    "answerHint": "Kirjoita vastauksesi tähän...",
+    "incorrect": "Väärin",
+    "hint": "Vihje",
+    "skip": "Ohita",
+    "backToModeSelection": "Takaisin tilan valintaan",
+    "errors": {
+      "noTerms": "Oppimistilassa ei ole saatavilla termejä.",
+      "notEnoughTerms": "Ei tarpeeksi termejä valitulle pituudelle."
+    },
+    "feedback": {
+      "correct": "Oikein!",
+      "incorrect": "Väärin. Oikea vastaus: $answer",
+      "hint": "Vihje: Alkaa kirjaimella \"$char\"",
+      "skipped": "Ohitettu. Vastaus oli: $answer"
+    },
+    "progress": {
+      "allLearned": "Kaikki termit opittu!",
+      "cycleStatus": "Kierros $cycleNum | Kohde $itemNum / $total",
+      "sessionComplete": "Oppimisistunto valmis! Hyvää työtä!",
+      "maxCyclesReached(param=count)": {
+        "one": "Enimmäismäärä kierroksia saavutettu. 1 kohde vielä kertaamatta.",
+        "other": "Enimmäismäärä kierroksia saavutettu. $count kohdetta vielä kertaamatta."
+      },
+      "startingCycle": "Aloitetaan kierros $cycleNum, jossa on $count kohdetta..."
+    }
+  },
+  "testScreen": {
+    "title": "Testi",
+    "noQuestions": "Tässä testissä ei ole kysymyksiä.",
+    "viewResults": "Näytä tulokset",
+    "submitTest": "Lähetä testi",
+    "errors": {
+      "loadFailed": "Virhe ladattaessa opiskelulistaa testiä varten.",
+      "noTerms": "Testissä ei ole saatavilla termejä.",
+      "notEnoughTerms": "Ei tarpeeksi termejä valitulle opiskelun pituudelle."
+    }
+  },
+  "resultsScreen": {
+    "title": "Testin tulokset",
+    "notSubmitted": "Testiä ei ole vielä lähetetty.",
+    "noQuestions": "Tässä testissä ei ollut kysymyksiä.",
+    "yourScore": "Pisteesi",
+    "scoreFraction": "$score / $total oikein",
+    "reviewIncorrect": "Kertaa väärät vastaukset:",
+    "yourAnswerWas": "Vastauksesi: $answer",
+    "noAnswer": "(Ei vastausta)",
+    "congratulations": "Onneksi olkoon! Sait kaiken oikein!",
+    "retryTest": "Yritä testiä uudelleen",
+    "reviewFlashcards": "Kertaa muistikorteilla",
+    "backToWelcome": "Takaisin aloitusnäyttöön"
+  },
+  "settingsScreen": {
+    "title": "Asetukset",
+    "appearance": "Ulkoasu",
+    "language": "Kieli",
+    "systemDefault": "Järjestelmän oletus",
+    "light": "Vaalea",
+    "dark": "Tumma",
+    "english": "Englanti",
+    "finnish": "Suomi",
+    "dataManagement": "Tietojen hallinta",
+    "exportData": "Vie tiedot",
+    "exportDataSubtitle": "Tallenna kaikki listat tiedostoon",
+    "importData": "Tuo tiedot",
+    "importDataSubtitle": "Lataa listat tiedostosta",
+    "deleteAllData": "Poista kaikki tiedot",
+    "exportDialog": {
+      "title": "Vie tiedot",
+      "content": "Miten haluat viedä tietosi?",
+      "share": "Jaa tiedosto",
+      "save": "Tallenna laitteelle"
+    },
+    "importDialog": {
+      "title": "Vahvista tuonti",
+      "content": "Tämä tuo opiskelulistat tiedostosta. Kaikki olemassa olevat listat, joilla on sama nimi, korvataan. Jatketaanko?",
+      "import": "Tuo"
+    },
+    "deleteDialog": {
+      "title": "Vahvista poisto",
+      "content": "Haluatko varmasti poistaa KAIKKI opiskelulistat? Tätä toimintoa ei voi kumota.",
+      "deleteAll": "Poista kaikki"
+    },
+    "snackbars": {
+      "noDataToExport": "Ei vietäviä tietoja.",
+      "exportSuccess": "Tiedot viety onnistuneesti!",
+      "exportError": "Virhe tietojen viennissä: $error",
+      "fileSaved": "Tiedosto tallennettu onnistuneesti!",
+      "importSuccess": "$count listaa tuotu onnistuneesti!",
+      "importError": "Virhe tietojen tuonnissa: $error",
+      "allDeleted": "Kaikki opiskelulistat on poistettu."
+    }
+  }
+}

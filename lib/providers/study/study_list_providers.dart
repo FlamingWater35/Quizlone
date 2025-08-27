@@ -3,6 +3,7 @@ import 'package:logging/logging.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '/providers/core/core_providers.dart';
+import '../../i18n/translations.g.dart';
 import '../../models/study_list.dart';
 import '../../models/term.dart';
 import '../immutables/study_list_form_state.dart';
@@ -80,7 +81,7 @@ class StudyListFormNotifier extends _$StudyListFormNotifier {
       return true;
     } catch (e, s) {
       state = state.copyWith(
-        errorMessage: "Failed to save list: $e",
+        errorMessage: t.inputScreen.errors.saveFailed(error: e.toString()),
         isLoading: false,
       );
       _log.severe("Error saving list", e, s);
@@ -102,20 +103,17 @@ class StudyListFormNotifier extends _$StudyListFormNotifier {
             .toList();
 
     if (state.listNameInput.trim().isEmpty) {
-      state = state.copyWith(errorMessage: "List name cannot be empty.");
+      state = state.copyWith(errorMessage: t.inputScreen.errors.listNameEmpty);
       return false;
     }
 
     if (lines.isEmpty) {
-      state = state.copyWith(errorMessage: "No terms/definitions entered.");
+      state = state.copyWith(errorMessage: t.inputScreen.errors.noTerms);
       return false;
     }
 
     if (lines.length < 2 || lines.length % 2 != 0) {
-      state = state.copyWith(
-        errorMessage:
-            "Invalid format. Each term needs a definition on the next line.",
-      );
+      state = state.copyWith(errorMessage: t.inputScreen.errors.invalidFormat);
       return false;
     }
 
@@ -128,17 +126,14 @@ class StudyListFormNotifier extends _$StudyListFormNotifier {
         );
       } else {
         state = state.copyWith(
-          errorMessage:
-              "Format error near line ${i + 1}. Empty term or definition found.",
+          errorMessage: t.inputScreen.errors.emptyTerm(line: i + 1),
         );
         return false;
       }
     }
 
     if (parsedTerms.isEmpty) {
-      state = state.copyWith(
-        errorMessage: "No valid term/definition pairs found.",
-      );
+      state = state.copyWith(errorMessage: t.inputScreen.errors.noValidPairs);
       return false;
     }
 

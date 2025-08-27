@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../i18n/translations.g.dart';
 import '../../models/enums/enums.dart';
 import '../../models/term.dart';
 import '../study/study_list_providers.dart';
@@ -138,7 +139,7 @@ class FlashcardController extends _$FlashcardController {
           originalTerms: [],
           displayTerms: [],
           isLoading: false,
-          errorMessage: "No terms available to study.",
+          errorMessage: t.flashcardScreen.noTerms,
           startSide: startSideOption,
         ),
       );
@@ -168,7 +169,7 @@ class FlashcardController extends _$FlashcardController {
         originalTerms: [],
         displayTerms: [],
         isLoading: false,
-        errorMessage: "No terms available to study.",
+        errorMessage: t.flashcardScreen.noTerms,
         startSide: startSideOption,
       );
     }

@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../i18n/translations.g.dart';
 import '../../models/enums/enums.dart';
 import '../../models/term.dart';
 import '../study/study_list_providers.dart';
@@ -167,8 +168,10 @@ class LearnController extends _$LearnController {
                   : LearnFeedbackType.incorrect,
           feedbackMessage:
               isCorrect
-                  ? "Correct!"
-                  : "Incorrect. Correct answer: ${questionState.expectedAnswer}",
+                  ? t.learnScreen.feedback.correct
+                  : t.learnScreen.feedback.incorrect(
+                    answer: questionState.expectedAnswer,
+                  ),
           answerSubmitted: true,
         ),
         termsIncorrectThisCycle: updatedIncorrect,
@@ -194,8 +197,9 @@ class LearnController extends _$LearnController {
         currentVal.copyWith(
           currentQuestion: questionState.copyWith(
             feedbackType: LearnFeedbackType.hint,
-            feedbackMessage:
-                "Hint: Starts with \"${questionState.expectedAnswer[0]}\"",
+            feedbackMessage: t.learnScreen.feedback.hint(
+              char: questionState.expectedAnswer[0],
+            ),
           ),
         ),
       );
@@ -216,8 +220,9 @@ class LearnController extends _$LearnController {
       currentVal.copyWith(
         currentQuestion: questionState.copyWith(
           feedbackType: LearnFeedbackType.skipped,
-          feedbackMessage:
-              "Skipped. The answer was: ${questionState.expectedAnswer}",
+          feedbackMessage: t.learnScreen.feedback.skipped(
+            answer: questionState.expectedAnswer,
+          ),
           answerSubmitted: true,
         ),
         termsIncorrectThisCycle: [
@@ -245,7 +250,10 @@ class LearnController extends _$LearnController {
     return LearnQuestionState(
       term: term,
       questionText: askForTerm ? term.definitionText : term.termText,
-      questionLabel: askForTerm ? "Definition:" : "Term:",
+      questionLabel:
+          askForTerm
+              ? t.modeSelectionScreen.askForTerm
+              : t.modeSelectionScreen.askForDef,
       expectedAnswer: askForTerm ? term.termText : term.definitionText,
     );
   }
@@ -261,7 +269,7 @@ class LearnController extends _$LearnController {
         allTermsInSet: allTerms,
         isLoading: false,
         isSessionComplete: true,
-        progressMessage: "All terms learned!",
+        progressMessage: t.learnScreen.progress.allLearned,
         cycleCount: cycleNum,
       );
     }
@@ -273,8 +281,11 @@ class LearnController extends _$LearnController {
       currentQuestion: _createLearnQuestion(termsForThisCycle[0], questionType),
       cycleCount: cycleNum,
       isLoading: false,
-      progressMessage:
-          "Cycle $cycleNum | Item 1 of ${termsForThisCycle.length}",
+      progressMessage: t.learnScreen.progress.cycleStatus(
+        cycleNum: cycleNum,
+        itemNum: 1,
+        total: termsForThisCycle.length,
+      ),
     );
   }
 
@@ -293,8 +304,11 @@ class LearnController extends _$LearnController {
             currentVal.termsToLearnThisCycle[nextIndex],
             questionTypeOption,
           ),
-          progressMessage:
-              "Cycle ${currentVal.cycleCount} | Item ${nextIndex + 1} of ${currentVal.termsToLearnThisCycle.length}",
+          progressMessage: t.learnScreen.progress.cycleStatus(
+            cycleNum: currentVal.cycleCount,
+            itemNum: nextIndex + 1,
+            total: currentVal.termsToLearnThisCycle.length,
+          ),
         ),
       );
     } else {
@@ -302,7 +316,7 @@ class LearnController extends _$LearnController {
         state = AsyncData(
           currentVal.copyWith(
             isSessionComplete: true,
-            progressMessage: "Learn session complete! Well done!",
+            progressMessage: t.learnScreen.progress.sessionComplete,
             setNullCurrentQuestion: true,
           ),
         );
@@ -310,8 +324,9 @@ class LearnController extends _$LearnController {
         state = AsyncData(
           currentVal.copyWith(
             isSessionComplete: true,
-            progressMessage:
-                "Max cycles reached. ${currentVal.termsIncorrectThisCycle.length} items still to review.",
+            progressMessage: t.learnScreen.progress.maxCyclesReached(
+              count: currentVal.termsIncorrectThisCycle.length,
+            ),
             setNullCurrentQuestion: true,
           ),
         );
@@ -330,8 +345,10 @@ class LearnController extends _$LearnController {
             cycleNum: nextCycleNum,
             questionType: questionTypeOption,
           ).copyWith(
-            progressMessage:
-                "Starting Cycle $nextCycleNum with ${termsForNextCycle.length} item(s)...",
+            progressMessage: t.learnScreen.progress.startingCycle(
+              cycleNum: nextCycleNum,
+              count: termsForNextCycle.length,
+            ),
           ),
         );
       }
@@ -346,9 +363,9 @@ class LearnController extends _$LearnController {
     final questionTypeOption = ref.watch(studyAskWithProvider);
 
     if (activeList == null || activeList.terms.isEmpty) {
-      return const LearnModeScreenState(
+      return LearnModeScreenState(
         isLoading: false,
-        errorMessage: "No terms available for Learn mode.",
+        errorMessage: t.learnScreen.errors.noTerms,
       );
     }
 
@@ -362,9 +379,9 @@ class LearnController extends _$LearnController {
     }
 
     if (termsForLearnSet.isEmpty) {
-      return const LearnModeScreenState(
+      return LearnModeScreenState(
         isLoading: false,
-        errorMessage: "Not enough terms for selected length.",
+        errorMessage: t.learnScreen.errors.notEnoughTerms,
       );
     }
 

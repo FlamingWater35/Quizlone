@@ -2,9 +2,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
-import 'package:quizlone/providers/core/settings_provider.dart';
+import 'package:quizlone/i18n/translations.g.dart';
 import 'package:quizlone/routing/app_router.dart';
 
+import 'providers/core/settings_provider.dart';
 import 'services/database_service.dart';
 import 'services/window_manager.dart';
 
@@ -12,8 +13,22 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   _setupLogging();
   await DatabaseService.init();
+
+  final dbService = DatabaseService();
+  final savedLang = dbService.getLanguage();
+  switch (savedLang) {
+    case 'en':
+      LocaleSettings.setLocale(AppLocale.en);
+      break;
+    case 'fi':
+      LocaleSettings.setLocale(AppLocale.fi);
+      break;
+    default:
+      LocaleSettings.useDeviceLocale();
+  }
+
   setupWindow();
-  runApp(const ProviderScope(child: MyApp()));
+  runApp(ProviderScope(child: TranslationProvider(child: const MyApp())));
 }
 
 void _setupLogging() {
@@ -34,8 +49,7 @@ void _setupLogging() {
 class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
-  static final appRouter = AppRouter();
-
+  static final _appRouter = AppRouter();
   static final _log = Logger('MyApp');
 
   @override
@@ -60,7 +74,7 @@ class MyApp extends ConsumerWidget {
     }
 
     return MaterialApp.router(
-      title: 'Quizlone',
+      title: t.appName,
 
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
@@ -92,7 +106,7 @@ class MyApp extends ConsumerWidget {
 
       themeMode: themeMode,
       debugShowCheckedModeBanner: false,
-      routerConfig: appRouter.config(),
+      routerConfig: _appRouter.config(),
     );
   }
 }

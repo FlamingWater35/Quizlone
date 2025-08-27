@@ -1,0 +1,180 @@
+{
+  "appName": "Quizlone",
+  "general": {
+    "back": "Back",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "error": "Error",
+    "next": "Next",
+    "previous": "Previous",
+    "saveAndContinue": "Save and Continue",
+    "submit": "Submit",
+    "all": "All",
+    "loading": "Loading...",
+    "genericError": "Error: $error"
+  },
+  "drawer": {
+    "settings": "Settings",
+    "about": "About",
+    "aboutDialog": {
+      "legalese": "© 2025 Quizlone",
+      "description": "A simple, modern study application built with Flutter."
+    }
+  },
+  "startScreen": {
+    "title": "Quizlone",
+    "welcome": "Welcome!",
+    "createNewList": "Create New List",
+    "loadSavedList": "Load Saved List",
+    "noLists": "No lists saved yet.",
+    "termCount(param=count)": {
+      "one": "1 term",
+      "other": "$count terms"
+    },
+    "confirmDeleteDialog": {
+      "title": "Confirm Delete",
+      "content": "Are you sure you want to delete '$listName'?"
+    }
+  },
+  "inputScreen": {
+    "title": "Create New List",
+    "listName": "List Name",
+    "listNameHint": "e.g., Chapter 1 Vocabulary",
+    "pasteTerms": "Paste your terms below:",
+    "pasteTermsHint": "(Term on one line, Definition on the next)",
+    "termsHint": "Justice\nThe principle of moral rightness\nSun\nA star that is the center of a planetary system",
+    "saveList": "Save List",
+    "errors": {
+      "listNameEmpty": "List name cannot be empty.",
+      "noTerms": "No terms/definitions entered.",
+      "invalidFormat": "Invalid format. Each term needs a definition on the next line.",
+      "emptyTerm": "Format error near line $line. Empty term or definition found.",
+      "noValidPairs": "No valid term/definition pairs found.",
+      "saveFailed": "Failed to save list: $error"
+    }
+  },
+  "modeSelectionScreen": {
+    "title": "Options & Mode",
+    "noActiveList": "No active study list found or list could not be loaded.",
+    "debugActiveId": "Debug: Current Active ID is $id",
+    "returnToWelcome": "Return to Welcome Screen",
+    "flashcardOptions": "Flashcard Options",
+    "showTermFirst": "Show Term First",
+    "showDefFirst": "Show Definition First",
+    "studyOptions": "Learn & Test Options",
+    "askForTerm": "Show Definition, Ask for Term",
+    "askForDef": "Show Term, Ask for Definition",
+    "studyLength": "Study Length:",
+    "testFormat": "Test Format",
+    "writtenAnswer": "Written Answer",
+    "multipleChoice": "Multiple Choice",
+    "flashcards": "Flashcards",
+    "learn": "Learn",
+    "test": "Test",
+    "backToWelcome": "Back to Welcome Screen"
+  },
+  "flashcardScreen": {
+    "title": "Flashcards",
+    "noCards": "No flashcards to display.",
+    "noTerms": "No terms available to study.",
+    "shuffle": "Shuffle",
+    "restart": "Restart"
+  },
+  "learnScreen": {
+    "title": "Learn",
+    "restartSession": "Restart Learn Session",
+    "backToOptions": "Back to Options",
+    "preparing": "Preparing next question...",
+    "answerHint": "Type your answer here...",
+    "incorrect": "Incorrect",
+    "hint": "Hint",
+    "skip": "Skip",
+    "backToModeSelection": "Back to Mode Selection",
+    "errors": {
+      "noTerms": "No terms available for Learn mode.",
+      "notEnoughTerms": "Not enough terms for selected length."
+    },
+    "feedback": {
+      "correct": "Correct!",
+      "incorrect": "Incorrect. Correct answer: $answer",
+      "hint": "Hint: Starts with \"$char\"",
+      "skipped": "Skipped. The answer was: $answer"
+    },
+    "progress": {
+      "allLearned": "All terms learned!",
+      "cycleStatus": "Cycle $cycleNum | Item $itemNum of $total",
+      "sessionComplete": "Learn session complete! Well done!",
+      "maxCyclesReached(param=count)": {
+        "one": "Max cycles reached. 1 item still to review.",
+        "other": "Max cycles reached. $count items still to review."
+      },
+      "startingCycle": "Starting Cycle $cycleNum with $count item(s)..."
+    }
+  },
+  "testScreen": {
+    "title": "Test",
+    "noQuestions": "No questions for this test.",
+    "viewResults": "View Results",
+    "submitTest": "Submit Test",
+    "errors": {
+      "loadFailed": "Error loading study list for test.",
+      "noTerms": "No terms available for the test.",
+      "notEnoughTerms": "Not enough terms for the selected study length."
+    }
+  },
+  "resultsScreen": {
+    "title": "Test Results",
+    "notSubmitted": "Test not submitted yet.",
+    "noQuestions": "No questions were in this test.",
+    "yourScore": "Your Score",
+    "scoreFraction": "$score / $total Correct",
+    "reviewIncorrect": "Review Incorrect Answers:",
+    "yourAnswerWas": "Your Answer: $answer",
+    "noAnswer": "(No answer)",
+    "congratulations": "Congratulations! You got everything right!",
+    "retryTest": "Retry Test",
+    "reviewFlashcards": "Review with Flashcards",
+    "backToWelcome": "Back to Welcome Screen"
+  },
+  "settingsScreen": {
+    "title": "Settings",
+    "appearance": "Appearance",
+    "language": "Language",
+    "systemDefault": "System Default",
+    "light": "Light",
+    "dark": "Dark",
+    "english": "English",
+    "finnish": "Finnish",
+    "dataManagement": "Data Management",
+    "exportData": "Export Data",
+    "exportDataSubtitle": "Save all lists to a file",
+    "importData": "Import Data",
+    "importDataSubtitle": "Load lists from a file",
+    "deleteAllData": "Delete All Data",
+    "exportDialog": {
+      "title": "Export Data",
+      "content": "How would you like to export your data?",
+      "share": "Share File",
+      "save": "Save to Device"
+    },
+    "importDialog": {
+      "title": "Confirm Import",
+      "content": "This will import study lists from a file. Any existing lists with the same name will be overwritten. Continue?",
+      "import": "Import"
+    },
+    "deleteDialog": {
+      "title": "Confirm Deletion",
+      "content": "Are you sure you want to delete ALL study lists? This action cannot be undone.",
+      "deleteAll": "Delete All"
+    },
+    "snackbars": {
+      "noDataToExport": "There is no data to export.",
+      "exportSuccess": "Data exported successfully!",
+      "exportError": "Error exporting data: $error",
+      "fileSaved": "File saved successfully!",
+      "importSuccess": "$count lists imported successfully!",
+      "importError": "Error importing data: $error",
+      "allDeleted": "All study lists have been deleted."
+    }
+  }
+}

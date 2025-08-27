@@ -6,7 +6,7 @@ part of 'settings_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$appThemeHash() => r'81714b40ce29a2963dbead9f4c56704e41f7e03f';
+String _$appThemeHash() => r'693ae236d67bca526d565ba32c8624f4f61c8704';
 
 /// See also [AppTheme].
 @ProviderFor(AppTheme)
@@ -21,5 +21,23 @@ final appThemeProvider =
     );
 
 typedef _$AppTheme = AutoDisposeNotifier<ThemeMode>;
+String _$appLanguageNotifierHash() =>
+    r'501f907252536cf1634547e6a32b865a52e4c3d4';
+
+/// See also [AppLanguageNotifier].
+@ProviderFor(AppLanguageNotifier)
+final appLanguageNotifierProvider =
+    AutoDisposeNotifierProvider<AppLanguageNotifier, AppLanguage>.internal(
+      AppLanguageNotifier.new,
+      name: r'appLanguageNotifierProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$appLanguageNotifierHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+typedef _$AppLanguageNotifier = AutoDisposeNotifier<AppLanguage>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

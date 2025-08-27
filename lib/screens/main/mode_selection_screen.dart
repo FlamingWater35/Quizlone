@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
+import 'package:quizlone/i18n/translations.g.dart';
 import 'package:quizlone/routing/app_router.dart';
 
 import '../../models/enums/enums.dart';
@@ -20,6 +21,7 @@ class ModeSelectionScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final activeId = ref.watch(activeStudyListIdProvider);
+    final t = Translations.of(context);
     _log.fine(
       "ModeSelectionScreen build: activeStudyListIdProvider is $activeId",
     );
@@ -36,7 +38,10 @@ class ModeSelectionScreen extends ConsumerWidget {
     );
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Options & Mode"), centerTitle: true),
+      appBar: AppBar(
+        title: Text(t.modeSelectionScreen.title),
+        centerTitle: true,
+      ),
       body: SafeArea(
         child: activeStudyListAsync.when(
           data: (StudyList? list) {
@@ -48,12 +53,16 @@ class ModeSelectionScreen extends ConsumerWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text(
-                          "No active study list found or list could not be loaded.",
+                        Text(
+                          t.modeSelectionScreen.noActiveList,
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 10),
-                        Text("Debug: Current Active ID is $activeId"),
+                        Text(
+                          t.modeSelectionScreen.debugActiveId(
+                            id: activeId ?? 'null',
+                          ),
+                        ),
                         const SizedBox(height: 20),
                         ElevatedButton(
                           onPressed: () {
@@ -62,7 +71,7 @@ class ModeSelectionScreen extends ConsumerWidget {
                                 .set(null);
                             context.router.replace(const StartRoute());
                           },
-                          child: const Text("Return to Welcome Screen"),
+                          child: Text(t.modeSelectionScreen.returnToWelcome),
                         ),
                       ],
                     ),
@@ -88,7 +97,7 @@ class ModeSelectionScreen extends ConsumerWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      "${list.terms.length} term${list.terms.length == 1 ? '' : 's'}",
+                      t.startScreen.termCount(count: list.terms.length),
                       style: textTheme.titleMedium?.copyWith(
                         color: colorScheme.onSurfaceVariant,
                       ),
@@ -97,11 +106,11 @@ class ModeSelectionScreen extends ConsumerWidget {
                     const SizedBox(height: 24),
 
                     _OptionGroup(
-                      title: "Flashcard Options",
+                      title: t.modeSelectionScreen.flashcardOptions,
                       children: [
                         RadioListTile<FlashcardStartSide>(
                           shape: roundedShape,
-                          title: const Text("Show Term First"),
+                          title: Text(t.modeSelectionScreen.showTermFirst),
                           value: FlashcardStartSide.term,
                           groupValue: fcStartWith,
                           onChanged:
@@ -111,7 +120,7 @@ class ModeSelectionScreen extends ConsumerWidget {
                         ),
                         RadioListTile<FlashcardStartSide>(
                           shape: roundedShape,
-                          title: const Text("Show Definition First"),
+                          title: Text(t.modeSelectionScreen.showDefFirst),
                           value: FlashcardStartSide.definition,
                           groupValue: fcStartWith,
                           onChanged:
@@ -124,11 +133,11 @@ class ModeSelectionScreen extends ConsumerWidget {
                     const SizedBox(height: 16),
 
                     _OptionGroup(
-                      title: "Learn & Test Options",
+                      title: t.modeSelectionScreen.studyOptions,
                       children: [
                         RadioListTile<StudyQuestionType>(
                           shape: roundedShape,
-                          title: const Text("Show Definition, Ask for Term"),
+                          title: Text(t.modeSelectionScreen.askForTerm),
                           value: StudyQuestionType.definition,
                           groupValue: studyAskWith,
                           onChanged:
@@ -138,7 +147,7 @@ class ModeSelectionScreen extends ConsumerWidget {
                         ),
                         RadioListTile<StudyQuestionType>(
                           shape: roundedShape,
-                          title: const Text("Show Term, Ask for Definition"),
+                          title: Text(t.modeSelectionScreen.askForDef),
                           value: StudyQuestionType.term,
                           groupValue: studyAskWith,
                           onChanged:
@@ -154,14 +163,14 @@ class ModeSelectionScreen extends ConsumerWidget {
                           ),
                           child: Row(
                             children: [
-                              const Text("Study Length: "),
+                              Text(t.modeSelectionScreen.studyLength),
                               const SizedBox(width: 10),
                               SizedBox(
                                 width: 80,
                                 child: TextFormField(
                                   initialValue: studyLength?.toString() ?? '',
                                   decoration: InputDecoration(
-                                    hintText: "All",
+                                    hintText: t.general.all,
                                     border: const OutlineInputBorder(),
                                     contentPadding: const EdgeInsets.symmetric(
                                       horizontal: 10,
@@ -202,14 +211,14 @@ class ModeSelectionScreen extends ConsumerWidget {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16.0),
                           child: Text(
-                            "Test Format",
+                            t.modeSelectionScreen.testFormat,
                             style: textTheme.titleSmall,
                           ),
                         ),
                         const SizedBox(height: 4),
                         RadioListTile<TestFormat>(
                           shape: roundedShape,
-                          title: const Text("Written Answer"),
+                          title: Text(t.modeSelectionScreen.writtenAnswer),
                           value: TestFormat.written,
                           groupValue: testFormat,
                           onChanged:
@@ -219,7 +228,7 @@ class ModeSelectionScreen extends ConsumerWidget {
                         ),
                         RadioListTile<TestFormat>(
                           shape: roundedShape,
-                          title: const Text("Multiple Choice"),
+                          title: Text(t.modeSelectionScreen.multipleChoice),
                           value: TestFormat.mc,
                           groupValue: testFormat,
                           onChanged:
@@ -233,17 +242,17 @@ class ModeSelectionScreen extends ConsumerWidget {
 
                     ...[
                       (
-                        label: "Flashcards",
+                        label: t.modeSelectionScreen.flashcards,
                         icon: Icons.style,
                         route: const FlashcardRoute(),
                       ),
                       (
-                        label: "Learn",
+                        label: t.modeSelectionScreen.learn,
                         icon: Icons.school,
                         route: const LearnRoute(),
                       ),
                       (
-                        label: "Test",
+                        label: t.modeSelectionScreen.test,
                         icon: Icons.quiz,
                         route: const TestModeRoute(),
                       ),
@@ -268,7 +277,7 @@ class ModeSelectionScreen extends ConsumerWidget {
                     Center(
                       child: TextButton(
                         onPressed: () => context.router.pop(),
-                        child: const Text("Back to Welcome Screen"),
+                        child: Text(t.modeSelectionScreen.backToWelcome),
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -284,7 +293,9 @@ class ModeSelectionScreen extends ConsumerWidget {
               err,
               stack,
             );
-            return Center(child: Text("Error loading list: $err"));
+            return Center(
+              child: Text(t.general.genericError(error: err.toString())),
+            );
           },
         ),
       ),

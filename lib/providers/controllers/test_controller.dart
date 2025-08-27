@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../i18n/translations.g.dart';
 import '../../models/enums/enums.dart';
 import '../../models/study_list.dart';
 import '../../models/term.dart';
@@ -200,7 +201,7 @@ class TestController extends _$TestController {
       _log.warning("[TestController] Error fetching active list", e, s);
       return TestScreenState(
         isLoading: false,
-        errorMessage: "Error loading study list for test.",
+        errorMessage: t.testScreen.errors.loadFailed,
         testFormat: testFormatOption,
         questionType: questionTypeOption,
       );
@@ -209,7 +210,7 @@ class TestController extends _$TestController {
     if (activeList == null || activeList.terms.isEmpty) {
       return TestScreenState(
         isLoading: false,
-        errorMessage: "No terms available for the test.",
+        errorMessage: t.testScreen.errors.noTerms,
         testFormat: testFormatOption,
         questionType: questionTypeOption,
       );
@@ -227,7 +228,7 @@ class TestController extends _$TestController {
     if (termsForTest.isEmpty) {
       return TestScreenState(
         isLoading: false,
-        errorMessage: "Not enough terms for the selected study length.",
+        errorMessage: t.testScreen.errors.notEnoughTerms,
         testFormat: testFormatOption,
         questionType: questionTypeOption,
       );

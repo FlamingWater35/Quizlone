@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
+import 'package:quizlone/i18n/translations.g.dart';
 import 'package:quizlone/routing/app_router.dart';
 
 import '../../providers/controllers/flashcard_controller.dart';
@@ -19,10 +20,11 @@ class ResultsScreen extends ConsumerWidget {
     final testNotifier = ref.read(testControllerProvider.notifier);
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
+    final t = Translations.of(context);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Test Results"),
+        title: Text(t.resultsScreen.title),
         centerTitle: true,
         automaticallyImplyLeading: false,
       ),
@@ -30,12 +32,10 @@ class ResultsScreen extends ConsumerWidget {
         child: testStateAsync.when(
           data: (state) {
             if (!state.isSubmitted) {
-              return const Center(child: Text("Test not submitted yet."));
+              return Center(child: Text(t.resultsScreen.notSubmitted));
             }
             if (state.questions.isEmpty) {
-              return const Center(
-                child: Text("No questions were in this test."),
-              );
+              return Center(child: Text(t.resultsScreen.noQuestions));
             }
 
             final score = state.score;
@@ -50,7 +50,7 @@ class ResultsScreen extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Text(
-                      "Your Score",
+                      t.resultsScreen.yourScore,
                       style: textTheme.titleLarge,
                       textAlign: TextAlign.center,
                     ),
@@ -63,7 +63,7 @@ class ResultsScreen extends ConsumerWidget {
                       textAlign: TextAlign.center,
                     ),
                     Text(
-                      "$score / $total Correct",
+                      t.resultsScreen.scoreFraction(score: score, total: total),
                       style: textTheme.titleMedium?.copyWith(
                         color: colorScheme.onSurfaceVariant,
                       ),
@@ -72,7 +72,7 @@ class ResultsScreen extends ConsumerWidget {
                     const SizedBox(height: 32),
                     if (incorrectAnswers.isNotEmpty) ...[
                       Text(
-                        "Review Incorrect Answers:",
+                        t.resultsScreen.reviewIncorrect,
                         style: textTheme.titleLarge,
                       ),
                       const SizedBox(height: 8),
@@ -99,7 +99,11 @@ class ResultsScreen extends ConsumerWidget {
                                   ),
                                   const SizedBox(height: 8),
                                   Text(
-                                    "Your Answer: ${item.userAnswerText ?? "(No answer)"}",
+                                    t.resultsScreen.yourAnswerWas(
+                                      answer:
+                                          item.userAnswerText ??
+                                          t.resultsScreen.noAnswer,
+                                    ),
                                     style: TextStyle(
                                       fontStyle: FontStyle.italic,
                                       color: colorScheme.onErrorContainer,
@@ -107,7 +111,7 @@ class ResultsScreen extends ConsumerWidget {
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
-                                    "Correct Answer: ${item.correctAnswerText}",
+                                    "${t.resultsScreen.reviewIncorrect.split(':').first}: ${item.correctAnswerText}",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: Colors.green.shade800,
@@ -122,7 +126,7 @@ class ResultsScreen extends ConsumerWidget {
                       const SizedBox(height: 24),
                     ] else if (total > 0) ...[
                       Text(
-                        "Congratulations! You got everything right!",
+                        t.resultsScreen.congratulations,
                         style: textTheme.titleLarge?.copyWith(
                           color: Colors.green.shade700,
                         ),
@@ -133,7 +137,7 @@ class ResultsScreen extends ConsumerWidget {
 
                     ElevatedButton.icon(
                       icon: const Icon(Icons.restart_alt),
-                      label: const Text("Retry Test"),
+                      label: Text(t.resultsScreen.retryTest),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: colorScheme.primary,
                         foregroundColor: colorScheme.onPrimary,
@@ -148,7 +152,7 @@ class ResultsScreen extends ConsumerWidget {
                     const SizedBox(height: 12),
                     OutlinedButton.icon(
                       icon: const Icon(Icons.style_outlined),
-                      label: const Text("Review with Flashcards"),
+                      label: Text(t.resultsScreen.reviewFlashcards),
                       onPressed: () {
                         ref.invalidate(flashcardControllerProvider);
                         context.router.replace(const FlashcardRoute());
@@ -160,7 +164,7 @@ class ResultsScreen extends ConsumerWidget {
                         onPressed: () {
                           context.router.popUntilRouteWithName(StartRoute.name);
                         },
-                        child: const Text("Back to Welcome Screen"),
+                        child: Text(t.resultsScreen.backToWelcome),
                       ),
                     ),
                   ],
@@ -168,7 +172,7 @@ class ResultsScreen extends ConsumerWidget {
               ),
             );
           },
-          loading: () => const Center(child: Text("Loading results...")),
+          loading: () => Center(child: Text(t.general.loading)),
           error: (err, stack) {
             _log.severe(
               "Error in testControllerProvider for ResultsScreen",
@@ -180,7 +184,7 @@ class ResultsScreen extends ConsumerWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Text(
-                    "Error displaying results: $err",
+                    t.general.genericError(error: err.toString()),
                     style: TextStyle(color: colorScheme.error),
                   ),
                 ),
