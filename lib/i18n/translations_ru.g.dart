@@ -117,6 +117,7 @@ class _TranslationsStartScreenRu extends TranslationsStartScreenEn {
 		other: '${count} термина',
 	);
 	@override late final _TranslationsStartScreenConfirmDeleteDialogRu confirmDeleteDialog = _TranslationsStartScreenConfirmDeleteDialogRu._(_root);
+	@override late final _TranslationsStartScreenRenameListDialogRu renameListDialog = _TranslationsStartScreenRenameListDialogRu._(_root);
 }
 
 // Path: inputScreen
@@ -309,6 +310,19 @@ class _TranslationsStartScreenConfirmDeleteDialogRu extends TranslationsStartScr
 	@override String content({required Object listName}) => 'Вы уверены, что хотите удалить \'${listName}\'?';
 }
 
+// Path: startScreen.renameListDialog
+class _TranslationsStartScreenRenameListDialogRu extends TranslationsStartScreenRenameListDialogEn {
+	_TranslationsStartScreenRenameListDialogRu._(TranslationsRu root) : this._root = root, super.internal(root);
+
+	final TranslationsRu _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Переименовать список';
+	@override String get rename => 'Переименовать';
+	@override String get errorNameExists => 'Список с таким названием уже существует.';
+	@override String get errorNameEmpty => 'Название списка не может быть пустым.';
+}
+
 // Path: inputScreen.errors
 class _TranslationsInputScreenErrorsRu extends TranslationsInputScreenErrorsEn {
 	_TranslationsInputScreenErrorsRu._(TranslationsRu root) : this._root = root, super.internal(root);
@@ -470,6 +484,10 @@ extension on TranslationsRu {
 			);
 			case 'startScreen.confirmDeleteDialog.title': return 'Подтвердите удаление';
 			case 'startScreen.confirmDeleteDialog.content': return ({required Object listName}) => 'Вы уверены, что хотите удалить \'${listName}\'?';
+			case 'startScreen.renameListDialog.title': return 'Переименовать список';
+			case 'startScreen.renameListDialog.rename': return 'Переименовать';
+			case 'startScreen.renameListDialog.errorNameExists': return 'Список с таким названием уже существует.';
+			case 'startScreen.renameListDialog.errorNameEmpty': return 'Название списка не может быть пустым.';
 			case 'inputScreen.title': return 'Создать новый список';
 			case 'inputScreen.listName': return 'Название списка';
 			case 'inputScreen.listNameHint': return 'например, Словарь к Главе 1';

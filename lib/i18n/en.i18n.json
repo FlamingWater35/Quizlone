@@ -40,6 +40,12 @@
     "confirmDeleteDialog": {
       "title": "Confirm Delete",
       "content": "Are you sure you want to delete '$listName'?"
+    },
+    "renameListDialog": {
+      "title": "Rename List",
+      "rename": "Rename",
+      "errorNameExists": "A list with this name already exists.",
+      "errorNameEmpty": "List name cannot be empty."
     }
   },
   "inputScreen": {

@@ -115,6 +115,7 @@ class _TranslationsStartScreenSv extends TranslationsStartScreenEn {
 		other: '${count} termer',
 	);
 	@override late final _TranslationsStartScreenConfirmDeleteDialogSv confirmDeleteDialog = _TranslationsStartScreenConfirmDeleteDialogSv._(_root);
+	@override late final _TranslationsStartScreenRenameListDialogSv renameListDialog = _TranslationsStartScreenRenameListDialogSv._(_root);
 }
 
 // Path: inputScreen
@@ -307,6 +308,19 @@ class _TranslationsStartScreenConfirmDeleteDialogSv extends TranslationsStartScr
 	@override String content({required Object listName}) => 'Är du säker på att du vill ta bort \'${listName}\'?';
 }
 
+// Path: startScreen.renameListDialog
+class _TranslationsStartScreenRenameListDialogSv extends TranslationsStartScreenRenameListDialogEn {
+	_TranslationsStartScreenRenameListDialogSv._(TranslationsSv root) : this._root = root, super.internal(root);
+
+	final TranslationsSv _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Byt namn på listan';
+	@override String get rename => 'Byt namn';
+	@override String get errorNameExists => 'En lista med detta namn finns redan.';
+	@override String get errorNameEmpty => 'Listnamnet kan inte vara tomt.';
+}
+
 // Path: inputScreen.errors
 class _TranslationsInputScreenErrorsSv extends TranslationsInputScreenErrorsEn {
 	_TranslationsInputScreenErrorsSv._(TranslationsSv root) : this._root = root, super.internal(root);
@@ -464,6 +478,10 @@ extension on TranslationsSv {
 			);
 			case 'startScreen.confirmDeleteDialog.title': return 'Bekräfta borttagning';
 			case 'startScreen.confirmDeleteDialog.content': return ({required Object listName}) => 'Är du säker på att du vill ta bort \'${listName}\'?';
+			case 'startScreen.renameListDialog.title': return 'Byt namn på listan';
+			case 'startScreen.renameListDialog.rename': return 'Byt namn';
+			case 'startScreen.renameListDialog.errorNameExists': return 'En lista med detta namn finns redan.';
+			case 'startScreen.renameListDialog.errorNameEmpty': return 'Listnamnet kan inte vara tomt.';
 			case 'inputScreen.title': return 'Skapa ny lista';
 			case 'inputScreen.listName': return 'Listans namn';
 			case 'inputScreen.listNameHint': return 't.ex. Kapitel 1 Ordlista';

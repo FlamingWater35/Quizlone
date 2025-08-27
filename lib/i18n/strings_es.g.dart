@@ -113,6 +113,7 @@ class _TranslationsStartScreenEs implements TranslationsStartScreenEn {
 		other: '${count} términos',
 	);
 	@override late final _TranslationsStartScreenConfirmDeleteDialogEs confirmDeleteDialog = _TranslationsStartScreenConfirmDeleteDialogEs._(_root);
+	@override late final _TranslationsStartScreenRenameListDialogEs renameListDialog = _TranslationsStartScreenRenameListDialogEs._(_root);
 }
 
 // Path: inputScreen
@@ -305,6 +306,19 @@ class _TranslationsStartScreenConfirmDeleteDialogEs implements TranslationsStart
 	@override String content({required Object listName}) => '¿Estás seguro de que quieres eliminar \'${listName}\'?';
 }
 
+// Path: startScreen.renameListDialog
+class _TranslationsStartScreenRenameListDialogEs implements TranslationsStartScreenRenameListDialogEn {
+	_TranslationsStartScreenRenameListDialogEs._(this._root);
+
+	final TranslationsEs _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Renombrar lista';
+	@override String get rename => 'Renombrar';
+	@override String get errorNameExists => 'Ya existe una lista con este nombre.';
+	@override String get errorNameEmpty => 'El nombre de la lista no puede estar vacío.';
+}
+
 // Path: inputScreen.errors
 class _TranslationsInputScreenErrorsEs implements TranslationsInputScreenErrorsEn {
 	_TranslationsInputScreenErrorsEs._(this._root);
@@ -462,6 +476,10 @@ extension on TranslationsEs {
 			);
 			case 'startScreen.confirmDeleteDialog.title': return 'Confirmar eliminación';
 			case 'startScreen.confirmDeleteDialog.content': return ({required Object listName}) => '¿Estás seguro de que quieres eliminar \'${listName}\'?';
+			case 'startScreen.renameListDialog.title': return 'Renombrar lista';
+			case 'startScreen.renameListDialog.rename': return 'Renombrar';
+			case 'startScreen.renameListDialog.errorNameExists': return 'Ya existe una lista con este nombre.';
+			case 'startScreen.renameListDialog.errorNameEmpty': return 'El nombre de la lista no puede estar vacío.';
 			case 'inputScreen.title': return 'Crear nueva lista';
 			case 'inputScreen.listName': return 'Nombre de la lista';
 			case 'inputScreen.listNameHint': return 'p. ej., Vocabulario del Capítulo 1';

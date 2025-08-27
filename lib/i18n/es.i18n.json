@@ -40,6 +40,12 @@
     "confirmDeleteDialog": {
       "title": "Confirmar eliminación",
       "content": "¿Estás seguro de que quieres eliminar '$listName'?"
+    },
+    "renameListDialog": {
+      "title": "Renombrar lista",
+      "rename": "Renombrar",
+      "errorNameExists": "Ya existe una lista con este nombre.",
+      "errorNameEmpty": "El nombre de la lista no puede estar vacío."
     }
   },
   "inputScreen": {

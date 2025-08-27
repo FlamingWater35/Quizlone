@@ -40,6 +40,12 @@
     "confirmDeleteDialog": {
       "title": "Vahvista poisto",
       "content": "Haluatko varmasti poistaa listan '$listName'?"
+    },
+    "renameListDialog": {
+      "title": "Nimeä lista uudelleen",
+      "rename": "Nimeä uudelleen",
+      "errorNameExists": "Tämänniminen lista on jo olemassa.",
+      "errorNameEmpty": "Listan nimi ei voi olla tyhjä."
     }
   },
   "inputScreen": {

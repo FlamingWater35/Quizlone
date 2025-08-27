@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:quizlone/i18n/translations.g.dart';
+import 'package:quizlone/models/study_list.dart';
 import 'package:quizlone/routing/app_router.dart';
 
 import '../../providers/core/core_providers.dart';
@@ -15,6 +16,86 @@ final _log = Logger("StartScreen");
 @RoutePage()
 class StartScreen extends ConsumerWidget {
   const StartScreen({super.key});
+
+  Future<void> _showRenameDialog(
+    BuildContext context,
+    WidgetRef ref,
+    StudyList list,
+  ) async {
+    final t = Translations.of(context);
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    final controller = TextEditingController(text: list.name);
+    final formKey = GlobalKey<FormState>();
+
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: Text(t.startScreen.renameListDialog.title),
+          content: Form(
+            key: formKey,
+            child: TextFormField(
+              controller: controller,
+              autofocus: true,
+              decoration: InputDecoration(hintText: t.inputScreen.listName),
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return t.startScreen.renameListDialog.errorNameEmpty;
+                }
+                return null;
+              },
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text(t.general.cancel),
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+              },
+            ),
+            FilledButton(
+              child: Text(t.startScreen.renameListDialog.rename),
+              onPressed: () async {
+                if (formKey.currentState?.validate() ?? false) {
+                  final newName = controller.text.trim();
+                  final oldName = list.name;
+
+                  if (newName == oldName) {
+                    Navigator.of(dialogContext).pop();
+                    return;
+                  }
+
+                  final success = await ref
+                      .read(databaseServiceProvider)
+                      .renameStudyList(oldName, newName);
+
+                  if (success) {
+                    if (ref.read(activeStudyListIdProvider) == oldName) {
+                      ref.read(activeStudyListIdProvider.notifier).set(newName);
+                    }
+                    if (context.mounted) {
+                      Navigator.of(dialogContext).pop();
+                    }
+                  } else {
+                    if (context.mounted) {
+                      scaffoldMessenger.showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            t.startScreen.renameListDialog.errorNameExists,
+                          ),
+                          backgroundColor: Theme.of(context).colorScheme.error,
+                        ),
+                      );
+                    }
+                  }
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -96,60 +177,84 @@ class StartScreen extends ConsumerWidget {
                                       const ModeSelectionRoute(),
                                     );
                                   },
-                                  trailing: IconButton(
-                                    icon: Icon(
-                                      Icons.delete_outline,
-                                      color: colorScheme.error,
-                                    ),
-                                    tooltip: t.general.delete,
-                                    onPressed: () async {
-                                      final confirm = await showDialog<bool>(
-                                        context: context,
-                                        builder:
-                                            (ctx) => AlertDialog(
-                                              title: Text(
-                                                t
-                                                    .startScreen
-                                                    .confirmDeleteDialog
-                                                    .title,
-                                              ),
-                                              content: Text(
-                                                t
-                                                    .startScreen
-                                                    .confirmDeleteDialog
-                                                    .content(
-                                                      listName: list.name,
-                                                    ),
-                                              ),
-                                              actions: [
-                                                TextButton(
-                                                  onPressed:
-                                                      () => Navigator.of(
-                                                        ctx,
-                                                      ).pop(false),
-                                                  child: Text(t.general.cancel),
-                                                ),
-                                                TextButton(
-                                                  onPressed:
-                                                      () => Navigator.of(
-                                                        ctx,
-                                                      ).pop(true),
-                                                  child: Text(
-                                                    t.general.delete,
-                                                    style: TextStyle(
-                                                      color: colorScheme.error,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
+                                  trailing: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      IconButton(
+                                        icon: const Icon(Icons.edit_outlined),
+                                        tooltip:
+                                            t
+                                                .startScreen
+                                                .renameListDialog
+                                                .rename,
+                                        onPressed:
+                                            () => _showRenameDialog(
+                                              context,
+                                              ref,
+                                              list,
                                             ),
-                                      );
-                                      if (confirm == true) {
-                                        await ref
-                                            .read(databaseServiceProvider)
-                                            .deleteStudyList(list.name);
-                                      }
-                                    },
+                                      ),
+                                      IconButton(
+                                        icon: Icon(
+                                          Icons.delete_outline,
+                                          color: colorScheme.error,
+                                        ),
+                                        tooltip: t.general.delete,
+                                        onPressed: () async {
+                                          final confirm = await showDialog<
+                                            bool
+                                          >(
+                                            context: context,
+                                            builder:
+                                                (ctx) => AlertDialog(
+                                                  title: Text(
+                                                    t
+                                                        .startScreen
+                                                        .confirmDeleteDialog
+                                                        .title,
+                                                  ),
+                                                  content: Text(
+                                                    t
+                                                        .startScreen
+                                                        .confirmDeleteDialog
+                                                        .content(
+                                                          listName: list.name,
+                                                        ),
+                                                  ),
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed:
+                                                          () => Navigator.of(
+                                                            ctx,
+                                                          ).pop(false),
+                                                      child: Text(
+                                                        t.general.cancel,
+                                                      ),
+                                                    ),
+                                                    TextButton(
+                                                      onPressed:
+                                                          () => Navigator.of(
+                                                            ctx,
+                                                          ).pop(true),
+                                                      child: Text(
+                                                        t.general.delete,
+                                                        style: TextStyle(
+                                                          color:
+                                                              colorScheme.error,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                          );
+                                          if (confirm == true) {
+                                            await ref
+                                                .read(databaseServiceProvider)
+                                                .deleteStudyList(list.name);
+                                          }
+                                        },
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),

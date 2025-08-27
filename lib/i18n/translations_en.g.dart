@@ -167,6 +167,7 @@ class TranslationsStartScreenEn {
 	);
 
 	late final TranslationsStartScreenConfirmDeleteDialogEn confirmDeleteDialog = TranslationsStartScreenConfirmDeleteDialogEn.internal(_root);
+	late final TranslationsStartScreenRenameListDialogEn renameListDialog = TranslationsStartScreenRenameListDialogEn.internal(_root);
 }
 
 // Path: inputScreen
@@ -545,6 +546,27 @@ class TranslationsStartScreenConfirmDeleteDialogEn {
 	String content({required Object listName}) => 'Are you sure you want to delete \'${listName}\'?';
 }
 
+// Path: startScreen.renameListDialog
+class TranslationsStartScreenRenameListDialogEn {
+	TranslationsStartScreenRenameListDialogEn.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Rename List'
+	String get title => 'Rename List';
+
+	/// en: 'Rename'
+	String get rename => 'Rename';
+
+	/// en: 'A list with this name already exists.'
+	String get errorNameExists => 'A list with this name already exists.';
+
+	/// en: 'List name cannot be empty.'
+	String get errorNameEmpty => 'List name cannot be empty.';
+}
+
 // Path: inputScreen.errors
 class TranslationsInputScreenErrorsEn {
 	TranslationsInputScreenErrorsEn.internal(this._root);
@@ -776,6 +798,10 @@ extension on Translations {
 			);
 			case 'startScreen.confirmDeleteDialog.title': return 'Confirm Delete';
 			case 'startScreen.confirmDeleteDialog.content': return ({required Object listName}) => 'Are you sure you want to delete \'${listName}\'?';
+			case 'startScreen.renameListDialog.title': return 'Rename List';
+			case 'startScreen.renameListDialog.rename': return 'Rename';
+			case 'startScreen.renameListDialog.errorNameExists': return 'A list with this name already exists.';
+			case 'startScreen.renameListDialog.errorNameEmpty': return 'List name cannot be empty.';
 			case 'inputScreen.title': return 'Create New List';
 			case 'inputScreen.listName': return 'List Name';
 			case 'inputScreen.listNameHint': return 'e.g., Chapter 1 Vocabulary';

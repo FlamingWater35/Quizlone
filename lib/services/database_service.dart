@@ -26,6 +26,33 @@ class DatabaseService {
     return list.name;
   }
 
+  Future<bool> renameStudyList(String oldNameKey, String newName) async {
+    if (_box.containsKey(newName)) {
+      return false;
+    }
+
+    final listToRename = _box.get(oldNameKey);
+    if (listToRename == null) {
+      return false;
+    }
+
+    final updatedList =
+        StudyList()
+          ..name = newName
+          ..terms = listToRename.terms
+          ..createdAt = listToRename.createdAt
+          ..lastUsedAt = DateTime.now()
+          ..flashcardShowTermFirst = listToRename.flashcardShowTermFirst
+          ..studyShowDefinitionAskTerm = listToRename.studyShowDefinitionAskTerm
+          ..testStudyLength = listToRename.testStudyLength
+          ..testFormat = listToRename.testFormat;
+
+    await _box.put(newName, updatedList);
+    await _box.delete(oldNameKey);
+
+    return true;
+  }
+
   Future<List<StudyList>> getAllStudyLists() async {
     final lists = _box.values.toList();
     lists.sort((a, b) => b.createdAt.compareTo(a.createdAt));
@@ -66,7 +93,6 @@ class DatabaseService {
     await _studyListBox.clear();
   }
 
-  // Methods for settings
   Future<void> saveTheme(String themeName) async {
     await _settingsBox.put('theme', themeName);
   }

@@ -42,6 +42,12 @@
     "confirmDeleteDialog": {
       "title": "Подтвердите удаление",
       "content": "Вы уверены, что хотите удалить '$listName'?"
+    },
+    "renameListDialog": {
+      "title": "Переименовать список",
+      "rename": "Переименовать",
+      "errorNameExists": "Список с таким названием уже существует.",
+      "errorNameEmpty": "Название списка не может быть пустым."
     }
   },
   "inputScreen": {

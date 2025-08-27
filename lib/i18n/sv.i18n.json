@@ -40,6 +40,12 @@
     "confirmDeleteDialog": {
       "title": "Bekräfta borttagning",
       "content": "Är du säker på att du vill ta bort '$listName'?"
+    },
+    "renameListDialog": {
+      "title": "Byt namn på listan",
+      "rename": "Byt namn",
+      "errorNameExists": "En lista med detta namn finns redan.",
+      "errorNameEmpty": "Listnamnet kan inte vara tomt."
     }
   },
   "inputScreen": {

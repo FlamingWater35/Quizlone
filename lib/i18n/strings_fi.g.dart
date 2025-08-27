@@ -113,6 +113,7 @@ class _TranslationsStartScreenFi implements TranslationsStartScreenEn {
 		other: '${count} termiä',
 	);
 	@override late final _TranslationsStartScreenConfirmDeleteDialogFi confirmDeleteDialog = _TranslationsStartScreenConfirmDeleteDialogFi._(_root);
+	@override late final _TranslationsStartScreenRenameListDialogFi renameListDialog = _TranslationsStartScreenRenameListDialogFi._(_root);
 }
 
 // Path: inputScreen
@@ -305,6 +306,19 @@ class _TranslationsStartScreenConfirmDeleteDialogFi implements TranslationsStart
 	@override String content({required Object listName}) => 'Haluatko varmasti poistaa listan \'${listName}\'?';
 }
 
+// Path: startScreen.renameListDialog
+class _TranslationsStartScreenRenameListDialogFi implements TranslationsStartScreenRenameListDialogEn {
+	_TranslationsStartScreenRenameListDialogFi._(this._root);
+
+	final TranslationsFi _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Nimeä lista uudelleen';
+	@override String get rename => 'Nimeä uudelleen';
+	@override String get errorNameExists => 'Tämänniminen lista on jo olemassa.';
+	@override String get errorNameEmpty => 'Listan nimi ei voi olla tyhjä.';
+}
+
 // Path: inputScreen.errors
 class _TranslationsInputScreenErrorsFi implements TranslationsInputScreenErrorsEn {
 	_TranslationsInputScreenErrorsFi._(this._root);
@@ -462,6 +476,10 @@ extension on TranslationsFi {
 			);
 			case 'startScreen.confirmDeleteDialog.title': return 'Vahvista poisto';
 			case 'startScreen.confirmDeleteDialog.content': return ({required Object listName}) => 'Haluatko varmasti poistaa listan \'${listName}\'?';
+			case 'startScreen.renameListDialog.title': return 'Nimeä lista uudelleen';
+			case 'startScreen.renameListDialog.rename': return 'Nimeä uudelleen';
+			case 'startScreen.renameListDialog.errorNameExists': return 'Tämänniminen lista on jo olemassa.';
+			case 'startScreen.renameListDialog.errorNameEmpty': return 'Listan nimi ei voi olla tyhjä.';
 			case 'inputScreen.title': return 'Luo uusi lista';
 			case 'inputScreen.listName': return 'Listan nimi';
 			case 'inputScreen.listNameHint': return 'esim. Luvun 1 sanasto';
