@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/material.dart';
 
 import '../screens/main/controls_screen.dart';
 import '../screens/main/mode_selection_screen.dart';
@@ -23,7 +24,27 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: LearnRoute.page),
     AutoRoute(page: TestModeRoute.page),
     AutoRoute(page: ResultsRoute.page),
-    AutoRoute(page: SettingsRoute.page),
-    AutoRoute(page: ControlsRoute.page),
+    CustomRoute(
+      page: SettingsRoute.page,
+      transitionsBuilder: buildSidebarTransition,
+    ),
+    CustomRoute(
+      page: ControlsRoute.page,
+      transitionsBuilder: buildSidebarTransition,
+    ),
   ];
+}
+
+Widget buildSidebarTransition(
+  BuildContext context,
+  Animation<double> animation,
+  Animation<double> secondaryAnimation,
+  Widget child,
+) {
+  return CupertinoPageTransition(
+    primaryRouteAnimation: animation,
+    secondaryRouteAnimation: secondaryAnimation,
+    linearTransition: false,
+    child: child,
+  );
 }

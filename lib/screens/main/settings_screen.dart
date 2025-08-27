@@ -33,52 +33,79 @@ class SettingsScreen extends ConsumerWidget {
     }
   }
 
-  Widget _buildLanguageDrawer(BuildContext context, WidgetRef ref) {
+  void _showLanguageMenu(BuildContext context, WidgetRef ref) {
     final languageNotifier = ref.read(appLanguageNotifierProvider.notifier);
     final currentLanguage = ref.read(appLanguageNotifierProvider);
     final t = Translations.of(context);
     final theme = Theme.of(context);
 
-    return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: [
-          SizedBox(
-            height: 120,
-            child: DrawerHeader(
-              decoration: BoxDecoration(color: theme.colorScheme.primary),
-              child: Text(
-                t.settingsScreen.languageDialogTitle,
-                style: theme.textTheme.headlineSmall?.copyWith(
-                  color: theme.colorScheme.onPrimary,
-                ),
-              ),
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+      transitionDuration: const Duration(milliseconds: 250),
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return Align(
+          alignment: Alignment.centerRight,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 500),
+            child: SimpleDialog(
+              title: Text(t.settingsScreen.languageDialogTitle),
+              contentPadding: const EdgeInsets.all(8.0),
+              children:
+                  AppLanguage.values.map((lang) {
+                    final isSelected = lang == currentLanguage;
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 4.0,
+                        horizontal: 8.0,
+                      ),
+                      child: Card(
+                        margin: EdgeInsets.zero,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: ListTile(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          title: Text(
+                            _getCurrentLanguageName(lang, t),
+                            style: TextStyle(
+                              fontWeight:
+                                  isSelected
+                                      ? FontWeight.bold
+                                      : FontWeight.normal,
+                            ),
+                          ),
+                          trailing:
+                              isSelected
+                                  ? Icon(
+                                    Icons.check_circle,
+                                    color: theme.colorScheme.primary,
+                                  )
+                                  : null,
+                          onTap: () {
+                            languageNotifier.setLanguage(lang);
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ),
+                    );
+                  }).toList(),
             ),
           ),
-          ...AppLanguage.values.map((lang) {
-            final isSelected = lang == currentLanguage;
-            return ListTile(
-              title: Text(
-                _getCurrentLanguageName(lang, t),
-                style: TextStyle(
-                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                ),
-              ),
-              trailing:
-                  isSelected
-                      ? Icon(
-                        Icons.check_circle,
-                        color: theme.colorScheme.primary,
-                      )
-                      : null,
-              onTap: () {
-                languageNotifier.setLanguage(lang);
-                Navigator.of(context).pop();
-              },
-            );
-          }),
-        ],
-      ),
+        );
+      },
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        return SlideTransition(
+          position: Tween<Offset>(
+            begin: const Offset(1.0, 0.0),
+            end: Offset.zero,
+          ).animate(CurvedAnimation(parent: animation, curve: Curves.easeOut)),
+          child: child,
+        );
+      },
     );
   }
 
@@ -319,132 +346,123 @@ class SettingsScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(title: Text(t.settingsScreen.title), centerTitle: true),
-      endDrawer: _buildLanguageDrawer(context, ref),
-      body: Builder(
-        builder: (context) {
-          return SafeArea(
-            child: CenteredView(
-              child: ListView(
-                padding: const EdgeInsets.all(16.0),
+      body: SafeArea(
+        child: CenteredView(
+          child: ListView(
+            padding: const EdgeInsets.all(16.0),
+            children: [
+              _SettingsGroup(
+                title: t.settingsScreen.appearance,
                 children: [
-                  _SettingsGroup(
-                    title: t.settingsScreen.appearance,
-                    children: [
-                      RadioListTile<ThemeMode>(
-                        shape: roundedShape,
-                        title: Text(t.settingsScreen.systemDefault),
-                        value: ThemeMode.system,
-                        groupValue: currentTheme,
-                        onChanged: (value) => themeNotifier.setTheme(value!),
-                      ),
-                      RadioListTile<ThemeMode>(
-                        shape: roundedShape,
-                        title: Text(t.settingsScreen.light),
-                        value: ThemeMode.light,
-                        groupValue: currentTheme,
-                        onChanged: (value) => themeNotifier.setTheme(value!),
-                      ),
-                      RadioListTile<ThemeMode>(
-                        shape: roundedShape,
-                        title: Text(t.settingsScreen.dark),
-                        value: ThemeMode.dark,
-                        groupValue: currentTheme,
-                        onChanged: (value) => themeNotifier.setTheme(value!),
-                      ),
-                    ],
+                  RadioListTile<ThemeMode>(
+                    shape: roundedShape,
+                    title: Text(t.settingsScreen.systemDefault),
+                    value: ThemeMode.system,
+                    groupValue: currentTheme,
+                    onChanged: (value) => themeNotifier.setTheme(value!),
                   ),
-                  const SizedBox(height: 16),
-                  _SettingsGroup(
-                    title: t.settingsScreen.language,
-                    children: [
-                      ListTile(
-                        shape: roundedShape,
-                        leading: const Icon(Icons.language_outlined),
-                        title: Text(t.settingsScreen.language),
-                        subtitle: Text(
-                          _getCurrentLanguageName(currentLanguage, t),
-                        ),
-                        onTap: () => Scaffold.of(context).openEndDrawer(),
-                      ),
-                    ],
+                  RadioListTile<ThemeMode>(
+                    shape: roundedShape,
+                    title: Text(t.settingsScreen.light),
+                    value: ThemeMode.light,
+                    groupValue: currentTheme,
+                    onChanged: (value) => themeNotifier.setTheme(value!),
                   ),
-                  const SizedBox(height: 16),
-                  _SettingsGroup(
-                    title: t.settingsScreen.uiScaling,
-                    children: [
-                      ListTile(
-                        subtitle: Text(t.settingsScreen.uiScalingSubtitle),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16.0,
-                          vertical: 8.0,
-                        ),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Slider(
-                                value: uiScale,
-                                min: 0.8,
-                                max: 1.5,
-                                divisions: 7,
-                                onChanged: (value) {
-                                  uiScaleNotifier.setScale(value);
-                                },
-                              ),
-                            ),
-                            Text("${(uiScale * 100).toStringAsFixed(0)}%"),
-                            const SizedBox(width: 8),
-                            OutlinedButton(
-                              onPressed:
-                                  uiScale == 1.0
-                                      ? null
-                                      : () => uiScaleNotifier.setScale(1.0),
-                              child: Text(t.general.reset),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  _SettingsGroup(
-                    title: t.settingsScreen.dataManagement,
-                    children: [
-                      ListTile(
-                        shape: roundedShape,
-                        leading: const Icon(Icons.file_download_outlined),
-                        title: Text(t.settingsScreen.exportData),
-                        subtitle: Text(t.settingsScreen.exportDataSubtitle),
-                        onTap: () => _exportData(context, ref),
-                      ),
-                      ListTile(
-                        shape: roundedShape,
-                        leading: const Icon(Icons.file_upload_outlined),
-                        title: Text(t.settingsScreen.importData),
-                        subtitle: Text(t.settingsScreen.importDataSubtitle),
-                        onTap: () => _importData(context, ref),
-                      ),
-                      const Divider(),
-                      ListTile(
-                        shape: roundedShape,
-                        leading: Icon(
-                          Icons.delete_forever_outlined,
-                          color: colorScheme.error,
-                        ),
-                        title: Text(
-                          t.settingsScreen.deleteAllData,
-                          style: TextStyle(color: colorScheme.error),
-                        ),
-                        onTap: () => _deleteAllData(context, ref),
-                      ),
-                    ],
+                  RadioListTile<ThemeMode>(
+                    shape: roundedShape,
+                    title: Text(t.settingsScreen.dark),
+                    value: ThemeMode.dark,
+                    groupValue: currentTheme,
+                    onChanged: (value) => themeNotifier.setTheme(value!),
                   ),
                 ],
               ),
-            ),
-          );
-        },
+              const SizedBox(height: 16),
+              _SettingsGroup(
+                title: t.settingsScreen.language,
+                children: [
+                  ListTile(
+                    shape: roundedShape,
+                    leading: const Icon(Icons.language_outlined),
+                    title: Text(t.settingsScreen.language),
+                    subtitle: Text(_getCurrentLanguageName(currentLanguage, t)),
+                    onTap: () => _showLanguageMenu(context, ref),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              _SettingsGroup(
+                title: t.settingsScreen.uiScaling,
+                children: [
+                  ListTile(subtitle: Text(t.settingsScreen.uiScalingSubtitle)),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0,
+                      vertical: 8.0,
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Slider(
+                            value: uiScale,
+                            min: 0.8,
+                            max: 1.5,
+                            divisions: 7,
+                            onChanged: (value) {
+                              uiScaleNotifier.setScale(value);
+                            },
+                          ),
+                        ),
+                        Text("${(uiScale * 100).toStringAsFixed(0)}%"),
+                        const SizedBox(width: 8),
+                        OutlinedButton(
+                          onPressed:
+                              uiScale == 1.0
+                                  ? null
+                                  : () => uiScaleNotifier.setScale(1.0),
+                          child: Text(t.general.reset),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              _SettingsGroup(
+                title: t.settingsScreen.dataManagement,
+                children: [
+                  ListTile(
+                    shape: roundedShape,
+                    leading: const Icon(Icons.file_download_outlined),
+                    title: Text(t.settingsScreen.exportData),
+                    subtitle: Text(t.settingsScreen.exportDataSubtitle),
+                    onTap: () => _exportData(context, ref),
+                  ),
+                  ListTile(
+                    shape: roundedShape,
+                    leading: const Icon(Icons.file_upload_outlined),
+                    title: Text(t.settingsScreen.importData),
+                    subtitle: Text(t.settingsScreen.importDataSubtitle),
+                    onTap: () => _importData(context, ref),
+                  ),
+                  const Divider(),
+                  ListTile(
+                    shape: roundedShape,
+                    leading: Icon(
+                      Icons.delete_forever_outlined,
+                      color: colorScheme.error,
+                    ),
+                    title: Text(
+                      t.settingsScreen.deleteAllData,
+                      style: TextStyle(color: colorScheme.error),
+                    ),
+                    onTap: () => _deleteAllData(context, ref),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
