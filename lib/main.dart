@@ -57,7 +57,7 @@ class MyApp extends ConsumerWidget {
     MyApp._log.info("Building MyApp widget");
     final themeMode = ref.watch(appThemeProvider);
     final uiScale = ref.watch(uiScaleNotifierProvider);
-    const seedColor = Colors.blueAccent;
+    const seedColor = Colors.deepPurple;
 
     SnackBarThemeData buildSnackBarTheme(ColorScheme colorScheme) {
       return SnackBarThemeData(
