@@ -21,18 +21,6 @@ import '../../widgets/centered_view.dart';
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
-  String _getCurrentLanguageName(AppLanguage lang, Translations t) {
-    switch (lang) {
-      case AppLanguage.en:
-        return t.settingsScreen.english;
-      case AppLanguage.fi:
-        return t.settingsScreen.finnish;
-      case AppLanguage.system:
-      default:
-        return t.settingsScreen.systemDefault;
-    }
-  }
-
   void _showLanguageMenu(BuildContext context, WidgetRef ref) {
     final languageNotifier = ref.read(appLanguageNotifierProvider.notifier);
     final currentLanguage = ref.read(appLanguageNotifierProvider);
@@ -70,7 +58,7 @@ class SettingsScreen extends ConsumerWidget {
                             borderRadius: BorderRadius.circular(12),
                           ),
                           title: Text(
-                            _getCurrentLanguageName(lang, t),
+                            lang.getDisplayName(t),
                             style: TextStyle(
                               fontWeight:
                                   isSelected
@@ -379,7 +367,7 @@ class SettingsScreen extends ConsumerWidget {
                 child: ListTile(
                   leading: const Icon(Icons.translate_outlined),
                   title: Text(t.settingsScreen.language),
-                  subtitle: Text(_getCurrentLanguageName(currentLanguage, t)),
+                  subtitle: Text(currentLanguage.getDisplayName(t)),
                   trailing: const Icon(
                     Icons.arrow_forward_ios_rounded,
                     size: 16,

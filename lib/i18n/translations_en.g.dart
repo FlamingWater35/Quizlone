@@ -45,6 +45,7 @@ class Translations implements BaseTranslations<AppLocale, Translations> {
 
 	late final TranslationsGeneralEn general = TranslationsGeneralEn.internal(_root);
 	late final TranslationsDrawerEn drawer = TranslationsDrawerEn.internal(_root);
+	late final TranslationsAboutScreenEn aboutScreen = TranslationsAboutScreenEn.internal(_root);
 	late final TranslationsStartScreenEn startScreen = TranslationsStartScreenEn.internal(_root);
 	late final TranslationsInputScreenEn inputScreen = TranslationsInputScreenEn.internal(_root);
 	late final TranslationsModeSelectionScreenEn modeSelectionScreen = TranslationsModeSelectionScreenEn.internal(_root);
@@ -119,6 +120,21 @@ class TranslationsDrawerEn {
 	String get about => 'About';
 
 	late final TranslationsDrawerAboutDialogEn aboutDialog = TranslationsDrawerAboutDialogEn.internal(_root);
+}
+
+// Path: aboutScreen
+class TranslationsAboutScreenEn {
+	TranslationsAboutScreenEn.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Version $version'
+	String version({required Object version}) => 'Version ${version}';
+
+	/// en: 'View Licenses'
+	String get viewLicenses => 'View Licenses';
 }
 
 // Path: startScreen
@@ -420,6 +436,15 @@ class TranslationsSettingsScreenEn {
 
 	/// en: 'Finnish'
 	String get finnish => 'Finnish';
+
+	/// en: 'Russian'
+	String get russian => 'Russian';
+
+	/// en: 'Spanish'
+	String get spanish => 'Spanish';
+
+	/// en: 'Swedish'
+	String get swedish => 'Swedish';
 
 	/// en: 'Data Management'
 	String get dataManagement => 'Data Management';
@@ -738,6 +763,8 @@ extension on Translations {
 			case 'drawer.about': return 'About';
 			case 'drawer.aboutDialog.legalese': return '© 2025 Quizlone';
 			case 'drawer.aboutDialog.description': return 'A simple, modern study application built with Flutter.';
+			case 'aboutScreen.version': return ({required Object version}) => 'Version ${version}';
+			case 'aboutScreen.viewLicenses': return 'View Licenses';
 			case 'startScreen.title': return 'Quizlone';
 			case 'startScreen.welcome': return 'Welcome!';
 			case 'startScreen.createNewList': return 'Create New List';
@@ -838,6 +865,9 @@ extension on Translations {
 			case 'settingsScreen.dark': return 'Dark';
 			case 'settingsScreen.english': return 'English';
 			case 'settingsScreen.finnish': return 'Finnish';
+			case 'settingsScreen.russian': return 'Russian';
+			case 'settingsScreen.spanish': return 'Spanish';
+			case 'settingsScreen.swedish': return 'Swedish';
 			case 'settingsScreen.dataManagement': return 'Data Management';
 			case 'settingsScreen.exportData': return 'Export Data';
 			case 'settingsScreen.exportDataSubtitle': return 'Save all lists to a file';

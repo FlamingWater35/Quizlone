@@ -41,6 +41,7 @@ class TranslationsFi extends Translations {
 	@override String get appName => 'Quizlone';
 	@override late final _TranslationsGeneralFi general = _TranslationsGeneralFi._(_root);
 	@override late final _TranslationsDrawerFi drawer = _TranslationsDrawerFi._(_root);
+	@override late final _TranslationsAboutScreenFi aboutScreen = _TranslationsAboutScreenFi._(_root);
 	@override late final _TranslationsStartScreenFi startScreen = _TranslationsStartScreenFi._(_root);
 	@override late final _TranslationsInputScreenFi inputScreen = _TranslationsInputScreenFi._(_root);
 	@override late final _TranslationsModeSelectionScreenFi modeSelectionScreen = _TranslationsModeSelectionScreenFi._(_root);
@@ -84,6 +85,17 @@ class _TranslationsDrawerFi extends TranslationsDrawerEn {
 	@override String get controls => 'Ohjaimet';
 	@override String get about => 'Tietoja';
 	@override late final _TranslationsDrawerAboutDialogFi aboutDialog = _TranslationsDrawerAboutDialogFi._(_root);
+}
+
+// Path: aboutScreen
+class _TranslationsAboutScreenFi extends TranslationsAboutScreenEn {
+	_TranslationsAboutScreenFi._(TranslationsFi root) : this._root = root, super.internal(root);
+
+	final TranslationsFi _root; // ignore: unused_field
+
+	// Translations
+	@override String version({required Object version}) => 'Versio ${version}';
+	@override String get viewLicenses => 'Näytä lisenssit';
 }
 
 // Path: startScreen
@@ -237,6 +249,9 @@ class _TranslationsSettingsScreenFi extends TranslationsSettingsScreenEn {
 	@override String get dark => 'Tumma';
 	@override String get english => 'Englanti';
 	@override String get finnish => 'Suomi';
+	@override String get russian => 'Venäjä';
+	@override String get spanish => 'Espanja';
+	@override String get swedish => 'Ruotsi';
 	@override String get dataManagement => 'Tietojen hallinta';
 	@override String get exportData => 'Vie tiedot';
 	@override String get exportDataSubtitle => 'Tallenna kaikki listat tiedostoon';
@@ -436,6 +451,8 @@ extension on TranslationsFi {
 			case 'drawer.about': return 'Tietoja';
 			case 'drawer.aboutDialog.legalese': return '© 2025 Quizlone';
 			case 'drawer.aboutDialog.description': return 'Yksinkertainen ja moderni opiskelusovellus, joka on rakennettu Flutterilla.';
+			case 'aboutScreen.version': return ({required Object version}) => 'Versio ${version}';
+			case 'aboutScreen.viewLicenses': return 'Näytä lisenssit';
 			case 'startScreen.title': return 'Quizlone';
 			case 'startScreen.welcome': return 'Tervetuloa!';
 			case 'startScreen.createNewList': return 'Luo uusi lista';
@@ -536,6 +553,9 @@ extension on TranslationsFi {
 			case 'settingsScreen.dark': return 'Tumma';
 			case 'settingsScreen.english': return 'Englanti';
 			case 'settingsScreen.finnish': return 'Suomi';
+			case 'settingsScreen.russian': return 'Venäjä';
+			case 'settingsScreen.spanish': return 'Espanja';
+			case 'settingsScreen.swedish': return 'Ruotsi';
 			case 'settingsScreen.dataManagement': return 'Tietojen hallinta';
 			case 'settingsScreen.exportData': return 'Vie tiedot';
 			case 'settingsScreen.exportDataSubtitle': return 'Tallenna kaikki listat tiedostoon';

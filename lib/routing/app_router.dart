@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
+import '../screens/main/about_screen.dart';
 import '../screens/main/controls_screen.dart';
 import '../screens/main/mode_selection_screen.dart';
 import '../screens/main/settings_screen.dart';
@@ -24,6 +25,7 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: LearnRoute.page),
     AutoRoute(page: TestModeRoute.page),
     AutoRoute(page: ResultsRoute.page),
+    AutoRoute(page: AboutRoute.page),
     CustomRoute(
       page: SettingsRoute.page,
       transitionsBuilder: buildSidebarTransition,

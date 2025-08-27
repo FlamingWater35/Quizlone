@@ -45,29 +45,93 @@ class AppTheme extends _$AppTheme {
   }
 }
 
-enum AppLanguage { system, en, fi }
+enum AppLanguage { system, en, fi, ru, es, sv }
+
+extension AppLanguageExtension on AppLanguage {
+  String get code {
+    switch (this) {
+      case AppLanguage.en:
+        return 'en';
+      case AppLanguage.fi:
+        return 'fi';
+      case AppLanguage.ru:
+        return 'ru';
+      case AppLanguage.es:
+        return 'es';
+      case AppLanguage.sv:
+        return 'sv';
+      case AppLanguage.system:
+      default:
+        return 'system';
+    }
+  }
+
+  static AppLanguage fromCode(String code) {
+    switch (code) {
+      case 'en':
+        return AppLanguage.en;
+      case 'fi':
+        return AppLanguage.fi;
+      case 'ru':
+        return AppLanguage.ru;
+      case 'es':
+        return AppLanguage.es;
+      case 'sv':
+        return AppLanguage.sv;
+      default:
+        return AppLanguage.system;
+    }
+  }
+
+  String getDisplayName(Translations t) {
+    switch (this) {
+      case AppLanguage.en:
+        return t.settingsScreen.english;
+      case AppLanguage.fi:
+        return t.settingsScreen.finnish;
+      case AppLanguage.ru:
+        return t.settingsScreen.russian;
+      case AppLanguage.es:
+        return t.settingsScreen.spanish;
+      case AppLanguage.sv:
+        return t.settingsScreen.swedish;
+      case AppLanguage.system:
+      default:
+        return t.settingsScreen.systemDefault;
+    }
+  }
+
+  void applyLocale() {
+    switch (this) {
+      case AppLanguage.en:
+        LocaleSettings.setLocale(AppLocale.en);
+        break;
+      case AppLanguage.fi:
+        LocaleSettings.setLocale(AppLocale.fi);
+        break;
+      case AppLanguage.ru:
+        LocaleSettings.setLocale(AppLocale.ru);
+        break;
+      case AppLanguage.es:
+        LocaleSettings.setLocale(AppLocale.es);
+        break;
+      case AppLanguage.sv:
+        LocaleSettings.setLocale(AppLocale.sv);
+        break;
+      case AppLanguage.system:
+      default:
+        LocaleSettings.useDeviceLocale();
+        break;
+    }
+  }
+}
 
 @riverpod
 class AppLanguageNotifier extends _$AppLanguageNotifier {
   Future<void> setLanguage(AppLanguage lang) async {
     _log.fine("[AppLanguageNotifier] Setting language to $lang");
-    String langCode;
-    switch (lang) {
-      case AppLanguage.en:
-        langCode = 'en';
-        LocaleSettings.setLocale(AppLocale.en);
-        break;
-      case AppLanguage.fi:
-        langCode = 'fi';
-        LocaleSettings.setLocale(AppLocale.fi);
-        break;
-      case AppLanguage.system:
-      default:
-        langCode = 'system';
-        LocaleSettings.useDeviceLocale();
-        break;
-    }
-    await ref.read(databaseServiceProvider).saveLanguage(langCode);
+    lang.applyLocale();
+    await ref.read(databaseServiceProvider).saveLanguage(lang.code);
     state = lang;
   }
 
@@ -75,14 +139,7 @@ class AppLanguageNotifier extends _$AppLanguageNotifier {
   AppLanguage build() {
     final langCode = ref.watch(databaseServiceProvider).getLanguage();
     _log.fine("[AppLanguageNotifier] Initializing with langCode: $langCode");
-    switch (langCode) {
-      case 'en':
-        return AppLanguage.en;
-      case 'fi':
-        return AppLanguage.fi;
-      default:
-        return AppLanguage.system;
-    }
+    return AppLanguageExtension.fromCode(langCode);
   }
 }
 

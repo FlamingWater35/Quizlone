@@ -45,6 +45,7 @@ class Translations implements BaseTranslations<AppLocale, Translations> {
 
 	late final TranslationsGeneralEn general = TranslationsGeneralEn._(_root);
 	late final TranslationsDrawerEn drawer = TranslationsDrawerEn._(_root);
+	late final TranslationsAboutScreenEn aboutScreen = TranslationsAboutScreenEn._(_root);
 	late final TranslationsStartScreenEn startScreen = TranslationsStartScreenEn._(_root);
 	late final TranslationsInputScreenEn inputScreen = TranslationsInputScreenEn._(_root);
 	late final TranslationsModeSelectionScreenEn modeSelectionScreen = TranslationsModeSelectionScreenEn._(_root);
@@ -119,6 +120,21 @@ class TranslationsDrawerEn {
 	String get about => 'About';
 
 	late final TranslationsDrawerAboutDialogEn aboutDialog = TranslationsDrawerAboutDialogEn._(_root);
+}
+
+// Path: aboutScreen
+class TranslationsAboutScreenEn {
+	TranslationsAboutScreenEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Version $version'
+	String version({required Object version}) => 'Version ${version}';
+
+	/// en: 'View Licenses'
+	String get viewLicenses => 'View Licenses';
 }
 
 // Path: startScreen
@@ -738,6 +754,8 @@ extension on Translations {
 			case 'drawer.about': return 'About';
 			case 'drawer.aboutDialog.legalese': return '© 2025 Quizlone';
 			case 'drawer.aboutDialog.description': return 'A simple, modern study application built with Flutter.';
+			case 'aboutScreen.version': return ({required Object version}) => 'Version ${version}';
+			case 'aboutScreen.viewLicenses': return 'View Licenses';
 			case 'startScreen.title': return 'Quizlone';
 			case 'startScreen.welcome': return 'Welcome!';
 			case 'startScreen.createNewList': return 'Create New List';

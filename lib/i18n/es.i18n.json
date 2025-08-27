@@ -1,0 +1,206 @@
+{
+  "appName": "Quizlone",
+  "general": {
+    "back": "Volver",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "error": "Error",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "saveAndContinue": "Guardar y continuar",
+    "submit": "Enviar",
+    "all": "Todos",
+    "loading": "Cargando...",
+    "genericError": "Error: $error",
+    "reset": "Reiniciar"
+  },
+  "drawer": {
+    "settings": "Ajustes",
+    "controls": "Controles",
+    "about": "Acerca de",
+    "aboutDialog": {
+      "legalese": "© 2025 Quizlone",
+      "description": "Una aplicación de estudio simple y moderna creada con Flutter."
+    }
+  },
+  "aboutScreen": {
+    "version": "Versión $version",
+    "viewLicenses": "Ver licencias"
+  },
+  "startScreen": {
+    "title": "Quizlone",
+    "welcome": "¡Bienvenido!",
+    "createNewList": "Crear nueva lista",
+    "loadSavedList": "Cargar lista guardada",
+    "noLists": "Aún no hay listas guardadas.",
+    "termCount(param=count)": {
+      "one": "1 término",
+      "other": "$count términos"
+    },
+    "confirmDeleteDialog": {
+      "title": "Confirmar eliminación",
+      "content": "¿Estás seguro de que quieres eliminar '$listName'?"
+    }
+  },
+  "inputScreen": {
+    "title": "Crear nueva lista",
+    "listName": "Nombre de la lista",
+    "listNameHint": "p. ej., Vocabulario del Capítulo 1",
+    "pasteTerms": "Pega tus términos a continuación:",
+    "pasteTermsHint": "(Término en una línea, definición en la siguiente)",
+    "termsHint": "Justicia\nEl principio de rectitud moral\nSol\nUna estrella que es el centro de un sistema planetario",
+    "saveList": "Guardar lista",
+    "errors": {
+      "listNameEmpty": "El nombre de la lista no puede estar vacío.",
+      "noTerms": "No se han introducido términos/definiciones.",
+      "invalidFormat": "Formato inválido. Cada término necesita una definición en la siguiente línea.",
+      "emptyTerm": "Error de formato cerca de la línea $line. Se encontró un término o definición vacíos.",
+      "noValidPairs": "No se encontraron pares de término/definición válidos.",
+      "saveFailed": "No se pudo guardar la lista: $error"
+    }
+  },
+  "modeSelectionScreen": {
+    "title": "Opciones y Modo",
+    "noActiveList": "No se encontró una lista de estudio activa o no se pudo cargar la lista.",
+    "debugActiveId": "Depuración: El ID activo actual es $id",
+    "returnToWelcome": "Volver a la pantalla de bienvenida",
+    "flashcardOptions": "Opciones de tarjetas",
+    "showTermFirst": "Mostrar término primero",
+    "showDefFirst": "Mostrar definición primero",
+    "studyOptions": "Opciones de aprendizaje y prueba",
+    "askForTerm": "Mostrar definición, preguntar término",
+    "askForDef": "Mostrar término, preguntar definición",
+    "studyLength": "Longitud de estudio:",
+    "testFormat": "Formato de prueba",
+    "writtenAnswer": "Respuesta escrita",
+    "multipleChoice": "Opción múltiple",
+    "flashcards": "Tarjetas",
+    "learn": "Aprender",
+    "test": "Prueba",
+    "backToWelcome": "Volver a la pantalla de bienvenida"
+  },
+  "flashcardScreen": {
+    "title": "Tarjetas",
+    "noCards": "No hay tarjetas para mostrar.",
+    "noTerms": "No hay términos disponibles para estudiar.",
+    "shuffle": "Barajar",
+    "restart": "Reiniciar"
+  },
+  "learnScreen": {
+    "title": "Aprender",
+    "restartSession": "Reiniciar sesión de aprendizaje",
+    "backToOptions": "Volver a las opciones",
+    "preparing": "Preparando la siguiente pregunta...",
+    "answerHint": "Escribe tu respuesta aquí...",
+    "incorrect": "Incorrecto",
+    "hint": "Pista",
+    "skip": "Saltar",
+    "backToModeSelection": "Volver a la selección de modo",
+    "errors": {
+      "noTerms": "No hay términos disponibles para el modo de aprendizaje.",
+      "notEnoughTerms": "No hay suficientes términos para la longitud seleccionada."
+    },
+    "feedback": {
+      "correct": "¡Correcto!",
+      "incorrect": "Incorrecto. La respuesta correcta es: $answer",
+      "hint": "Pista: Empieza con \"$char\"",
+      "skipped": "Saltado. La respuesta era: $answer"
+    },
+    "progress": {
+      "allLearned": "¡Todos los términos aprendidos!",
+      "cycleStatus": "Ciclo $cycleNum | Elemento $itemNum de $total",
+      "sessionComplete": "¡Sesión de aprendizaje completa! ¡Bien hecho!",
+      "maxCyclesReached(param=count)": {
+        "one": "Se alcanzó el máximo de ciclos. Queda 1 elemento por repasar.",
+        "other": "Se alcanzó el máximo de ciclos. Quedan $count elementos por repasar."
+      },
+      "startingCycle": "Iniciando ciclo $cycleNum con $count elemento(s)..."
+    }
+  },
+  "testScreen": {
+    "title": "Prueba",
+    "noQuestions": "No hay preguntas para esta prueba.",
+    "viewResults": "Ver resultados",
+    "submitTest": "Enviar prueba",
+    "errors": {
+      "loadFailed": "Error al cargar la lista de estudio para la prueba.",
+      "noTerms": "No hay términos disponibles para la prueba.",
+      "notEnoughTerms": "No hay suficientes términos para la longitud de estudio seleccionada."
+    }
+  },
+  "resultsScreen": {
+    "title": "Resultados de la prueba",
+    "notSubmitted": "La prueba aún no se ha enviado.",
+    "noQuestions": "No había preguntas en esta prueba.",
+    "yourScore": "Tu puntuación",
+    "scoreFraction": "$score / $total correctas",
+    "reviewIncorrect": "Revisar respuestas incorrectas:",
+    "yourAnswerWas": "Tu respuesta: $answer",
+    "noAnswer": "(Sin respuesta)",
+    "congratulations": "¡Felicidades! ¡Acertaste todo!",
+    "retryTest": "Reintentar prueba",
+    "reviewFlashcards": "Revisar con tarjetas",
+    "backToWelcome": "Volver a la pantalla de bienvenida"
+  },
+  "settingsScreen": {
+    "title": "Ajustes",
+    "appearance": "Apariencia",
+    "language": "Idioma",
+    "languageDialogTitle": "Seleccionar idioma",
+    "uiScaling": "Escalado de la interfaz",
+    "uiScalingSubtitle": "Ajusta el tamaño del texto y los elementos de la interfaz",
+    "systemDefault": "Predeterminado del sistema",
+    "light": "Claro",
+    "dark": "Oscuro",
+    "english": "Inglés",
+    "finnish": "Finlandés",
+    "russian": "Ruso",
+    "spanish": "Español",
+    "swedish": "Sueco",
+    "dataManagement": "Gestión de datos",
+    "exportData": "Exportar datos",
+    "exportDataSubtitle": "Guardar todas las listas en un archivo",
+    "importData": "Importar datos",
+    "importDataSubtitle": "Cargar listas desde un archivo",
+    "deleteAllData": "Eliminar todos los datos",
+    "exportDialog": {
+      "title": "Exportar datos",
+      "content": "¿Cómo te gustaría exportar tus datos?",
+      "share": "Compartir archivo",
+      "save": "Guardar en el dispositivo"
+    },
+    "importDialog": {
+      "title": "Confirmar importación",
+      "content": "Esto importará listas de estudio desde un archivo. Cualquier lista existente con el mismo nombre será sobrescrita. ¿Continuar?",
+      "import": "Importar"
+    },
+    "deleteDialog": {
+      "title": "Confirmar eliminación",
+      "content": "¿Estás seguro de que quieres eliminar TODAS las listas de estudio? Esta acción no se puede deshacer.",
+      "deleteAll": "Eliminar todo"
+    },
+    "snackbars": {
+      "noDataToExport": "No hay datos para exportar.",
+      "exportSuccess": "¡Datos exportados con éxito!",
+      "exportError": "Error al exportar datos: $error",
+      "fileSaved": "¡Archivo guardado con éxito!",
+      "importSuccess": "¡Se importaron $count listas con éxito!",
+      "importError": "Error al importar datos: $error",
+      "allDeleted": "Todas las listas de estudio han sido eliminadas."
+    }
+  },
+  "controlsScreen": {
+    "title": "Controles",
+    "gesturesTitle": "Gestos (Tarjetas)",
+    "keyboardTitle": "Teclado (Tarjetas)",
+    "nextCard": "Siguiente tarjeta",
+    "previousCard": "Tarjeta anterior",
+    "flipCard": "Voltear tarjeta",
+    "swipeLeft": "Deslizar a la izquierda",
+    "swipeRight": "Deslizar a la derecha",
+    "swipeVertical": "Deslizar hacia arriba o abajo",
+    "arrowRight": "Tecla de flecha derecha",
+    "arrowLeft": "Tecla de flecha izquierda",
+    "arrowVerticalOrSpace": "Teclas de flecha arriba/abajo o Barra espaciadora"
+  }
+}

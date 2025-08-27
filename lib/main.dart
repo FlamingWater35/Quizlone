@@ -15,17 +15,8 @@ void main() async {
   await DatabaseService.init();
 
   final dbService = DatabaseService();
-  final savedLang = dbService.getLanguage();
-  switch (savedLang) {
-    case 'en':
-      LocaleSettings.setLocale(AppLocale.en);
-      break;
-    case 'fi':
-      LocaleSettings.setLocale(AppLocale.fi);
-      break;
-    default:
-      LocaleSettings.useDeviceLocale();
-  }
+  final savedLangCode = dbService.getLanguage();
+  AppLanguageExtension.fromCode(savedLangCode).applyLocale();
 
   setupWindow();
   runApp(ProviderScope(child: TranslationProvider(child: const MyApp())));

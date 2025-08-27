@@ -39,6 +39,7 @@ class TranslationsFi implements Translations {
 	@override String get appName => 'Quizlone';
 	@override late final _TranslationsGeneralFi general = _TranslationsGeneralFi._(_root);
 	@override late final _TranslationsDrawerFi drawer = _TranslationsDrawerFi._(_root);
+	@override late final _TranslationsAboutScreenFi aboutScreen = _TranslationsAboutScreenFi._(_root);
 	@override late final _TranslationsStartScreenFi startScreen = _TranslationsStartScreenFi._(_root);
 	@override late final _TranslationsInputScreenFi inputScreen = _TranslationsInputScreenFi._(_root);
 	@override late final _TranslationsModeSelectionScreenFi modeSelectionScreen = _TranslationsModeSelectionScreenFi._(_root);
@@ -82,6 +83,17 @@ class _TranslationsDrawerFi implements TranslationsDrawerEn {
 	@override String get controls => 'Ohjaimet';
 	@override String get about => 'Tietoja';
 	@override late final _TranslationsDrawerAboutDialogFi aboutDialog = _TranslationsDrawerAboutDialogFi._(_root);
+}
+
+// Path: aboutScreen
+class _TranslationsAboutScreenFi implements TranslationsAboutScreenEn {
+	_TranslationsAboutScreenFi._(this._root);
+
+	final TranslationsFi _root; // ignore: unused_field
+
+	// Translations
+	@override String version({required Object version}) => 'Versio ${version}';
+	@override String get viewLicenses => 'Näytä lisenssit';
 }
 
 // Path: startScreen
@@ -434,6 +446,8 @@ extension on TranslationsFi {
 			case 'drawer.about': return 'Tietoja';
 			case 'drawer.aboutDialog.legalese': return '© 2025 Quizlone';
 			case 'drawer.aboutDialog.description': return 'Yksinkertainen ja moderni opiskelusovellus, joka on rakennettu Flutterilla.';
+			case 'aboutScreen.version': return ({required Object version}) => 'Versio ${version}';
+			case 'aboutScreen.viewLicenses': return 'Näytä lisenssit';
 			case 'startScreen.title': return 'Quizlone';
 			case 'startScreen.welcome': return 'Tervetuloa!';
 			case 'startScreen.createNewList': return 'Luo uusi lista';

@@ -23,6 +23,10 @@
       "description": "A simple, modern study application built with Flutter."
     }
   },
+  "aboutScreen": {
+    "version": "Version $version",
+    "viewLicenses": "View Licenses"
+  },
   "startScreen": {
     "title": "Quizlone",
     "welcome": "Welcome!",
@@ -150,6 +154,9 @@
     "dark": "Dark",
     "english": "English",
     "finnish": "Finnish",
+    "russian": "Russian",
+    "spanish": "Spanish",
+    "swedish": "Swedish",
     "dataManagement": "Data Management",
     "exportData": "Export Data",
     "exportDataSubtitle": "Save all lists to a file",

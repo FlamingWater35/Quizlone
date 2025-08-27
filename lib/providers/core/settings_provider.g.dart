@@ -22,7 +22,7 @@ final appThemeProvider =
 
 typedef _$AppTheme = AutoDisposeNotifier<ThemeMode>;
 String _$appLanguageNotifierHash() =>
-    r'501f907252536cf1634547e6a32b865a52e4c3d4';
+    r'10882d80b2ebdce0def49907b75ac8bd946baec8';
 
 /// See also [AppLanguageNotifier].
 @ProviderFor(AppLanguageNotifier)

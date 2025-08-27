@@ -23,6 +23,10 @@
       "description": "Yksinkertainen ja moderni opiskelusovellus, joka on rakennettu Flutterilla."
     }
   },
+  "aboutScreen": {
+    "version": "Versio $version",
+    "viewLicenses": "Näytä lisenssit"
+  },
   "startScreen": {
     "title": "Quizlone",
     "welcome": "Tervetuloa!",
@@ -150,6 +154,9 @@
     "dark": "Tumma",
     "english": "Englanti",
     "finnish": "Suomi",
+    "russian": "Venäjä",
+    "spanish": "Espanja",
+    "swedish": "Ruotsi",
     "dataManagement": "Tietojen hallinta",
     "exportData": "Vie tiedot",
     "exportDataSubtitle": "Tallenna kaikki listat tiedostoon",
