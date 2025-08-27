@@ -265,15 +265,6 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 40),
-                  Center(
-                    child: TextButton(
-                      onPressed: () {
-                        context.router.pop();
-                      },
-                      child: Text(t.learnScreen.backToModeSelection),
-                    ),
-                  ),
                 ],
               ),
             ),
