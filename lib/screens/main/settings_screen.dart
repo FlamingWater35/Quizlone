@@ -337,12 +337,8 @@ class SettingsScreen extends ConsumerWidget {
     final currentLanguage = ref.watch(appLanguageNotifierProvider);
     final uiScale = ref.watch(uiScaleNotifierProvider);
     final uiScaleNotifier = ref.read(uiScaleNotifierProvider.notifier);
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final colorScheme = Theme.of(context).colorScheme;
     final t = Translations.of(context);
-    final roundedShape = RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(12),
-    );
 
     return Scaffold(
       appBar: AppBar(title: Text(t.settingsScreen.title), centerTitle: true),
@@ -351,114 +347,125 @@ class SettingsScreen extends ConsumerWidget {
           child: ListView(
             padding: const EdgeInsets.all(16.0),
             children: [
-              _SettingsGroup(
-                title: t.settingsScreen.appearance,
-                children: [
-                  RadioListTile<ThemeMode>(
-                    shape: roundedShape,
-                    title: Text(t.settingsScreen.systemDefault),
-                    value: ThemeMode.system,
-                    groupValue: currentTheme,
-                    onChanged: (value) => themeNotifier.setTheme(value!),
-                  ),
-                  RadioListTile<ThemeMode>(
-                    shape: roundedShape,
-                    title: Text(t.settingsScreen.light),
-                    value: ThemeMode.light,
-                    groupValue: currentTheme,
-                    onChanged: (value) => themeNotifier.setTheme(value!),
-                  ),
-                  RadioListTile<ThemeMode>(
-                    shape: roundedShape,
-                    title: Text(t.settingsScreen.dark),
-                    value: ThemeMode.dark,
-                    groupValue: currentTheme,
-                    onChanged: (value) => themeNotifier.setTheme(value!),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              _SettingsGroup(
-                title: t.settingsScreen.language,
-                children: [
-                  ListTile(
-                    shape: roundedShape,
-                    leading: const Icon(Icons.language_outlined),
-                    title: Text(t.settingsScreen.language),
-                    subtitle: Text(_getCurrentLanguageName(currentLanguage, t)),
-                    onTap: () => _showLanguageMenu(context, ref),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              _SettingsGroup(
-                title: t.settingsScreen.uiScaling,
-                children: [
-                  ListTile(subtitle: Text(t.settingsScreen.uiScalingSubtitle)),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16.0,
-                      vertical: 8.0,
+              _SettingsHeader(title: t.settingsScreen.appearance),
+              Card(
+                clipBehavior: Clip.antiAlias,
+                child: Column(
+                  children: [
+                    RadioListTile<ThemeMode>(
+                      title: Text(t.settingsScreen.systemDefault),
+                      value: ThemeMode.system,
+                      groupValue: currentTheme,
+                      onChanged: (value) => themeNotifier.setTheme(value!),
                     ),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Slider(
-                            value: uiScale,
-                            min: 0.8,
-                            max: 1.5,
-                            divisions: 7,
-                            onChanged: (value) {
-                              uiScaleNotifier.setScale(value);
-                            },
+                    RadioListTile<ThemeMode>(
+                      title: Text(t.settingsScreen.light),
+                      value: ThemeMode.light,
+                      groupValue: currentTheme,
+                      onChanged: (value) => themeNotifier.setTheme(value!),
+                    ),
+                    RadioListTile<ThemeMode>(
+                      title: Text(t.settingsScreen.dark),
+                      value: ThemeMode.dark,
+                      groupValue: currentTheme,
+                      onChanged: (value) => themeNotifier.setTheme(value!),
+                    ),
+                  ],
+                ),
+              ),
+              _SettingsHeader(title: t.settingsScreen.language),
+              Card(
+                clipBehavior: Clip.antiAlias,
+                child: ListTile(
+                  leading: const Icon(Icons.translate_outlined),
+                  title: Text(t.settingsScreen.language),
+                  subtitle: Text(_getCurrentLanguageName(currentLanguage, t)),
+                  trailing: const Icon(
+                    Icons.arrow_forward_ios_rounded,
+                    size: 16,
+                  ),
+                  onTap: () => _showLanguageMenu(context, ref),
+                ),
+              ),
+              _SettingsHeader(title: t.settingsScreen.uiScaling),
+              Card(
+                clipBehavior: Clip.antiAlias,
+                child: Column(
+                  children: [
+                    ListTile(
+                      leading: const Icon(Icons.format_size_outlined),
+                      title: Text(t.settingsScreen.uiScaling),
+                      subtitle: Text(t.settingsScreen.uiScalingSubtitle),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 8.0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Slider(
+                              value: uiScale,
+                              min: 0.8,
+                              max: 1.5,
+                              divisions: 7,
+                              label: "${(uiScale * 100).toStringAsFixed(0)}%",
+                              onChanged: (value) {
+                                uiScaleNotifier.setScale(value);
+                              },
+                            ),
                           ),
-                        ),
-                        Text("${(uiScale * 100).toStringAsFixed(0)}%"),
-                        const SizedBox(width: 8),
-                        OutlinedButton(
-                          onPressed:
-                              uiScale == 1.0
-                                  ? null
-                                  : () => uiScaleNotifier.setScale(1.0),
-                          child: Text(t.general.reset),
-                        ),
-                      ],
+                          SizedBox(
+                            width: 60,
+                            child: Text(
+                              "${(uiScale * 100).toStringAsFixed(0)}%",
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          OutlinedButton(
+                            onPressed:
+                                uiScale == 1.0
+                                    ? null
+                                    : () => uiScaleNotifier.setScale(1.0),
+                            child: Text(t.general.reset),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-              const SizedBox(height: 16),
-              _SettingsGroup(
-                title: t.settingsScreen.dataManagement,
-                children: [
-                  ListTile(
-                    shape: roundedShape,
-                    leading: const Icon(Icons.file_download_outlined),
-                    title: Text(t.settingsScreen.exportData),
-                    subtitle: Text(t.settingsScreen.exportDataSubtitle),
-                    onTap: () => _exportData(context, ref),
-                  ),
-                  ListTile(
-                    shape: roundedShape,
-                    leading: const Icon(Icons.file_upload_outlined),
-                    title: Text(t.settingsScreen.importData),
-                    subtitle: Text(t.settingsScreen.importDataSubtitle),
-                    onTap: () => _importData(context, ref),
-                  ),
-                  const Divider(),
-                  ListTile(
-                    shape: roundedShape,
-                    leading: Icon(
-                      Icons.delete_forever_outlined,
-                      color: colorScheme.error,
+              _SettingsHeader(title: t.settingsScreen.dataManagement),
+              Card(
+                clipBehavior: Clip.antiAlias,
+                child: Column(
+                  children: [
+                    ListTile(
+                      leading: const Icon(Icons.file_download_outlined),
+                      title: Text(t.settingsScreen.exportData),
+                      subtitle: Text(t.settingsScreen.exportDataSubtitle),
+                      onTap: () => _exportData(context, ref),
                     ),
-                    title: Text(
-                      t.settingsScreen.deleteAllData,
-                      style: TextStyle(color: colorScheme.error),
+                    ListTile(
+                      leading: const Icon(Icons.file_upload_outlined),
+                      title: Text(t.settingsScreen.importData),
+                      subtitle: Text(t.settingsScreen.importDataSubtitle),
+                      onTap: () => _importData(context, ref),
                     ),
-                    onTap: () => _deleteAllData(context, ref),
-                  ),
-                ],
+                    const Divider(indent: 16, endIndent: 16),
+                    ListTile(
+                      leading: Icon(
+                        Icons.delete_forever_outlined,
+                        color: colorScheme.error,
+                      ),
+                      title: Text(
+                        t.settingsScreen.deleteAllData,
+                        style: TextStyle(color: colorScheme.error),
+                      ),
+                      onTap: () => _deleteAllData(context, ref),
+                    ),
+                    const SizedBox(width: 8),
+                  ],
+                ),
               ),
             ],
           ),
@@ -468,32 +475,20 @@ class SettingsScreen extends ConsumerWidget {
   }
 }
 
-class _SettingsGroup extends StatelessWidget {
-  const _SettingsGroup({required this.title, required this.children});
+class _SettingsHeader extends StatelessWidget {
+  const _SettingsHeader({required this.title});
 
-  final List<Widget> children;
   final String title;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final roundedShape = RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(12),
-    );
-
-    return Card(
-      shape: roundedShape,
-      clipBehavior: Clip.antiAlias,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
-            child: Text(title, style: theme.textTheme.titleLarge),
-          ),
-          const Divider(),
-          ...children,
-        ],
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
+      child: Text(
+        title.toUpperCase(),
+        style: Theme.of(context).textTheme.labelLarge?.copyWith(
+          color: Theme.of(context).colorScheme.primary,
+        ),
       ),
     );
   }
