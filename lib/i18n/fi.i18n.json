@@ -16,6 +16,7 @@
   },
   "drawer": {
     "settings": "Asetukset",
+    "controls": "Ohjaimet",
     "about": "Tietoja",
     "aboutDialog": {
       "legalese": "© 2025 Quizlone",
@@ -180,5 +181,19 @@
       "importError": "Virhe tietojen tuonnissa: $error",
       "allDeleted": "Kaikki opiskelulistat on poistettu."
     }
+  },
+  "controlsScreen": {
+    "title": "Ohjaimet",
+    "gesturesTitle": "Liikkeet (Muistikortit)",
+    "keyboardTitle": "Näppäimistö (Muistikortit)",
+    "nextCard": "Seuraava kortti",
+    "previousCard": "Edellinen kortti",
+    "flipCard": "Käännä kortti",
+    "swipeLeft": "Pyyhkäise vasemmalle",
+    "swipeRight": "Pyyhkäise oikealle",
+    "swipeVertical": "Pyyhkäise ylös tai alas",
+    "arrowRight": "Oikea nuolinäppäin",
+    "arrowLeft": "Vasen nuolinäppäin",
+    "arrowVerticalOrSpace": "Ylä-/alanuoli tai välilyönti"
   }
 }

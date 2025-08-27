@@ -53,6 +53,7 @@ class Translations implements BaseTranslations<AppLocale, Translations> {
 	late final TranslationsTestScreenEn testScreen = TranslationsTestScreenEn.internal(_root);
 	late final TranslationsResultsScreenEn resultsScreen = TranslationsResultsScreenEn.internal(_root);
 	late final TranslationsSettingsScreenEn settingsScreen = TranslationsSettingsScreenEn.internal(_root);
+	late final TranslationsControlsScreenEn controlsScreen = TranslationsControlsScreenEn.internal(_root);
 }
 
 // Path: general
@@ -110,6 +111,9 @@ class TranslationsDrawerEn {
 
 	/// en: 'Settings'
 	String get settings => 'Settings';
+
+	/// en: 'Controls'
+	String get controls => 'Controls';
 
 	/// en: 'About'
 	String get about => 'About';
@@ -441,6 +445,51 @@ class TranslationsSettingsScreenEn {
 	late final TranslationsSettingsScreenSnackbarsEn snackbars = TranslationsSettingsScreenSnackbarsEn.internal(_root);
 }
 
+// Path: controlsScreen
+class TranslationsControlsScreenEn {
+	TranslationsControlsScreenEn.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Controls'
+	String get title => 'Controls';
+
+	/// en: 'Gestures (Flashcards)'
+	String get gesturesTitle => 'Gestures (Flashcards)';
+
+	/// en: 'Keyboard (Flashcards)'
+	String get keyboardTitle => 'Keyboard (Flashcards)';
+
+	/// en: 'Next Card'
+	String get nextCard => 'Next Card';
+
+	/// en: 'Previous Card'
+	String get previousCard => 'Previous Card';
+
+	/// en: 'Flip Card'
+	String get flipCard => 'Flip Card';
+
+	/// en: 'Swipe Left'
+	String get swipeLeft => 'Swipe Left';
+
+	/// en: 'Swipe Right'
+	String get swipeRight => 'Swipe Right';
+
+	/// en: 'Swipe Up or Down'
+	String get swipeVertical => 'Swipe Up or Down';
+
+	/// en: 'Right Arrow Key'
+	String get arrowRight => 'Right Arrow Key';
+
+	/// en: 'Left Arrow Key'
+	String get arrowLeft => 'Left Arrow Key';
+
+	/// en: 'Up/Down Arrow or Spacebar'
+	String get arrowVerticalOrSpace => 'Up/Down Arrow or Spacebar';
+}
+
 // Path: drawer.aboutDialog
 class TranslationsDrawerAboutDialogEn {
 	TranslationsDrawerAboutDialogEn.internal(this._root);
@@ -685,6 +734,7 @@ extension on Translations {
 			case 'general.genericError': return ({required Object error}) => 'Error: ${error}';
 			case 'general.reset': return 'Reset';
 			case 'drawer.settings': return 'Settings';
+			case 'drawer.controls': return 'Controls';
 			case 'drawer.about': return 'About';
 			case 'drawer.aboutDialog.legalese': return '© 2025 Quizlone';
 			case 'drawer.aboutDialog.description': return 'A simple, modern study application built with Flutter.';
@@ -811,6 +861,18 @@ extension on Translations {
 			case 'settingsScreen.snackbars.importSuccess': return ({required Object count}) => '${count} lists imported successfully!';
 			case 'settingsScreen.snackbars.importError': return ({required Object error}) => 'Error importing data: ${error}';
 			case 'settingsScreen.snackbars.allDeleted': return 'All study lists have been deleted.';
+			case 'controlsScreen.title': return 'Controls';
+			case 'controlsScreen.gesturesTitle': return 'Gestures (Flashcards)';
+			case 'controlsScreen.keyboardTitle': return 'Keyboard (Flashcards)';
+			case 'controlsScreen.nextCard': return 'Next Card';
+			case 'controlsScreen.previousCard': return 'Previous Card';
+			case 'controlsScreen.flipCard': return 'Flip Card';
+			case 'controlsScreen.swipeLeft': return 'Swipe Left';
+			case 'controlsScreen.swipeRight': return 'Swipe Right';
+			case 'controlsScreen.swipeVertical': return 'Swipe Up or Down';
+			case 'controlsScreen.arrowRight': return 'Right Arrow Key';
+			case 'controlsScreen.arrowLeft': return 'Left Arrow Key';
+			case 'controlsScreen.arrowVerticalOrSpace': return 'Up/Down Arrow or Spacebar';
 			default: return null;
 		}
 	}

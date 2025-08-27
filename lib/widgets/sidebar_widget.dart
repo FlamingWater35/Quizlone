@@ -35,6 +35,7 @@ class _AppDrawerState extends State<AppDrawer> {
     showAboutDialog(
       context: context,
       applicationName: t.appName,
+      applicationLegalese: t.drawer.aboutDialog.legalese,
       applicationVersion: _version,
       children: <Widget>[
         Padding(
@@ -81,6 +82,17 @@ class _AppDrawerState extends State<AppDrawer> {
             onTap: () {
               Navigator.pop(context);
               context.router.push(const SettingsRoute());
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.gamepad_outlined),
+            title: Text(t.drawer.controls),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            onTap: () {
+              Navigator.pop(context);
+              context.router.push(const ControlsRoute());
             },
           ),
           const Divider(indent: 16, endIndent: 16),

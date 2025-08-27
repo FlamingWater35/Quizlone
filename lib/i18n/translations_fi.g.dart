@@ -49,6 +49,7 @@ class TranslationsFi extends Translations {
 	@override late final _TranslationsTestScreenFi testScreen = _TranslationsTestScreenFi._(_root);
 	@override late final _TranslationsResultsScreenFi resultsScreen = _TranslationsResultsScreenFi._(_root);
 	@override late final _TranslationsSettingsScreenFi settingsScreen = _TranslationsSettingsScreenFi._(_root);
+	@override late final _TranslationsControlsScreenFi controlsScreen = _TranslationsControlsScreenFi._(_root);
 }
 
 // Path: general
@@ -80,6 +81,7 @@ class _TranslationsDrawerFi extends TranslationsDrawerEn {
 
 	// Translations
 	@override String get settings => 'Asetukset';
+	@override String get controls => 'Ohjaimet';
 	@override String get about => 'Tietoja';
 	@override late final _TranslationsDrawerAboutDialogFi aboutDialog = _TranslationsDrawerAboutDialogFi._(_root);
 }
@@ -228,8 +230,8 @@ class _TranslationsSettingsScreenFi extends TranslationsSettingsScreenEn {
 	@override String get appearance => 'Ulkoasu';
 	@override String get language => 'Kieli';
 	@override String get languageDialogTitle => 'Valitse kieli';
-	@override String get uiScaling => 'Näytön skaalaus';
-	@override String get uiScalingSubtitle => 'Säädä tekstin ja elementtien kokoa';
+	@override String get uiScaling => 'Käyttöliittymän skaalaus';
+	@override String get uiScalingSubtitle => 'Säädä tekstin ja käyttöliittymän elementtien kokoa';
 	@override String get systemDefault => 'Järjestelmän oletus';
 	@override String get light => 'Vaalea';
 	@override String get dark => 'Tumma';
@@ -245,6 +247,27 @@ class _TranslationsSettingsScreenFi extends TranslationsSettingsScreenEn {
 	@override late final _TranslationsSettingsScreenImportDialogFi importDialog = _TranslationsSettingsScreenImportDialogFi._(_root);
 	@override late final _TranslationsSettingsScreenDeleteDialogFi deleteDialog = _TranslationsSettingsScreenDeleteDialogFi._(_root);
 	@override late final _TranslationsSettingsScreenSnackbarsFi snackbars = _TranslationsSettingsScreenSnackbarsFi._(_root);
+}
+
+// Path: controlsScreen
+class _TranslationsControlsScreenFi extends TranslationsControlsScreenEn {
+	_TranslationsControlsScreenFi._(TranslationsFi root) : this._root = root, super.internal(root);
+
+	final TranslationsFi _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Ohjaimet';
+	@override String get gesturesTitle => 'Eleet (Muistikortit)';
+	@override String get keyboardTitle => 'Näppäimistö (Muistikortit)';
+	@override String get nextCard => 'Seuraava kortti';
+	@override String get previousCard => 'Edellinen kortti';
+	@override String get flipCard => 'Käännä kortti';
+	@override String get swipeLeft => 'Pyyhkäise vasemmalle';
+	@override String get swipeRight => 'Pyyhkäise oikealle';
+	@override String get swipeVertical => 'Pyyhkäise ylös tai alas';
+	@override String get arrowRight => 'Oikea nuolinäppäin';
+	@override String get arrowLeft => 'Vasen nuolinäppäin';
+	@override String get arrowVerticalOrSpace => 'Ylä-/alanuoli tai välilyönti';
 }
 
 // Path: drawer.aboutDialog
@@ -409,6 +432,7 @@ extension on TranslationsFi {
 			case 'general.genericError': return ({required Object error}) => 'Virhe: ${error}';
 			case 'general.reset': return 'Nollaa';
 			case 'drawer.settings': return 'Asetukset';
+			case 'drawer.controls': return 'Ohjaimet';
 			case 'drawer.about': return 'Tietoja';
 			case 'drawer.aboutDialog.legalese': return '© 2025 Quizlone';
 			case 'drawer.aboutDialog.description': return 'Yksinkertainen ja moderni opiskelusovellus, joka on rakennettu Flutterilla.';
@@ -505,8 +529,8 @@ extension on TranslationsFi {
 			case 'settingsScreen.appearance': return 'Ulkoasu';
 			case 'settingsScreen.language': return 'Kieli';
 			case 'settingsScreen.languageDialogTitle': return 'Valitse kieli';
-			case 'settingsScreen.uiScaling': return 'Näytön skaalaus';
-			case 'settingsScreen.uiScalingSubtitle': return 'Säädä tekstin ja elementtien kokoa';
+			case 'settingsScreen.uiScaling': return 'Käyttöliittymän skaalaus';
+			case 'settingsScreen.uiScalingSubtitle': return 'Säädä tekstin ja käyttöliittymän elementtien kokoa';
 			case 'settingsScreen.systemDefault': return 'Järjestelmän oletus';
 			case 'settingsScreen.light': return 'Vaalea';
 			case 'settingsScreen.dark': return 'Tumma';
@@ -535,6 +559,18 @@ extension on TranslationsFi {
 			case 'settingsScreen.snackbars.importSuccess': return ({required Object count}) => '${count} listaa tuotu onnistuneesti!';
 			case 'settingsScreen.snackbars.importError': return ({required Object error}) => 'Virhe tietojen tuonnissa: ${error}';
 			case 'settingsScreen.snackbars.allDeleted': return 'Kaikki opiskelulistat on poistettu.';
+			case 'controlsScreen.title': return 'Ohjaimet';
+			case 'controlsScreen.gesturesTitle': return 'Eleet (Muistikortit)';
+			case 'controlsScreen.keyboardTitle': return 'Näppäimistö (Muistikortit)';
+			case 'controlsScreen.nextCard': return 'Seuraava kortti';
+			case 'controlsScreen.previousCard': return 'Edellinen kortti';
+			case 'controlsScreen.flipCard': return 'Käännä kortti';
+			case 'controlsScreen.swipeLeft': return 'Pyyhkäise vasemmalle';
+			case 'controlsScreen.swipeRight': return 'Pyyhkäise oikealle';
+			case 'controlsScreen.swipeVertical': return 'Pyyhkäise ylös tai alas';
+			case 'controlsScreen.arrowRight': return 'Oikea nuolinäppäin';
+			case 'controlsScreen.arrowLeft': return 'Vasen nuolinäppäin';
+			case 'controlsScreen.arrowVerticalOrSpace': return 'Ylä-/alanuoli tai välilyönti';
 			default: return null;
 		}
 	}

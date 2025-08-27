@@ -16,6 +16,7 @@
   },
   "drawer": {
     "settings": "Settings",
+    "controls": "Controls",
     "about": "About",
     "aboutDialog": {
       "legalese": "© 2025 Quizlone",
@@ -180,5 +181,19 @@
       "importError": "Error importing data: $error",
       "allDeleted": "All study lists have been deleted."
     }
+  },
+  "controlsScreen": {
+    "title": "Controls",
+    "gesturesTitle": "Gestures (Flashcards)",
+    "keyboardTitle": "Keyboard (Flashcards)",
+    "nextCard": "Next Card",
+    "previousCard": "Previous Card",
+    "flipCard": "Flip Card",
+    "swipeLeft": "Swipe Left",
+    "swipeRight": "Swipe Right",
+    "swipeVertical": "Swipe Up or Down",
+    "arrowRight": "Right Arrow Key",
+    "arrowLeft": "Left Arrow Key",
+    "arrowVerticalOrSpace": "Up/Down Arrow or Spacebar"
   }
 }
