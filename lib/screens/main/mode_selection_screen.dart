@@ -83,205 +83,246 @@ class ModeSelectionScreen extends ConsumerWidget {
             final int totalTerms = list.terms.length;
 
             return CenteredView(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Text(
-                      list.name,
-                      style: textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      t.startScreen.termCount(count: list.terms.length),
-                      style: textTheme.titleMedium?.copyWith(
-                        color: colorScheme.onSurfaceVariant,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 24),
-
-                    _OptionGroup(
-                      title: t.modeSelectionScreen.flashcardOptions,
-                      children: [
-                        RadioListTile<FlashcardStartSide>(
-                          shape: roundedShape,
-                          title: Text(t.modeSelectionScreen.showTermFirst),
-                          value: FlashcardStartSide.term,
-                          groupValue: fcStartWith,
-                          onChanged:
-                              (value) => ref
-                                  .read(flashcardStartWithProvider.notifier)
-                                  .set(value!),
-                        ),
-                        RadioListTile<FlashcardStartSide>(
-                          shape: roundedShape,
-                          title: Text(t.modeSelectionScreen.showDefFirst),
-                          value: FlashcardStartSide.definition,
-                          groupValue: fcStartWith,
-                          onChanged:
-                              (value) => ref
-                                  .read(flashcardStartWithProvider.notifier)
-                                  .set(value!),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-
-                    _OptionGroup(
-                      title: t.modeSelectionScreen.studyOptions,
-                      children: [
-                        RadioListTile<StudyQuestionType>(
-                          shape: roundedShape,
-                          title: Text(t.modeSelectionScreen.askForTerm),
-                          value: StudyQuestionType.definition,
-                          groupValue: studyAskWith,
-                          onChanged:
-                              (value) => ref
-                                  .read(studyAskWithProvider.notifier)
-                                  .set(value!),
-                        ),
-                        RadioListTile<StudyQuestionType>(
-                          shape: roundedShape,
-                          title: Text(t.modeSelectionScreen.askForDef),
-                          value: StudyQuestionType.term,
-                          groupValue: studyAskWith,
-                          onChanged:
-                              (value) => ref
-                                  .read(studyAskWithProvider.notifier)
-                                  .set(value!),
-                        ),
-                        const Divider(height: 20),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16.0,
-                            vertical: 8.0,
+              child: Hero(
+                tag: list.name,
+                child: Card(
+                  color: Colors.transparent,
+                  elevation: 0,
+                  margin: const EdgeInsets.all(4),
+                  shape: roundedShape,
+                  clipBehavior: Clip.antiAlias,
+                  child: Material(
+                    type: MaterialType.transparency,
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Text(
+                            list.name,
+                            style: textTheme.headlineSmall?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.center,
                           ),
-                          child: Row(
+                          const SizedBox(height: 4),
+                          Text(
+                            t.startScreen.termCount(count: list.terms.length),
+                            style: textTheme.titleMedium?.copyWith(
+                              color: colorScheme.onSurfaceVariant,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 24),
+
+                          _OptionGroup(
+                            title: t.modeSelectionScreen.flashcardOptions,
                             children: [
-                              Text(t.modeSelectionScreen.studyLength),
-                              const SizedBox(width: 10),
-                              SizedBox(
-                                width: 80,
-                                child: TextFormField(
-                                  initialValue: studyLength?.toString() ?? '',
-                                  decoration: InputDecoration(
-                                    hintText: t.general.all,
-                                    border: const OutlineInputBorder(),
-                                    contentPadding: const EdgeInsets.symmetric(
-                                      horizontal: 10,
-                                      vertical: 8,
-                                    ),
-                                    isDense: true,
-                                    suffixText:
-                                        totalTerms > 0 ? "/ $totalTerms" : null,
-                                  ),
-                                  keyboardType: TextInputType.number,
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.digitsOnly,
-                                  ],
-                                  onChanged: (value) {
-                                    final intVal = int.tryParse(value);
-                                    if (value.isEmpty || intVal == null) {
-                                      ref
-                                          .read(studyLengthProvider.notifier)
-                                          .clear();
-                                    } else if (intVal > totalTerms &&
-                                        totalTerms > 0) {
-                                      ref
-                                          .read(studyLengthProvider.notifier)
-                                          .set(totalTerms);
-                                    } else {
-                                      ref
-                                          .read(studyLengthProvider.notifier)
-                                          .set(intVal);
-                                    }
-                                  },
-                                  textAlign: TextAlign.center,
+                              RadioListTile<FlashcardStartSide>(
+                                shape: roundedShape,
+                                title: Text(
+                                  t.modeSelectionScreen.showTermFirst,
                                 ),
+                                value: FlashcardStartSide.term,
+                                groupValue: fcStartWith,
+                                onChanged:
+                                    (value) => ref
+                                        .read(
+                                          flashcardStartWithProvider.notifier,
+                                        )
+                                        .set(value!),
+                              ),
+                              RadioListTile<FlashcardStartSide>(
+                                shape: roundedShape,
+                                title: Text(t.modeSelectionScreen.showDefFirst),
+                                value: FlashcardStartSide.definition,
+                                groupValue: fcStartWith,
+                                onChanged:
+                                    (value) => ref
+                                        .read(
+                                          flashcardStartWithProvider.notifier,
+                                        )
+                                        .set(value!),
                               ),
                             ],
                           ),
-                        ),
-                        const Divider(height: 20),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Text(
-                            t.modeSelectionScreen.testFormat,
-                            style: textTheme.titleSmall,
+                          const SizedBox(height: 16),
+                          _OptionGroup(
+                            title: t.modeSelectionScreen.studyOptions,
+                            children: [
+                              RadioListTile<StudyQuestionType>(
+                                shape: roundedShape,
+                                title: Text(t.modeSelectionScreen.askForTerm),
+                                value: StudyQuestionType.definition,
+                                groupValue: studyAskWith,
+                                onChanged:
+                                    (value) => ref
+                                        .read(studyAskWithProvider.notifier)
+                                        .set(value!),
+                              ),
+                              RadioListTile<StudyQuestionType>(
+                                shape: roundedShape,
+                                title: Text(t.modeSelectionScreen.askForDef),
+                                value: StudyQuestionType.term,
+                                groupValue: studyAskWith,
+                                onChanged:
+                                    (value) => ref
+                                        .read(studyAskWithProvider.notifier)
+                                        .set(value!),
+                              ),
+                              const Divider(height: 20),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16.0,
+                                  vertical: 8.0,
+                                ),
+                                child: Row(
+                                  children: [
+                                    Text(t.modeSelectionScreen.studyLength),
+                                    const SizedBox(width: 10),
+                                    SizedBox(
+                                      width: 80,
+                                      child: TextFormField(
+                                        initialValue:
+                                            studyLength?.toString() ?? '',
+                                        decoration: InputDecoration(
+                                          hintText: t.general.all,
+                                          border: const OutlineInputBorder(),
+                                          contentPadding:
+                                              const EdgeInsets.symmetric(
+                                                horizontal: 10,
+                                                vertical: 8,
+                                              ),
+                                          isDense: true,
+                                          suffixText:
+                                              totalTerms > 0
+                                                  ? "/ $totalTerms"
+                                                  : null,
+                                        ),
+                                        keyboardType: TextInputType.number,
+                                        inputFormatters: [
+                                          FilteringTextInputFormatter
+                                              .digitsOnly,
+                                        ],
+                                        onChanged: (value) {
+                                          final intVal = int.tryParse(value);
+                                          if (value.isEmpty || intVal == null) {
+                                            ref
+                                                .read(
+                                                  studyLengthProvider.notifier,
+                                                )
+                                                .clear();
+                                          } else if (intVal > totalTerms &&
+                                              totalTerms > 0) {
+                                            ref
+                                                .read(
+                                                  studyLengthProvider.notifier,
+                                                )
+                                                .set(totalTerms);
+                                          } else {
+                                            ref
+                                                .read(
+                                                  studyLengthProvider.notifier,
+                                                )
+                                                .set(intVal);
+                                          }
+                                        },
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const Divider(height: 20),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16.0,
+                                ),
+                                child: Text(
+                                  t.modeSelectionScreen.testFormat,
+                                  style: textTheme.titleSmall,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              RadioListTile<TestFormat>(
+                                shape: roundedShape,
+                                title: Text(
+                                  t.modeSelectionScreen.writtenAnswer,
+                                ),
+                                value: TestFormat.written,
+                                groupValue: testFormat,
+                                onChanged:
+                                    (value) => ref
+                                        .read(
+                                          testQuestionFormatProvider.notifier,
+                                        )
+                                        .set(value!),
+                              ),
+                              RadioListTile<TestFormat>(
+                                shape: roundedShape,
+                                title: Text(
+                                  t.modeSelectionScreen.multipleChoice,
+                                ),
+                                value: TestFormat.mc,
+                                groupValue: testFormat,
+                                onChanged:
+                                    (value) => ref
+                                        .read(
+                                          testQuestionFormatProvider.notifier,
+                                        )
+                                        .set(value!),
+                              ),
+                            ],
                           ),
-                        ),
-                        const SizedBox(height: 4),
-                        RadioListTile<TestFormat>(
-                          shape: roundedShape,
-                          title: Text(t.modeSelectionScreen.writtenAnswer),
-                          value: TestFormat.written,
-                          groupValue: testFormat,
-                          onChanged:
-                              (value) => ref
-                                  .read(testQuestionFormatProvider.notifier)
-                                  .set(value!),
-                        ),
-                        RadioListTile<TestFormat>(
-                          shape: roundedShape,
-                          title: Text(t.modeSelectionScreen.multipleChoice),
-                          value: TestFormat.mc,
-                          groupValue: testFormat,
-                          onChanged:
-                              (value) => ref
-                                  .read(testQuestionFormatProvider.notifier)
-                                  .set(value!),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 24),
-
-                    ...[
-                      (
-                        label: t.modeSelectionScreen.flashcards,
-                        icon: Icons.style,
-                        route: const FlashcardRoute(),
-                      ),
-                      (
-                        label: t.modeSelectionScreen.learn,
-                        icon: Icons.school,
-                        route: const LearnRoute(),
-                      ),
-                      (
-                        label: t.modeSelectionScreen.test,
-                        icon: Icons.quiz,
-                        route: const TestModeRoute(),
-                      ),
-                    ].map((mode) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 6.0),
-                        child: ElevatedButton.icon(
-                          icon: Icon(mode.icon),
-                          label: Text(mode.label),
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            textStyle: textTheme.titleLarge,
-                            shape: const StadiumBorder(),
+                          const SizedBox(height: 24),
+                          ...[
+                            (
+                              label: t.modeSelectionScreen.flashcards,
+                              icon: Icons.style,
+                              route: const FlashcardRoute(),
+                            ),
+                            (
+                              label: t.modeSelectionScreen.learn,
+                              icon: Icons.school,
+                              route: const LearnRoute(),
+                            ),
+                            (
+                              label: t.modeSelectionScreen.test,
+                              icon: Icons.quiz,
+                              route: const TestModeRoute(),
+                            ),
+                          ].map((mode) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 6.0,
+                              ),
+                              child: ElevatedButton.icon(
+                                icon: Icon(mode.icon),
+                                label: Text(mode.label),
+                                style: ElevatedButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 16,
+                                  ),
+                                  textStyle: textTheme.titleLarge,
+                                  shape: const StadiumBorder(),
+                                ),
+                                onPressed:
+                                    () => context.router.push(mode.route),
+                              ),
+                            );
+                          }),
+                          const SizedBox(height: 30),
+                          Center(
+                            child: TextButton(
+                              onPressed: () => context.router.pop(),
+                              child: Text(t.modeSelectionScreen.backToWelcome),
+                            ),
                           ),
-                          onPressed: () => context.router.push(mode.route),
-                        ),
-                      );
-                    }),
-
-                    const SizedBox(height: 30),
-
-                    Center(
-                      child: TextButton(
-                        onPressed: () => context.router.pop(),
-                        child: Text(t.modeSelectionScreen.backToWelcome),
+                          const SizedBox(height: 20),
+                        ],
                       ),
                     ),
-                    const SizedBox(height: 20),
-                  ],
+                  ),
                 ),
               ),
             );

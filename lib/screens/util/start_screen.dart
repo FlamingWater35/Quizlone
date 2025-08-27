@@ -61,83 +61,97 @@ class StartScreen extends ConsumerWidget {
                         itemCount: lists.length,
                         itemBuilder: (context, index) {
                           final list = lists[index];
-                          return Card(
-                            margin: const EdgeInsets.symmetric(vertical: 6),
-                            child: ListTile(
-                              contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 8,
-                              ),
-                              title: Text(
-                                list.name,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              subtitle: Text(
-                                t.startScreen.termCount(
-                                  count: list.terms.length,
-                                ),
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              onTap: () {
-                                ref
-                                    .read(activeStudyListIdProvider.notifier)
-                                    .set(list.name);
-                                context.router.push(const ModeSelectionRoute());
-                              },
-                              trailing: IconButton(
-                                icon: Icon(
-                                  Icons.delete_outline,
-                                  color: colorScheme.error,
-                                ),
-                                tooltip: t.general.delete,
-                                onPressed: () async {
-                                  final confirm = await showDialog<bool>(
-                                    context: context,
-                                    builder:
-                                        (ctx) => AlertDialog(
-                                          title: Text(
-                                            t
-                                                .startScreen
-                                                .confirmDeleteDialog
-                                                .title,
-                                          ),
-                                          content: Text(
-                                            t.startScreen.confirmDeleteDialog
-                                                .content(listName: list.name),
-                                          ),
-                                          actions: [
-                                            TextButton(
-                                              onPressed:
-                                                  () => Navigator.of(
-                                                    ctx,
-                                                  ).pop(false),
-                                              child: Text(t.general.cancel),
-                                            ),
-                                            TextButton(
-                                              onPressed:
-                                                  () => Navigator.of(
-                                                    ctx,
-                                                  ).pop(true),
-                                              child: Text(
-                                                t.general.delete,
-                                                style: TextStyle(
-                                                  color: colorScheme.error,
-                                                ),
+                          return Hero(
+                            tag: list.name,
+                            child: Card(
+                              margin: const EdgeInsets.symmetric(vertical: 6),
+                              child: Material(
+                                type: MaterialType.transparency,
+                                child: ListTile(
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 8,
+                                  ),
+                                  title: Text(
+                                    list.name,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  subtitle: Text(
+                                    t.startScreen.termCount(
+                                      count: list.terms.length,
+                                    ),
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  onTap: () {
+                                    ref
+                                        .read(
+                                          activeStudyListIdProvider.notifier,
+                                        )
+                                        .set(list.name);
+                                    context.router.push(
+                                      const ModeSelectionRoute(),
+                                    );
+                                  },
+                                  trailing: IconButton(
+                                    icon: Icon(
+                                      Icons.delete_outline,
+                                      color: colorScheme.error,
+                                    ),
+                                    tooltip: t.general.delete,
+                                    onPressed: () async {
+                                      final confirm = await showDialog<bool>(
+                                        context: context,
+                                        builder:
+                                            (ctx) => AlertDialog(
+                                              title: Text(
+                                                t
+                                                    .startScreen
+                                                    .confirmDeleteDialog
+                                                    .title,
                                               ),
+                                              content: Text(
+                                                t
+                                                    .startScreen
+                                                    .confirmDeleteDialog
+                                                    .content(
+                                                      listName: list.name,
+                                                    ),
+                                              ),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed:
+                                                      () => Navigator.of(
+                                                        ctx,
+                                                      ).pop(false),
+                                                  child: Text(t.general.cancel),
+                                                ),
+                                                TextButton(
+                                                  onPressed:
+                                                      () => Navigator.of(
+                                                        ctx,
+                                                      ).pop(true),
+                                                  child: Text(
+                                                    t.general.delete,
+                                                    style: TextStyle(
+                                                      color: colorScheme.error,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                          ],
-                                        ),
-                                  );
-                                  if (confirm == true) {
-                                    await ref
-                                        .read(databaseServiceProvider)
-                                        .deleteStudyList(list.name);
-                                  }
-                                },
+                                      );
+                                      if (confirm == true) {
+                                        await ref
+                                            .read(databaseServiceProvider)
+                                            .deleteStudyList(list.name);
+                                      }
+                                    },
+                                  ),
+                                ),
                               ),
                             ),
                           );

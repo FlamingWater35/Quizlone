@@ -40,44 +40,50 @@ class ControlsScreen extends StatelessWidget {
       appBar: AppBar(title: Text(t.controlsScreen.title), centerTitle: true),
       body: SafeArea(
         child: CenteredView(
-          child: ListView(
-            children: [
-              buildSectionHeader(t.controlsScreen.gesturesTitle),
-              const Divider(indent: 24, endIndent: 24),
-              buildControlTile(
-                Icons.swipe_left_outlined,
-                t.controlsScreen.nextCard,
-                t.controlsScreen.swipeLeft,
-              ),
-              buildControlTile(
-                Icons.swipe_right_outlined,
-                t.controlsScreen.previousCard,
-                t.controlsScreen.swipeRight,
-              ),
-              buildControlTile(
-                Icons.swipe_up_outlined,
-                t.controlsScreen.flipCard,
-                t.controlsScreen.swipeVertical,
-              ),
-              buildSectionHeader(t.controlsScreen.keyboardTitle),
-              const Divider(indent: 24, endIndent: 24),
-              buildControlTile(
-                Icons.arrow_forward,
-                t.controlsScreen.nextCard,
-                t.controlsScreen.arrowRight,
-              ),
-              buildControlTile(
-                Icons.arrow_back,
-                t.controlsScreen.previousCard,
-                t.controlsScreen.arrowLeft,
-              ),
-              buildControlTile(
-                Icons.space_bar_outlined,
-                t.controlsScreen.flipCard,
-                t.controlsScreen.arrowVerticalOrSpace,
-              ),
-              const SizedBox(height: 24),
-            ],
+          child: Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            margin: const EdgeInsets.all(4),
+            child: ListView(
+              children: [
+                buildSectionHeader(t.controlsScreen.gesturesTitle),
+                const Divider(indent: 24, endIndent: 24),
+                buildControlTile(
+                  Icons.swipe_left_outlined,
+                  t.controlsScreen.nextCard,
+                  t.controlsScreen.swipeLeft,
+                ),
+                buildControlTile(
+                  Icons.swipe_right_outlined,
+                  t.controlsScreen.previousCard,
+                  t.controlsScreen.swipeRight,
+                ),
+                buildControlTile(
+                  Icons.swipe_up_outlined,
+                  t.controlsScreen.flipCard,
+                  t.controlsScreen.swipeVertical,
+                ),
+                buildSectionHeader(t.controlsScreen.keyboardTitle),
+                const Divider(indent: 24, endIndent: 24),
+                buildControlTile(
+                  Icons.arrow_forward,
+                  t.controlsScreen.nextCard,
+                  t.controlsScreen.arrowRight,
+                ),
+                buildControlTile(
+                  Icons.arrow_back,
+                  t.controlsScreen.previousCard,
+                  t.controlsScreen.arrowLeft,
+                ),
+                buildControlTile(
+                  Icons.space_bar_outlined,
+                  t.controlsScreen.flipCard,
+                  t.controlsScreen.arrowVerticalOrSpace,
+                ),
+                const SizedBox(height: 24),
+              ],
+            ),
           ),
         ),
       ),
