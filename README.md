@@ -49,11 +49,12 @@ To get a local copy up and running, follow these simple steps.
     flutter pub get
     ```
 
-3. **Run the code generator:**
-    This project uses code generation for state management, routing, and data models. You must run this command before you can run the app.
+3. **Run the code generators:**
+    This project uses code generation for state management, routing, data models and localization. You must run these commands before you can run the app.
 
     ```bash
     dart run build_runner build --delete-conflicting-outputs
+    dart run slang # For localization
     ```
 
 4. **Run the application:**
