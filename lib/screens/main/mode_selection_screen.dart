@@ -79,7 +79,7 @@ class ModeSelectionScreen extends ConsumerWidget {
                     padding: const EdgeInsets.all(24.0),
                     child: LayoutBuilder(
                       builder: (context, constraints) {
-                        const double breakpoint = 500.0;
+                        const double breakpoint = 650.0;
                         final isWide = constraints.maxWidth >= breakpoint;
                         return isWide
                             ? _WideLayout(list: list)
@@ -110,6 +110,7 @@ class ModeSelectionScreen extends ConsumerWidget {
 
 class _NarrowLayout extends StatelessWidget {
   const _NarrowLayout({required this.list});
+
   final StudyList list;
 
   @override
@@ -117,13 +118,9 @@ class _NarrowLayout extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        _ListHeader(list: list),
-        const SizedBox(height: 24),
+        _ActionPanel(list: list),
+        const Divider(),
         const _OptionsPanel(),
-        const SizedBox(height: 32),
-        const _ActionButtons(),
-        const SizedBox(height: 30),
-        const _BackButton(),
       ],
     );
   }
@@ -131,6 +128,7 @@ class _NarrowLayout extends StatelessWidget {
 
 class _WideLayout extends StatelessWidget {
   const _WideLayout({required this.list});
+
   final StudyList list;
 
   @override
@@ -138,20 +136,7 @@ class _WideLayout extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(
-          flex: 2,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const SizedBox(height: 40),
-              _ListHeader(list: list, isWide: true),
-              const SizedBox(height: 48),
-              const _ActionButtons(),
-              const SizedBox(height: 40),
-              const _BackButton(),
-            ],
-          ),
-        ),
+        Expanded(flex: 2, child: _ActionPanel(list: list, isWide: true)),
         const SizedBox(width: 24),
         const Expanded(flex: 3, child: _OptionsPanel()),
       ],
@@ -159,10 +144,32 @@ class _WideLayout extends StatelessWidget {
   }
 }
 
+class _ActionPanel extends StatelessWidget {
+  const _ActionPanel({required this.list, this.isWide = false});
+
+  final bool isWide;
+  final StudyList list;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        if (isWide) const SizedBox(height: 40),
+        _ListHeader(list: list, isWide: isWide),
+        const SizedBox(height: 48),
+        const _ActionButtons(),
+        const SizedBox(height: 20),
+      ],
+    );
+  }
+}
+
 class _ListHeader extends StatelessWidget {
   const _ListHeader({required this.list, this.isWide = false});
-  final StudyList list;
+
   final bool isWide;
+  final StudyList list;
 
   @override
   Widget build(BuildContext context) {
@@ -196,7 +203,6 @@ class _OptionsPanel extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final t = Translations.of(context);
-    final textTheme = Theme.of(context).textTheme;
     final totalTerms =
         ref.watch(activeStudyListProvider).asData?.value?.terms.length ?? 0;
 
@@ -206,118 +212,138 @@ class _OptionsPanel extends ConsumerWidget {
     final testFormat = ref.watch(testQuestionFormatProvider);
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        _SettingsHeader(title: t.modeSelectionScreen.flashcardOptions),
-        Card(
-          clipBehavior: Clip.antiAlias,
-          child: Column(
-            children: [
-              RadioListTile<FlashcardStartSide>(
-                title: Text(t.modeSelectionScreen.showTermFirst),
-                value: FlashcardStartSide.term,
-                groupValue: fcStartWith,
-                onChanged:
-                    (value) => ref
-                        .read(flashcardStartWithProvider.notifier)
-                        .set(value!),
-              ),
-              RadioListTile<FlashcardStartSide>(
-                title: Text(t.modeSelectionScreen.showDefFirst),
-                value: FlashcardStartSide.definition,
-                groupValue: fcStartWith,
-                onChanged:
-                    (value) => ref
-                        .read(flashcardStartWithProvider.notifier)
-                        .set(value!),
-              ),
-            ],
-          ),
+        _SettingsCard(
+          title: t.modeSelectionScreen.flashcardOptions,
+          children: [
+            Row(
+              children: [
+                _CustomToggleButton<FlashcardStartSide>(
+                  label: t.modeSelectionScreen.showTermFirst,
+                  icon: Icons.rectangle_outlined,
+                  value: FlashcardStartSide.term,
+                  groupValue: fcStartWith,
+                  onChanged:
+                      (value) => ref
+                          .read(flashcardStartWithProvider.notifier)
+                          .set(value),
+                ),
+                const SizedBox(width: 8),
+                _CustomToggleButton<FlashcardStartSide>(
+                  label: t.modeSelectionScreen.showDefFirst,
+                  icon: Icons.notes_outlined,
+                  value: FlashcardStartSide.definition,
+                  groupValue: fcStartWith,
+                  onChanged:
+                      (value) => ref
+                          .read(flashcardStartWithProvider.notifier)
+                          .set(value),
+                ),
+              ],
+            ),
+          ],
         ),
         const SizedBox(height: 16),
-        _SettingsHeader(title: t.modeSelectionScreen.studyOptions),
-        Card(
-          clipBehavior: Clip.antiAlias,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              RadioListTile<StudyQuestionType>(
-                title: Text(t.modeSelectionScreen.askForTerm),
-                value: StudyQuestionType.definition,
-                groupValue: studyAskWith,
-                onChanged:
-                    (value) =>
-                        ref.read(studyAskWithProvider.notifier).set(value!),
-              ),
-              RadioListTile<StudyQuestionType>(
-                title: Text(t.modeSelectionScreen.askForDef),
-                value: StudyQuestionType.term,
-                groupValue: studyAskWith,
-                onChanged:
-                    (value) =>
-                        ref.read(studyAskWithProvider.notifier).set(value!),
-              ),
-              const Divider(indent: 16, endIndent: 16),
-              ListTile(
-                title: Text(t.modeSelectionScreen.studyLength),
-                trailing: SizedBox(
-                  width: 80,
-                  child: TextFormField(
-                    initialValue: studyLength?.toString() ?? '',
-                    decoration: InputDecoration(
-                      hintText: t.general.all,
-                      border: const OutlineInputBorder(),
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 8,
+        _SettingsCard(
+          title: "${t.modeSelectionScreen.learn} Options",
+          children: [
+            Row(
+              children: [
+                _CustomToggleButton<StudyQuestionType>(
+                  label: t.modeSelectionScreen.askForTerm,
+                  icon: Icons.notes_outlined,
+                  value: StudyQuestionType.definition,
+                  groupValue: studyAskWith,
+                  onChanged:
+                      (value) =>
+                          ref.read(studyAskWithProvider.notifier).set(value),
+                ),
+                const SizedBox(width: 8),
+                _CustomToggleButton<StudyQuestionType>(
+                  label: t.modeSelectionScreen.askForDef,
+                  icon: Icons.rectangle_outlined,
+                  value: StudyQuestionType.term,
+                  groupValue: studyAskWith,
+                  onChanged:
+                      (value) =>
+                          ref.read(studyAskWithProvider.notifier).set(value),
+                ),
+              ],
+            ),
+            const Divider(height: 24),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(t.modeSelectionScreen.studyLength),
+                  const SizedBox(width: 16),
+                  SizedBox(
+                    width: 80,
+                    child: TextFormField(
+                      initialValue: studyLength?.toString() ?? '',
+                      decoration: InputDecoration(
+                        hintText: t.general.all,
+                        border: const OutlineInputBorder(),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 8,
+                        ),
+                        isDense: true,
+                        suffixText: totalTerms > 0 ? "/ $totalTerms" : null,
                       ),
-                      isDense: true,
-                      suffixText: totalTerms > 0 ? "/ $totalTerms" : null,
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      onChanged: (value) {
+                        final intVal = int.tryParse(value);
+                        final notifier = ref.read(studyLengthProvider.notifier);
+                        if (value.isEmpty || intVal == null) {
+                          notifier.clear();
+                        } else if (intVal > totalTerms && totalTerms > 0) {
+                          notifier.set(totalTerms);
+                        } else {
+                          notifier.set(intVal);
+                        }
+                      },
+                      textAlign: TextAlign.center,
                     ),
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                    onChanged: (value) {
-                      final intVal = int.tryParse(value);
-                      final notifier = ref.read(studyLengthProvider.notifier);
-                      if (value.isEmpty || intVal == null) {
-                        notifier.clear();
-                      } else if (intVal > totalTerms && totalTerms > 0) {
-                        notifier.set(totalTerms);
-                      } else {
-                        notifier.set(intVal);
-                      }
-                    },
-                    textAlign: TextAlign.center,
                   ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        _SettingsCard(
+          title: "${t.modeSelectionScreen.test} Options",
+          children: [
+            Row(
+              children: [
+                _CustomToggleButton<TestFormat>(
+                  label: t.modeSelectionScreen.writtenAnswer,
+                  icon: Icons.edit_note_outlined,
+                  value: TestFormat.written,
+                  groupValue: testFormat,
+                  onChanged:
+                      (value) => ref
+                          .read(testQuestionFormatProvider.notifier)
+                          .set(value),
                 ),
-              ),
-              const Divider(indent: 16, endIndent: 16),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
-                child: Text(
-                  t.modeSelectionScreen.testFormat,
-                  style: textTheme.titleMedium,
+                const SizedBox(width: 8),
+                _CustomToggleButton<TestFormat>(
+                  label: t.modeSelectionScreen.multipleChoice,
+                  icon: Icons.check_box_outlined,
+                  value: TestFormat.mc,
+                  groupValue: testFormat,
+                  onChanged:
+                      (value) => ref
+                          .read(testQuestionFormatProvider.notifier)
+                          .set(value),
                 ),
-              ),
-              RadioListTile<TestFormat>(
-                title: Text(t.modeSelectionScreen.writtenAnswer),
-                value: TestFormat.written,
-                groupValue: testFormat,
-                onChanged:
-                    (value) => ref
-                        .read(testQuestionFormatProvider.notifier)
-                        .set(value!),
-              ),
-              RadioListTile<TestFormat>(
-                title: Text(t.modeSelectionScreen.multipleChoice),
-                value: TestFormat.mc,
-                groupValue: testFormat,
-                onChanged:
-                    (value) => ref
-                        .read(testQuestionFormatProvider.notifier)
-                        .set(value!),
-              ),
-            ],
-          ),
+              ],
+            ),
+          ],
         ),
       ],
     );
@@ -355,13 +381,12 @@ class _ActionButtons extends StatelessWidget {
           modes.map((mode) {
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 6.0),
-              child: ElevatedButton.icon(
+              child: FilledButton.icon(
                 icon: Icon(mode.icon),
                 label: Text(mode.label),
-                style: ElevatedButton.styleFrom(
+                style: FilledButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   textStyle: textTheme.titleLarge,
-                  shape: const StadiumBorder(),
                 ),
                 onPressed: () => context.router.push(mode.route),
               ),
@@ -371,32 +396,99 @@ class _ActionButtons extends StatelessWidget {
   }
 }
 
-class _BackButton extends StatelessWidget {
-  const _BackButton();
+class _SettingsCard extends StatelessWidget {
+  const _SettingsCard({required this.title, required this.children});
+
+  final List<Widget> children;
+  final String title;
+
   @override
   Widget build(BuildContext context) {
-    final t = Translations.of(context);
-    return Center(
-      child: TextButton(
-        onPressed: () => context.router.pop(),
-        child: Text(t.modeSelectionScreen.backToWelcome),
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              title.toUpperCase(),
+              style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
+            const SizedBox(height: 12),
+            ...children,
+          ],
+        ),
       ),
     );
   }
 }
 
-class _SettingsHeader extends StatelessWidget {
-  const _SettingsHeader({required this.title});
-  final String title;
+class _CustomToggleButton<T> extends StatelessWidget {
+  const _CustomToggleButton({
+    required this.label,
+    required this.icon,
+    required this.value,
+    required this.groupValue,
+    required this.onChanged,
+  });
+
+  final T groupValue;
+  final IconData icon;
+  final String label;
+  final ValueChanged<T> onChanged;
+  final T value;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(4, 16, 4, 8),
-      child: Text(
-        title.toUpperCase(),
-        style: Theme.of(context).textTheme.labelLarge?.copyWith(
-          color: Theme.of(context).colorScheme.primary,
+    final bool isSelected = value == groupValue;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return Expanded(
+      child: Card(
+        margin: EdgeInsets.zero,
+        elevation: isSelected ? 2 : 0,
+        color:
+            isSelected ? colorScheme.secondaryContainer : colorScheme.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+          side: BorderSide(
+            color: isSelected ? Colors.transparent : colorScheme.outlineVariant,
+          ),
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: () => onChanged(value),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  icon,
+                  size: 15.0,
+                  color:
+                      isSelected
+                          ? colorScheme.onSecondaryContainer
+                          : colorScheme.onSurfaceVariant,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  label,
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.labelLarge?.copyWith(
+                    color:
+                        isSelected
+                            ? colorScheme.onSecondaryContainer
+                            : colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
