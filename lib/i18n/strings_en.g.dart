@@ -437,6 +437,15 @@ class TranslationsSettingsScreenEn {
 	/// en: 'Finnish'
 	String get finnish => 'Finnish';
 
+	/// en: 'Russian'
+	String get russian => 'Russian';
+
+	/// en: 'Spanish'
+	String get spanish => 'Spanish';
+
+	/// en: 'Swedish'
+	String get swedish => 'Swedish';
+
 	/// en: 'Data Management'
 	String get dataManagement => 'Data Management';
 
@@ -856,6 +865,9 @@ extension on Translations {
 			case 'settingsScreen.dark': return 'Dark';
 			case 'settingsScreen.english': return 'English';
 			case 'settingsScreen.finnish': return 'Finnish';
+			case 'settingsScreen.russian': return 'Russian';
+			case 'settingsScreen.spanish': return 'Spanish';
+			case 'settingsScreen.swedish': return 'Swedish';
 			case 'settingsScreen.dataManagement': return 'Data Management';
 			case 'settingsScreen.exportData': return 'Export Data';
 			case 'settingsScreen.exportDataSubtitle': return 'Save all lists to a file';

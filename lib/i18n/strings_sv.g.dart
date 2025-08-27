@@ -247,6 +247,9 @@ class _TranslationsSettingsScreenSv implements TranslationsSettingsScreenEn {
 	@override String get dark => 'Mörk';
 	@override String get english => 'Engelska';
 	@override String get finnish => 'Finska';
+	@override String get russian => 'Ryska';
+	@override String get spanish => 'Spanska';
+	@override String get swedish => 'Svenska';
 	@override String get dataManagement => 'Datahantering';
 	@override String get exportData => 'Exportera data';
 	@override String get exportDataSubtitle => 'Spara alla listor till en fil';
@@ -548,6 +551,9 @@ extension on TranslationsSv {
 			case 'settingsScreen.dark': return 'Mörk';
 			case 'settingsScreen.english': return 'Engelska';
 			case 'settingsScreen.finnish': return 'Finska';
+			case 'settingsScreen.russian': return 'Ryska';
+			case 'settingsScreen.spanish': return 'Spanska';
+			case 'settingsScreen.swedish': return 'Svenska';
 			case 'settingsScreen.dataManagement': return 'Datahantering';
 			case 'settingsScreen.exportData': return 'Exportera data';
 			case 'settingsScreen.exportDataSubtitle': return 'Spara alla listor till en fil';

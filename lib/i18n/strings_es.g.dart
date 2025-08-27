@@ -247,6 +247,9 @@ class _TranslationsSettingsScreenEs implements TranslationsSettingsScreenEn {
 	@override String get dark => 'Oscuro';
 	@override String get english => 'Inglés';
 	@override String get finnish => 'Finlandés';
+	@override String get russian => 'Ruso';
+	@override String get spanish => 'Español';
+	@override String get swedish => 'Sueco';
 	@override String get dataManagement => 'Gestión de datos';
 	@override String get exportData => 'Exportar datos';
 	@override String get exportDataSubtitle => 'Guardar todas las listas en un archivo';
@@ -548,6 +551,9 @@ extension on TranslationsEs {
 			case 'settingsScreen.dark': return 'Oscuro';
 			case 'settingsScreen.english': return 'Inglés';
 			case 'settingsScreen.finnish': return 'Finlandés';
+			case 'settingsScreen.russian': return 'Ruso';
+			case 'settingsScreen.spanish': return 'Español';
+			case 'settingsScreen.swedish': return 'Sueco';
 			case 'settingsScreen.dataManagement': return 'Gestión de datos';
 			case 'settingsScreen.exportData': return 'Exportar datos';
 			case 'settingsScreen.exportDataSubtitle': return 'Guardar todas las listas en un archivo';

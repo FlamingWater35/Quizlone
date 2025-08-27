@@ -247,6 +247,9 @@ class _TranslationsSettingsScreenFi implements TranslationsSettingsScreenEn {
 	@override String get dark => 'Tumma';
 	@override String get english => 'Englanti';
 	@override String get finnish => 'Suomi';
+	@override String get russian => 'Venäjä';
+	@override String get spanish => 'Espanja';
+	@override String get swedish => 'Ruotsi';
 	@override String get dataManagement => 'Tietojen hallinta';
 	@override String get exportData => 'Vie tiedot';
 	@override String get exportDataSubtitle => 'Tallenna kaikki listat tiedostoon';
@@ -548,6 +551,9 @@ extension on TranslationsFi {
 			case 'settingsScreen.dark': return 'Tumma';
 			case 'settingsScreen.english': return 'Englanti';
 			case 'settingsScreen.finnish': return 'Suomi';
+			case 'settingsScreen.russian': return 'Venäjä';
+			case 'settingsScreen.spanish': return 'Espanja';
+			case 'settingsScreen.swedish': return 'Ruotsi';
 			case 'settingsScreen.dataManagement': return 'Tietojen hallinta';
 			case 'settingsScreen.exportData': return 'Vie tiedot';
 			case 'settingsScreen.exportDataSubtitle': return 'Tallenna kaikki listat tiedostoon';

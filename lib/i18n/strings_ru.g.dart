@@ -249,6 +249,9 @@ class _TranslationsSettingsScreenRu implements TranslationsSettingsScreenEn {
 	@override String get dark => 'Темная';
 	@override String get english => 'Английский';
 	@override String get finnish => 'Финский';
+	@override String get russian => 'Русский';
+	@override String get spanish => 'Испанский';
+	@override String get swedish => 'Шведский';
 	@override String get dataManagement => 'Управление данными';
 	@override String get exportData => 'Экспорт данных';
 	@override String get exportDataSubtitle => 'Сохранить все списки в файл';
@@ -556,6 +559,9 @@ extension on TranslationsRu {
 			case 'settingsScreen.dark': return 'Темная';
 			case 'settingsScreen.english': return 'Английский';
 			case 'settingsScreen.finnish': return 'Финский';
+			case 'settingsScreen.russian': return 'Русский';
+			case 'settingsScreen.spanish': return 'Испанский';
+			case 'settingsScreen.swedish': return 'Шведский';
 			case 'settingsScreen.dataManagement': return 'Управление данными';
 			case 'settingsScreen.exportData': return 'Экспорт данных';
 			case 'settingsScreen.exportDataSubtitle': return 'Сохранить все списки в файл';
