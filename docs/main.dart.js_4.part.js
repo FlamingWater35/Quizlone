@@ -2,16 +2,16 @@
 a[b][c]=a[b][c]||[]
 a[b][c].push({p:"main.dart.js_4",e:"beginPart"})})(self,"$__dart_deferred_initializers__","eventLog")
 $__dart_deferred_initializers__.current=function(a,b,c,$){var B,A={
-aSI(d,e,f){var w,v,u=null,t=new B.h_(d,x.c),s=new B.h_(d,x.c)
-s=new A.V3(t,s)
-s.vu(d,u,e,u)
+aT4(d,e,f){var w,v,u=null,t=new B.h_(d,x.c),s=new B.h_(d,x.c)
+s=new A.Vc(t,s)
+s.vB(d,u,e,u)
 w=s.a
 v=t.r
 v.toString
 w.r=v
-t.r=A.b8U(s)
+t.r=A.b9h(s)
 return s},
-b8Q(d,e){var w="Quizlone",v="Inst\xe4llningar",u="Kontroller",t="Skapa ny lista",s="Bekr\xe4fta borttagning",r="Bildkort",q="Inl\xe4rning",p="Tillbaka till v\xe4lkomstsk\xe4rmen",o="Exportera data"
+b9d(d,e){var w="Quizlone",v="Inst\xe4llningar",u="Kontroller",t="Skapa ny lista",s="Bekr\xe4fta borttagning",r="Bildkort",q="Inl\xe4rning",p="Tillbaka till v\xe4lkomstsk\xe4rmen",o="Exportera data"
 switch(e){case"appName":return w
 case"general.back":return"Tillbaka"
 case"general.cancel":return"Avbryt"
@@ -23,23 +23,27 @@ case"general.saveAndContinue":return"Spara och forts\xe4tt"
 case"general.submit":return"Skicka"
 case"general.all":return"Alla"
 case"general.loading":return"Laddar..."
-case"general.genericError":return new A.aG_()
+case"general.genericError":return new A.aGm()
 case"general.reset":return"\xc5terst\xe4ll"
 case"drawer.settings":return v
 case"drawer.controls":return u
 case"drawer.about":return"Om"
 case"drawer.aboutDialog.legalese":return"\xa9 2025 Quizlone"
 case"drawer.aboutDialog.description":return y.t
-case"aboutScreen.version":return new A.aG0()
+case"aboutScreen.version":return new A.aGn()
 case"aboutScreen.viewLicenses":return"Visa licenser"
 case"startScreen.title":return w
 case"startScreen.welcome":return"V\xe4lkommen!"
 case"startScreen.createNewList":return t
 case"startScreen.loadSavedList":return"Ladda sparad lista"
 case"startScreen.noLists":return"Inga listor sparade \xe4n."
-case"startScreen.termCount":return new A.aG1(d)
+case"startScreen.termCount":return new A.aGo(d)
 case"startScreen.confirmDeleteDialog.title":return s
-case"startScreen.confirmDeleteDialog.content":return new A.aGc()
+case"startScreen.confirmDeleteDialog.content":return new A.aGz()
+case"startScreen.renameListDialog.title":return"Byt namn p\xe5 listan"
+case"startScreen.renameListDialog.rename":return"Byt namn"
+case"startScreen.renameListDialog.errorNameExists":return"En lista med detta namn finns redan."
+case"startScreen.renameListDialog.errorNameEmpty":return"Listnamnet kan inte vara tomt."
 case"inputScreen.title":return t
 case"inputScreen.listName":return"Listans namn"
 case"inputScreen.listNameHint":return"t.ex. Kapitel 1 Ordlista"
@@ -50,12 +54,12 @@ case"inputScreen.saveList":return"Spara lista"
 case"inputScreen.errors.listNameEmpty":return"Listans namn kan inte vara tomt."
 case"inputScreen.errors.noTerms":return"Inga termer/definitioner inmatade."
 case"inputScreen.errors.invalidFormat":return y.C
-case"inputScreen.errors.emptyTerm":return new A.aGn()
+case"inputScreen.errors.emptyTerm":return new A.aGK()
 case"inputScreen.errors.noValidPairs":return y.M
-case"inputScreen.errors.saveFailed":return new A.aGy()
+case"inputScreen.errors.saveFailed":return new A.aGV()
 case"modeSelectionScreen.title":return"Alternativ & L\xe4ge"
 case"modeSelectionScreen.noActiveList":return y.w
-case"modeSelectionScreen.debugActiveId":return new A.aGJ()
+case"modeSelectionScreen.debugActiveId":return new A.aH5()
 case"modeSelectionScreen.returnToWelcome":return"\xc5terg\xe5 till v\xe4lkomstsk\xe4rmen"
 case"modeSelectionScreen.flashcardOptions":return"Inst\xe4llningar f\xf6r bildkort"
 case"modeSelectionScreen.showTermFirst":return"Visa term f\xf6rst"
@@ -88,14 +92,14 @@ case"learnScreen.backToModeSelection":return"Tillbaka till l\xe4gesval"
 case"learnScreen.errors.noTerms":return y.g
 case"learnScreen.errors.notEnoughTerms":return y.U
 case"learnScreen.feedback.correct":return"R\xe4tt!"
-case"learnScreen.feedback.incorrect":return new A.aGU()
-case"learnScreen.feedback.hint":return new A.aH4()
-case"learnScreen.feedback.skipped":return new A.aH6()
+case"learnScreen.feedback.incorrect":return new A.aHg()
+case"learnScreen.feedback.hint":return new A.aHr()
+case"learnScreen.feedback.skipped":return new A.aHt()
 case"learnScreen.progress.allLearned":return"Alla termer inl\xe4rda!"
-case"learnScreen.progress.cycleStatus":return new A.aH7()
+case"learnScreen.progress.cycleStatus":return new A.aHu()
 case"learnScreen.progress.sessionComplete":return"Inl\xe4rningssessionen \xe4r klar! Bra jobbat!"
-case"learnScreen.progress.maxCyclesReached":return new A.aG2(d)
-case"learnScreen.progress.startingCycle":return new A.aG3()
+case"learnScreen.progress.maxCyclesReached":return new A.aGp(d)
+case"learnScreen.progress.startingCycle":return new A.aGq()
 case"testScreen.title":return"Prov"
 case"testScreen.noQuestions":return"Inga fr\xe5gor f\xf6r detta prov."
 case"testScreen.viewResults":return"Visa resultat"
@@ -107,9 +111,9 @@ case"resultsScreen.title":return"Provresultat"
 case"resultsScreen.notSubmitted":return"Provet har inte l\xe4mnats in \xe4n."
 case"resultsScreen.noQuestions":return"Det fanns inga fr\xe5gor i detta prov."
 case"resultsScreen.yourScore":return"Ditt resultat"
-case"resultsScreen.scoreFraction":return new A.aG4()
+case"resultsScreen.scoreFraction":return new A.aGr()
 case"resultsScreen.reviewIncorrect":return"Granska felaktiga svar:"
-case"resultsScreen.yourAnswerWas":return new A.aG5()
+case"resultsScreen.yourAnswerWas":return new A.aGs()
 case"resultsScreen.noAnswer":return"(Inget svar)"
 case"resultsScreen.congratulations":return"Grattis! Du hade alla r\xe4tt!"
 case"resultsScreen.retryTest":return"F\xf6rs\xf6k igen"
@@ -147,10 +151,10 @@ case"settingsScreen.deleteDialog.content":return y.l
 case"settingsScreen.deleteDialog.deleteAll":return"Ta bort allt"
 case"settingsScreen.snackbars.noDataToExport":return"Det finns ingen data att exportera."
 case"settingsScreen.snackbars.exportSuccess":return"Data exporterades framg\xe5ngsrikt!"
-case"settingsScreen.snackbars.exportError":return new A.aG6()
+case"settingsScreen.snackbars.exportError":return new A.aGt()
 case"settingsScreen.snackbars.fileSaved":return"Filen har sparats!"
-case"settingsScreen.snackbars.importSuccess":return new A.aG7()
-case"settingsScreen.snackbars.importError":return new A.aG8()
+case"settingsScreen.snackbars.importSuccess":return new A.aGu()
+case"settingsScreen.snackbars.importError":return new A.aGv()
 case"settingsScreen.snackbars.allDeleted":return"Alla studielistor har tagits bort."
 case"controlsScreen.title":return u
 case"controlsScreen.gesturesTitle":return"Gester (Bildkort)"
@@ -165,418 +169,428 @@ case"controlsScreen.arrowRight":return"H\xf6gerpiltangent"
 case"controlsScreen.arrowLeft":return"V\xe4nsterpiltangent"
 case"controlsScreen.arrowVerticalOrSpace":return"Upp/ner-piltangenter eller Mellanslag"
 default:return null}},
-b8U(d){return new A.aH8(d)},
-V3:function V3(d,e){var _=this
+b9h(d){return new A.aHv(d)},
+Vc:function Vc(d,e){var _=this
 _.ax=d
 _.id=_.go=_.fy=_.fx=_.fr=_.dy=_.dx=_.db=_.cy=_.cx=_.CW=_.ch=_.ay=$
 _.a=e
 _.at=_.as=_.Q=_.z=_.y=_.x=_.w=_.r=_.f=_.e=_.d=_.c=_.b=$},
-aDW:function aDW(){},
-aDO:function aDO(d,e){var _=this
+aEe:function aEe(){},
+aE6:function aE6(d,e){var _=this
 _.c=d
 _.d=$
 _.a=e
 _.b=$},
-aDC:function aDC(){},
-aEP:function aEP(d,e){var _=this
+aDV:function aDV(){},
+aFb:function aFb(d,e){var _=this
+_.d=d
+_.f=_.e=$
+_.a=e
+_.c=_.b=$},
+aEm:function aEm(d,e){var _=this
 _.c=d
 _.d=$
 _.a=e
 _.b=$},
-aE3:function aE3(d,e){var _=this
-_.c=d
-_.d=$
-_.a=e
-_.b=$},
-aEn:function aEn(){},
-aDS:function aDS(){},
-aEj:function aEj(d,e){var _=this
+aEG:function aEG(){},
+aEa:function aEa(){},
+aEC:function aEC(d,e){var _=this
 _.e=d
 _.w=_.r=_.f=$
 _.a=e
 _.d=_.c=_.b=$},
-aEX:function aEX(d,e){var _=this
+aFj:function aFj(d,e){var _=this
 _.c=d
 _.d=$
 _.a=e
 _.b=$},
-aEr:function aEr(){},
-aEH:function aEH(d,e){var _=this
+aEK:function aEK(){},
+aF_:function aF_(d,e){var _=this
 _.f=d
 _.y=_.x=_.w=$
 _.a=e
 _.e=_.d=_.c=$},
-aDG:function aDG(){},
-aDK:function aDK(){},
-aEL:function aEL(){},
-aE_:function aE_(){},
-aE7:function aE7(){},
-aEc:function aEc(){},
-aEh:function aEh(d,e){this.b=d
-this.a=e},
-aET:function aET(){},
-aEB:function aEB(){},
+aDZ:function aDZ(){},
+aE2:function aE2(){},
+aF3:function aF3(){},
+aF9:function aF9(){},
+aEi:function aEi(){},
+aEq:function aEq(){},
 aEv:function aEv(){},
-aEG:function aEG(){},
-aH8:function aH8(d){this.a=d},
-aG_:function aG_(){},
-aG0:function aG0(){},
-aG1:function aG1(d){this.a=d},
-aGc:function aGc(){},
+aEA:function aEA(d,e){this.b=d
+this.a=e},
+aFf:function aFf(){},
+aEU:function aEU(){},
+aEO:function aEO(){},
+aEZ:function aEZ(){},
+aHv:function aHv(d){this.a=d},
+aGm:function aGm(){},
 aGn:function aGn(){},
-aGy:function aGy(){},
-aGJ:function aGJ(){},
-aGU:function aGU(){},
-aH4:function aH4(){},
-aH6:function aH6(){},
-aH7:function aH7(){},
-aG2:function aG2(d){this.a=d},
-aG3:function aG3(){},
-aG4:function aG4(){},
-aG5:function aG5(){},
-aG6:function aG6(){},
-aG7:function aG7(){},
-aG8:function aG8(){}}
+aGo:function aGo(d){this.a=d},
+aGz:function aGz(){},
+aGK:function aGK(){},
+aGV:function aGV(){},
+aH5:function aH5(){},
+aHg:function aHg(){},
+aHr:function aHr(){},
+aHt:function aHt(){},
+aHu:function aHu(){},
+aGp:function aGp(d){this.a=d},
+aGq:function aGq(){},
+aGr:function aGr(){},
+aGs:function aGs(){},
+aGt:function aGt(){},
+aGu:function aGu(){},
+aGv:function aGv(){}}
 B=c[0]
 A=a.updateHolder(c[6],A)
-A.V3.prototype={
-gi_(){var w=this.ay
+A.Vc.prototype={
+gi1(){var w=this.ay
 if(w===$){w!==$&&B.v()
 w=this.ay=this}return w},
-gnt(d){return"Quizlone"},
-ges(){var w=this,v=w.ch
-if(v===$){w.gi_()
+gnw(d){return"Quizlone"},
+gej(){var w=this,v=w.ch
+if(v===$){w.gi1()
 w.ch!==$&&B.v()
-v=w.ch=new A.aDW()}return v},
-glo(){var w,v=this,u=v.CW
-if(u===$){w=v.gi_()
+v=w.ch=new A.aEe()}return v},
+glp(){var w,v=this,u=v.CW
+if(u===$){w=v.gi1()
 v.CW!==$&&B.v()
-u=v.CW=new A.aDO(w,w)}return u},
-grM(){var w=this,v=w.cx
-if(v===$){w.gi_()
+u=v.CW=new A.aE6(w,w)}return u},
+grT(){var w=this,v=w.cx
+if(v===$){w.gi1()
 w.cx!==$&&B.v()
-v=w.cx=new A.aDC()}return v},
-git(){var w,v=this,u=v.cy
-if(u===$){w=v.gi_()
+v=w.cx=new A.aDV()}return v},
+gfg(){var w,v=this,u=v.cy
+if(u===$){w=v.gi1()
 v.cy!==$&&B.v()
-u=v.cy=new A.aEP(w,w)}return u},
-gfS(){var w,v=this,u=v.db
-if(u===$){w=v.gi_()
+u=v.cy=new A.aFb(w,w)}return u},
+gfn(){var w,v=this,u=v.db
+if(u===$){w=v.gi1()
 v.db!==$&&B.v()
-u=v.db=new A.aE3(w,w)}return u},
-gen(){var w=this,v=w.dx
-if(v===$){w.gi_()
+u=v.db=new A.aEm(w,w)}return u},
+geo(){var w=this,v=w.dx
+if(v===$){w.gi1()
 w.dx!==$&&B.v()
-v=w.dx=new A.aEn()}return v},
-gmp(){var w=this,v=w.dy
-if(v===$){w.gi_()
+v=w.dx=new A.aEG()}return v},
+gmq(){var w=this,v=w.dy
+if(v===$){w.gi1()
 w.dy!==$&&B.v()
-v=w.dy=new A.aDS()}return v},
+v=w.dy=new A.aEa()}return v},
 gef(){var w,v=this,u=v.fr
-if(u===$){w=v.gi_()
+if(u===$){w=v.gi1()
 v.fr!==$&&B.v()
-u=v.fr=new A.aEj(w,w)}return u},
+u=v.fr=new A.aEC(w,w)}return u},
 gkX(){var w,v=this,u=v.fx
-if(u===$){w=v.gi_()
+if(u===$){w=v.gi1()
 v.fx!==$&&B.v()
-u=v.fx=new A.aEX(w,w)}return u},
-gfq(){var w=this,v=w.fy
-if(v===$){w.gi_()
+u=v.fx=new A.aFj(w,w)}return u},
+gfu(){var w=this,v=w.fy
+if(v===$){w.gi1()
 w.fy!==$&&B.v()
-v=w.fy=new A.aEr()}return v},
+v=w.fy=new A.aEK()}return v},
 gci(){var w,v=this,u=v.go
-if(u===$){w=v.gi_()
+if(u===$){w=v.gi1()
 v.go!==$&&B.v()
-u=v.go=new A.aEH(w,w)}return u},
+u=v.go=new A.aF_(w,w)}return u},
 gf1(){var w=this,v=w.id
-if(v===$){w.gi_()
+if(v===$){w.gi1()
 w.id!==$&&B.v()
-v=w.id=new A.aDG()}return v},
-glN(){return this.ax}}
-A.aDW.prototype={
-gwU(d){return"Tillbaka"},
-giO(d){return"Avbryt"},
-gqs(d){return"Ta bort"},
-gig(d){return"N\xe4sta"},
-goa(){return"F\xf6reg\xe5ende"},
-gvf(d){return"Skicka"},
-gwG(){return"Alla"},
-gyY(){return"Laddar..."},
-l2(d){return"Fel: "+d},
-gzH(d){return"\xc5terst\xe4ll"}}
-A.aDO.prototype={
-guX(){return"Inst\xe4llningar"},
-gxd(d){return"Kontroller"},
-grK(){return"Om"},
-grL(){var w=this.d
+v=w.id=new A.aDZ()}return v},
+glO(){return this.ax}}
+A.aEe.prototype={
+gx_(d){return"Tillbaka"},
+gi4(d){return"Avbryt"},
+gqx(d){return"Ta bort"},
+gik(d){return"N\xe4sta"},
+god(){return"F\xf6reg\xe5ende"},
+gvl(d){return"Skicka"},
+gwM(){return"Alla"},
+gz4(){return"Laddar..."},
+l3(d){return"Fel: "+d},
+gzQ(d){return"\xc5terst\xe4ll"}}
+A.aE6.prototype={
+gv3(){return"Inst\xe4llningar"},
+gxj(d){return"Kontroller"},
+grR(){return"Om"},
+grS(){var w=this.d
 if(w===$){w!==$&&B.v()
-w=this.d=new A.aDK()}return w}}
-A.aDC.prototype={
-A5(d,e){return"Version "+e},
-gA6(){return"Visa licenser"}}
-A.aEP.prototype={
-gaC(d){return"Quizlone"},
-gA9(){return"V\xe4lkommen!"},
-gxp(){return"Skapa ny lista"},
-gyX(){return"Ladda sparad lista"},
-gze(){return"Inga listor sparade \xe4n."},
-uj(d){var w=B.eR("sv")
+w=this.d=new A.aE2()}return w}}
+A.aDV.prototype={
+Ae(d,e){return"Version "+e},
+gAf(){return"Visa licenser"}}
+A.aFb.prototype={
+gaA(d){return"Quizlone"},
+gAi(){return"V\xe4lkommen!"},
+gxw(){return"Skapa ny lista"},
+gz3(){return"Ladda sparad lista"},
+gzl(){return"Inga listor sparade \xe4n."},
+ut(d){var w=B.eR("sv")
 return w.$3$one$other(d,"1 term",""+d+" termer")},
-gt6(){var w=this.d
+gtd(){var w=this.e
 if(w===$){w!==$&&B.v()
-w=this.d=new A.aEL()}return w}}
-A.aE3.prototype={
-gaC(d){return"Skapa ny lista"},
-gyR(){return"Listans namn"},
-gyT(){return"t.ex. Kapitel 1 Ordlista"},
-gzs(){return"Klistra in dina termer nedan:"},
-gzt(){return"(Term p\xe5 en rad, definition p\xe5 n\xe4sta)"},
-gzT(){return y.a},
-guM(){return"Spara lista"},
+w=this.e=new A.aF3()}return w},
+gmO(){var w=this.f
+if(w===$){w!==$&&B.v()
+w=this.f=new A.aF9()}return w}}
+A.aEm.prototype={
+gaA(d){return"Skapa ny lista"},
+gu0(){return"Listans namn"},
+gz_(){return"t.ex. Kapitel 1 Ordlista"},
+gzz(){return"Klistra in dina termer nedan:"},
+gzA(){return"(Term p\xe5 en rad, definition p\xe5 n\xe4sta)"},
+gA1(){return y.a},
+guT(){return"Spara lista"},
 ge1(){var w=this.d
 if(w===$){w!==$&&B.v()
-w=this.d=new A.aE_()}return w}}
-A.aEn.prototype={
-gaC(d){return"Alternativ & L\xe4ge"},
-gza(){return y.w},
-xA(d){return"Debug: Nuvarande aktivt ID \xe4r "+d},
-gzN(){return"\xc5terg\xe5 till v\xe4lkomstsk\xe4rmen"},
-gy8(){return"Inst\xe4llningar f\xf6r bildkort"},
-gv2(){return"Visa term f\xf6rst"},
-gv_(){return"Visa definition f\xf6rst"},
-grX(){return"Visa definition, fr\xe5ga efter term"},
-grW(){return"Visa term, fr\xe5ga efter definition"},
-gve(){return"Studiel\xe4ngd:"},
-gAe(){return"Skrivet svar"},
-gz8(){return"Flerval"},
-gy9(){return"Bildkort"},
-gtT(){return"Inl\xe4rning"},
-guk(){return"Prov"}}
-A.aDS.prototype={
-gaC(d){return"Bildkort"},
-gzc(){return"Inga bildkort att visa."},
-gep(){return"Inga termer tillg\xe4ngliga att studera."},
-gv5(d){return"Blanda"},
-gqd(){return"Starta om"}}
-A.aEj.prototype={
-gaC(d){return"Inl\xe4rning"},
-gzL(){return"Starta om inl\xe4rningssessionen"},
-gwV(){return"Tillbaka till alternativ"},
-gzy(){return"F\xf6rbereder n\xe4sta fr\xe5ga..."},
-gwJ(){return"Skriv ditt svar h\xe4r..."},
-gyr(){return"Felaktigt"},
-gpL(d){return"Ledtr\xe5d"},
-gv6(d){return"Hoppa \xf6ver"},
+w=this.d=new A.aEi()}return w}}
+A.aEG.prototype={
+gaA(d){return"Alternativ & L\xe4ge"},
+gzh(){return y.w},
+xG(d){return"Debug: Nuvarande aktivt ID \xe4r "+d},
+gzW(){return"\xc5terg\xe5 till v\xe4lkomstsk\xe4rmen"},
+gyg(){return"Inst\xe4llningar f\xf6r bildkort"},
+gv8(){return"Visa term f\xf6rst"},
+gv6(){return"Visa definition f\xf6rst"},
+gt3(){return"Visa definition, fr\xe5ga efter term"},
+gt2(){return"Visa term, fr\xe5ga efter definition"},
+gvk(){return"Studiel\xe4ngd:"},
+gAn(){return"Skrivet svar"},
+gzf(){return"Flerval"},
+gyh(){return"Bildkort"},
+gu_(){return"Inl\xe4rning"},
+guu(){return"Prov"}}
+A.aEa.prototype={
+gaA(d){return"Bildkort"},
+gzj(){return"Inga bildkort att visa."},
+geq(){return"Inga termer tillg\xe4ngliga att studera."},
+gvb(d){return"Blanda"},
+gqi(){return"Starta om"}}
+A.aEC.prototype={
+gaA(d){return"Inl\xe4rning"},
+gzU(){return"Starta om inl\xe4rningssessionen"},
+gx0(){return"Tillbaka till alternativ"},
+gzF(){return"F\xf6rbereder n\xe4sta fr\xe5ga..."},
+gwP(){return"Skriv ditt svar h\xe4r..."},
+gyz(){return"Felaktigt"},
+gpQ(d){return"Ledtr\xe5d"},
+gvc(d){return"Hoppa \xf6ver"},
 ge1(){var w=this.f
 if(w===$){w!==$&&B.v()
-w=this.f=new A.aE7()}return w},
-gnM(){var w=this.r
+w=this.f=new A.aEq()}return w},
+gnP(){var w=this.r
 if(w===$){w!==$&&B.v()
-w=this.r=new A.aEc()}return w},
-glB(){var w,v=this.w
+w=this.r=new A.aEv()}return w},
+glC(){var w,v=this.w
 if(v===$){w=this.e
 v!==$&&B.v()
-v=this.w=new A.aEh(w,w)}return v}}
-A.aEX.prototype={
-gaC(d){return"Prov"},
+v=this.w=new A.aEA(w,w)}return v}}
+A.aFj.prototype={
+gaA(d){return"Prov"},
 gkP(){return"Inga fr\xe5gor f\xf6r detta prov."},
-gA7(){return"Visa resultat"},
-gvh(){return"L\xe4mna in provet"},
+gAg(){return"Visa resultat"},
+gvn(){return"L\xe4mna in provet"},
 ge1(){var w=this.d
 if(w===$){w!==$&&B.v()
-w=this.d=new A.aET()}return w}}
-A.aEr.prototype={
-gaC(d){return"Provresultat"},
-gzi(){return"Provet har inte l\xe4mnats in \xe4n."},
+w=this.d=new A.aFf()}return w}}
+A.aEK.prototype={
+gaA(d){return"Provresultat"},
+gzp(){return"Provet har inte l\xe4mnats in \xe4n."},
 gkP(){return"Det fanns inga fr\xe5gor i detta prov."},
-gAg(){return"Ditt resultat"},
-uP(d,e){return""+d+" / "+e+" r\xe4tt"},
-gqf(){return"Granska felaktiga svar:"},
-Af(d){return"Ditt svar: "+d},
-gzb(){return"(Inget svar)"},
-gxb(){return"Grattis! Du hade alla r\xe4tt!"},
-gzM(){return"F\xf6rs\xf6k igen"},
-gzP(){return"Repetera med bildkort"},
-gwW(){return"Tillbaka till v\xe4lkomstsk\xe4rmen"}}
-A.aEH.prototype={
-gaC(d){return"Inst\xe4llningar"},
-gwK(d){return"Utseende"},
-gtR(d){return"Spr\xe5k"},
-gyK(){return"V\xe4lj spr\xe5k"},
-gur(){return"UI-skalning"},
-gA_(){return y.H},
-gr1(){return"Systemstandard"},
-gyQ(){return"Ljus"},
-gxw(){return"M\xf6rk"},
-gxR(){return"Engelska"},
-gy7(){return"Finska"},
-gzS(){return"Ryska"},
-gv9(){return"Spanska"},
-gvo(){return"Svenska"},
-gxx(){return"Datahantering"},
-gxV(){return"Exportera data"},
-gxW(){return"Spara alla listor till en fil"},
-gyn(){return"Importera data"},
-gyo(){return"Ladda listor fr\xe5n en fil"},
-gxD(){return"Ta bort all data"},
-gpM(){var w=this.w
+gAp(){return"Ditt resultat"},
+uW(d,e){return""+d+" / "+e+" r\xe4tt"},
+gqk(){return"Granska felaktiga svar:"},
+Ao(d){return"Ditt svar: "+d},
+gzi(){return"(Inget svar)"},
+gxh(){return"Grattis! Du hade alla r\xe4tt!"},
+gzV(){return"F\xf6rs\xf6k igen"},
+gzY(){return"Repetera med bildkort"},
+gx3(){return"Tillbaka till v\xe4lkomstsk\xe4rmen"}}
+A.aF_.prototype={
+gaA(d){return"Inst\xe4llningar"},
+gwQ(d){return"Utseende"},
+gtY(d){return"Spr\xe5k"},
+gyS(){return"V\xe4lj spr\xe5k"},
+guA(){return"UI-skalning"},
+gA8(){return y.H},
+gr7(){return"Systemstandard"},
+gyY(){return"Ljus"},
+gxC(){return"M\xf6rk"},
+gxX(){return"Engelska"},
+gyf(){return"Finska"},
+gA0(){return"Ryska"},
+gvf(){return"Spanska"},
+gvv(){return"Svenska"},
+gxD(){return"Datahantering"},
+gy4(){return"Exportera data"},
+gy5(){return"Spara alla listor till en fil"},
+gyv(){return"Importera data"},
+gyw(){return"Ladda listor fr\xe5n en fil"},
+gxJ(){return"Ta bort all data"},
+gpR(){var w=this.w
 if(w===$){w!==$&&B.v()
-w=this.w=new A.aEB()}return w},
-gpb(){var w=this.x
+w=this.w=new A.aEU()}return w},
+gpg(){var w=this.x
 if(w===$){w!==$&&B.v()
-w=this.x=new A.aEv()}return w},
-glX(){var w=this.y
+w=this.x=new A.aEO()}return w},
+glY(){var w=this.y
 if(w===$){w!==$&&B.v()
-w=this.y=new A.aEG()}return w}}
-A.aDG.prototype={
-gaC(d){return"Kontroller"},
-gux(){return"Gester (Bildkort)"},
-gyH(){return"Tangentbord (Bildkort)"},
-go1(){return"N\xe4sta kort"},
-gob(){return"F\xf6reg\xe5ende kort"},
-gnU(){return"V\xe4nd kort"},
-gvp(){return"Svep v\xe4nster"},
-gvq(){return"Svep h\xf6ger"},
-gvr(){return"Svep upp eller ner"},
-gwP(){return"H\xf6gerpiltangent"},
-gwO(){return"V\xe4nsterpiltangent"},
-gwQ(){return"Upp/ner-piltangenter eller Mellanslag"}}
-A.aDK.prototype={
-gyO(){return"\xa9 2025 Quizlone"},
-gxF(d){return y.t}}
-A.aEL.prototype={
-gaC(d){return"Bekr\xe4fta borttagning"},
-xc(d,e){return"\xc4r du s\xe4ker p\xe5 att du vill ta bort '"+e+"'?"}}
-A.aE_.prototype={
-gyS(){return"Listans namn kan inte vara tomt."},
-gep(){return"Inga termer/definitioner inmatade."},
-gyA(){return y.C},
-xO(d){return"Formatfel n\xe4ra rad "+d+". Tom term eller definition hittades."},
-gzf(){return y.M},
-uL(d){return"Det gick inte att spara listan: "+d}}
-A.aE7.prototype={
-gep(){return y.g},
+w=this.y=new A.aEZ()}return w}}
+A.aDZ.prototype={
+gaA(d){return"Kontroller"},
+guF(){return"Gester (Bildkort)"},
+gyP(){return"Tangentbord (Bildkort)"},
+go4(){return"N\xe4sta kort"},
+goe(){return"F\xf6reg\xe5ende kort"},
+gnX(){return"V\xe4nd kort"},
+gvw(){return"Svep v\xe4nster"},
+gvx(){return"Svep h\xf6ger"},
+gvy(){return"Svep upp eller ner"},
+gwV(){return"H\xf6gerpiltangent"},
+gwU(){return"V\xe4nsterpiltangent"},
+gwW(){return"Upp/ner-piltangenter eller Mellanslag"}}
+A.aE2.prototype={
+gyW(){return"\xa9 2025 Quizlone"},
+gxL(d){return y.t}}
+A.aF3.prototype={
+gaA(d){return"Bekr\xe4fta borttagning"},
+xi(d,e){return"\xc4r du s\xe4ker p\xe5 att du vill ta bort '"+e+"'?"}}
+A.aF9.prototype={
+gaA(d){return"Byt namn p\xe5 listan"},
+guj(){return"Byt namn"},
+gxZ(){return"En lista med detta namn finns redan."},
+gxY(){return"Listnamnet kan inte vara tomt."}}
+A.aEi.prototype={
+gyZ(){return"Listans namn kan inte vara tomt."},
+geq(){return"Inga termer/definitioner inmatade."},
+gyI(){return y.C},
+xU(d){return"Formatfel n\xe4ra rad "+d+". Tom term eller definition hittades."},
+gzm(){return y.M},
+uS(d){return"Det gick inte att spara listan: "+d}}
+A.aEq.prototype={
+geq(){return y.g},
 gkQ(){return y.U}}
-A.aEc.prototype={
-gxk(){return"R\xe4tt!"},
-ys(d){return"Fel. R\xe4tt svar: "+d},
-yj(d,e){return'Ledtr\xe5d: B\xf6rjar med "'+e+'"'},
-v7(d){return"\xd6verhoppad. Svaret var: "+d}}
-A.aEh.prototype={
-gwI(){return"Alla termer inl\xe4rda!"},
-tb(d,e,f){return"Omg\xe5ng "+d+" | Fr\xe5ga "+e+" av "+f},
-guT(){return"Inl\xe4rningssessionen \xe4r klar! Bra jobbat!"},
-z0(d){var w=B.eR("sv")
-return w.$3$one$other(d,y.R,"Max antal omg\xe5ngar n\xe5ddes. "+d+" fr\xe5gor kvar att repetera.")},
-vb(d,e){return"Startar omg\xe5ng "+e+" med "+d+" fr\xe5ga(or)..."}}
-A.aET.prototype={
-gyW(){return y.Q},
-gep(){return"Inga termer tillg\xe4ngliga f\xf6r provet."},
-gkQ(){return y.k}}
-A.aEB.prototype={
-gaC(d){return"Bekr\xe4fta import"},
-gku(d){return y.v},
-guK(d){return"Importera"}}
 A.aEv.prototype={
-gaC(d){return"Bekr\xe4fta borttagning"},
+gxq(){return"R\xe4tt!"},
+yA(d){return"Fel. R\xe4tt svar: "+d},
+yr(d,e){return'Ledtr\xe5d: B\xf6rjar med "'+e+'"'},
+vd(d){return"\xd6verhoppad. Svaret var: "+d}}
+A.aEA.prototype={
+gwO(){return"Alla termer inl\xe4rda!"},
+ti(d,e,f){return"Omg\xe5ng "+d+" | Fr\xe5ga "+e+" av "+f},
+gv_(){return"Inl\xe4rningssessionen \xe4r klar! Bra jobbat!"},
+z7(d){var w=B.eR("sv")
+return w.$3$one$other(d,y.R,"Max antal omg\xe5ngar n\xe5ddes. "+d+" fr\xe5gor kvar att repetera.")},
+vh(d,e){return"Startar omg\xe5ng "+e+" med "+d+" fr\xe5ga(or)..."}}
+A.aFf.prototype={
+gz2(){return y.Q},
+geq(){return"Inga termer tillg\xe4ngliga f\xf6r provet."},
+gkQ(){return y.k}}
+A.aEU.prototype={
+gaA(d){return"Bekr\xe4fta import"},
+gku(d){return y.v},
+guR(d){return"Importera"}}
+A.aEO.prototype={
+gaA(d){return"Bekr\xe4fta borttagning"},
 gku(d){return y.l},
-gxC(){return"Ta bort allt"}}
-A.aEG.prototype={
-gzd(){return"Det finns ingen data att exportera."},
-xX(d){return"Fel vid export av data: "+d},
-yq(d){return""+d+" listor importerades framg\xe5ngsrikt!"},
-yp(d){return"Fel vid import av data: "+d},
-gwH(){return"Alla studielistor har tagits bort."}}
+gxI(){return"Ta bort allt"}}
+A.aEZ.prototype={
+gzk(){return"Det finns ingen data att exportera."},
+y6(d){return"Fel vid export av data: "+d},
+yy(d){return""+d+" listor importerades framg\xe5ngsrikt!"},
+yx(d){return"Fel vid import av data: "+d},
+gwN(){return"Alla studielistor har tagits bort."}}
 var z=a.updateTypes([])
-A.aH8.prototype={
-$1(d){return A.b8Q(this.a,d)},
+A.aHv.prototype={
+$1(d){return A.b9d(this.a,d)},
 $S:53}
-A.aG_.prototype={
+A.aGm.prototype={
 $1$error(d){return"Fel: "+B.j(d)},
 $S:11}
-A.aG0.prototype={
+A.aGn.prototype={
 $1$version(d){return"Version "+B.j(d)},
 $S:76}
-A.aG1.prototype={
+A.aGo.prototype={
 $1$count(d){var w
-this.a.gi_()
+this.a.gi1()
 w=B.eR("sv")
 return w.$3$one$other(d,"1 term",B.j(d)+" termer")},
 $S:39}
-A.aGc.prototype={
+A.aGz.prototype={
 $1$listName(d){return"\xc4r du s\xe4ker p\xe5 att du vill ta bort '"+B.j(d)+"'?"},
 $S:78}
-A.aGn.prototype={
+A.aGK.prototype={
 $1$line(d){return"Formatfel n\xe4ra rad "+B.j(d)+". Tom term eller definition hittades."},
 $S:92}
-A.aGy.prototype={
+A.aGV.prototype={
 $1$error(d){return"Det gick inte att spara listan: "+B.j(d)},
 $S:11}
-A.aGJ.prototype={
+A.aH5.prototype={
 $1$id(d){return"Debug: Nuvarande aktivt ID \xe4r "+B.j(d)},
 $S:80}
-A.aGU.prototype={
+A.aHg.prototype={
 $1$answer(d){return"Fel. R\xe4tt svar: "+B.j(d)},
 $S:22}
-A.aH4.prototype={
+A.aHr.prototype={
 $1$char(d){return'Ledtr\xe5d: B\xf6rjar med "'+B.j(d)+'"'},
 $S:82}
-A.aH6.prototype={
+A.aHt.prototype={
 $1$answer(d){return"\xd6verhoppad. Svaret var: "+B.j(d)},
 $S:22}
-A.aH7.prototype={
+A.aHu.prototype={
 $3$cycleNum$itemNum$total(d,e,f){return"Omg\xe5ng "+B.j(d)+" | Fr\xe5ga "+B.j(e)+" av "+B.j(f)},
 $S:83}
-A.aG2.prototype={
+A.aGp.prototype={
 $1$count(d){var w
-this.a.gi_()
+this.a.gi1()
 w=B.eR("sv")
 return w.$3$one$other(d,y.R,"Max antal omg\xe5ngar n\xe5ddes. "+B.j(d)+" fr\xe5gor kvar att repetera.")},
 $S:39}
-A.aG3.prototype={
+A.aGq.prototype={
 $2$count$cycleNum(d,e){return"Startar omg\xe5ng "+B.j(e)+" med "+B.j(d)+" fr\xe5ga(or)..."},
 $S:84}
-A.aG4.prototype={
+A.aGr.prototype={
 $2$score$total(d,e){return B.j(d)+" / "+B.j(e)+" r\xe4tt"},
 $S:85}
-A.aG5.prototype={
+A.aGs.prototype={
 $1$answer(d){return"Ditt svar: "+B.j(d)},
 $S:22}
-A.aG6.prototype={
+A.aGt.prototype={
 $1$error(d){return"Fel vid export av data: "+B.j(d)},
 $S:11}
-A.aG7.prototype={
+A.aGu.prototype={
 $1$count(d){return B.j(d)+" listor importerades framg\xe5ngsrikt!"},
 $S:86}
-A.aG8.prototype={
+A.aGv.prototype={
 $1$error(d){return"Fel vid import av data: "+B.j(d)},
 $S:11};(function inheritance(){var w=a.inherit,v=a.inheritMany
-w(A.V3,B.dh)
-w(A.aDW,B.ud)
-w(A.aDO,B.ub)
-w(A.aDC,B.u8)
-w(A.aEP,B.ur)
-w(A.aE3,B.ue)
-w(A.aEn,B.uk)
-w(A.aDS,B.uc)
-w(A.aEj,B.ug)
-w(A.aEX,B.us)
-w(A.aEr,B.ul)
-w(A.aEH,B.un)
-w(A.aDG,B.u9)
-w(A.aDK,B.ua)
-w(A.aEL,B.uq)
-w(A.aE_,B.uf)
-w(A.aE7,B.uh)
-w(A.aEc,B.ui)
-w(A.aEh,B.uj)
-w(A.aET,B.ut)
-w(A.aEB,B.uo)
-w(A.aEv,B.um)
-w(A.aEG,B.up)
-v(B.j8,[A.aH8,A.aG_,A.aG0,A.aG1,A.aGc,A.aGn,A.aGy,A.aGJ,A.aGU,A.aH4,A.aH6,A.aH7,A.aG2,A.aG3,A.aG4,A.aG5,A.aG6,A.aG7,A.aG8])})()
-B.a2S(b.typeUniverse,JSON.parse('{"V3":{"dh":[],"hE":["dC","dh"]}}'))
+w(A.Vc,B.dh)
+w(A.aEe,B.uf)
+w(A.aE6,B.ud)
+w(A.aDV,B.ua)
+w(A.aFb,B.ut)
+w(A.aEm,B.ug)
+w(A.aEG,B.um)
+w(A.aEa,B.ue)
+w(A.aEC,B.ui)
+w(A.aFj,B.uv)
+w(A.aEK,B.un)
+w(A.aF_,B.up)
+w(A.aDZ,B.ub)
+w(A.aE2,B.uc)
+w(A.aF3,B.us)
+w(A.aF9,B.uu)
+w(A.aEi,B.uh)
+w(A.aEq,B.uj)
+w(A.aEv,B.uk)
+w(A.aEA,B.ul)
+w(A.aFf,B.uw)
+w(A.aEU,B.uq)
+w(A.aEO,B.uo)
+w(A.aEZ,B.ur)
+v(B.j9,[A.aHv,A.aGm,A.aGn,A.aGo,A.aGz,A.aGK,A.aGV,A.aH5,A.aHg,A.aHr,A.aHt,A.aHu,A.aGp,A.aGq,A.aGr,A.aGs,A.aGt,A.aGu,A.aGv])})()
+B.a30(b.typeUniverse,JSON.parse('{"Vc":{"dh":[],"hE":["dC","dh"]}}'))
 var y={v:"Detta kommer att importera studielistor fr\xe5n en fil. Befintliga listor med samma namn kommer att skrivas \xf6ver. Forts\xe4tta?",t:"En enkel, modern studieapplikation byggd med Flutter.",Q:"Fel vid laddning av studielista f\xf6r provet.",M:"Inga giltiga par av term/definition hittades.",g:"Inga termer tillg\xe4ngliga f\xf6r inl\xe4rningsl\xe4get.",w:"Ingen aktiv studielista hittades eller listan kunde inte laddas.",U:"Inte tillr\xe4ckligt med termer f\xf6r den valda l\xe4ngden.",k:"Inte tillr\xe4ckligt med termer f\xf6r den valda studiel\xe4ngden.",H:"Justera storleken p\xe5 text och gr\xe4nssnittselement",R:"Max antal omg\xe5ngar n\xe5ddes. 1 fr\xe5ga kvar att repetera.",C:"Ogiltigt format. Varje term beh\xf6ver en definition p\xe5 n\xe4sta rad.",a:"R\xe4ttvisa\nPrincipen om moralisk riktighet\nSol\nEn stj\xe4rna som \xe4r centrum i ett planetsystem",l:"\xc4r du s\xe4ker p\xe5 att du vill ta bort ALLA studielistor? Denna \xe5tg\xe4rd kan inte \xe5ngras."}
 var x={c:B.al("h_<dC,dh>")}};
 ((a,b)=>{a[b]=a.current
-a.eventLog.push({p:"main.dart.js_4",e:"endPart",h:b})})($__dart_deferred_initializers__,"mmY2V0wyYxtf+BBjOmBCZxMXO/M=");
+a.eventLog.push({p:"main.dart.js_4",e:"endPart",h:b})})($__dart_deferred_initializers__,"rUPRFNplyLJyCjzQnywTSXnlytg=");
