@@ -12,60 +12,48 @@ import '../../widgets/centered_view.dart';
 import '../../widgets/flashcard_widget.dart';
 
 @RoutePage()
-class FlashcardScreen extends ConsumerStatefulWidget {
+class FlashcardScreen extends ConsumerWidget {
   const FlashcardScreen({super.key});
 
-  @override
-  ConsumerState<FlashcardScreen> createState() => _FlashcardScreenState();
-}
-
-class _FlashcardScreenState extends ConsumerState<FlashcardScreen> {
   static final _log = Logger("FlashcardScreen");
 
-  final FocusNode _focusNode = FocusNode();
-
   @override
-  void dispose() {
-    _focusNode.dispose();
-    super.dispose();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
-        _focusNode.requestFocus();
-      }
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final t = Translations.of(context);
     final activeListAsync = ref.watch(activeStudyListProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(t.flashcardScreen.title),
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            context.router.pop();
-          },
-        ),
-      ),
+      appBar: AppBar(title: Text(t.flashcardScreen.title), centerTitle: true),
       body: SafeArea(
         child: activeListAsync.when(
           data: (list) {
             if (list == null) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                if (context.mounted) {
-                  context.router.replace(const StartRoute());
-                }
-              });
-              return const Center(child: CircularProgressIndicator());
+              return Center(
+                child: CenteredView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          t.modeSelectionScreen.noActiveList,
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 20),
+                        ElevatedButton(
+                          onPressed: () {
+                            ref
+                                .read(activeStudyListIdProvider.notifier)
+                                .set(null);
+                            context.router.replaceAll([const StartRoute()]);
+                          },
+                          child: Text(t.modeSelectionScreen.returnToWelcome),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
             }
             return const _FlashcardView();
           },
@@ -120,6 +108,8 @@ class _FlashcardView extends ConsumerStatefulWidget {
 }
 
 class _FlashcardViewState extends ConsumerState<_FlashcardView> {
+  static final _log = Logger("FlashcardView");
+
   final FocusNode _focusNode = FocusNode();
   var _slideFromRight = true;
 
@@ -368,11 +358,7 @@ class _FlashcardViewState extends ConsumerState<_FlashcardView> {
         },
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (err, stack) {
-          _FlashcardScreenState._log.severe(
-            "Error in flashcardControllerProvider",
-            err,
-            stack,
-          );
+          _log.severe("Error in flashcardControllerProvider", err, stack);
           return Center(
             child: CenteredView(
               child: Padding(

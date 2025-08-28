@@ -26,12 +26,32 @@ class LearnScreen extends ConsumerWidget {
         child: activeListAsync.when(
           data: (list) {
             if (list == null) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                if (context.mounted) {
-                  context.router.replace(const StartRoute());
-                }
-              });
-              return const Center(child: CircularProgressIndicator());
+              return Center(
+                child: CenteredView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          t.modeSelectionScreen.noActiveList,
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 20),
+                        ElevatedButton(
+                          onPressed: () {
+                            ref
+                                .read(activeStudyListIdProvider.notifier)
+                                .set(null);
+                            context.router.replaceAll([const StartRoute()]);
+                          },
+                          child: Text(t.modeSelectionScreen.returnToWelcome),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
             }
             return const _LearnView();
           },
