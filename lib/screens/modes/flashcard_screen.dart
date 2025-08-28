@@ -62,7 +62,7 @@ class _FlashcardScreenState extends ConsumerState<FlashcardScreen> {
             ),
             const SizedBox(width: 16),
             Expanded(
-              child: ElevatedButton.icon(
+              child: OutlinedButton.icon(
                 icon: const Icon(Icons.arrow_forward),
                 label: Text(t.general.next),
                 onPressed: canGoNext ? notifier.nextCard : null,

@@ -20,7 +20,7 @@ class TestScreen extends ConsumerStatefulWidget {
 class _TestScreenState extends ConsumerState<TestScreen> {
   static final _log = Logger("TestScreen");
 
-  Map<int, TextEditingController> _writtenAnswerControllers = {};
+  final Map<int, TextEditingController> _writtenAnswerControllers = {};
 
   @override
   void dispose() {
@@ -36,10 +36,8 @@ class _TestScreenState extends ConsumerState<TestScreen> {
   }
 
   void _initializeControllers(List<TestQuestion> questions) {
-    for (var controller in _writtenAnswerControllers.values) {
-      controller.dispose();
-    }
-    _writtenAnswerControllers = {};
+    if (_writtenAnswerControllers.isNotEmpty) return;
+
     for (int i = 0; i < questions.length; i++) {
       if (ref.read(testControllerProvider).value?.testFormat ==
           TestFormat.written) {
@@ -50,6 +48,90 @@ class _TestScreenState extends ConsumerState<TestScreen> {
     }
   }
 
+  Widget _buildMultipleChoiceOption(
+    BuildContext context,
+    String option,
+    TestQuestion question,
+    int questionIndex,
+    TestController notifier,
+    bool isSubmitted,
+  ) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
+    final bool isSelected = question.userAnswerText == option;
+    final bool isCorrectAnswer = option == question.correctAnswerText;
+
+    Color? tileColor;
+    Color? textColor;
+    Icon? resultIcon;
+
+    if (isSubmitted) {
+      if (isCorrectAnswer) {
+        tileColor = colorScheme.primary.withOpacity(0.15);
+        textColor = colorScheme.primary;
+        resultIcon = Icon(Icons.check_circle, color: textColor);
+      } else if (isSelected && !isCorrectAnswer) {
+        tileColor = colorScheme.error.withOpacity(0.15);
+        textColor = colorScheme.error;
+        resultIcon = Icon(Icons.cancel, color: textColor);
+      } else {
+        textColor = colorScheme.onSurfaceVariant;
+      }
+    } else {
+      if (isSelected) {
+        tileColor = colorScheme.primaryContainer;
+        textColor = colorScheme.onPrimaryContainer;
+      }
+    }
+
+    return Card(
+      elevation: 0,
+      margin: const EdgeInsets.symmetric(vertical: 4.0),
+      color: tileColor ?? colorScheme.surfaceContainerHighest.withOpacity(0.3),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side:
+            isSelected && !isSubmitted
+                ? BorderSide(color: colorScheme.primary, width: 1.5)
+                : BorderSide.none,
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap:
+            isSubmitted
+                ? null
+                : () => notifier.updateUserAnswer(questionIndex, option),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+          child: Row(
+            children: [
+              if (resultIcon != null) ...[
+                resultIcon,
+                const SizedBox(width: 12),
+              ] else
+                Radio<String>(
+                  value: option,
+                  groupValue: question.userAnswerText,
+                  onChanged:
+                      isSubmitted
+                          ? null
+                          : (_) =>
+                              notifier.updateUserAnswer(questionIndex, option),
+                ),
+              Expanded(
+                child: Text(
+                  option,
+                  style: textTheme.bodyLarge?.copyWith(color: textColor),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildQuestionItem(
     BuildContext context,
     TestQuestion question,
@@ -57,61 +139,60 @@ class _TestScreenState extends ConsumerState<TestScreen> {
     TestController notifier,
     TestScreenState screenState,
   ) {
-    final bool isSubmitted = screenState.isSubmitted;
-    final colorScheme = Theme.of(context).colorScheme;
+    final isSubmitted = screenState.isSubmitted;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
     final t = Translations.of(context);
-    Color? cardColor;
-    InputDecoration inputDecoration;
+    Color? cardBorderColor;
 
     if (isSubmitted) {
-      if (question.isCorrect == true) {
-        cardColor = Colors.green.withAlpha(12);
-        inputDecoration = InputDecoration(
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.green.shade700, width: 1.5),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.green.shade700, width: 1.5),
-          ),
-        );
-      } else {
-        cardColor = colorScheme.errorContainer.withAlpha(24);
-        inputDecoration = InputDecoration(
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: colorScheme.error, width: 1.5),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: colorScheme.error, width: 1.5),
-          ),
-        );
-      }
-    } else {
-      inputDecoration = const InputDecoration();
+      cardBorderColor =
+          question.isCorrect == true ? colorScheme.primary : colorScheme.error;
     }
 
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 8.0),
-      color: cardColor,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12.0),
+        side:
+            cardBorderColor != null
+                ? BorderSide(color: cardBorderColor, width: 1.5)
+                : BorderSide(color: colorScheme.outlineVariant),
+      ),
+      clipBehavior: Clip.antiAlias,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "${index + 1}. ",
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+            Text.rich(
+              TextSpan(
+                text: "${index + 1}. ",
+                style: textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: colorScheme.primary,
                 ),
-                Expanded(child: Text(question.questionText)),
-              ],
+                children: [
+                  TextSpan(
+                    text: question.questionText,
+                    style: textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.normal,
+                      color: colorScheme.onSurface,
+                    ),
+                  ),
+                ],
+              ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 16),
+
             if (screenState.testFormat == TestFormat.written)
               TextField(
                 controller: _writtenAnswerControllers[index],
-                decoration: inputDecoration,
+                decoration: InputDecoration(
+                  border: const OutlineInputBorder(),
+                  hintText: t.learnScreen.answerHint,
+                ),
                 onChanged: (value) => notifier.updateUserAnswer(index, value),
                 readOnly: isSubmitted,
               )
@@ -119,63 +200,30 @@ class _TestScreenState extends ConsumerState<TestScreen> {
                 question.multipleChoiceOptions != null)
               Column(
                 children:
-                    question.multipleChoiceOptions!.map((option) {
-                      bool isSelected = question.userAnswerText == option;
-                      bool isActuallyCorrect =
-                          option == question.correctAnswerText;
-                      Color? tileColor;
-                      Color? textColor;
-
-                      if (isSubmitted) {
-                        if (isActuallyCorrect) {
-                          tileColor = Colors.green.withAlpha(20);
-                          textColor = Colors.green.shade900;
-                        } else if (isSelected && !isActuallyCorrect) {
-                          tileColor = colorScheme.error.withAlpha(20);
-                          textColor = colorScheme.error;
-                        }
-                      }
-
-                      return RadioListTile<String>(
-                        title: Text(
-                          option,
-                          style: TextStyle(
-                            color: textColor,
-                            fontWeight:
-                                isActuallyCorrect && isSubmitted
-                                    ? FontWeight.bold
-                                    : FontWeight.normal,
+                    question.multipleChoiceOptions!
+                        .map(
+                          (option) => _buildMultipleChoiceOption(
+                            context,
+                            option,
+                            question,
+                            index,
+                            notifier,
+                            isSubmitted,
                           ),
-                        ),
-                        value: option,
-                        groupValue: question.userAnswerText,
-                        onChanged:
-                            isSubmitted
-                                ? null
-                                : (value) {
-                                  if (value != null) {
-                                    notifier.updateUserAnswer(index, value);
-                                  }
-                                },
-                        tileColor: tileColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        dense: true,
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 4,
-                        ),
-                      );
-                    }).toList(),
+                        )
+                        .toList(),
               ),
+
             if (isSubmitted && question.isCorrect == false)
               Padding(
-                padding: const EdgeInsets.only(top: 10.0),
+                padding: const EdgeInsets.only(top: 16.0),
                 child: Text.rich(
                   TextSpan(
                     text:
                         "${t.resultsScreen.reviewIncorrect.split(':').first}: ",
-                    style: TextStyle(color: Colors.green.shade800),
+                    style: textTheme.titleSmall?.copyWith(
+                      color: colorScheme.primary,
+                    ),
                     children: [
                       TextSpan(
                         text: question.correctAnswerText,
@@ -198,16 +246,7 @@ class _TestScreenState extends ConsumerState<TestScreen> {
     final t = Translations.of(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(t.testScreen.title),
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            context.router.pop();
-          },
-        ),
-      ),
+      appBar: AppBar(title: Text(t.testScreen.title), centerTitle: true),
       body: SafeArea(
         child: testStateAsync.when(
           data: (state) {
@@ -227,14 +266,10 @@ class _TestScreenState extends ConsumerState<TestScreen> {
               return Center(child: Text(t.testScreen.noQuestions));
             }
 
-            if (_writtenAnswerControllers.isEmpty &&
-                state.questions.isNotEmpty &&
+            if (state.questions.isNotEmpty &&
                 state.testFormat == TestFormat.written) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
-                if (mounted) {
-                  _initializeControllers(state.questions);
-                  setState(() {});
-                }
+                if (mounted) _initializeControllers(state.questions);
               });
             }
 
@@ -258,19 +293,25 @@ class _TestScreenState extends ConsumerState<TestScreen> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(16.0),
+                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
                     child: SizedBox(
                       width: double.infinity,
                       child:
                           state.isSubmitted
-                              ? ElevatedButton.icon(
+                              ? FilledButton.icon(
                                 icon: const Icon(Icons.bar_chart),
-                                onPressed: () {
-                                  context.router.push(const ResultsRoute());
-                                },
+                                onPressed:
+                                    () => context.router.push(
+                                      const ResultsRoute(),
+                                    ),
                                 label: Text(t.testScreen.viewResults),
+                                style: FilledButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 16,
+                                  ),
+                                ),
                               )
-                              : ElevatedButton.icon(
+                              : FilledButton.icon(
                                 icon: const Icon(Icons.check_circle_outline),
                                 onPressed:
                                     state.questions.isEmpty
@@ -280,6 +321,11 @@ class _TestScreenState extends ConsumerState<TestScreen> {
                                           testNotifier.submitTest();
                                         },
                                 label: Text(t.testScreen.submitTest),
+                                style: FilledButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 16,
+                                  ),
+                                ),
                               ),
                     ),
                   ),

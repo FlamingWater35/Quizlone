@@ -16,12 +16,15 @@ class LearnScreen extends ConsumerStatefulWidget {
 }
 
 class _LearnScreenState extends ConsumerState<LearnScreen> {
-  late TextEditingController _answerController;
   static final _log = Logger("LearnScreen");
+
+  late TextEditingController _answerController;
+  final FocusNode _focusNode = FocusNode();
 
   @override
   void dispose() {
     _answerController.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 
@@ -29,10 +32,16 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
   void initState() {
     super.initState();
     _answerController = TextEditingController();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _focusNode.requestFocus();
+      }
+    });
   }
 
-  void _onSubmit(LearnController notifier) {
-    if (_answerController.text.isNotEmpty) {
+  void _onSubmit(LearnController notifier, LearnModeScreenState state) {
+    if (_answerController.text.isNotEmpty &&
+        !(state.currentQuestion?.answerSubmitted ?? true)) {
       notifier.submitAnswer();
     }
   }
@@ -43,23 +52,37 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
     LearnController notifier,
   ) {
     final t = Translations.of(context);
+    final theme = Theme.of(context);
     return Center(
       child: CenteredView(
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(24.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Icon(
+                Icons.celebration_outlined,
+                size: 80,
+                color: theme.colorScheme.primary,
+              ),
+              const SizedBox(height: 24),
               Text(
                 state.progressMessage,
-                style: Theme.of(context).textTheme.headlineSmall,
+                style: theme.textTheme.headlineSmall,
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 30),
-              ElevatedButton.icon(
+              const SizedBox(height: 40),
+              FilledButton.icon(
                 icon: const Icon(Icons.restart_alt),
                 onPressed: notifier.refreshAndRestart,
                 label: Text(t.learnScreen.restartSession),
+                style: FilledButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 12,
+                  ),
+                  textStyle: theme.textTheme.titleMedium,
+                ),
               ),
               const SizedBox(height: 12),
               TextButton(
@@ -89,6 +112,21 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
     }
   }
 
+  IconData? _getFeedbackIcon(LearnFeedbackType type) {
+    switch (type) {
+      case LearnFeedbackType.correct:
+        return Icons.check_circle_outline;
+      case LearnFeedbackType.incorrect:
+        return Icons.cancel_outlined;
+      case LearnFeedbackType.hint:
+        return Icons.lightbulb_outline;
+      case LearnFeedbackType.skipped:
+        return Icons.double_arrow_outlined;
+      default:
+        return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final learnStateAsync = ref.watch(learnControllerProvider);
@@ -109,20 +147,12 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
           !nextQuestionSubmitted &&
           mounted) {
         _answerController.clear();
+        _focusNode.requestFocus();
       }
     });
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(t.learnScreen.title),
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            context.router.pop();
-          },
-        ),
-      ),
+      appBar: AppBar(title: Text(t.learnScreen.title), centerTitle: true),
       body: learnStateAsync.when(
         data: (state) {
           if (state.errorMessage != null) {
@@ -138,14 +168,16 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
           if (state.isSessionComplete) {
             return _buildSessionCompleteUI(context, state, learnNotifier);
           }
-          if (state.currentQuestion == null && !state.isLoading) {
-            return Center(child: Text(t.learnScreen.preparing));
-          }
-          if (state.currentQuestion == null && state.isLoading) {
+          if (state.currentQuestion == null) {
             return const Center(child: CircularProgressIndicator());
           }
 
           final questionState = state.currentQuestion!;
+          final progressValue =
+              state.termsToLearnThisCycle.isEmpty
+                  ? 0.0
+                  : (state.currentTermIndexInCycle + 1) /
+                      state.termsToLearnThisCycle.length;
 
           return CenteredView(
             child: SingleChildScrollView(
@@ -158,113 +190,164 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
                     style: textTheme.titleMedium,
                     textAlign: TextAlign.center,
                   ),
+                  const SizedBox(height: 8),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: LinearProgressIndicator(
+                      value: progressValue,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
                   const SizedBox(height: 20),
+
                   Card(
+                    elevation: 2,
+                    clipBehavior: Clip.antiAlias,
                     child: Padding(
-                      padding: const EdgeInsets.all(16.0),
+                      padding: const EdgeInsets.all(20.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           Text(
                             questionState.questionLabel,
                             style: textTheme.labelLarge?.copyWith(
-                              color: Theme.of(context).colorScheme.outline,
+                              color: Theme.of(context).colorScheme.primary,
                             ),
                             textAlign: TextAlign.center,
                           ),
-                          const SizedBox(height: 8),
+                          const SizedBox(height: 12),
                           Text(
                             questionState.questionText,
                             style: textTheme.headlineSmall,
                             textAlign: TextAlign.center,
                             softWrap: true,
                           ),
-                          const SizedBox(height: 20),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: TextField(
-                                  controller: _answerController,
-                                  decoration: InputDecoration(
-                                    hintText: t.learnScreen.answerHint,
-                                    errorText:
-                                        (questionState.feedbackType ==
-                                                    LearnFeedbackType
-                                                        .incorrect &&
-                                                questionState.answerSubmitted)
-                                            ? t.learnScreen.incorrect
-                                            : null,
-                                  ),
-                                  onChanged: learnNotifier.updateUserAnswer,
-                                  onSubmitted: (_) => _onSubmit(learnNotifier),
-                                  readOnly: questionState.answerSubmitted,
-                                  autofocus: true,
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              ElevatedButton(
-                                onPressed:
-                                    questionState.answerSubmitted
-                                        ? null
-                                        : () => _onSubmit(learnNotifier),
-                                child: Text(t.general.submit),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 16),
-                          if (questionState.feedbackMessage.isNotEmpty)
-                            Container(
-                              padding: const EdgeInsets.all(12.0),
-                              decoration: BoxDecoration(
-                                color: _getFeedbackColor(
-                                  context,
-                                  questionState.feedbackType,
-                                ).withAlpha(12),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Text(
-                                questionState.feedbackMessage,
-                                textAlign: TextAlign.center,
-                                style: textTheme.titleMedium?.copyWith(
-                                  color: _getFeedbackColor(
-                                    context,
-                                    questionState.feedbackType,
-                                  ),
-                                ),
-                              ),
-                            ),
                           const SizedBox(height: 24),
-                          if (!questionState.answerSubmitted)
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                OutlinedButton.icon(
-                                  icon: const Icon(Icons.lightbulb_outline),
-                                  label: Text(t.learnScreen.hint),
-                                  onPressed: learnNotifier.showHint,
-                                  style: OutlinedButton.styleFrom(
-                                    foregroundColor:
-                                        Theme.of(context).colorScheme.secondary,
-                                    side: BorderSide(
-                                      color:
-                                          Theme.of(
-                                            context,
-                                          ).colorScheme.secondary,
-                                    ),
-                                  ),
-                                ),
-                                OutlinedButton.icon(
-                                  icon: const Icon(Icons.skip_next),
-                                  label: Text(t.learnScreen.skip),
-                                  onPressed:
-                                      learnNotifier.skipQuestionAndShowAnswer,
-                                ),
-                              ],
+                          const Divider(),
+                          const SizedBox(height: 24),
+
+                          TextField(
+                            focusNode: _focusNode,
+                            controller: _answerController,
+                            decoration: InputDecoration(
+                              border: const OutlineInputBorder(),
+                              labelText: t.learnScreen.answerHint,
                             ),
+                            onChanged: learnNotifier.updateUserAnswer,
+                            onSubmitted: (_) => _onSubmit(learnNotifier, state),
+                            readOnly: questionState.answerSubmitted,
+                            autofocus: true,
+                          ),
+                          const SizedBox(height: 20),
+
+                          AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 300),
+                            transitionBuilder: (child, animation) {
+                              return FadeTransition(
+                                opacity: animation,
+                                child: child,
+                              );
+                            },
+                            child:
+                                questionState.feedbackMessage.isNotEmpty
+                                    ? Container(
+                                      key: ValueKey(
+                                        questionState.feedbackMessage,
+                                      ),
+                                      padding: const EdgeInsets.all(12.0),
+                                      decoration: BoxDecoration(
+                                        color: _getFeedbackColor(
+                                          context,
+                                          questionState.feedbackType,
+                                        ).withAlpha(15),
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          if (_getFeedbackIcon(
+                                                questionState.feedbackType,
+                                              ) !=
+                                              null)
+                                            Icon(
+                                              _getFeedbackIcon(
+                                                questionState.feedbackType,
+                                              ),
+                                              color: _getFeedbackColor(
+                                                context,
+                                                questionState.feedbackType,
+                                              ),
+                                              size: 20,
+                                            ),
+                                          const SizedBox(width: 8),
+                                          Expanded(
+                                            child: Text(
+                                              questionState.feedbackMessage,
+                                              textAlign: TextAlign.center,
+                                              style: textTheme.titleMedium
+                                                  ?.copyWith(
+                                                    color: _getFeedbackColor(
+                                                      context,
+                                                      questionState
+                                                          .feedbackType,
+                                                    ),
+                                                  ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                    : const SizedBox(
+                                      key: ValueKey('empty'),
+                                      height: 58,
+                                    ),
+                          ),
                         ],
                       ),
                     ),
                   ),
+                  const SizedBox(height: 20),
+
+                  if (!questionState.answerSubmitted)
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        FilledButton.icon(
+                          icon: const Icon(Icons.check),
+                          onPressed: () => _onSubmit(learnNotifier, state),
+                          label: Text(t.general.submit),
+                          style: FilledButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            TextButton.icon(
+                              icon: const Icon(
+                                Icons.lightbulb_outline,
+                                size: 18,
+                              ),
+                              label: Text(t.learnScreen.hint),
+                              onPressed: learnNotifier.showHint,
+                            ),
+                            TextButton.icon(
+                              icon: const Icon(
+                                Icons.skip_next_outlined,
+                                size: 18,
+                              ),
+                              label: Text(t.learnScreen.skip),
+                              onPressed:
+                                  learnNotifier.skipQuestionAndShowAnswer,
+                            ),
+                          ],
+                        ),
+                      ],
+                    )
+                  else
+                    const SizedBox(height: 80),
                 ],
               ),
             ),

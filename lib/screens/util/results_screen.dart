@@ -12,6 +12,7 @@ import '../../widgets/centered_view.dart';
 @RoutePage()
 class ResultsScreen extends ConsumerWidget {
   const ResultsScreen({super.key});
+
   static final _log = Logger("ResultScreen");
 
   @override
@@ -32,8 +33,12 @@ class ResultsScreen extends ConsumerWidget {
         child: testStateAsync.when(
           data: (state) {
             if (!state.isSubmitted) {
-              return Center(child: Text(t.resultsScreen.notSubmitted));
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (context.mounted) context.router.pop();
+              });
+              return const Center(child: CircularProgressIndicator());
             }
+
             if (state.questions.isEmpty) {
               return Center(child: Text(t.resultsScreen.noQuestions));
             }
@@ -42,108 +47,139 @@ class ResultsScreen extends ConsumerWidget {
             final total = state.totalQuestions;
             final percentage = total > 0 ? (score / total * 100).round() : 0;
             final incorrectAnswers = state.incorrectAnswers;
+            final bool isPerfectScore = score == total && total > 0;
 
             return CenteredView(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(24.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Text(
                       t.resultsScreen.yourScore,
-                      style: textTheme.titleLarge,
+                      style: textTheme.headlineSmall,
                       textAlign: TextAlign.center,
                     ),
                     Text(
                       "$percentage%",
                       style: textTheme.displayLarge?.copyWith(
-                        color: colorScheme.primary,
+                        color:
+                            isPerfectScore
+                                ? colorScheme.primary
+                                : colorScheme.onSurface,
                         fontWeight: FontWeight.bold,
                       ),
                       textAlign: TextAlign.center,
                     ),
                     Text(
                       t.resultsScreen.scoreFraction(score: score, total: total),
-                      style: textTheme.titleMedium?.copyWith(
+                      style: textTheme.titleLarge?.copyWith(
                         color: colorScheme.onSurfaceVariant,
                       ),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 32),
+
                     if (incorrectAnswers.isNotEmpty) ...[
                       Text(
                         t.resultsScreen.reviewIncorrect,
                         style: textTheme.titleLarge,
                       ),
-                      const SizedBox(height: 8),
-                      ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: incorrectAnswers.length,
-                        itemBuilder: (context, index) {
-                          final item = incorrectAnswers[index];
-                          return Card(
-                            color: colorScheme.errorContainer.withAlpha(38),
-                            margin: const EdgeInsets.symmetric(vertical: 6.0),
-                            child: Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    item.questionText,
-                                    style: textTheme.bodyLarge?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color: colorScheme.onErrorContainer,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Text(
-                                    t.resultsScreen.yourAnswerWas(
-                                      answer:
-                                          item.userAnswerText ??
-                                          t.resultsScreen.noAnswer,
-                                    ),
-                                    style: TextStyle(
-                                      fontStyle: FontStyle.italic,
-                                      color: colorScheme.onErrorContainer,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    "${t.resultsScreen.reviewIncorrect.split(':').first}: ${item.correctAnswerText}",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.green.shade800,
-                                    ),
-                                  ),
-                                ],
-                              ),
+                      const SizedBox(height: 16),
+                      ...incorrectAnswers.map((item) {
+                        return Card(
+                          color: colorScheme.error.withOpacity(0.1),
+                          shadowColor: Colors.transparent,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            side: BorderSide(
+                              color: colorScheme.error.withOpacity(0.3),
                             ),
-                          );
-                        },
-                      ),
-                      const SizedBox(height: 24),
+                          ),
+                          margin: const EdgeInsets.symmetric(vertical: 6.0),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  item.questionText,
+                                  style: textTheme.titleMedium?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: colorScheme.onSurface,
+                                  ),
+                                ),
+                                const Divider(height: 24),
+                                Text.rich(
+                                  TextSpan(
+                                    text:
+                                        "${t.resultsScreen.yourAnswerWas(answer: '')} ",
+                                    style: textTheme.bodyMedium?.copyWith(
+                                      color: colorScheme.onSurfaceVariant,
+                                    ),
+                                    children: [
+                                      TextSpan(
+                                        text:
+                                            item.userAnswerText ??
+                                            t.resultsScreen.noAnswer,
+                                        style: TextStyle(
+                                          color: colorScheme.error,
+                                          fontStyle: FontStyle.italic,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text.rich(
+                                  TextSpan(
+                                    text:
+                                        "${t.resultsScreen.reviewIncorrect.split(':').first}: ",
+                                    style: textTheme.bodyMedium?.copyWith(
+                                      color: colorScheme.onSurfaceVariant,
+                                    ),
+                                    children: [
+                                      TextSpan(
+                                        text: item.correctAnswerText,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: colorScheme.primary,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }),
                     ] else if (total > 0) ...[
+                      Icon(
+                        Icons.check_circle_outline,
+                        color: colorScheme.primary,
+                        size: 60,
+                      ),
+                      const SizedBox(height: 16),
                       Text(
                         t.resultsScreen.congratulations,
-                        style: textTheme.titleLarge?.copyWith(
-                          color: Colors.green.shade700,
+                        style: textTheme.headlineSmall?.copyWith(
+                          color: colorScheme.primary,
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      const SizedBox(height: 24),
                     ],
 
-                    ElevatedButton.icon(
+                    const SizedBox(height: 32),
+
+                    FilledButton.icon(
                       icon: const Icon(Icons.restart_alt),
                       label: Text(t.resultsScreen.retryTest),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: colorScheme.primary,
-                        foregroundColor: colorScheme.onPrimary,
+                      style: FilledButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
                       ),
-                      onPressed: () async {
-                        await testNotifier.restartTest();
+                      onPressed: () {
+                        testNotifier.restartTest();
                         if (context.mounted) {
                           context.router.replace(const TestModeRoute());
                         }
@@ -162,9 +198,11 @@ class ResultsScreen extends ConsumerWidget {
                     Center(
                       child: TextButton(
                         onPressed: () {
-                          context.router.popUntilRouteWithName(StartRoute.name);
+                          context.router.popUntilRouteWithName(
+                            ModeSelectionRoute.name,
+                          );
                         },
-                        child: Text(t.resultsScreen.backToWelcome),
+                        child: Text(t.modeSelectionScreen.title),
                       ),
                     ),
                   ],
