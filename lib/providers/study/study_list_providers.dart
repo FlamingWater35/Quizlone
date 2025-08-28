@@ -22,6 +22,7 @@ Stream<List<StudyList>> studyLists(Ref ref) {
 class ActiveStudyListId extends _$ActiveStudyListId {
   void set(String? id) {
     _log.fine("[ActiveStudyListIdProvider] set() called with id: $id.");
+    ref.read(databaseServiceProvider).saveActiveListId(id);
     state = id;
     _log.fine("[ActiveStudyListIdProvider] state is now: $state.");
   }
@@ -29,9 +30,9 @@ class ActiveStudyListId extends _$ActiveStudyListId {
   @override
   String? build() {
     _log.fine(
-      "[ActiveStudyListIdProvider] build() called. Initializing state to null.",
+      "[ActiveStudyListIdProvider] build() called. Initializing state from DB.",
     );
-    return null;
+    return ref.watch(databaseServiceProvider).getActiveListId();
   }
 }
 

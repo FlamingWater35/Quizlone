@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:quizlone/i18n/translations.g.dart';
+import 'package:quizlone/providers/study/study_list_providers.dart';
 import 'package:quizlone/routing/app_router.dart';
 
 import '../../models/enums/enums.dart';
@@ -68,11 +69,11 @@ class _TestScreenState extends ConsumerState<TestScreen> {
 
     if (isSubmitted) {
       if (isCorrectAnswer) {
-        tileColor = colorScheme.primary.withOpacity(0.15);
+        tileColor = colorScheme.primary.withAlpha(20);
         textColor = colorScheme.primary;
         resultIcon = Icon(Icons.check_circle, color: textColor);
       } else if (isSelected && !isCorrectAnswer) {
-        tileColor = colorScheme.error.withOpacity(0.15);
+        tileColor = colorScheme.error.withAlpha(20);
         textColor = colorScheme.error;
         resultIcon = Icon(Icons.cancel, color: textColor);
       } else {
@@ -88,7 +89,7 @@ class _TestScreenState extends ConsumerState<TestScreen> {
     return Card(
       elevation: 0,
       margin: const EdgeInsets.symmetric(vertical: 4.0),
-      color: tileColor ?? colorScheme.surfaceContainerHighest.withOpacity(0.3),
+      color: tileColor ?? colorScheme.surfaceContainerHighest.withAlpha(40),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
         side:
@@ -253,10 +254,29 @@ class _TestScreenState extends ConsumerState<TestScreen> {
             if (state.errorMessage != null) {
               return Center(
                 child: CenteredView(
-                  child: Text(
-                    state.errorMessage!,
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.error,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          state.errorMessage!,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.error,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        ElevatedButton(
+                          onPressed: () {
+                            ref
+                                .read(activeStudyListIdProvider.notifier)
+                                .set(null);
+                            context.router.replace(const StartRoute());
+                          },
+                          child: Text(t.modeSelectionScreen.returnToWelcome),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -340,11 +360,27 @@ class _TestScreenState extends ConsumerState<TestScreen> {
               child: CenteredView(
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    t.general.genericError(error: err.toString()),
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.error,
-                    ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        t.general.genericError(error: err.toString()),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.error,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: () {
+                          ref
+                              .read(activeStudyListIdProvider.notifier)
+                              .set(null);
+                          context.router.replace(const StartRoute());
+                        },
+                        child: Text(t.modeSelectionScreen.returnToWelcome),
+                      ),
+                    ],
                   ),
                 ),
               ),

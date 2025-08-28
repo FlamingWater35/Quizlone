@@ -10,6 +10,7 @@ class DatabaseService {
   static const String _settingsBoxName = 'settingsBox';
   static late Box<StudyList> _studyListBox;
   static const String _studyListBoxName = 'studyListsBox';
+  static const String _activeListIdKey = 'activeListId';
 
   static Future<void> init() async {
     await Hive.initFlutter('Quizlone');
@@ -115,6 +116,18 @@ class DatabaseService {
 
   double getUiScale() {
     return _settingsBox.get('uiScale', defaultValue: 1.0);
+  }
+
+  Future<void> saveActiveListId(String? id) async {
+    if (id == null) {
+      await _settingsBox.delete(_activeListIdKey);
+    } else {
+      await _settingsBox.put(_activeListIdKey, id);
+    }
+  }
+
+  String? getActiveListId() {
+    return _settingsBox.get(_activeListIdKey);
   }
 
   Box<StudyList> get _box => _studyListBox;

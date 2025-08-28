@@ -248,6 +248,17 @@ class StartScreen extends ConsumerWidget {
                                                 ),
                                           );
                                           if (confirm == true) {
+                                            if (ref.read(
+                                                  activeStudyListIdProvider,
+                                                ) ==
+                                                list.name) {
+                                              ref
+                                                  .read(
+                                                    activeStudyListIdProvider
+                                                        .notifier,
+                                                  )
+                                                  .set(null);
+                                            }
                                             await ref
                                                 .read(databaseServiceProvider)
                                                 .deleteStudyList(list.name);

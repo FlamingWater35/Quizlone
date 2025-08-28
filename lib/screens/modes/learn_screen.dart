@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:quizlone/i18n/translations.g.dart';
+import 'package:quizlone/providers/study/study_list_providers.dart';
+import 'package:quizlone/routing/app_router.dart';
 
 import '../../providers/controllers/learn_controller.dart';
 import '../../widgets/centered_view.dart';
@@ -158,9 +160,30 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
           if (state.errorMessage != null) {
             return Center(
               child: CenteredView(
-                child: Text(
-                  state.errorMessage!,
-                  style: TextStyle(color: Theme.of(context).colorScheme.error),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        state.errorMessage!,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.error,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: () {
+                          ref
+                              .read(activeStudyListIdProvider.notifier)
+                              .set(null);
+                          context.router.replace(const StartRoute());
+                        },
+                        child: Text(t.modeSelectionScreen.returnToWelcome),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             );
@@ -360,9 +383,25 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
             child: CenteredView(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  t.general.genericError(error: err.toString()),
-                  style: TextStyle(color: Theme.of(context).colorScheme.error),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      t.general.genericError(error: err.toString()),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.error,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () {
+                        ref.read(activeStudyListIdProvider.notifier).set(null);
+                        context.router.replace(const StartRoute());
+                      },
+                      child: Text(t.modeSelectionScreen.returnToWelcome),
+                    ),
+                  ],
                 ),
               ),
             ),
