@@ -20,11 +20,7 @@ class ModeSelectionScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final activeId = ref.watch(activeStudyListIdProvider);
     final t = Translations.of(context);
-    _log.fine(
-      "ModeSelectionScreen build: activeStudyListIdProvider is $activeId",
-    );
     final activeStudyListAsync = ref.watch(activeStudyListProvider);
 
     return Scaffold(
@@ -36,38 +32,12 @@ class ModeSelectionScreen extends ConsumerWidget {
         child: activeStudyListAsync.when(
           data: (StudyList? list) {
             if (list == null) {
-              return Center(
-                child: CenteredView(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          t.modeSelectionScreen.noActiveList,
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 10),
-                        Text(
-                          t.modeSelectionScreen.debugActiveId(
-                            id: activeId ?? 'null',
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        ElevatedButton(
-                          onPressed: () {
-                            ref
-                                .read(activeStudyListIdProvider.notifier)
-                                .set(null);
-                            context.router.replace(const StartRoute());
-                          },
-                          child: Text(t.modeSelectionScreen.returnToWelcome),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              );
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (context.mounted) {
+                  context.router.replace(const StartRoute());
+                }
+              });
+              return const Center(child: CircularProgressIndicator());
             }
 
             return CenteredView(

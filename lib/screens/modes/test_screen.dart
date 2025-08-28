@@ -3,24 +3,86 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:quizlone/i18n/translations.g.dart';
-import 'package:quizlone/providers/study/study_list_providers.dart';
 import 'package:quizlone/routing/app_router.dart';
 
 import '../../models/enums/enums.dart';
 import '../../providers/controllers/test_controller.dart';
+import '../../providers/study/study_list_providers.dart';
 import '../../widgets/centered_view.dart';
 
 @RoutePage(name: "TestModeRoute")
-class TestScreen extends ConsumerStatefulWidget {
+class TestScreen extends ConsumerWidget {
   const TestScreen({super.key});
 
-  @override
-  ConsumerState<TestScreen> createState() => _TestScreenState();
-}
-
-class _TestScreenState extends ConsumerState<TestScreen> {
   static final _log = Logger("TestScreen");
 
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final t = Translations.of(context);
+    final activeListAsync = ref.watch(activeStudyListProvider);
+
+    return Scaffold(
+      appBar: AppBar(title: Text(t.testScreen.title), centerTitle: true),
+      body: SafeArea(
+        child: activeListAsync.when(
+          data: (list) {
+            if (list == null) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (context.mounted) {
+                  context.router.replace(const StartRoute());
+                }
+              });
+              return const Center(child: CircularProgressIndicator());
+            }
+            return const _TestView();
+          },
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (err, stack) {
+            _log.severe("Error loading active list for TestScreen", err, stack);
+            return Center(
+              child: CenteredView(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        t.general.genericError(error: err.toString()),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.error,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: () {
+                          ref
+                              .read(activeStudyListIdProvider.notifier)
+                              .set(null);
+                          context.router.replace(const StartRoute());
+                        },
+                        child: Text(t.modeSelectionScreen.returnToWelcome),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class _TestView extends ConsumerStatefulWidget {
+  const _TestView();
+
+  @override
+  ConsumerState<_TestView> createState() => _TestViewState();
+}
+
+class _TestViewState extends ConsumerState<_TestView> {
   final Map<int, TextEditingController> _writtenAnswerControllers = {};
 
   @override
@@ -29,11 +91,6 @@ class _TestScreenState extends ConsumerState<TestScreen> {
       controller.dispose();
     }
     super.dispose();
-  }
-
-  @override
-  void initState() {
-    super.initState();
   }
 
   void _initializeControllers(List<TestQuestion> questions) {
@@ -246,148 +303,117 @@ class _TestScreenState extends ConsumerState<TestScreen> {
     final testNotifier = ref.read(testControllerProvider.notifier);
     final t = Translations.of(context);
 
-    return Scaffold(
-      appBar: AppBar(title: Text(t.testScreen.title), centerTitle: true),
-      body: SafeArea(
-        child: testStateAsync.when(
-          data: (state) {
-            if (state.errorMessage != null) {
-              return Center(
-                child: CenteredView(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          state.errorMessage!,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.error,
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        ElevatedButton(
-                          onPressed: () {
-                            ref
-                                .read(activeStudyListIdProvider.notifier)
-                                .set(null);
-                            context.router.replace(const StartRoute());
-                          },
-                          child: Text(t.modeSelectionScreen.returnToWelcome),
-                        ),
-                      ],
+    return testStateAsync.when(
+      data: (state) {
+        if (state.errorMessage != null) {
+          return Center(
+            child: CenteredView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      state.errorMessage!,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.error,
+                      ),
                     ),
-                  ),
-                ),
-              );
-            }
-            if (state.questions.isEmpty && !state.isLoading) {
-              return Center(child: Text(t.testScreen.noQuestions));
-            }
-
-            if (state.questions.isNotEmpty &&
-                state.testFormat == TestFormat.written) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                if (mounted) _initializeControllers(state.questions);
-              });
-            }
-
-            return CenteredView(
-              child: Column(
-                children: [
-                  Expanded(
-                    child: ListView.builder(
-                      padding: const EdgeInsets.all(16.0),
-                      itemCount: state.questions.length,
-                      itemBuilder: (context, index) {
-                        final question = state.questions[index];
-                        return _buildQuestionItem(
-                          context,
-                          question,
-                          index,
-                          testNotifier,
-                          state,
-                        );
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () {
+                        ref.read(activeStudyListIdProvider.notifier).set(null);
+                        context.router.replace(const StartRoute());
                       },
+                      child: Text(t.modeSelectionScreen.returnToWelcome),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-                    child: SizedBox(
-                      width: double.infinity,
-                      child:
-                          state.isSubmitted
-                              ? FilledButton.icon(
-                                icon: const Icon(Icons.bar_chart),
-                                onPressed:
-                                    () => context.router.push(
-                                      const ResultsRoute(),
-                                    ),
-                                label: Text(t.testScreen.viewResults),
-                                style: FilledButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 16,
-                                  ),
-                                ),
-                              )
-                              : FilledButton.icon(
-                                icon: const Icon(Icons.check_circle_outline),
-                                onPressed:
-                                    state.questions.isEmpty
-                                        ? null
-                                        : () {
-                                          FocusScope.of(context).unfocus();
-                                          testNotifier.submitTest();
-                                        },
-                                label: Text(t.testScreen.submitTest),
-                                style: FilledButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 16,
-                                  ),
-                                ),
-                              ),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (err, stack) {
-            _log.severe("Error in testControllerProvider", err, stack);
-            return Center(
-              child: CenteredView(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        t.general.genericError(error: err.toString()),
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.error,
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      ElevatedButton(
-                        onPressed: () {
-                          ref
-                              .read(activeStudyListIdProvider.notifier)
-                              .set(null);
-                          context.router.replace(const StartRoute());
-                        },
-                        child: Text(t.modeSelectionScreen.returnToWelcome),
-                      ),
-                    ],
-                  ),
+                  ],
                 ),
               ),
-            );
-          },
-        ),
-      ),
+            ),
+          );
+        }
+        if (state.questions.isEmpty && !state.isLoading) {
+          return Center(child: Text(t.testScreen.noQuestions));
+        }
+
+        if (state.questions.isNotEmpty &&
+            state.testFormat == TestFormat.written) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) _initializeControllers(state.questions);
+          });
+        }
+
+        return CenteredView(
+          child: Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  padding: const EdgeInsets.all(16.0),
+                  itemCount: state.questions.length,
+                  itemBuilder: (context, index) {
+                    final question = state.questions[index];
+                    return _buildQuestionItem(
+                      context,
+                      question,
+                      index,
+                      testNotifier,
+                      state,
+                    );
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+                child: SizedBox(
+                  width: double.infinity,
+                  child:
+                      state.isSubmitted
+                          ? FilledButton.icon(
+                            icon: const Icon(Icons.bar_chart),
+                            onPressed:
+                                () => context.router.push(const ResultsRoute()),
+                            label: Text(t.testScreen.viewResults),
+                            style: FilledButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                            ),
+                          )
+                          : FilledButton.icon(
+                            icon: const Icon(Icons.check_circle_outline),
+                            onPressed:
+                                state.questions.isEmpty
+                                    ? null
+                                    : () {
+                                      FocusScope.of(context).unfocus();
+                                      testNotifier.submitTest();
+                                    },
+                            label: Text(t.testScreen.submitTest),
+                            style: FilledButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                            ),
+                          ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (err, stack) {
+        TestScreen._log.severe("Error in testControllerProvider", err, stack);
+        return Center(
+          child: CenteredView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                t.general.genericError(error: err.toString()),
+                style: TextStyle(color: Theme.of(context).colorScheme.error),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

@@ -4,10 +4,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:quizlone/i18n/translations.g.dart';
-import 'package:quizlone/providers/study/study_list_providers.dart';
 import 'package:quizlone/routing/app_router.dart';
 
 import '../../providers/controllers/flashcard_controller.dart';
+import '../../providers/study/study_list_providers.dart';
 import '../../widgets/centered_view.dart';
 import '../../widgets/flashcard_widget.dart';
 
@@ -22,6 +22,104 @@ class FlashcardScreen extends ConsumerStatefulWidget {
 class _FlashcardScreenState extends ConsumerState<FlashcardScreen> {
   static final _log = Logger("FlashcardScreen");
 
+  final FocusNode _focusNode = FocusNode();
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _focusNode.requestFocus();
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final t = Translations.of(context);
+    final activeListAsync = ref.watch(activeStudyListProvider);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(t.flashcardScreen.title),
+        centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            context.router.pop();
+          },
+        ),
+      ),
+      body: SafeArea(
+        child: activeListAsync.when(
+          data: (list) {
+            if (list == null) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (context.mounted) {
+                  context.router.replace(const StartRoute());
+                }
+              });
+              return const Center(child: CircularProgressIndicator());
+            }
+            return const _FlashcardView();
+          },
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (err, stack) {
+            _log.severe(
+              "Error loading active list for FlashcardScreen",
+              err,
+              stack,
+            );
+            return Center(
+              child: CenteredView(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        t.general.genericError(error: err.toString()),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.error,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: () {
+                          ref
+                              .read(activeStudyListIdProvider.notifier)
+                              .set(null);
+                          context.router.replace(const StartRoute());
+                        },
+                        child: Text(t.modeSelectionScreen.returnToWelcome),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class _FlashcardView extends ConsumerStatefulWidget {
+  const _FlashcardView();
+
+  @override
+  ConsumerState<_FlashcardView> createState() => _FlashcardViewState();
+}
+
+class _FlashcardViewState extends ConsumerState<_FlashcardView> {
   final FocusNode _focusNode = FocusNode();
   var _slideFromRight = true;
 
@@ -139,182 +237,155 @@ class _FlashcardScreenState extends ConsumerState<FlashcardScreen> {
         }
         return KeyEventResult.ignored;
       },
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(t.flashcardScreen.title),
-          centerTitle: true,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              context.router.pop();
-            },
-          ),
-        ),
-        body: SafeArea(
-          child: flashcardStateAsync.when(
-            data: (state) {
-              if (state.errorMessage != null) {
-                return Center(
-                  child: CenteredView(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            state.errorMessage!,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.error,
-                              fontSize: 16,
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                          ElevatedButton(
-                            onPressed: () {
-                              ref
-                                  .read(activeStudyListIdProvider.notifier)
-                                  .set(null);
-                              context.router.replace(const StartRoute());
-                            },
-                            child: Text(t.modeSelectionScreen.returnToWelcome),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              }
-              if (state.currentCard == null) {
-                return Center(child: Text(t.flashcardScreen.noCards));
-              }
-
-              return CenteredView(
-                child: SingleChildScrollView(
+      child: flashcardStateAsync.when(
+        data: (state) {
+          if (state.errorMessage != null) {
+            return Center(
+              child: CenteredView(
+                child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        state.currentProgress,
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                      const SizedBox(height: 16),
-                      GestureDetector(
-                        onHorizontalDragEnd: (details) {
-                          if (details.primaryVelocity != null) {
-                            if (details.primaryVelocity! < -100) {
-                              flashcardNotifier.nextCard();
-                            } else if (details.primaryVelocity! > 100) {
-                              flashcardNotifier.previousCard();
-                            }
-                          }
-                        },
-                        onVerticalDragEnd: (details) {
-                          if (details.primaryVelocity != null &&
-                              details.primaryVelocity!.abs() > 100) {
-                            flashcardNotifier.flipCard();
-                          }
-                        },
-                        child: Card(
-                          child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Column(
-                              children: [
-                                AnimatedSwitcher(
-                                  duration: const Duration(milliseconds: 400),
-                                  transitionBuilder: (
-                                    Widget child,
-                                    Animation<double> animation,
-                                  ) {
-                                    final curvedAnimation = CurvedAnimation(
-                                      parent: animation,
-                                      curve: Curves.easeInOut,
-                                    );
-
-                                    final offsetAnimation = Tween<Offset>(
-                                      begin:
-                                          _slideFromRight
-                                              ? const Offset(0.3, 0.0)
-                                              : const Offset(-0.3, 0.0),
-                                      end: Offset.zero,
-                                    ).animate(curvedAnimation);
-
-                                    final scaleAnimation = Tween<double>(
-                                      begin: 0.8,
-                                      end: 1.0,
-                                    ).animate(curvedAnimation);
-
-                                    return FadeTransition(
-                                      opacity: curvedAnimation,
-                                      child: ScaleTransition(
-                                        scale: scaleAnimation,
-                                        child: SlideTransition(
-                                          position: offsetAnimation,
-                                          child: child,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  child: FlashcardWidget(
-                                    key: ValueKey(state.currentIndex),
-                                    term: state.currentCard!,
-                                    isFlipped: state.isFlipped,
-                                    onTap: flashcardNotifier.flipCard,
-                                    startSide: state.startSide,
-                                    height: 300,
-                                  ),
-                                ),
-                                const SizedBox(height: 24),
-                                _buildNavigationControls(
-                                  context,
-                                  flashcardNotifier,
-                                  state,
-                                ),
-                              ],
-                            ),
-                          ),
+                        state.errorMessage!,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.error,
+                          fontSize: 16,
                         ),
+                      ),
+                      const SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: () {
+                          ref
+                              .read(activeStudyListIdProvider.notifier)
+                              .set(null);
+                          context.router.replace(const StartRoute());
+                        },
+                        child: Text(t.modeSelectionScreen.returnToWelcome),
                       ),
                     ],
                   ),
                 ),
-              );
-            },
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (err, stack) {
-              _log.severe("Error in flashcardControllerProvider", err, stack);
-              return Center(
-                child: CenteredView(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          t.general.genericError(error: err.toString()),
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.error,
-                          ),
+              ),
+            );
+          }
+          if (state.currentCard == null) {
+            return Center(child: Text(t.flashcardScreen.noCards));
+          }
+
+          return CenteredView(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  Text(
+                    state.currentProgress,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  const SizedBox(height: 16),
+                  GestureDetector(
+                    onHorizontalDragEnd: (details) {
+                      if (details.primaryVelocity != null) {
+                        if (details.primaryVelocity! < -100) {
+                          flashcardNotifier.nextCard();
+                        } else if (details.primaryVelocity! > 100) {
+                          flashcardNotifier.previousCard();
+                        }
+                      }
+                    },
+                    onVerticalDragEnd: (details) {
+                      if (details.primaryVelocity != null &&
+                          details.primaryVelocity!.abs() > 100) {
+                        flashcardNotifier.flipCard();
+                      }
+                    },
+                    child: Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          children: [
+                            AnimatedSwitcher(
+                              duration: const Duration(milliseconds: 400),
+                              transitionBuilder: (
+                                Widget child,
+                                Animation<double> animation,
+                              ) {
+                                final curvedAnimation = CurvedAnimation(
+                                  parent: animation,
+                                  curve: Curves.easeInOut,
+                                );
+
+                                final offsetAnimation = Tween<Offset>(
+                                  begin:
+                                      _slideFromRight
+                                          ? const Offset(0.3, 0.0)
+                                          : const Offset(-0.3, 0.0),
+                                  end: Offset.zero,
+                                ).animate(curvedAnimation);
+
+                                final scaleAnimation = Tween<double>(
+                                  begin: 0.8,
+                                  end: 1.0,
+                                ).animate(curvedAnimation);
+
+                                return FadeTransition(
+                                  opacity: curvedAnimation,
+                                  child: ScaleTransition(
+                                    scale: scaleAnimation,
+                                    child: SlideTransition(
+                                      position: offsetAnimation,
+                                      child: child,
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: FlashcardWidget(
+                                key: ValueKey(state.currentIndex),
+                                term: state.currentCard!,
+                                isFlipped: state.isFlipped,
+                                onTap: flashcardNotifier.flipCard,
+                                startSide: state.startSide,
+                                height: 300,
+                              ),
+                            ),
+                            const SizedBox(height: 24),
+                            _buildNavigationControls(
+                              context,
+                              flashcardNotifier,
+                              state,
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: 20),
-                        ElevatedButton(
-                          onPressed: () {
-                            ref
-                                .read(activeStudyListIdProvider.notifier)
-                                .set(null);
-                            context.router.replace(const StartRoute());
-                          },
-                          child: Text(t.modeSelectionScreen.returnToWelcome),
-                        ),
-                      ],
+                      ),
                     ),
                   ),
+                ],
+              ),
+            ),
+          );
+        },
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (err, stack) {
+          _FlashcardScreenState._log.severe(
+            "Error in flashcardControllerProvider",
+            err,
+            stack,
+          );
+          return Center(
+            child: CenteredView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  t.general.genericError(error: err.toString()),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Theme.of(context).colorScheme.error),
                 ),
-              );
-            },
-          ),
-        ),
+              ),
+            ),
+          );
+        },
       ),
     );
   }
