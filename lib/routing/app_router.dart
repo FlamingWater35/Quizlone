@@ -1,5 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quizlone/providers/study/study_list_providers.dart';
 
 import '../screens/main/about_screen.dart';
 import '../screens/main/controls_screen.dart';
@@ -14,17 +16,38 @@ import '../screens/util/start_screen.dart';
 
 part 'app_router.gr.dart';
 
+class StudyModeGuard extends AutoRouteGuard {
+  StudyModeGuard(this.ref);
+
+  final WidgetRef ref;
+
+  @override
+  void onNavigation(NavigationResolver resolver, StackRouter router) {
+    final activeId = ref.read(activeStudyListIdProvider);
+
+    if (activeId != null) {
+      resolver.next(true);
+    } else {
+      router.replaceAll([const StartRoute()]);
+    }
+  }
+}
+
 @AutoRouterConfig()
 class AppRouter extends RootStackRouter {
+  AppRouter(this.ref);
+
+  final WidgetRef ref;
+
   @override
   List<AutoRoute> get routes => [
     AutoRoute(page: StartRoute.page, initial: true),
     AutoRoute(page: InputRoute.page),
-    AutoRoute(page: ModeSelectionRoute.page),
-    AutoRoute(page: FlashcardRoute.page),
-    AutoRoute(page: LearnRoute.page),
-    AutoRoute(page: TestModeRoute.page),
-    AutoRoute(page: ResultsRoute.page),
+    AutoRoute(page: ModeSelectionRoute.page, guards: [StudyModeGuard(ref)]),
+    AutoRoute(page: FlashcardRoute.page, guards: [StudyModeGuard(ref)]),
+    AutoRoute(page: LearnRoute.page, guards: [StudyModeGuard(ref)]),
+    AutoRoute(page: TestModeRoute.page, guards: [StudyModeGuard(ref)]),
+    AutoRoute(page: ResultsRoute.page, guards: [StudyModeGuard(ref)]),
     AutoRoute(page: AboutRoute.page),
     CustomRoute(
       page: SettingsRoute.page,
