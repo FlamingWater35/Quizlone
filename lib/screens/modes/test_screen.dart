@@ -103,6 +103,7 @@ class _TestView extends ConsumerStatefulWidget {
 }
 
 class _TestViewState extends ConsumerState<_TestView> {
+  late final ScrollController _scrollController;
   final Map<int, TextEditingController> _writtenAnswerControllers = {};
 
   @override
@@ -110,7 +111,14 @@ class _TestViewState extends ConsumerState<_TestView> {
     for (var controller in _writtenAnswerControllers.values) {
       controller.dispose();
     }
+    _scrollController.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
   }
 
   void _initializeControllers(List<TestQuestion> questions) {
@@ -319,6 +327,21 @@ class _TestViewState extends ConsumerState<_TestView> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen<AsyncValue<TestScreenState>>(testControllerProvider, (
+      previous,
+      next,
+    ) {
+      final wasSubmitted = previous?.asData?.value.isSubmitted ?? false;
+
+      if (next is AsyncData<TestScreenState> && !next.value.isSubmitted) {
+        if (wasSubmitted) {
+          if (_scrollController.hasClients) {
+            _scrollController.jumpTo(0);
+          }
+        }
+      }
+    });
+
     final testStateAsync = ref.watch(testControllerProvider);
     final testNotifier = ref.read(testControllerProvider.notifier);
     final t = Translations.of(context);
@@ -370,6 +393,7 @@ class _TestViewState extends ConsumerState<_TestView> {
             children: [
               Expanded(
                 child: ListView.builder(
+                  controller: _scrollController,
                   padding: const EdgeInsets.all(16.0),
                   itemCount: state.questions.length,
                   itemBuilder: (context, index) {

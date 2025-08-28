@@ -146,7 +146,7 @@ class TestController extends _$TestController {
     );
   }
 
-  Future<void> restartTest() async {
+  void restartTest() {
     ref.invalidateSelf();
   }
 
@@ -186,9 +186,8 @@ class TestController extends _$TestController {
     return finalChoices;
   }
 
-  @override
-  Future<TestScreenState> build() async {
-    _log.fine("[TestController] build started");
+  Future<TestScreenState> _generateTestState() async {
+    _log.fine("[TestController] _generateTestState started");
     ref.watch(activeStudyListProvider);
     final studyLengthOption = ref.watch(studyLengthProvider);
     final testFormatOption = ref.watch(testQuestionFormatProvider);
@@ -271,5 +270,10 @@ class TestController extends _$TestController {
       testFormat: testFormatOption,
       questionType: questionTypeOption,
     );
+  }
+
+  @override
+  Future<TestScreenState> build() async {
+    return _generateTestState();
   }
 }
