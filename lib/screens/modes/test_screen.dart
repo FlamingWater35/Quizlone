@@ -14,12 +14,83 @@ import '../../widgets/centered_view.dart';
 class TestScreen extends ConsumerWidget {
   const TestScreen({super.key});
 
+  static final _log = Logger("TestScreen");
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final t = Translations.of(context);
+    final activeListAsync = ref.watch(activeStudyListProvider);
+
     return Scaffold(
       appBar: AppBar(title: Text(t.testScreen.title), centerTitle: true),
-      body: const SafeArea(child: _TestView()),
+      body: SafeArea(
+        child: activeListAsync.when(
+          data: (list) {
+            if (list == null) {
+              return Center(
+                child: CenteredView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          t.modeSelectionScreen.noActiveList,
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 20),
+                        ElevatedButton(
+                          onPressed: () {
+                            ref
+                                .read(activeStudyListIdProvider.notifier)
+                                .set(null);
+                            context.router.replaceAll([const StartRoute()]);
+                          },
+                          child: Text(t.modeSelectionScreen.returnToWelcome),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            }
+            return const _TestView();
+          },
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (err, stack) {
+            _log.severe("Error loading active list for TestScreen", err, stack);
+            return Center(
+              child: CenteredView(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        t.general.genericError(error: err.toString()),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.error,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: () {
+                          ref
+                              .read(activeStudyListIdProvider.notifier)
+                              .set(null);
+                          context.router.replace(const StartRoute());
+                        },
+                        child: Text(t.modeSelectionScreen.returnToWelcome),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+      ),
     );
   }
 }
@@ -32,8 +103,6 @@ class _TestView extends ConsumerStatefulWidget {
 }
 
 class _TestViewState extends ConsumerState<_TestView> {
-  static final _log = Logger("TestView");
-
   late final ScrollController _scrollController;
   final Map<int, TextEditingController> _writtenAnswerControllers = {};
 
@@ -376,7 +445,7 @@ class _TestViewState extends ConsumerState<_TestView> {
       },
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (err, stack) {
-        _log.severe("Error in testControllerProvider", err, stack);
+        TestScreen._log.severe("Error in testControllerProvider", err, stack);
         return Center(
           child: CenteredView(
             child: Padding(

@@ -2,16 +2,16 @@
 a[b][c]=a[b][c]||[]
 a[b][c].push({p:"main.dart.js_1",e:"beginPart"})})(self,"$__dart_deferred_initializers__","eventLog")
 $__dart_deferred_initializers__.current=function(a,b,c,$){var B,A={
-aTq(d,e,f){var w,v,u=null,t=new B.h1(d,x.c),s=new B.h1(d,x.c)
-s=new A.Vk(t,s)
-s.vE(d,u,e,u)
+aTG(d,e,f){var w,v,u=null,t=new B.h3(d,x.c),s=new B.h3(d,x.c)
+s=new A.Vh(t,s)
+s.vF(d,u,e,u)
 w=s.a
 v=t.r
 v.toString
 w.r=v
-t.r=A.b9E(s)
+t.r=A.b9W(s)
 return s},
-b9A(d,e){var w="Quizlone",v="Reiniciar",u="Controles",t="Crear nueva lista",s="Confirmar eliminaci\xf3n",r=y.N,q="Volver a la pantalla de bienvenida",p="Tarjetas",o="Aprender",n="Exportar datos"
+b9S(d,e){var w="Quizlone",v="Reiniciar",u="Controles",t="Crear nueva lista",s="Confirmar eliminaci\xf3n",r=y.N,q="Volver a la pantalla de bienvenida",p="Tarjetas",o="Aprender",n="Exportar datos"
 switch(e){case"appName":return w
 case"general.back":return"Volver"
 case"general.cancel":return"Cancelar"
@@ -23,23 +23,23 @@ case"general.saveAndContinue":return"Guardar y continuar"
 case"general.submit":return"Enviar"
 case"general.all":return"Todos"
 case"general.loading":return"Cargando..."
-case"general.genericError":return new A.aHw()
+case"general.genericError":return new A.aHJ()
 case"general.reset":return v
 case"drawer.settings":return"Ajustes"
 case"drawer.controls":return u
 case"drawer.about":return"Acerca de"
 case"drawer.aboutDialog.legalese":return"\xa9 2025 Quizlone"
 case"drawer.aboutDialog.description":return y.a
-case"aboutScreen.version":return new A.aHx()
+case"aboutScreen.version":return new A.aHK()
 case"aboutScreen.viewLicenses":return"Ver licencias"
 case"startScreen.title":return w
 case"startScreen.welcome":return"\xa1Bienvenido!"
 case"startScreen.createNewList":return t
 case"startScreen.loadSavedList":return"Cargar lista guardada"
 case"startScreen.noLists":return"A\xfan no hay listas guardadas."
-case"startScreen.termCount":return new A.aHy(d)
+case"startScreen.termCount":return new A.aHL(d)
 case"startScreen.confirmDeleteDialog.title":return s
-case"startScreen.confirmDeleteDialog.content":return new A.aHz()
+case"startScreen.confirmDeleteDialog.content":return new A.aHM()
 case"startScreen.renameListDialog.title":return"Renombrar lista"
 case"startScreen.renameListDialog.rename":return"Renombrar"
 case"startScreen.renameListDialog.errorNameExists":return"Ya existe una lista con este nombre."
@@ -54,12 +54,12 @@ case"inputScreen.saveList":return"Guardar lista"
 case"inputScreen.errors.listNameEmpty":return r
 case"inputScreen.errors.noTerms":return y._
 case"inputScreen.errors.invalidFormat":return y.n
-case"inputScreen.errors.emptyTerm":return new A.aHA()
+case"inputScreen.errors.emptyTerm":return new A.aHN()
 case"inputScreen.errors.noValidPairs":return y.O
-case"inputScreen.errors.saveFailed":return new A.aHB()
+case"inputScreen.errors.saveFailed":return new A.aHO()
 case"modeSelectionScreen.title":return"Opciones y Modo"
 case"modeSelectionScreen.noActiveList":return y.X
-case"modeSelectionScreen.debugActiveId":return new A.aHC()
+case"modeSelectionScreen.debugActiveId":return new A.aHP()
 case"modeSelectionScreen.returnToWelcome":return q
 case"modeSelectionScreen.flashcardOptions":return"Opciones de tarjetas"
 case"modeSelectionScreen.showTermFirst":return"Mostrar t\xe9rmino primero"
@@ -92,14 +92,14 @@ case"learnScreen.backToModeSelection":return"Volver a la selecci\xf3n de modo"
 case"learnScreen.errors.noTerms":return y.B
 case"learnScreen.errors.notEnoughTerms":return y.h
 case"learnScreen.feedback.correct":return"\xa1Correcto!"
-case"learnScreen.feedback.incorrect":return new A.aHE()
-case"learnScreen.feedback.hint":return new A.aHF()
-case"learnScreen.feedback.skipped":return new A.aHG()
+case"learnScreen.feedback.incorrect":return new A.aHR()
+case"learnScreen.feedback.hint":return new A.aHS()
+case"learnScreen.feedback.skipped":return new A.aHT()
 case"learnScreen.progress.allLearned":return"\xa1Todos los t\xe9rminos aprendidos!"
-case"learnScreen.progress.cycleStatus":return new A.aHH()
+case"learnScreen.progress.cycleStatus":return new A.aHU()
 case"learnScreen.progress.sessionComplete":return y.R
-case"learnScreen.progress.maxCyclesReached":return new A.aHI(d)
-case"learnScreen.progress.startingCycle":return new A.aHJ()
+case"learnScreen.progress.maxCyclesReached":return new A.aHV(d)
+case"learnScreen.progress.startingCycle":return new A.aHW()
 case"testScreen.title":return"Prueba"
 case"testScreen.noQuestions":return"No hay preguntas para esta prueba."
 case"testScreen.viewResults":return"Ver resultados"
@@ -111,9 +111,9 @@ case"resultsScreen.title":return"Resultados de la prueba"
 case"resultsScreen.notSubmitted":return"La prueba a\xfan no se ha enviado."
 case"resultsScreen.noQuestions":return"No hab\xeda preguntas en esta prueba."
 case"resultsScreen.yourScore":return"Tu puntuaci\xf3n"
-case"resultsScreen.scoreFraction":return new A.aHK()
+case"resultsScreen.scoreFraction":return new A.aHX()
 case"resultsScreen.reviewIncorrect":return"Revisar respuestas incorrectas:"
-case"resultsScreen.yourAnswerWas":return new A.aHL()
+case"resultsScreen.yourAnswerWas":return new A.aHY()
 case"resultsScreen.noAnswer":return"(Sin respuesta)"
 case"resultsScreen.congratulations":return"\xa1Felicidades! \xa1Acertaste todo!"
 case"resultsScreen.retryTest":return"Reintentar prueba"
@@ -151,10 +151,10 @@ case"settingsScreen.deleteDialog.content":return y.x
 case"settingsScreen.deleteDialog.deleteAll":return"Eliminar todo"
 case"settingsScreen.snackbars.noDataToExport":return"No hay datos para exportar."
 case"settingsScreen.snackbars.exportSuccess":return"\xa1Datos exportados con \xe9xito!"
-case"settingsScreen.snackbars.exportError":return new A.aHM()
+case"settingsScreen.snackbars.exportError":return new A.aHZ()
 case"settingsScreen.snackbars.fileSaved":return"\xa1Archivo guardado con \xe9xito!"
-case"settingsScreen.snackbars.importSuccess":return new A.aHN()
-case"settingsScreen.snackbars.importError":return new A.aHP()
+case"settingsScreen.snackbars.importSuccess":return new A.aI_()
+case"settingsScreen.snackbars.importError":return new A.aI1()
 case"settingsScreen.snackbars.allDeleted":return y.J
 case"controlsScreen.title":return u
 case"controlsScreen.gesturesTitle":return"Gestos (Tarjetas)"
@@ -169,423 +169,423 @@ case"controlsScreen.arrowRight":return"Tecla de flecha derecha"
 case"controlsScreen.arrowLeft":return"Tecla de flecha izquierda"
 case"controlsScreen.arrowVerticalOrSpace":return y.b
 default:return null}},
-b9E(d){return new A.aHV(d)},
-Vk:function Vk(d,e){var _=this
+b9W(d){return new A.aI7(d)},
+Vh:function Vh(d,e){var _=this
 _.ax=d
 _.id=_.go=_.fy=_.fx=_.fr=_.dy=_.dx=_.db=_.cy=_.cx=_.CW=_.ch=_.ay=$
 _.a=e
 _.at=_.as=_.Q=_.z=_.y=_.x=_.w=_.r=_.f=_.e=_.d=_.c=_.b=$},
-aEy:function aEy(){},
-aEq:function aEq(d,e){var _=this
+aEL:function aEL(){},
+aED:function aED(d,e){var _=this
 _.c=d
 _.d=$
 _.a=e
 _.b=$},
-aEe:function aEe(){},
-aFr:function aFr(d,e){var _=this
+aEr:function aEr(){},
+aFE:function aFE(d,e){var _=this
 _.d=d
 _.f=_.e=$
 _.a=e
 _.c=_.b=$},
-aEG:function aEG(d,e){var _=this
+aET:function aET(d,e){var _=this
 _.c=d
 _.d=$
 _.a=e
 _.b=$},
-aF_:function aF_(){},
-aEu:function aEu(){},
-aEO:function aEO(d,e){var _=this
+aFc:function aFc(){},
+aEH:function aEH(){},
+aF0:function aF0(d,e){var _=this
 _.e=d
 _.w=_.r=_.f=$
 _.a=e
 _.d=_.c=_.b=$},
-aFD:function aFD(d,e){var _=this
+aFQ:function aFQ(d,e){var _=this
 _.c=d
 _.d=$
 _.a=e
 _.b=$},
-aF3:function aF3(){},
-aFb:function aFb(d,e){var _=this
+aFg:function aFg(){},
+aFo:function aFo(d,e){var _=this
 _.f=d
 _.y=_.x=_.w=$
 _.a=e
 _.e=_.d=_.c=$},
-aEi:function aEi(){},
-aEm:function aEm(){},
-aFn:function aFn(){},
-aFt:function aFt(){},
-aEC:function aEC(){},
-aEK:function aEK(){},
+aEv:function aEv(){},
+aEz:function aEz(){},
+aFA:function aFA(){},
+aFG:function aFG(){},
 aEP:function aEP(){},
-aEU:function aEU(d,e){this.b=d
+aEX:function aEX(){},
+aF1:function aF1(){},
+aF6:function aF6(d,e){this.b=d
 this.a=e},
-aFz:function aFz(){},
-aFd:function aFd(){},
-aF7:function aF7(){},
-aFi:function aFi(){},
-aHV:function aHV(d){this.a=d},
-aHw:function aHw(){},
-aHx:function aHx(){},
-aHy:function aHy(d){this.a=d},
-aHz:function aHz(){},
-aHA:function aHA(){},
-aHB:function aHB(){},
-aHC:function aHC(){},
-aHE:function aHE(){},
-aHF:function aHF(){},
-aHG:function aHG(){},
-aHH:function aHH(){},
-aHI:function aHI(d){this.a=d},
+aFM:function aFM(){},
+aFq:function aFq(){},
+aFk:function aFk(){},
+aFv:function aFv(){},
+aI7:function aI7(d){this.a=d},
 aHJ:function aHJ(){},
 aHK:function aHK(){},
-aHL:function aHL(){},
+aHL:function aHL(d){this.a=d},
 aHM:function aHM(){},
 aHN:function aHN(){},
-aHP:function aHP(){}}
+aHO:function aHO(){},
+aHP:function aHP(){},
+aHR:function aHR(){},
+aHS:function aHS(){},
+aHT:function aHT(){},
+aHU:function aHU(){},
+aHV:function aHV(d){this.a=d},
+aHW:function aHW(){},
+aHX:function aHX(){},
+aHY:function aHY(){},
+aHZ:function aHZ(){},
+aI_:function aI_(){},
+aI1:function aI1(){}}
 B=c[0]
 A=a.updateHolder(c[3],A)
-A.Vk.prototype={
+A.Vh.prototype={
 gi_(){var w=this.ay
 if(w===$){w!==$&&B.v()
 w=this.ay=this}return w},
-gnx(d){return"Quizlone"},
-gej(){var w=this,v=w.ch
+gny(d){return"Quizlone"},
+gdK(){var w=this,v=w.ch
 if(v===$){w.gi_()
 w.ch!==$&&B.v()
-v=w.ch=new A.aEy()}return v},
-glt(){var w,v=this,u=v.CW
+v=w.ch=new A.aEL()}return v},
+glu(){var w,v=this,u=v.CW
 if(u===$){w=v.gi_()
 v.CW!==$&&B.v()
-u=v.CW=new A.aEq(w,w)}return u},
-grW(){var w=this,v=w.cx
+u=v.CW=new A.aED(w,w)}return u},
+grX(){var w=this,v=w.cx
 if(v===$){w.gi_()
 w.cx!==$&&B.v()
-v=w.cx=new A.aEe()}return v},
+v=w.cx=new A.aEr()}return v},
 gfj(){var w,v=this,u=v.cy
 if(u===$){w=v.gi_()
 v.cy!==$&&B.v()
-u=v.cy=new A.aFr(w,w)}return u},
+u=v.cy=new A.aFE(w,w)}return u},
 gfp(){var w,v=this,u=v.db
 if(u===$){w=v.gi_()
 v.db!==$&&B.v()
-u=v.db=new A.aEG(w,w)}return u},
-gdE(){var w=this,v=w.dx
+u=v.db=new A.aET(w,w)}return u},
+gcD(){var w=this,v=w.dx
 if(v===$){w.gi_()
 w.dx!==$&&B.v()
-v=w.dx=new A.aF_()}return v},
-gms(){var w=this,v=w.dy
+v=w.dx=new A.aFc()}return v},
+gmu(){var w=this,v=w.dy
 if(v===$){w.gi_()
 w.dy!==$&&B.v()
-v=w.dy=new A.aEu()}return v},
-geo(){var w,v=this,u=v.fr
+v=w.dy=new A.aEH()}return v},
+gep(){var w,v=this,u=v.fr
 if(u===$){w=v.gi_()
 v.fr!==$&&B.v()
-u=v.fr=new A.aEO(w,w)}return u},
-gl_(){var w,v=this,u=v.fx
+u=v.fr=new A.aF0(w,w)}return u},
+gl1(){var w,v=this,u=v.fx
 if(u===$){w=v.gi_()
 v.fx!==$&&B.v()
-u=v.fx=new A.aFD(w,w)}return u},
+u=v.fx=new A.aFQ(w,w)}return u},
 ghw(){var w=this,v=w.fy
 if(v===$){w.gi_()
 w.fy!==$&&B.v()
-v=w.fy=new A.aF3()}return v},
+v=w.fy=new A.aFg()}return v},
 gcj(){var w,v=this,u=v.go
 if(u===$){w=v.gi_()
 v.go!==$&&B.v()
-u=v.go=new A.aFb(w,w)}return u},
+u=v.go=new A.aFo(w,w)}return u},
 gf8(){var w=this,v=w.id
 if(v===$){w.gi_()
 w.id!==$&&B.v()
-v=w.id=new A.aEi()}return v},
-glQ(){return this.ax}}
-A.aEy.prototype={
-gx3(d){return"Volver"},
+v=w.id=new A.aEv()}return v},
+glS(){return this.ax}}
+A.aEL.prototype={
+gx4(d){return"Volver"},
 gi9(d){return"Cancelar"},
-gqy(d){return"Eliminar"},
+gqz(d){return"Eliminar"},
 giq(d){return"Siguiente"},
-god(){return"Anterior"},
-gvr(d){return"Enviar"},
-gwQ(){return"Todos"},
-gz3(){return"Cargando..."},
-l6(d){return"Error: "+d},
+gof(){return"Anterior"},
+gvs(d){return"Enviar"},
+gwR(){return"Todos"},
+gz4(){return"Cargando..."},
+ix(d){return"Error: "+d},
 gzN(d){return"Reiniciar"}}
-A.aEq.prototype={
-gv9(){return"Ajustes"},
-gxk(d){return"Controles"},
-grU(){return"Acerca de"},
-grV(){var w=this.d
+A.aED.prototype={
+gva(){return"Ajustes"},
+gxl(d){return"Controles"},
+grV(){return"Acerca de"},
+grW(){var w=this.d
 if(w===$){w!==$&&B.v()
-w=this.d=new A.aEm()}return w}}
-A.aEe.prototype={
+w=this.d=new A.aEz()}return w}}
+A.aEr.prototype={
 Aa(d,e){return"Versi\xf3n "+e},
 gAb(){return"Ver licencias"}}
-A.aFr.prototype={
+A.aFE.prototype={
 gaA(d){return"Quizlone"},
 gAe(){return"\xa1Bienvenido!"},
-gxy(){return"Crear nueva lista"},
-gz2(){return"Cargar lista guardada"},
+gxz(){return"Crear nueva lista"},
+gz3(){return"Cargar lista guardada"},
 gzl(){return"A\xfan no hay listas guardadas."},
-uy(d){var w=B.eV("es")
+uz(d){var w=B.eX("es")
 return w.$3$one$other(d,"1 t\xe9rmino",""+d+" t\xe9rminos")},
-gtg(){var w=this.e
+gth(){var w=this.e
 if(w===$){w!==$&&B.v()
-w=this.e=new A.aFn()}return w},
-gmQ(){var w=this.f
+w=this.e=new A.aFA()}return w},
+gmS(){var w=this.f
 if(w===$){w!==$&&B.v()
-w=this.f=new A.aFt()}return w}}
-A.aEG.prototype={
+w=this.f=new A.aFG()}return w}}
+A.aET.prototype={
 gaA(d){return"Crear nueva lista"},
-gu5(){return"Nombre de la lista"},
-gyZ(){return"p. ej., Vocabulario del Cap\xedtulo 1"},
+gu6(){return"Nombre de la lista"},
+gz_(){return"p. ej., Vocabulario del Cap\xedtulo 1"},
 gzy(){return"Pega tus t\xe9rminos a continuaci\xf3n:"},
 gzz(){return y.C},
 gzY(){return y.P},
-guZ(){return"Guardar lista"},
-ge3(){var w=this.d
+gv_(){return"Guardar lista"},
+ge5(){var w=this.d
 if(w===$){w!==$&&B.v()
-w=this.d=new A.aEC()}return w}}
-A.aF_.prototype={
+w=this.d=new A.aEP()}return w}}
+A.aFc.prototype={
 gaA(d){return"Opciones y Modo"},
-gzh(){return y.X},
-gmS(){return"Volver a la pantalla de bienvenida"},
-gyg(){return"Opciones de tarjetas"},
-gve(){return"Mostrar t\xe9rmino primero"},
-gvc(){return"Mostrar definici\xf3n primero"},
-gt7(){return"Mostrar definici\xf3n, preguntar t\xe9rmino"},
-gt6(){return"Mostrar t\xe9rmino, preguntar definici\xf3n"},
-gvq(){return"Longitud de estudio:"},
+go6(){return y.X},
+ghO(){return"Volver a la pantalla de bienvenida"},
+gyh(){return"Opciones de tarjetas"},
+gvf(){return"Mostrar t\xe9rmino primero"},
+gvd(){return"Mostrar definici\xf3n primero"},
+gt8(){return"Mostrar definici\xf3n, preguntar t\xe9rmino"},
+gt7(){return"Mostrar t\xe9rmino, preguntar definici\xf3n"},
+gvr(){return"Longitud de estudio:"},
 gAj(){return"Respuesta escrita"},
-gzf(){return"Opci\xf3n m\xfaltiple"},
-gyh(){return"Tarjetas"},
-gu2(){return"Aprender"},
-guz(){return"Prueba"}}
-A.aEu.prototype={
+gzg(){return"Opci\xf3n m\xfaltiple"},
+gyi(){return"Tarjetas"},
+gu3(){return"Aprender"},
+guA(){return"Prueba"}}
+A.aEH.prototype={
 gaA(d){return"Tarjetas"},
 gzj(){return"No hay tarjetas para mostrar."},
-geq(){return y.f},
-gvh(d){return"Barajar"},
-gqj(){return"Reiniciar"}}
-A.aEO.prototype={
+ger(){return y.f},
+gvi(d){return"Barajar"},
+gqk(){return"Reiniciar"}}
+A.aF0.prototype={
 gaA(d){return"Aprender"},
 gzR(){return"Reiniciar sesi\xf3n de aprendizaje"},
-gx4(){return"Volver a las opciones"},
-gt1(){return"Escribe tu respuesta aqu\xed..."},
-gpP(d){return"Pista"},
-gvi(d){return"Saltar"},
-ge3(){var w=this.f
+gx5(){return"Volver a las opciones"},
+gt2(){return"Escribe tu respuesta aqu\xed..."},
+gpR(d){return"Pista"},
+gvj(d){return"Saltar"},
+ge5(){var w=this.f
 if(w===$){w!==$&&B.v()
-w=this.f=new A.aEK()}return w},
-gnQ(){var w=this.r
+w=this.f=new A.aEX()}return w},
+gnR(){var w=this.r
 if(w===$){w!==$&&B.v()
-w=this.r=new A.aEP()}return w},
-glE(){var w,v=this.w
+w=this.r=new A.aF1()}return w},
+glF(){var w,v=this.w
 if(v===$){w=this.e
 v!==$&&B.v()
-v=this.w=new A.aEU(w,w)}return v}}
-A.aFD.prototype={
+v=this.w=new A.aF6(w,w)}return v}}
+A.aFQ.prototype={
 gaA(d){return"Prueba"},
-gkS(){return"No hay preguntas para esta prueba."},
+gkU(){return"No hay preguntas para esta prueba."},
 gAc(){return"Ver resultados"},
-gvs(){return"Enviar prueba"},
-ge3(){var w=this.d
+gvt(){return"Enviar prueba"},
+ge5(){var w=this.d
 if(w===$){w!==$&&B.v()
-w=this.d=new A.aFz()}return w}}
-A.aF3.prototype={
+w=this.d=new A.aFM()}return w}}
+A.aFg.prototype={
 gaA(d){return"Resultados de la prueba"},
-gkS(){return"No hab\xeda preguntas en esta prueba."},
+gkU(){return"No hab\xeda preguntas en esta prueba."},
 gAl(){return"Tu puntuaci\xf3n"},
-v1(d,e){return""+d+" / "+e+" correctas"},
-gql(){return"Revisar respuestas incorrectas:"},
+v2(d,e){return""+d+" / "+e+" correctas"},
+gqm(){return"Revisar respuestas incorrectas:"},
 Ak(d){return"Tu respuesta: "+d},
 gzi(){return"(Sin respuesta)"},
-gxi(){return"\xa1Felicidades! \xa1Acertaste todo!"},
+gxj(){return"\xa1Felicidades! \xa1Acertaste todo!"},
 gzS(){return"Reintentar prueba"},
 gzU(){return"Revisar con tarjetas"}}
-A.aFb.prototype={
+A.aFo.prototype={
 gaA(d){return"Ajustes"},
-gwT(d){return"Apariencia"},
-gu0(d){return"Idioma"},
-gyR(){return"Seleccionar idioma"},
-guF(){return"Escalado de la interfaz"},
+gwU(d){return"Apariencia"},
+gu1(d){return"Idioma"},
+gyS(){return"Seleccionar idioma"},
+guG(){return"Escalado de la interfaz"},
 gA4(){return y.L},
-gr8(){return"Predeterminado del sistema"},
-gyX(){return"Claro"},
-gxE(){return"Oscuro"},
-gxY(){return"Ingl\xe9s"},
-gyf(){return"Finland\xe9s"},
+gr9(){return"Predeterminado del sistema"},
+gyY(){return"Claro"},
+gxF(){return"Oscuro"},
+gxZ(){return"Ingl\xe9s"},
+gyg(){return"Finland\xe9s"},
 gzX(){return"Ruso"},
-gvl(){return"Espa\xf1ol"},
-gvy(){return"Sueco"},
-gxF(){return"Gesti\xf3n de datos"},
-gy5(){return"Exportar datos"},
-gy6(){return"Guardar todas las listas en un archivo"},
-gyv(){return"Importar datos"},
-gyw(){return"Cargar listas desde un archivo"},
-gxK(){return"Eliminar todos los datos"},
-gpQ(){var w=this.w
+gvm(){return"Espa\xf1ol"},
+gvz(){return"Sueco"},
+gxG(){return"Gesti\xf3n de datos"},
+gy6(){return"Exportar datos"},
+gy7(){return"Guardar todas las listas en un archivo"},
+gyw(){return"Importar datos"},
+gyx(){return"Cargar listas desde un archivo"},
+gxL(){return"Eliminar todos los datos"},
+gpS(){var w=this.w
 if(w===$){w!==$&&B.v()
-w=this.w=new A.aFd()}return w},
-gpf(){var w=this.x
+w=this.w=new A.aFq()}return w},
+gph(){var w=this.x
 if(w===$){w!==$&&B.v()
-w=this.x=new A.aF7()}return w},
-gm_(){var w=this.y
+w=this.x=new A.aFk()}return w},
+gm1(){var w=this.y
 if(w===$){w!==$&&B.v()
-w=this.y=new A.aFi()}return w}}
-A.aEi.prototype={
+w=this.y=new A.aFv()}return w}}
+A.aEv.prototype={
 gaA(d){return"Controles"},
-guK(){return"Gestos (Tarjetas)"},
-gyO(){return"Teclado (Tarjetas)"},
-go4(){return"Siguiente tarjeta"},
-goe(){return"Tarjeta anterior"},
-gnX(){return"Voltear tarjeta"},
-gvz(){return"Deslizar a la izquierda"},
-gvA(){return"Deslizar a la derecha"},
-gvB(){return"Deslizar hacia arriba o abajo"},
-gwX(){return"Tecla de flecha derecha"},
-gwW(){return"Tecla de flecha izquierda"},
-gwY(){return y.b}}
-A.aEm.prototype={
-gyV(){return"\xa9 2025 Quizlone"},
-gxM(d){return y.a}}
-A.aFn.prototype={
+guL(){return"Gestos (Tarjetas)"},
+gyP(){return"Teclado (Tarjetas)"},
+go5(){return"Siguiente tarjeta"},
+gog(){return"Tarjeta anterior"},
+gnY(){return"Voltear tarjeta"},
+gvA(){return"Deslizar a la izquierda"},
+gvB(){return"Deslizar a la derecha"},
+gvC(){return"Deslizar hacia arriba o abajo"},
+gwY(){return"Tecla de flecha derecha"},
+gwX(){return"Tecla de flecha izquierda"},
+gwZ(){return y.b}}
+A.aEz.prototype={
+gyW(){return"\xa9 2025 Quizlone"},
+gxN(d){return y.a}}
+A.aFA.prototype={
 gaA(d){return"Confirmar eliminaci\xf3n"},
-xj(d,e){return"\xbfEst\xe1s seguro de que quieres eliminar '"+e+"'?"}}
-A.aFt.prototype={
+xk(d,e){return"\xbfEst\xe1s seguro de que quieres eliminar '"+e+"'?"}}
+A.aFG.prototype={
 gaA(d){return"Renombrar lista"},
-guo(){return"Renombrar"},
-gy_(){return"Ya existe una lista con este nombre."},
-gxZ(){return y.N}}
-A.aEC.prototype={
-gyY(){return y.N},
-geq(){return y._},
-gyH(){return y.n},
-xV(d){return"Error de formato cerca de la l\xednea "+d+y.Z},
-gzm(){return y.O},
-uY(d){return"No se pudo guardar la lista: "+d}}
-A.aEK.prototype={
-geq(){return y.B},
-gkT(){return y.h}}
+guq(){return"Renombrar"},
+gy0(){return"Ya existe una lista con este nombre."},
+gy_(){return y.N}}
 A.aEP.prototype={
-gxt(){return"\xa1Correcto!"},
-yz(d){return"Incorrecto. La respuesta correcta es: "+d},
-yr(d,e){return'Pista: Empieza con "'+e+'"'},
-vj(d){return"Saltado. La respuesta era: "+d}}
-A.aEU.prototype={
-gwS(){return"\xa1Todos los t\xe9rminos aprendidos!"},
-tl(d,e,f){return"Ciclo "+d+" | Elemento "+e+" de "+f},
-gv5(){return y.R},
-z7(d){var w=B.eV("es")
+gyZ(){return y.N},
+ger(){return y._},
+gyI(){return y.n},
+xW(d){return"Error de formato cerca de la l\xednea "+d+y.Z},
+gzm(){return y.O},
+uZ(d){return"No se pudo guardar la lista: "+d}}
+A.aEX.prototype={
+ger(){return y.B},
+gkV(){return y.h}}
+A.aF1.prototype={
+gxu(){return"\xa1Correcto!"},
+yA(d){return"Incorrecto. La respuesta correcta es: "+d},
+ys(d,e){return'Pista: Empieza con "'+e+'"'},
+vk(d){return"Saltado. La respuesta era: "+d}}
+A.aF6.prototype={
+gwT(){return"\xa1Todos los t\xe9rminos aprendidos!"},
+tm(d,e,f){return"Ciclo "+d+" | Elemento "+e+" de "+f},
+gv6(){return y.R},
+z8(d){var w=B.eX("es")
 return w.$3$one$other(d,y.H,"Se alcanz\xf3 el m\xe1ximo de ciclos. Quedan "+d+" elementos por repasar.")},
-vn(d,e){return"Iniciando ciclo "+e+" con "+d+" elemento(s)..."}}
-A.aFz.prototype={
-gz1(){return y.Q},
-geq(){return y.I},
-gkT(){return y.W}}
-A.aFd.prototype={
+vo(d,e){return"Iniciando ciclo "+e+" con "+d+" elemento(s)..."}}
+A.aFM.prototype={
+gz2(){return y.Q},
+ger(){return y.I},
+gkV(){return y.W}}
+A.aFq.prototype={
 gaA(d){return"Confirmar importaci\xf3n"},
-gkw(d){return y.s},
-guW(d){return"Importar"}}
-A.aF7.prototype={
+gky(d){return y.s},
+guX(d){return"Importar"}}
+A.aFk.prototype={
 gaA(d){return"Confirmar eliminaci\xf3n"},
-gkw(d){return y.x},
-gxJ(){return"Eliminar todo"}}
-A.aFi.prototype={
+gky(d){return y.x},
+gxK(){return"Eliminar todo"}}
+A.aFv.prototype={
 gzk(){return"No hay datos para exportar."},
-y7(d){return"Error al exportar datos: "+d},
-yy(d){return"\xa1Se importaron "+d+" listas con \xe9xito!"},
-yx(d){return"Error al importar datos: "+d},
-gwR(){return y.J}}
+y8(d){return"Error al exportar datos: "+d},
+yz(d){return"\xa1Se importaron "+d+" listas con \xe9xito!"},
+yy(d){return"Error al importar datos: "+d},
+gwS(){return y.J}}
 var z=a.updateTypes([])
-A.aHV.prototype={
-$1(d){return A.b9A(this.a,d)},
-$S:53}
-A.aHw.prototype={
+A.aI7.prototype={
+$1(d){return A.b9S(this.a,d)},
+$S:54}
+A.aHJ.prototype={
 $1$error(d){return"Error: "+B.j(d)},
 $S:11}
-A.aHx.prototype={
+A.aHK.prototype={
 $1$version(d){return"Versi\xf3n "+B.j(d)},
 $S:76}
-A.aHy.prototype={
+A.aHL.prototype={
 $1$count(d){var w
 this.a.gi_()
-w=B.eV("es")
+w=B.eX("es")
 return w.$3$one$other(d,"1 t\xe9rmino",B.j(d)+" t\xe9rminos")},
 $S:39}
-A.aHz.prototype={
+A.aHM.prototype={
 $1$listName(d){return"\xbfEst\xe1s seguro de que quieres eliminar '"+B.j(d)+"'?"},
 $S:78}
-A.aHA.prototype={
+A.aHN.prototype={
 $1$line(d){return"Error de formato cerca de la l\xednea "+B.j(d)+y.Z},
-$S:92}
-A.aHB.prototype={
+$S:79}
+A.aHO.prototype={
 $1$error(d){return"No se pudo guardar la lista: "+B.j(d)},
 $S:11}
-A.aHC.prototype={
+A.aHP.prototype={
 $1$id(d){return"Depuraci\xf3n: El ID activo actual es "+B.j(d)},
-$S:80}
-A.aHE.prototype={
+$S:92}
+A.aHR.prototype={
 $1$answer(d){return"Incorrecto. La respuesta correcta es: "+B.j(d)},
 $S:22}
-A.aHF.prototype={
+A.aHS.prototype={
 $1$char(d){return'Pista: Empieza con "'+B.j(d)+'"'},
 $S:82}
-A.aHG.prototype={
+A.aHT.prototype={
 $1$answer(d){return"Saltado. La respuesta era: "+B.j(d)},
 $S:22}
-A.aHH.prototype={
+A.aHU.prototype={
 $3$cycleNum$itemNum$total(d,e,f){return"Ciclo "+B.j(d)+" | Elemento "+B.j(e)+" de "+B.j(f)},
 $S:83}
-A.aHI.prototype={
+A.aHV.prototype={
 $1$count(d){var w
 this.a.gi_()
-w=B.eV("es")
+w=B.eX("es")
 return w.$3$one$other(d,y.H,"Se alcanz\xf3 el m\xe1ximo de ciclos. Quedan "+B.j(d)+" elementos por repasar.")},
 $S:39}
-A.aHJ.prototype={
+A.aHW.prototype={
 $2$count$cycleNum(d,e){return"Iniciando ciclo "+B.j(e)+" con "+B.j(d)+" elemento(s)..."},
 $S:84}
-A.aHK.prototype={
+A.aHX.prototype={
 $2$score$total(d,e){return B.j(d)+" / "+B.j(e)+" correctas"},
 $S:85}
-A.aHL.prototype={
+A.aHY.prototype={
 $1$answer(d){return"Tu respuesta: "+B.j(d)},
 $S:22}
-A.aHM.prototype={
+A.aHZ.prototype={
 $1$error(d){return"Error al exportar datos: "+B.j(d)},
 $S:11}
-A.aHN.prototype={
+A.aI_.prototype={
 $1$count(d){return"\xa1Se importaron "+B.j(d)+" listas con \xe9xito!"},
 $S:86}
-A.aHP.prototype={
+A.aI1.prototype={
 $1$error(d){return"Error al importar datos: "+B.j(d)},
 $S:11};(function inheritance(){var w=a.inherit,v=a.inheritMany
-w(A.Vk,B.di)
-w(A.aEy,B.ud)
-w(A.aEq,B.ub)
-w(A.aEe,B.u8)
-w(A.aFr,B.ur)
-w(A.aEG,B.ue)
-w(A.aF_,B.uk)
-w(A.aEu,B.uc)
-w(A.aEO,B.ug)
-w(A.aFD,B.ut)
-w(A.aF3,B.ul)
-w(A.aFb,B.un)
-w(A.aEi,B.u9)
-w(A.aEm,B.ua)
-w(A.aFn,B.uq)
-w(A.aFt,B.us)
-w(A.aEC,B.uf)
-w(A.aEK,B.uh)
-w(A.aEP,B.ui)
-w(A.aEU,B.uj)
-w(A.aFz,B.uu)
-w(A.aFd,B.uo)
-w(A.aF7,B.um)
-w(A.aFi,B.up)
-v(B.j6,[A.aHV,A.aHw,A.aHx,A.aHy,A.aHz,A.aHA,A.aHB,A.aHC,A.aHE,A.aHF,A.aHG,A.aHH,A.aHI,A.aHJ,A.aHK,A.aHL,A.aHM,A.aHN,A.aHP])})()
-B.a3h(b.typeUniverse,JSON.parse('{"Vk":{"di":[],"hD":["dE","di"]}}'))
+w(A.Vh,B.di)
+w(A.aEL,B.ub)
+w(A.aED,B.u9)
+w(A.aEr,B.u6)
+w(A.aFE,B.up)
+w(A.aET,B.uc)
+w(A.aFc,B.ui)
+w(A.aEH,B.ua)
+w(A.aF0,B.ue)
+w(A.aFQ,B.ur)
+w(A.aFg,B.uj)
+w(A.aFo,B.ul)
+w(A.aEv,B.u7)
+w(A.aEz,B.u8)
+w(A.aFA,B.uo)
+w(A.aFG,B.uq)
+w(A.aEP,B.ud)
+w(A.aEX,B.uf)
+w(A.aF1,B.ug)
+w(A.aF6,B.uh)
+w(A.aFM,B.us)
+w(A.aFq,B.um)
+w(A.aFk,B.uk)
+w(A.aFv,B.un)
+v(B.j9,[A.aI7,A.aHJ,A.aHK,A.aHL,A.aHM,A.aHN,A.aHO,A.aHP,A.aHR,A.aHS,A.aHT,A.aHU,A.aHV,A.aHW,A.aHX,A.aHY,A.aHZ,A.aI_,A.aI1])})()
+B.a3e(b.typeUniverse,JSON.parse('{"Vh":{"di":[],"hG":["dF","di"]}}'))
 var y={C:"(T\xe9rmino en una l\xednea, definici\xf3n en la siguiente)",Z:". Se encontr\xf3 un t\xe9rmino o definici\xf3n vac\xedos.",L:"Ajusta el tama\xf1o del texto y los elementos de la interfaz",N:"El nombre de la lista no puede estar vac\xedo.",Q:"Error al cargar la lista de estudio para la prueba.",s:"Esto importar\xe1 listas de estudio desde un archivo. Cualquier lista existente con el mismo nombre ser\xe1 sobrescrita. \xbfContinuar?",n:"Formato inv\xe1lido. Cada t\xe9rmino necesita una definici\xf3n en la siguiente l\xednea.",P:"Justicia\nEl principio de rectitud moral\nSol\nUna estrella que es el centro de un sistema planetario",W:"No hay suficientes t\xe9rminos para la longitud de estudio seleccionada.",h:"No hay suficientes t\xe9rminos para la longitud seleccionada.",B:"No hay t\xe9rminos disponibles para el modo de aprendizaje.",f:"No hay t\xe9rminos disponibles para estudiar.",I:"No hay t\xe9rminos disponibles para la prueba.",O:"No se encontraron pares de t\xe9rmino/definici\xf3n v\xe1lidos.",X:"No se encontr\xf3 una lista de estudio activa o no se pudo cargar la lista.",_:"No se han introducido t\xe9rminos/definiciones.",H:"Se alcanz\xf3 el m\xe1ximo de ciclos. Queda 1 elemento por repasar.",b:"Teclas de flecha arriba/abajo o Barra espaciadora",J:"Todas las listas de estudio han sido eliminadas.",a:"Una aplicaci\xf3n de estudio simple y moderna creada con Flutter.",R:"\xa1Sesi\xf3n de aprendizaje completa! \xa1Bien hecho!",x:"\xbfEst\xe1s seguro de que quieres eliminar TODAS las listas de estudio? Esta acci\xf3n no se puede deshacer."}
-var x={c:B.ao("h1<dE,di>")}};
+var x={c:B.al("h3<dF,di>")}};
 ((a,b)=>{a[b]=a.current
-a.eventLog.push({p:"main.dart.js_1",e:"endPart",h:b})})($__dart_deferred_initializers__,"Sv4kLWW+UYmPPH7mQhRBPnCy1kw=");
+a.eventLog.push({p:"main.dart.js_1",e:"endPart",h:b})})($__dart_deferred_initializers__,"tLyhZOngKXx7Y3UH53XWQ0uRRWo=");

@@ -40,11 +40,11 @@ void _setupLogging() {
 class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
+  static final _appRouter = AppRouter();
   static final _log = Logger('MyApp');
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final appRouter = AppRouter(ref);
     MyApp._log.info("Building MyApp widget");
     final themeMode = ref.watch(appThemeProvider);
     final uiScale = ref.watch(uiScaleNotifierProvider);
@@ -60,10 +60,7 @@ class MyApp extends ConsumerWidget {
           fontSize: 14,
         ),
         actionTextColor: colorScheme.inversePrimary,
-        insetPadding: const EdgeInsets.symmetric(
-          horizontal: 16.0,
-          vertical: 10.0,
-        ),
+        insetPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
         elevation: 4.0,
       );
     }
@@ -109,7 +106,7 @@ class MyApp extends ConsumerWidget {
         );
       },
       debugShowCheckedModeBanner: false,
-      routerConfig: appRouter.config(),
+      routerConfig: _appRouter.config(),
     );
   }
 }
