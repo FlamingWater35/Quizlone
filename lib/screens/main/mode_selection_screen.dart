@@ -199,18 +199,46 @@ class _ListHeader extends StatelessWidget {
   }
 }
 
-class _OptionsPanel extends ConsumerWidget {
+class _OptionsPanel extends ConsumerStatefulWidget {
   const _OptionsPanel();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_OptionsPanel> createState() => _OptionsPanelState();
+}
+
+class _OptionsPanelState extends ConsumerState<_OptionsPanel> {
+  late final TextEditingController _studyLengthController;
+
+  @override
+  void dispose() {
+    _studyLengthController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    final initialValue = ref.read(studyLengthProvider);
+    _studyLengthController = TextEditingController(
+      text: initialValue?.toString() ?? '',
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    ref.listen<int?>(studyLengthProvider, (previous, next) {
+      final newText = next?.toString() ?? '';
+      if (newText != _studyLengthController.text) {
+        _studyLengthController.text = newText;
+      }
+    });
+
     final t = Translations.of(context);
     final totalTerms =
         ref.watch(activeStudyListProvider).asData?.value?.terms.length ?? 0;
 
     final fcStartWith = ref.watch(flashcardStartWithProvider);
     final studyAskWith = ref.watch(studyAskWithProvider);
-    final studyLength = ref.watch(studyLengthProvider);
     final testFormat = ref.watch(testQuestionFormatProvider);
 
     return Column(
@@ -284,7 +312,7 @@ class _OptionsPanel extends ConsumerWidget {
                   SizedBox(
                     width: 80,
                     child: TextFormField(
-                      initialValue: studyLength?.toString() ?? '',
+                      controller: _studyLengthController,
                       decoration: InputDecoration(
                         hintText: t.general.all,
                         border: const OutlineInputBorder(),
