@@ -110,9 +110,11 @@ class DatabaseService {
     }
 
     final oldName = listToRename.name;
-    listToRename.name = newName;
-    listToRename.updateLastUsed();
-    await _box.put(id, listToRename);
+    final updatedList = listToRename.copyWith(
+      name: newName,
+      lastUsedAt: DateTime.now(),
+    );
+    await _box.put(id, updatedList);
 
     final Map<dynamic, MatchRecord> recordsToUpdate = {};
     final allRecords = _matchRecordsBox.toMap();

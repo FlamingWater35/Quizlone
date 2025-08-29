@@ -80,7 +80,6 @@ class StartScreen extends ConsumerWidget {
                           content: Text(
                             t.startScreen.renameListDialog.errorNameExists,
                           ),
-                          backgroundColor: Theme.of(context).colorScheme.error,
                         ),
                       );
                     }

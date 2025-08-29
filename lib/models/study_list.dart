@@ -57,4 +57,31 @@ class StudyList {
   }
 
   Map<String, dynamic> toJson() => _$StudyListToJson(this);
+
+  StudyList copyWith({
+    String? id,
+    String? name,
+    List<Term>? terms,
+    DateTime? createdAt,
+    DateTime? lastUsedAt,
+    DateTime? lastOpenedAt,
+    bool? flashcardShowTermFirst,
+    bool? studyShowDefinitionAskTerm,
+    int? testStudyLength,
+    TestFormat? testFormat,
+  }) {
+    return StudyList()
+      ..id = id ?? this.id
+      ..name = name ?? this.name
+      ..terms = terms ?? this.terms
+      ..createdAt = createdAt ?? this.createdAt
+      ..lastUsedAt = lastUsedAt ?? this.lastUsedAt
+      ..lastOpenedAt = lastOpenedAt ?? this.lastOpenedAt
+      ..flashcardShowTermFirst =
+          flashcardShowTermFirst ?? this.flashcardShowTermFirst
+      ..studyShowDefinitionAskTerm =
+          studyShowDefinitionAskTerm ?? this.studyShowDefinitionAskTerm
+      ..testStudyLength = testStudyLength ?? this.testStudyLength
+      ..testFormat = testFormat ?? this.testFormat;
+  }
 }
