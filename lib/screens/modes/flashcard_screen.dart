@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -120,15 +122,20 @@ class _FlashcardView extends ConsumerStatefulWidget {
   ConsumerState<_FlashcardView> createState() => _FlashcardViewState();
 }
 
-class _FlashcardViewState extends ConsumerState<_FlashcardView> {
+class _FlashcardViewState extends ConsumerState<_FlashcardView>
+    with TickerProviderStateMixin {
   static final _log = Logger("FlashcardView");
 
   final FocusNode _focusNode = FocusNode();
+  late final AnimationController _restartController;
+  late final AnimationController _shuffleController;
   var _slideFromRight = true;
 
   @override
   void dispose() {
     _focusNode.dispose();
+    _shuffleController.dispose();
+    _restartController.dispose();
     super.dispose();
   }
 
@@ -140,6 +147,15 @@ class _FlashcardViewState extends ConsumerState<_FlashcardView> {
         _focusNode.requestFocus();
       }
     });
+
+    _shuffleController = AnimationController(
+      duration: const Duration(milliseconds: 500),
+      vsync: this,
+    );
+    _restartController = AnimationController(
+      duration: const Duration(milliseconds: 250),
+      vsync: this,
+    );
   }
 
   Widget _buildNavigationControls(
@@ -180,14 +196,26 @@ class _FlashcardViewState extends ConsumerState<_FlashcardView> {
             IconButton(
               icon: const Icon(Icons.shuffle),
               tooltip: t.flashcardScreen.shuffle,
-              onPressed: notifier.shuffleCards,
+              onPressed: () async {
+                await _shuffleController.forward(from: 0.0);
+                if (mounted) {
+                  notifier.shuffleCards();
+                  _shuffleController.reset();
+                }
+              },
               iconSize: 28,
             ),
             const SizedBox(width: 40),
             IconButton(
               icon: const Icon(Icons.restart_alt),
               tooltip: t.flashcardScreen.restart,
-              onPressed: notifier.restart,
+              onPressed: () async {
+                await _restartController.forward(from: 0.0);
+                if (mounted) {
+                  notifier.restart();
+                  _restartController.reset();
+                }
+              },
               iconSize: 28,
             ),
           ],
@@ -309,48 +337,80 @@ class _FlashcardViewState extends ConsumerState<_FlashcardView> {
                         padding: const EdgeInsets.all(16.0),
                         child: Column(
                           children: [
-                            AnimatedSwitcher(
-                              duration: const Duration(milliseconds: 400),
-                              transitionBuilder: (
-                                Widget child,
-                                Animation<double> animation,
-                              ) {
-                                final curvedAnimation = CurvedAnimation(
-                                  parent: animation,
-                                  curve: Curves.easeInOut,
+                            AnimatedBuilder(
+                              animation: Listenable.merge([
+                                _shuffleController,
+                                _restartController,
+                              ]),
+                              builder: (context, child) {
+                                final restartOffset = Tween<Offset>(
+                                  begin: Offset.zero,
+                                  end: const Offset(1.5, 0.0),
+                                ).animate(
+                                  CurvedAnimation(
+                                    parent: _restartController,
+                                    curve: Curves.easeIn,
+                                  ),
                                 );
 
-                                final offsetAnimation = Tween<Offset>(
-                                  begin:
-                                      _slideFromRight
-                                          ? const Offset(0.3, 0.0)
-                                          : const Offset(-0.3, 0.0),
-                                  end: Offset.zero,
-                                ).animate(curvedAnimation);
+                                final shuffleVal = _shuffleController.value;
+                                final shuffleAngle = shuffleVal * 2 * pi;
+                                final shuffleScale = 1 - sin(shuffleVal * pi);
 
-                                final scaleAnimation = Tween<double>(
-                                  begin: 0.8,
-                                  end: 1.0,
-                                ).animate(curvedAnimation);
-
-                                return FadeTransition(
-                                  opacity: curvedAnimation,
-                                  child: ScaleTransition(
-                                    scale: scaleAnimation,
-                                    child: SlideTransition(
-                                      position: offsetAnimation,
+                                return Transform.translate(
+                                  offset: restartOffset.value,
+                                  child: Transform.scale(
+                                    scale: shuffleScale.abs(),
+                                    child: Transform.rotate(
+                                      angle: shuffleAngle,
                                       child: child,
                                     ),
                                   ),
                                 );
                               },
-                              child: FlashcardWidget(
-                                key: ValueKey(state.currentIndex),
-                                term: state.currentCard!,
-                                isFlipped: state.isFlipped,
-                                onTap: flashcardNotifier.flipCard,
-                                startSide: state.startSide,
-                                height: 300,
+                              child: AnimatedSwitcher(
+                                duration: const Duration(milliseconds: 400),
+                                transitionBuilder: (
+                                  Widget child,
+                                  Animation<double> animation,
+                                ) {
+                                  final curvedAnimation = CurvedAnimation(
+                                    parent: animation,
+                                    curve: Curves.easeInOut,
+                                  );
+
+                                  final offsetAnimation = Tween<Offset>(
+                                    begin:
+                                        _slideFromRight
+                                            ? const Offset(0.3, 0.0)
+                                            : const Offset(-0.3, 0.0),
+                                    end: Offset.zero,
+                                  ).animate(curvedAnimation);
+
+                                  final scaleAnimation = Tween<double>(
+                                    begin: 0.8,
+                                    end: 1.0,
+                                  ).animate(curvedAnimation);
+
+                                  return FadeTransition(
+                                    opacity: curvedAnimation,
+                                    child: ScaleTransition(
+                                      scale: scaleAnimation,
+                                      child: SlideTransition(
+                                        position: offsetAnimation,
+                                        child: child,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: FlashcardWidget(
+                                  key: ValueKey(state.currentIndex),
+                                  term: state.currentCard!,
+                                  isFlipped: state.isFlipped,
+                                  onTap: flashcardNotifier.flipCard,
+                                  startSide: state.startSide,
+                                  height: 300,
+                                ),
                               ),
                             ),
                             const SizedBox(height: 24),
