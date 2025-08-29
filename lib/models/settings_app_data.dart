@@ -7,26 +7,13 @@ part 'settings_app_data.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class AppData {
+  final List<StudyList> studyLists;
+  final List<MatchRecord> matchRecords;
+
   AppData({required this.studyLists, required this.matchRecords});
 
-  factory AppData.fromJson(Map<String, dynamic> json) {
-    return AppData(
-      studyLists:
-          (json['studyLists'] as List<dynamic>)
-              .map((e) => StudyList.fromJson(e as Map<String, dynamic>))
-              .toList(),
-      matchRecords:
-          (json['matchRecords'] as List<dynamic>)
-              .map((e) => MatchRecord.fromJson(e as Map<String, dynamic>))
-              .toList(),
-    );
-  }
+  factory AppData.fromJson(Map<String, dynamic> json) =>
+      _$AppDataFromJson(json);
 
-  final List<MatchRecord> matchRecords;
-  final List<StudyList> studyLists;
-
-  Map<String, dynamic> toJson() => <String, dynamic>{
-    'studyLists': studyLists.map((e) => e.toJson()).toList(),
-    'matchRecords': matchRecords.map((e) => e.toJson()).toList(),
-  };
+  Map<String, dynamic> toJson() => _$AppDataToJson(this);
 }
