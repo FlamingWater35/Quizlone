@@ -109,6 +109,7 @@ class SettingsScreen extends ConsumerWidget {
 
     final lists = await dbService.getAllStudyLists();
     final records = await dbService.getAllMatchRecords();
+    final order = dbService.getStudyListOrder();
 
     if (lists.isEmpty && records.isEmpty) {
       scaffoldMessenger.showSnackBar(
@@ -117,7 +118,11 @@ class SettingsScreen extends ConsumerWidget {
       return;
     }
 
-    final appData = AppData(studyLists: lists, matchRecords: records);
+    final appData = AppData(
+      studyLists: lists,
+      matchRecords: records,
+      studyListOrder: order,
+    );
     final jsonString = jsonEncode(appData.toJson());
     final bytes = utf8.encode(jsonString);
     const fileName = 'quizlone_backup.json';
@@ -266,15 +271,18 @@ class SettingsScreen extends ConsumerWidget {
         final dynamic jsonData = jsonDecode(jsonString);
         List<StudyList> studyLists = [];
         List<MatchRecord> matchRecords = [];
+        List<String> studyListOrder = [];
         int importCount = 0;
 
         if (jsonData is Map<String, dynamic>) {
           final appData = AppData.fromJson(jsonData);
           studyLists = appData.studyLists;
           matchRecords = appData.matchRecords;
+          studyListOrder = appData.studyListOrder;
         } else if (jsonData is List<dynamic>) {
           studyLists =
               jsonData.map((json) => StudyList.fromJson(json)).toList();
+          studyListOrder = studyLists.map((list) => list.id).toList();
         } else {
           throw Exception("Invalid backup file format.");
         }
@@ -291,6 +299,13 @@ class SettingsScreen extends ConsumerWidget {
             await dbService.saveMatchRecord(record);
           }
         }
+
+        if (studyListOrder.isNotEmpty) {
+          await dbService.saveStudyListOrder(studyListOrder);
+        }
+
+        ref.invalidate(studyListsProvider);
+        ref.invalidate(matchRecordsProvider);
 
         scaffoldMessenger.showSnackBar(
           SnackBar(

@@ -9,8 +9,13 @@ part 'settings_app_data.g.dart';
 class AppData {
   final List<StudyList> studyLists;
   final List<MatchRecord> matchRecords;
+  final List<String> studyListOrder;
 
-  AppData({required this.studyLists, required this.matchRecords});
+  AppData({
+    required this.studyLists,
+    required this.matchRecords,
+    required this.studyListOrder,
+  });
 
   factory AppData.fromJson(Map<String, dynamic> json) =>
       _$AppDataFromJson(json);

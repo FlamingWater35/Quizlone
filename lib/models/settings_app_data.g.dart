@@ -15,9 +15,14 @@ AppData _$AppDataFromJson(Map<String, dynamic> json) => AppData(
       (json['matchRecords'] as List<dynamic>)
           .map((e) => MatchRecord.fromJson(e as Map<String, dynamic>))
           .toList(),
+  studyListOrder:
+      (json['studyListOrder'] as List<dynamic>)
+          .map((e) => e as String)
+          .toList(),
 );
 
 Map<String, dynamic> _$AppDataToJson(AppData instance) => <String, dynamic>{
   'studyLists': instance.studyLists.map((e) => e.toJson()).toList(),
   'matchRecords': instance.matchRecords.map((e) => e.toJson()).toList(),
+  'studyListOrder': instance.studyListOrder,
 };
