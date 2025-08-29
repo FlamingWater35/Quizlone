@@ -24,13 +24,14 @@ class StudyListAdapter extends TypeAdapter<StudyList> {
       ..flashcardShowTermFirst = fields[4] as bool
       ..studyShowDefinitionAskTerm = fields[5] as bool
       ..testStudyLength = (fields[6] as num?)?.toInt()
-      .._testFormatString = fields[7] as String;
+      .._testFormatString = fields[7] as String
+      ..lastOpenedAt = fields[8] as DateTime?;
   }
 
   @override
   void write(BinaryWriter writer, StudyList obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -46,7 +47,9 @@ class StudyListAdapter extends TypeAdapter<StudyList> {
       ..writeByte(6)
       ..write(obj.testStudyLength)
       ..writeByte(7)
-      ..write(obj._testFormatString);
+      ..write(obj._testFormatString)
+      ..writeByte(8)
+      ..write(obj.lastOpenedAt);
   }
 
   @override
@@ -69,6 +72,10 @@ StudyList _$StudyListFromJson(Map<String, dynamic> json) =>
       ..createdAt = DateTime.parse(json['createdAt'] as String)
       ..flashcardShowTermFirst = json['flashcardShowTermFirst'] as bool
       ..lastUsedAt = DateTime.parse(json['lastUsedAt'] as String)
+      ..lastOpenedAt =
+          json['lastOpenedAt'] == null
+              ? null
+              : DateTime.parse(json['lastOpenedAt'] as String)
       ..name = json['name'] as String
       ..studyShowDefinitionAskTerm = json['studyShowDefinitionAskTerm'] as bool
       ..terms =
@@ -81,6 +88,7 @@ Map<String, dynamic> _$StudyListToJson(StudyList instance) => <String, dynamic>{
   'createdAt': instance.createdAt.toIso8601String(),
   'flashcardShowTermFirst': instance.flashcardShowTermFirst,
   'lastUsedAt': instance.lastUsedAt.toIso8601String(),
+  'lastOpenedAt': instance.lastOpenedAt?.toIso8601String(),
   'name': instance.name,
   'studyShowDefinitionAskTerm': instance.studyShowDefinitionAskTerm,
   'terms': instance.terms.map((e) => e.toJson()).toList(),
