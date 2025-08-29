@@ -23,6 +23,9 @@ class StudyList {
   @HiveField(3)
   DateTime lastUsedAt = DateTime.now();
 
+  @HiveField(8)
+  DateTime? lastOpenedAt;
+
   @HiveField(0)
   late String name;
 

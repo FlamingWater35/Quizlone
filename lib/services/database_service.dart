@@ -6,11 +6,12 @@ import '../models/term.dart';
 class DatabaseService {
   DatabaseService();
 
+  static const String _activeListIdKey = 'activeListId';
   static late Box _settingsBox;
   static const String _settingsBoxName = 'settingsBox';
   static late Box<StudyList> _studyListBox;
   static const String _studyListBoxName = 'studyListsBox';
-  static const String _activeListIdKey = 'activeListId';
+  static const String _studyListOrderKey = 'studyListOrder';
 
   static Future<void> init() async {
     await Hive.initFlutter('Quizlone');
@@ -22,8 +23,26 @@ class DatabaseService {
     _settingsBox = await Hive.openBox(_settingsBoxName);
   }
 
+  Future<void> saveStudyListOrder(List<String> order) async {
+    await _settingsBox.put(_studyListOrderKey, order);
+  }
+
+  List<String> getStudyListOrder() {
+    final order = _settingsBox.get(_studyListOrderKey);
+    if (order is List) {
+      return order.cast<String>();
+    }
+    return [];
+  }
+
   Future<String> saveStudyList(StudyList list) async {
+    final isNew = !_box.containsKey(list.name);
     await _box.put(list.name, list);
+    if (isNew) {
+      final order = getStudyListOrder();
+      order.insert(0, list.name);
+      await saveStudyListOrder(order);
+    }
     return list.name;
   }
 
@@ -43,6 +62,7 @@ class DatabaseService {
           ..terms = listToRename.terms
           ..createdAt = listToRename.createdAt
           ..lastUsedAt = DateTime.now()
+          ..lastOpenedAt = listToRename.lastOpenedAt
           ..flashcardShowTermFirst = listToRename.flashcardShowTermFirst
           ..studyShowDefinitionAskTerm = listToRename.studyShowDefinitionAskTerm
           ..testStudyLength = listToRename.testStudyLength
@@ -51,20 +71,55 @@ class DatabaseService {
     await _box.put(newName, updatedList);
     await _box.delete(oldNameKey);
 
+    final order = getStudyListOrder();
+    final index = order.indexOf(oldNameKey);
+    if (index != -1) {
+      order[index] = newName;
+      await saveStudyListOrder(order);
+    }
+
     return true;
   }
 
   Future<List<StudyList>> getAllStudyLists() async {
-    final lists = _box.values.toList();
-    lists.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-    return lists;
+    final allListsFromBox = _box.values.toList();
+    if (allListsFromBox.isEmpty) {
+      return [];
+    }
+
+    var order = getStudyListOrder();
+    final listMap = {for (var list in allListsFromBox) list.name: list};
+    return order.map((key) => listMap[key]).whereType<StudyList>().toList();
   }
 
   Stream<List<StudyList>> listenToStudyLists() async* {
     List<StudyList> getSortedLists() {
-      final lists = _box.values.toList();
-      lists.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-      return lists;
+      final allListsFromBox = _box.values.toList();
+      if (allListsFromBox.isEmpty) {
+        saveStudyListOrder([]);
+        return [];
+      }
+
+      var order = getStudyListOrder();
+      final listMap = {for (var list in allListsFromBox) list.name: list};
+      final Set<String> boxKeys = listMap.keys.toSet();
+
+      final originalOrderLength = order.length;
+      order.removeWhere((key) => !boxKeys.contains(key));
+
+      final Set<String> orderKeys = order.toSet();
+      final List<String> newKeys =
+          boxKeys.where((key) => !orderKeys.contains(key)).toList();
+
+      if (newKeys.isNotEmpty) {
+        order.insertAll(0, newKeys);
+      }
+
+      if (order.length != originalOrderLength || newKeys.isNotEmpty) {
+        saveStudyListOrder(order);
+      }
+
+      return order.map((key) => listMap[key]!).toList();
     }
 
     yield getSortedLists();
@@ -85,6 +140,9 @@ class DatabaseService {
   Future<bool> deleteStudyList(String nameKey) async {
     if (_box.containsKey(nameKey)) {
       await _box.delete(nameKey);
+      final order = getStudyListOrder();
+      order.remove(nameKey);
+      await saveStudyListOrder(order);
       return true;
     }
     return false;

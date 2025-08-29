@@ -14,8 +14,15 @@ import '../../widgets/sidebar_widget.dart';
 final _log = Logger("StartScreen");
 
 @RoutePage()
-class StartScreen extends ConsumerWidget {
+class StartScreen extends ConsumerStatefulWidget {
   const StartScreen({super.key});
+
+  @override
+  ConsumerState<StartScreen> createState() => _StartScreenState();
+}
+
+class _StartScreenState extends ConsumerState<StartScreen> {
+  List<StudyList>? _localLists;
 
   Future<void> _showRenameDialog(
     BuildContext context,
@@ -98,7 +105,15 @@ class StartScreen extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
+    ref.listen(studyListsProvider, (previous, next) {
+      if (next.hasValue) {
+        setState(() {
+          _localLists = null;
+        });
+      }
+    });
+
     final studyListsAsync = ref.watch(studyListsProvider);
     final colorScheme = Theme.of(context).colorScheme;
     final t = Translations.of(context);
@@ -135,20 +150,27 @@ class StartScreen extends ConsumerWidget {
                 Expanded(
                   child: studyListsAsync.when(
                     data: (lists) {
-                      if (lists.isEmpty) {
+                      final displayLists = _localLists ?? lists;
+                      if (displayLists.isEmpty) {
                         return Center(child: Text(t.startScreen.noLists));
                       }
-                      return ListView.builder(
-                        itemCount: lists.length,
+                      return ReorderableListView.builder(
+                        buildDefaultDragHandles: false,
+                        itemCount: displayLists.length,
                         itemBuilder: (context, index) {
-                          final list = lists[index];
+                          final list = displayLists[index];
                           return Hero(
+                            key: ValueKey(list.name),
                             tag: list.name,
                             child: Card(
                               margin: const EdgeInsets.symmetric(vertical: 6),
                               child: Material(
                                 type: MaterialType.transparency,
                                 child: ListTile(
+                                  leading: ReorderableDragStartListener(
+                                    index: index,
+                                    child: const Icon(Icons.drag_handle),
+                                  ),
                                   contentPadding: const EdgeInsets.symmetric(
                                     horizontal: 16,
                                     vertical: 8,
@@ -167,15 +189,21 @@ class StartScreen extends ConsumerWidget {
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12),
                                   ),
-                                  onTap: () {
+                                  onTap: () async {
+                                    list.lastOpenedAt = DateTime.now();
+                                    await ref
+                                        .read(databaseServiceProvider)
+                                        .saveStudyList(list);
                                     ref
                                         .read(
                                           activeStudyListIdProvider.notifier,
                                         )
                                         .set(list.name);
-                                    context.router.push(
-                                      const ModeSelectionRoute(),
-                                    );
+                                    if (context.mounted) {
+                                      context.router.push(
+                                        const ModeSelectionRoute(),
+                                      );
+                                    }
                                   },
                                   trailing: Row(
                                     mainAxisSize: MainAxisSize.min,
@@ -271,6 +299,26 @@ class StartScreen extends ConsumerWidget {
                               ),
                             ),
                           );
+                        },
+                        onReorder: (int oldIndex, int newIndex) {
+                          setState(() {
+                            if (oldIndex < newIndex) {
+                              newIndex -= 1;
+                            }
+
+                            final currentLists = List<StudyList>.from(
+                              displayLists,
+                            );
+                            final movedList = currentLists.removeAt(oldIndex);
+                            currentLists.insert(newIndex, movedList);
+                            _localLists = currentLists;
+
+                            final newOrderOfKeys =
+                                currentLists.map((l) => l.name).toList();
+                            ref
+                                .read(databaseServiceProvider)
+                                .saveStudyListOrder(newOrderOfKeys);
+                          });
                         },
                       );
                     },
