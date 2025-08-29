@@ -18,6 +18,9 @@ A modern, cross-platform flashcard and study application built with Flutter. Qui
   * Generate a test from your study list.
   * Supports both written and multiple-choice question formats.
   * View detailed results with corrections for incorrect answers.
+* **🎴 Match Mode:**
+  * Find card pairs that are scattered across the screen
+  * Try to beat your previous time
 * **🎨 Theme Customization:** Choose between System, Light, and Dark themes. Your preference is saved across sessions.
 * **🔄 Data Management:**
   * **Export:** Save all your study lists to a single JSON file.
