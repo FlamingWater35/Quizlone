@@ -132,7 +132,7 @@ print(Fore.GREEN + f"Creating {no_jekyll_path}...")
 with open(no_jekyll_path, "w") as f:
     pass
 
-output_archive = os.path.join(os.path.join(WINDOWS_OUTPUT_DIR, os.pardir), "Windows-release.7z")
+output_archive = os.path.join(os.path.join(WINDOWS_OUTPUT_DIR, os.pardir), "windows-release.7z")
 distpath = WINDOWS_OUTPUT_DIR
 compression_filters = [{'id': py7zr.FILTER_LZMA2, 'preset': py7zr.PRESET_DEFAULT}]
 
