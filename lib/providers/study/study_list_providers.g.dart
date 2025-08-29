@@ -6,22 +6,6 @@ part of 'study_list_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$studyListsHash() => r'877d41e1c024fb1bf75c2bbe9562e3fec837f9c3';
-
-/// See also [studyLists].
-@ProviderFor(studyLists)
-final studyListsProvider = AutoDisposeStreamProvider<List<StudyList>>.internal(
-  studyLists,
-  name: r'studyListsProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$studyListsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef StudyListsRef = AutoDisposeStreamProviderRef<List<StudyList>>;
 String _$activeStudyListHash() => r'3df167782cfd80839f69822a2ddc6d4b6e5392af';
 
 /// See also [activeStudyList].
@@ -40,6 +24,23 @@ final activeStudyListProvider = AutoDisposeFutureProvider<StudyList?>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef ActiveStudyListRef = AutoDisposeFutureProviderRef<StudyList?>;
+String _$studyListsHash() => r'b2540c7db7cf62fa6a23835665a0f5ed6a9d7d31';
+
+/// See also [StudyLists].
+@ProviderFor(StudyLists)
+final studyListsProvider =
+    AutoDisposeAsyncNotifierProvider<StudyLists, List<StudyList>>.internal(
+      StudyLists.new,
+      name: r'studyListsProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$studyListsHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+typedef _$StudyLists = AutoDisposeAsyncNotifier<List<StudyList>>;
 String _$activeStudyListIdHash() => r'0b75fa05f591c942362190b8472e3339b0ba5bfd';
 
 /// See also [ActiveStudyListId].
@@ -58,7 +59,7 @@ final activeStudyListIdProvider =
 
 typedef _$ActiveStudyListId = Notifier<String?>;
 String _$studyListFormNotifierHash() =>
-    r'52e51f336610e57aa9da5e0223559e9287064f4b';
+    r'a2c0a07599eb33895bc6c8b6bb032787dc55342d';
 
 /// See also [StudyListFormNotifier].
 @ProviderFor(StudyListFormNotifier)

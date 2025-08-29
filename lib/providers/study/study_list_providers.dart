@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -13,9 +15,49 @@ part 'study_list_providers.g.dart';
 final _log = Logger("StudyListProviders");
 
 @riverpod
-Stream<List<StudyList>> studyLists(Ref ref) {
-  final dbService = ref.watch(databaseServiceProvider);
-  return dbService.listenToStudyLists();
+class StudyLists extends _$StudyLists {
+  StreamSubscription? _subscription;
+
+  @override
+  Future<List<StudyList>> build() async {
+    _subscription = ref
+        .watch(databaseServiceProvider)
+        .listenToStudyLists()
+        .listen((lists) {
+          state = AsyncData(lists);
+        });
+
+    ref.onDispose(() {
+      _subscription?.cancel();
+    });
+
+    return ref.read(databaseServiceProvider).getAllStudyLists();
+  }
+
+  Future<void> reorder(int oldIndex, int newIndex) async {
+    final currentLists = state.valueOrNull;
+    if (currentLists == null) return;
+
+    if (oldIndex < newIndex) {
+      newIndex -= 1;
+    }
+
+    final reorderedLists = List<StudyList>.from(currentLists);
+    final movedList = reorderedLists.removeAt(oldIndex);
+    reorderedLists.insert(newIndex, movedList);
+
+    state = AsyncData(reorderedLists);
+
+    final newOrderOfKeys = reorderedLists.map((l) => l.id).toList();
+    try {
+      await ref
+          .read(databaseServiceProvider)
+          .saveStudyListOrder(newOrderOfKeys);
+    } catch (e, s) {
+      _log.severe("Failed to save reordered list", e, s);
+      state = AsyncData(currentLists);
+    }
+  }
 }
 
 @Riverpod(keepAlive: true)

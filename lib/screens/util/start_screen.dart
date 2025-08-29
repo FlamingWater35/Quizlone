@@ -14,15 +14,8 @@ import '../../widgets/sidebar_widget.dart';
 final _log = Logger("StartScreen");
 
 @RoutePage()
-class StartScreen extends ConsumerStatefulWidget {
+class StartScreen extends ConsumerWidget {
   const StartScreen({super.key});
-
-  @override
-  ConsumerState<StartScreen> createState() => _StartScreenState();
-}
-
-class _StartScreenState extends ConsumerState<StartScreen> {
-  List<StudyList>? _localLists;
 
   Future<void> _showRenameDialog(
     BuildContext context,
@@ -87,6 +80,7 @@ class _StartScreenState extends ConsumerState<StartScreen> {
                           content: Text(
                             t.startScreen.renameListDialog.errorNameExists,
                           ),
+                          backgroundColor: Theme.of(context).colorScheme.error,
                         ),
                       );
                     }
@@ -101,7 +95,7 @@ class _StartScreenState extends ConsumerState<StartScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final studyListsAsync = ref.watch(studyListsProvider);
     final colorScheme = Theme.of(context).colorScheme;
     final t = Translations.of(context);
@@ -138,26 +132,15 @@ class _StartScreenState extends ConsumerState<StartScreen> {
                 Expanded(
                   child: studyListsAsync.when(
                     data: (lists) {
-                      final localKeys = _localLists?.map((l) => l.name).toSet();
-                      final providerKeys = lists.map((l) => l.name).toSet();
-
-                      if (_localLists == null ||
-                          !providerKeys.containsAll(localKeys!) ||
-                          !localKeys.containsAll(providerKeys)) {
-                        _localLists = lists;
-                      }
-
-                      final displayLists = _localLists!;
-
-                      if (displayLists.isEmpty) {
+                      if (lists.isEmpty) {
                         return Center(child: Text(t.startScreen.noLists));
                       }
                       return ReorderableListView.builder(
                         buildDefaultDragHandles: false,
                         padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                        itemCount: displayLists.length,
+                        itemCount: lists.length,
                         itemBuilder: (context, index) {
-                          final list = displayLists[index];
+                          final list = lists[index];
                           return Hero(
                             key: ValueKey(list.id),
                             tag: list.id,
@@ -300,24 +283,9 @@ class _StartScreenState extends ConsumerState<StartScreen> {
                           );
                         },
                         onReorder: (int oldIndex, int newIndex) {
-                          setState(() {
-                            if (oldIndex < newIndex) {
-                              newIndex -= 1;
-                            }
-
-                            final currentLists = List<StudyList>.from(
-                              displayLists,
-                            );
-                            final movedList = currentLists.removeAt(oldIndex);
-                            currentLists.insert(newIndex, movedList);
-                            _localLists = currentLists;
-
-                            final newOrderOfKeys =
-                                currentLists.map((l) => l.id).toList();
-                            ref
-                                .read(databaseServiceProvider)
-                                .saveStudyListOrder(newOrderOfKeys);
-                          });
+                          ref
+                              .read(studyListsProvider.notifier)
+                              .reorder(oldIndex, newIndex);
                         },
                       );
                     },
