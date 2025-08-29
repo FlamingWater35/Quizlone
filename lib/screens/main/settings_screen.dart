@@ -7,7 +7,6 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:json_annotation/json_annotation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:quizlone/i18n/translations.g.dart';
 import 'package:quizlone/routing/app_router.dart';
@@ -15,40 +14,13 @@ import 'package:share_plus/share_plus.dart';
 import 'package:universal_html/html.dart' as html;
 
 import '../../models/match_record.dart';
+import '../../models/settings_app_data.dart';
 import '../../models/study_list.dart';
 import '../../providers/core/core_providers.dart';
 import '../../providers/core/settings_provider.dart';
 import '../../providers/study/study_list_providers.dart';
 import '../../widgets/centered_view.dart';
 import '../modes/match_leaderboard_screen.dart';
-
-part 'settings_screen.g.dart';
-
-@JsonSerializable(explicitToJson: true)
-class AppData {
-  AppData({required this.studyLists, required this.matchRecords});
-
-  factory AppData.fromJson(Map<String, dynamic> json) {
-    return AppData(
-      studyLists:
-          (json['studyLists'] as List<dynamic>)
-              .map((e) => StudyList.fromJson(e as Map<String, dynamic>))
-              .toList(),
-      matchRecords:
-          (json['matchRecords'] as List<dynamic>)
-              .map((e) => MatchRecord.fromJson(e as Map<String, dynamic>))
-              .toList(),
-    );
-  }
-
-  final List<MatchRecord> matchRecords;
-  final List<StudyList> studyLists;
-
-  Map<String, dynamic> toJson() => <String, dynamic>{
-    'studyLists': studyLists.map((e) => e.toJson()).toList(),
-    'matchRecords': matchRecords.map((e) => e.toJson()).toList(),
-  };
-}
 
 @RoutePage()
 class SettingsScreen extends ConsumerWidget {

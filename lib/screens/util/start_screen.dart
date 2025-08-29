@@ -158,6 +158,7 @@ class _StartScreenState extends ConsumerState<StartScreen> {
                       }
                       return ReorderableListView.builder(
                         buildDefaultDragHandles: false,
+                        padding: const EdgeInsets.symmetric(horizontal: 15.0),
                         itemCount: displayLists.length,
                         itemBuilder: (context, index) {
                           final list = displayLists[index];

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'settings_screen.dart';
+part of 'settings_app_data.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator

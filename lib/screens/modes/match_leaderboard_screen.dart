@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizlone/i18n/translations.g.dart';
@@ -8,6 +9,7 @@ import 'package:quizlone/routing/app_router.dart';
 import 'package:quizlone/widgets/centered_view.dart';
 
 import '../../providers/controllers/match_controller.dart';
+import '../../providers/study/study_list_providers.dart';
 
 final matchRecordsProvider = FutureProvider.family<List<MatchRecord>, String>((
   ref,
@@ -30,6 +32,21 @@ class MatchLeaderboardScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if (kIsWeb && !context.router.canPop()) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (ref.read(activeStudyListIdProvider) != null && context.mounted) {
+          context.router.replaceAll([
+            const StartRoute(),
+            const ModeSelectionRoute(),
+            MatchLeaderboardRoute(
+              studyListName: studyListName,
+              newRecordCreatedAt: newRecordCreatedAt,
+            ),
+          ]);
+        }
+      });
+    }
+
     final recordsAsync = ref.watch(matchRecordsProvider(studyListName));
     final t = Translations.of(context);
     final theme = Theme.of(context);
@@ -38,7 +55,6 @@ class MatchLeaderboardScreen extends ConsumerWidget {
       appBar: AppBar(
         title: Text(t.matchScreen.leaderboard.title),
         centerTitle: true,
-        automaticallyImplyLeading: false,
       ),
       body: SafeArea(
         child: CenteredView(
@@ -68,6 +84,7 @@ class MatchLeaderboardScreen extends ConsumerWidget {
                         );
                       }
                       return ListView.builder(
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
                         itemCount: records.length,
                         itemBuilder: (context, index) {
                           final record = records[index];
