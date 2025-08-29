@@ -83,6 +83,7 @@
     "flashcards": "Muistikortit",
     "learn": "Opi",
     "test": "Testi",
+    "match": "Yhdistäpeli",
     "backToWelcome": "Takaisin aloitusnäyttöön"
   },
   "flashcardScreen": {
@@ -121,6 +122,17 @@
         "other": "Enimmäismäärä kierroksia saavutettu. $count kohdetta vielä kertaamatta."
       },
       "startingCycle": "Aloitetaan kierros $cycleNum, jossa on $count kohdetta..."
+    }
+  },
+  "matchScreen": {
+    "title": "Yhdistäpeli",
+    "congratulations": "Onneksi olkoon!",
+    "timeCompleted": "Suoritit pelin $time sekunnissa!",
+    "playAgain": "Pelaa uudelleen",
+    "backToOptions": "Takaisin valintoihin",
+    "errors": {
+      "noTerms": "Yhdistäpelissä ei ole saatavilla termejä.",
+      "notEnoughTerms": "Pelaamiseen tarvitaan vähintään yksi termi/määritelmä-pari."
     }
   },
   "testScreen": {

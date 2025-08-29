@@ -91,6 +91,22 @@ class LearnRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [MatchScreen]
+class MatchRoute extends PageRouteInfo<void> {
+  const MatchRoute({List<PageRouteInfo>? children})
+    : super(MatchRoute.name, initialChildren: children);
+
+  static const String name = 'MatchRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const MatchScreen();
+    },
+  );
+}
+
+/// generated route for
 /// [ModeSelectionScreen]
 class ModeSelectionRoute extends PageRouteInfo<void> {
   const ModeSelectionRoute({List<PageRouteInfo>? children})

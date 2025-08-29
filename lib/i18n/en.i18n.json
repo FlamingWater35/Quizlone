@@ -83,6 +83,7 @@
     "flashcards": "Flashcards",
     "learn": "Learn",
     "test": "Test",
+    "match": "Match",
     "backToWelcome": "Back to Welcome Screen"
   },
   "flashcardScreen": {
@@ -121,6 +122,17 @@
         "other": "Max cycles reached. $count items still to review."
       },
       "startingCycle": "Starting Cycle $cycleNum with $count item(s)..."
+    }
+  },
+  "matchScreen": {
+    "title": "Match",
+    "congratulations": "Congratulations!",
+    "timeCompleted": "You finished in $time seconds!",
+    "playAgain": "Play Again",
+    "backToOptions": "Back to Options",
+    "errors": {
+      "noTerms": "No terms available for Match mode.",
+      "notEnoughTerms": "At least one term/definition pair is required to play."
     }
   },
   "testScreen": {

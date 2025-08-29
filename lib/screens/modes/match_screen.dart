@@ -1,0 +1,332 @@
+import 'dart:math';
+
+import 'package:auto_route/auto_route.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:logging/logging.dart';
+import 'package:quizlone/i18n/translations.g.dart';
+import 'package:quizlone/routing/app_router.dart';
+
+import '../../providers/controllers/match_controller.dart';
+import '../../providers/study/study_list_providers.dart';
+import '../../widgets/centered_view.dart';
+
+@RoutePage()
+class MatchScreen extends ConsumerWidget {
+  const MatchScreen({super.key});
+
+  static final _log = Logger("MatchScreen");
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    if (kIsWeb && !context.router.canPop()) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (ref.read(activeStudyListIdProvider) != null && context.mounted) {
+          context.router.replaceAll([
+            const StartRoute(),
+            const ModeSelectionRoute(),
+            const MatchRoute(),
+          ]);
+        }
+      });
+    }
+
+    final t = Translations.of(context);
+    final activeListAsync = ref.watch(activeStudyListProvider);
+
+    return Scaffold(
+      appBar: AppBar(title: Text(t.matchScreen.title), centerTitle: true),
+      body: SafeArea(
+        child: activeListAsync.when(
+          data: (list) {
+            if (list == null) {
+              return Center(
+                child: CenteredView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          t.modeSelectionScreen.noActiveList,
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 20),
+                        ElevatedButton(
+                          onPressed: () {
+                            ref
+                                .read(activeStudyListIdProvider.notifier)
+                                .set(null);
+                            context.router.replaceAll([const StartRoute()]);
+                          },
+                          child: Text(t.modeSelectionScreen.returnToWelcome),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            }
+            return const _MatchView();
+          },
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (err, stack) {
+            _log.severe(
+              "Error loading active list for MatchScreen",
+              err,
+              stack,
+            );
+            return Center(
+              child: Text(t.general.genericError(error: err.toString())),
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class _MatchView extends ConsumerWidget {
+  const _MatchView();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final matchStateAsync = ref.watch(matchControllerProvider);
+    final t = Translations.of(context);
+
+    return matchStateAsync.when(
+      data: (state) {
+        if (state.errorMessage != null) {
+          return Center(child: Text(state.errorMessage!));
+        }
+        if (state.items.isEmpty) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        return Stack(
+          children: [
+            Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.timer_outlined, size: 20),
+                      const SizedBox(width: 8),
+                      Text(
+                        state.elapsedSeconds.toString(),
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: CenteredView(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: LayoutBuilder(
+                        builder: (context, constraints) {
+                          const double spacing = 12.0;
+                          final itemCount = state.items.length;
+                          if (itemCount == 0) return const SizedBox.shrink();
+
+                          // Determine the grid layout to best fit the screen
+                          final screenRatio =
+                              constraints.maxWidth / constraints.maxHeight;
+                          final idealCols = sqrt(itemCount * screenRatio);
+                          final cols = max(2, idealCols.round());
+                          final rows = (itemCount / cols).ceil();
+
+                          // Calculate the aspect ratio needed for cards to fill the space
+                          final cardWidth =
+                              (constraints.maxWidth - (cols - 1) * spacing) /
+                              cols;
+                          final cardHeight =
+                              (constraints.maxHeight - (rows - 1) * spacing) /
+                              rows;
+                          final aspectRatio =
+                              cardHeight > 0 ? cardWidth / cardHeight : 1.0;
+
+                          return GridView.builder(
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: cols,
+                                  crossAxisSpacing: spacing,
+                                  mainAxisSpacing: spacing,
+                                  childAspectRatio: aspectRatio,
+                                ),
+                            itemCount: itemCount,
+                            itemBuilder: (context, index) {
+                              final item = state.items[index];
+                              final isSelected =
+                                  state.selectedItem?.uniqueId == item.uniqueId;
+                              final isMatched = state.matchedPairIds.contains(
+                                item.pairId,
+                              );
+                              final isIncorrect = state.incorrectPair.contains(
+                                item.uniqueId,
+                              );
+
+                              return _MatchCard(
+                                item: item,
+                                isSelected: isSelected,
+                                isMatched: isMatched,
+                                isIncorrect: isIncorrect,
+                                onTap:
+                                    () => ref
+                                        .read(matchControllerProvider.notifier)
+                                        .selectItem(item),
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            if (state.isComplete)
+              _CompletionOverlay(
+                seconds: state.elapsedSeconds,
+                onRestart:
+                    () => ref.read(matchControllerProvider.notifier).restart(),
+              ),
+          ],
+        );
+      },
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error:
+          (err, stack) => Center(
+            child: Text(t.general.genericError(error: err.toString())),
+          ),
+    );
+  }
+}
+
+class _MatchCard extends StatelessWidget {
+  const _MatchCard({
+    required this.item,
+    required this.isSelected,
+    required this.isMatched,
+    required this.isIncorrect,
+    required this.onTap,
+  });
+
+  final bool isIncorrect;
+  final bool isMatched;
+  final bool isSelected;
+  final MatchItem item;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    Color cardColor = colorScheme.surfaceContainerHighest;
+    Color textColor = colorScheme.onSurfaceVariant;
+    Border? border;
+
+    if (isIncorrect) {
+      cardColor = colorScheme.errorContainer;
+      textColor = colorScheme.onErrorContainer;
+    } else if (isSelected) {
+      cardColor = colorScheme.primaryContainer;
+      textColor = colorScheme.onPrimaryContainer;
+      border = Border.all(color: colorScheme.primary, width: 2.0);
+    }
+
+    return AnimatedOpacity(
+      duration: const Duration(milliseconds: 300),
+      opacity: isMatched ? 0.0 : 1.0,
+      child: IgnorePointer(
+        ignoring: isMatched,
+        child: Card(
+          margin: EdgeInsets.zero,
+          elevation: isSelected ? 4.0 : 1.0,
+          color: cardColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12.0),
+            side:
+                border != null
+                    ? border.top
+                    : BorderSide(color: colorScheme.outlineVariant),
+          ),
+          clipBehavior: Clip.antiAlias,
+          child: InkWell(
+            onTap: onTap,
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  item.text,
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.bodyLarge?.copyWith(color: textColor),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _CompletionOverlay extends StatelessWidget {
+  const _CompletionOverlay({required this.seconds, required this.onRestart});
+
+  final VoidCallback onRestart;
+  final int seconds;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = Translations.of(context);
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
+
+    return Container(
+      color: Colors.black.withAlpha(90),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(
+              Icons.celebration_outlined,
+              color: Colors.amber,
+              size: 80,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              t.matchScreen.congratulations,
+              style: textTheme.displaySmall?.copyWith(color: Colors.white),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              t.matchScreen.timeCompleted(time: seconds),
+              style: textTheme.titleLarge?.copyWith(color: Colors.white70),
+            ),
+            const SizedBox(height: 32),
+            FilledButton.icon(
+              icon: const Icon(Icons.restart_alt),
+              label: Text(t.matchScreen.playAgain),
+              onPressed: onRestart,
+              style: FilledButton.styleFrom(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 12,
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
+            TextButton(
+              onPressed: () => context.router.pop(),
+              child: Text(t.matchScreen.backToOptions),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

@@ -83,6 +83,7 @@
     "flashcards": "Bildkort",
     "learn": "Inlärning",
     "test": "Prov",
+    "match": "Matcha",
     "backToWelcome": "Tillbaka till välkomstskärmen"
   },
   "flashcardScreen": {
@@ -121,6 +122,17 @@
         "other": "Max antal omgångar nåddes. $count frågor kvar att repetera."
       },
       "startingCycle": "Startar omgång $cycleNum med $count fråga(or)..."
+    }
+  },
+  "matchScreen": {
+    "title": "Matcha",
+    "congratulations": "Grattis!",
+    "timeCompleted": "Du klarade det på $time sekunder!",
+    "playAgain": "Spela igen",
+    "backToOptions": "Tillbaka till alternativ",
+    "errors": {
+      "noTerms": "Inga termer tillgängliga för Matcha-läget.",
+      "notEnoughTerms": "Minst ett par med term/definition krävs för att spela."
     }
   },
   "testScreen": {

@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:hive_ce_flutter/hive_flutter.dart';
 
 import '../models/study_list.dart';
@@ -105,6 +107,10 @@ class DatabaseService {
       final Set<String> boxKeys = listMap.keys.toSet();
 
       final originalOrderLength = order.length;
+      final uniqueOrderedKeys = LinkedHashSet<String>.from(order).toList();
+      order = uniqueOrderedKeys;
+
+      final originalUniqueOrderLength = order.length;
       order.removeWhere((key) => !boxKeys.contains(key));
 
       final Set<String> orderKeys = order.toSet();
@@ -115,11 +121,13 @@ class DatabaseService {
         order.insertAll(0, newKeys);
       }
 
-      if (order.length != originalOrderLength || newKeys.isNotEmpty) {
+      if (order.length != originalUniqueOrderLength ||
+          newKeys.isNotEmpty ||
+          originalOrderLength != uniqueOrderedKeys.length) {
         saveStudyListOrder(order);
       }
 
-      return order.map((key) => listMap[key]!).toList();
+      return order.map((key) => listMap[key]!).whereType<StudyList>().toList();
     }
 
     yield getSortedLists();

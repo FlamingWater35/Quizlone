@@ -375,6 +375,11 @@ class _ActionButtons extends StatelessWidget {
         icon: Icons.quiz,
         route: const TestModeRoute(),
       ),
+      (
+        label: t.modeSelectionScreen.match,
+        icon: Icons.extension,
+        route: const MatchRoute(),
+      ),
     ];
 
     return Column(

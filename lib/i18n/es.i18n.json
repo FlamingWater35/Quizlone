@@ -83,6 +83,7 @@
     "flashcards": "Tarjetas",
     "learn": "Aprender",
     "test": "Prueba",
+    "match": "Combinar",
     "backToWelcome": "Volver a la pantalla de bienvenida"
   },
   "flashcardScreen": {
@@ -121,6 +122,17 @@
         "other": "Se alcanzó el máximo de ciclos. Quedan $count elementos por repasar."
       },
       "startingCycle": "Iniciando ciclo $cycleNum con $count elemento(s)..."
+    }
+  },
+  "matchScreen": {
+    "title": "Combinar",
+    "congratulations": "¡Felicidades!",
+    "timeCompleted": "¡Terminaste en $time segundos!",
+    "playAgain": "Jugar de nuevo",
+    "backToOptions": "Volver a las opciones",
+    "errors": {
+      "noTerms": "No hay términos disponibles para el modo Combinar.",
+      "notEnoughTerms": "Se requiere al menos un par de término/definición para jugar."
     }
   },
   "testScreen": {

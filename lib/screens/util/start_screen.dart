@@ -106,14 +106,6 @@ class _StartScreenState extends ConsumerState<StartScreen> {
 
   @override
   Widget build(BuildContext context) {
-    ref.listen(studyListsProvider, (previous, next) {
-      if (next.hasValue) {
-        setState(() {
-          _localLists = null;
-        });
-      }
-    });
-
     final studyListsAsync = ref.watch(studyListsProvider);
     final colorScheme = Theme.of(context).colorScheme;
     final t = Translations.of(context);
@@ -150,7 +142,17 @@ class _StartScreenState extends ConsumerState<StartScreen> {
                 Expanded(
                   child: studyListsAsync.when(
                     data: (lists) {
-                      final displayLists = _localLists ?? lists;
+                      final localKeys = _localLists?.map((l) => l.name).toSet();
+                      final providerKeys = lists.map((l) => l.name).toSet();
+
+                      if (_localLists == null ||
+                          !providerKeys.containsAll(localKeys!) ||
+                          !localKeys.containsAll(providerKeys)) {
+                        _localLists = lists;
+                      }
+
+                      final displayLists = _localLists!;
+
                       if (displayLists.isEmpty) {
                         return Center(child: Text(t.startScreen.noLists));
                       }
