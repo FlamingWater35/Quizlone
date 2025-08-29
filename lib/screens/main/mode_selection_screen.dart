@@ -74,7 +74,7 @@ class ModeSelectionScreen extends ConsumerWidget {
 
             return CenteredView(
               child: Hero(
-                tag: list.name,
+                tag: list.id,
                 child: Material(
                   type: MaterialType.transparency,
                   child: SingleChildScrollView(

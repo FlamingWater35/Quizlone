@@ -25,13 +25,14 @@ class StudyListAdapter extends TypeAdapter<StudyList> {
       ..studyShowDefinitionAskTerm = fields[5] as bool
       ..testStudyLength = (fields[6] as num?)?.toInt()
       .._testFormatString = fields[7] as String
-      ..lastOpenedAt = fields[8] as DateTime?;
+      ..lastOpenedAt = fields[8] as DateTime?
+      ..id = fields[9] as String;
   }
 
   @override
   void write(BinaryWriter writer, StudyList obj) {
     writer
-      ..writeByte(9)
+      ..writeByte(10)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -49,7 +50,9 @@ class StudyListAdapter extends TypeAdapter<StudyList> {
       ..writeByte(7)
       ..write(obj._testFormatString)
       ..writeByte(8)
-      ..write(obj.lastOpenedAt);
+      ..write(obj.lastOpenedAt)
+      ..writeByte(9)
+      ..write(obj.id);
   }
 
   @override
@@ -71,11 +74,12 @@ StudyList _$StudyListFromJson(Map<String, dynamic> json) =>
     StudyList()
       ..createdAt = DateTime.parse(json['createdAt'] as String)
       ..flashcardShowTermFirst = json['flashcardShowTermFirst'] as bool
-      ..lastUsedAt = DateTime.parse(json['lastUsedAt'] as String)
+      ..id = json['id'] as String
       ..lastOpenedAt =
           json['lastOpenedAt'] == null
               ? null
               : DateTime.parse(json['lastOpenedAt'] as String)
+      ..lastUsedAt = DateTime.parse(json['lastUsedAt'] as String)
       ..name = json['name'] as String
       ..studyShowDefinitionAskTerm = json['studyShowDefinitionAskTerm'] as bool
       ..terms =
@@ -87,8 +91,9 @@ StudyList _$StudyListFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$StudyListToJson(StudyList instance) => <String, dynamic>{
   'createdAt': instance.createdAt.toIso8601String(),
   'flashcardShowTermFirst': instance.flashcardShowTermFirst,
-  'lastUsedAt': instance.lastUsedAt.toIso8601String(),
+  'id': instance.id,
   'lastOpenedAt': instance.lastOpenedAt?.toIso8601String(),
+  'lastUsedAt': instance.lastUsedAt.toIso8601String(),
   'name': instance.name,
   'studyShowDefinitionAskTerm': instance.studyShowDefinitionAskTerm,
   'terms': instance.terms.map((e) => e.toJson()).toList(),

@@ -86,52 +86,38 @@ class DatabaseService {
   }
 
   Future<String> saveStudyList(StudyList list) async {
-    final isNew = !_box.containsKey(list.name);
-    await _box.put(list.name, list);
+    final isNew = !_box.containsKey(list.id);
+    await _box.put(list.id, list);
     if (isNew) {
       final order = getStudyListOrder();
-      order.insert(0, list.name);
+      order.insert(0, list.id);
       await saveStudyListOrder(order);
     }
-    return list.name;
+    return list.id;
   }
 
-  Future<bool> renameStudyList(String oldNameKey, String newName) async {
-    if (_box.containsKey(newName)) {
+  Future<bool> renameStudyList(String id, String newName) async {
+    if (_box.values.any(
+      (list) =>
+          list.name.toLowerCase() == newName.toLowerCase() && list.id != id,
+    )) {
       return false;
     }
 
-    final listToRename = _box.get(oldNameKey);
+    final listToRename = _box.get(id);
     if (listToRename == null) {
       return false;
     }
 
-    final updatedList =
-        StudyList()
-          ..name = newName
-          ..terms = listToRename.terms
-          ..createdAt = listToRename.createdAt
-          ..lastUsedAt = DateTime.now()
-          ..lastOpenedAt = listToRename.lastOpenedAt
-          ..flashcardShowTermFirst = listToRename.flashcardShowTermFirst
-          ..studyShowDefinitionAskTerm = listToRename.studyShowDefinitionAskTerm
-          ..testStudyLength = listToRename.testStudyLength
-          ..testFormat = listToRename.testFormat;
-
-    await _box.put(newName, updatedList);
-    await _box.delete(oldNameKey);
-
-    final order = getStudyListOrder();
-    final index = order.indexOf(oldNameKey);
-    if (index != -1) {
-      order[index] = newName;
-      await saveStudyListOrder(order);
-    }
+    final oldName = listToRename.name;
+    listToRename.name = newName;
+    listToRename.updateLastUsed();
+    await _box.put(id, listToRename);
 
     final Map<dynamic, MatchRecord> recordsToUpdate = {};
     final allRecords = _matchRecordsBox.toMap();
     allRecords.forEach((key, value) {
-      if (value.studyListName == oldNameKey) {
+      if (value.studyListName == oldName) {
         recordsToUpdate[key] = value;
       }
     });
@@ -158,7 +144,7 @@ class DatabaseService {
     }
 
     var order = getStudyListOrder();
-    final listMap = {for (var list in allListsFromBox) list.name: list};
+    final listMap = {for (var list in allListsFromBox) list.id: list};
     return order.map((key) => listMap[key]).whereType<StudyList>().toList();
   }
 
@@ -171,7 +157,7 @@ class DatabaseService {
       }
 
       var order = getStudyListOrder();
-      final listMap = {for (var list in allListsFromBox) list.name: list};
+      final listMap = {for (var list in allListsFromBox) list.id: list};
       final Set<String> boxKeys = listMap.keys.toSet();
 
       final originalOrderLength = order.length;
@@ -206,29 +192,34 @@ class DatabaseService {
   }
 
   Future<StudyList?> getStudyListByName(String name) async {
-    return _box.get(name);
+    return _box.values.firstWhere((list) => list.name == name);
   }
 
-  Future<StudyList?> getStudyListById(String nameKey) async {
-    return _box.get(nameKey);
+  Future<StudyList?> getStudyListById(String id) async {
+    return _box.get(id);
   }
 
-  Future<bool> deleteStudyList(String nameKey) async {
-    if (_box.containsKey(nameKey)) {
-      await _box.delete(nameKey);
+  Future<bool> deleteStudyList(String id) async {
+    if (_box.containsKey(id)) {
+      final listToDelete = await getStudyListById(id);
+      final listName = listToDelete?.name;
+
+      await _box.delete(id);
       final order = getStudyListOrder();
-      order.remove(nameKey);
+      order.remove(id);
       await saveStudyListOrder(order);
 
-      final List<dynamic> keysToDelete = [];
-      final allRecords = _matchRecordsBox.toMap();
-      allRecords.forEach((key, value) {
-        if (value.studyListName == nameKey) {
-          keysToDelete.add(key);
+      if (listName != null) {
+        final List<dynamic> keysToDelete = [];
+        final allRecords = _matchRecordsBox.toMap();
+        allRecords.forEach((key, value) {
+          if (value.studyListName == listName) {
+            keysToDelete.add(key);
+          }
+        });
+        if (keysToDelete.isNotEmpty) {
+          await _matchRecordsBox.deleteAll(keysToDelete);
         }
-      });
-      if (keysToDelete.isNotEmpty) {
-        await _matchRecordsBox.deleteAll(keysToDelete);
       }
 
       return true;

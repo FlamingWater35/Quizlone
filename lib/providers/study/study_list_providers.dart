@@ -140,7 +140,7 @@ class StudyListFormNotifier extends _$StudyListFormNotifier {
 
     state = state.copyWith(
       studyList:
-          StudyList()
+          state.studyList
             ..name = state.listNameInput.trim()
             ..terms = parsedTerms,
       clearError: true,

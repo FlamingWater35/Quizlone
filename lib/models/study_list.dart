@@ -20,11 +20,14 @@ class StudyList {
   @HiveField(4)
   bool flashcardShowTermFirst = true;
 
-  @HiveField(3)
-  DateTime lastUsedAt = DateTime.now();
+  @HiveField(9)
+  late String id;
 
   @HiveField(8)
   DateTime? lastOpenedAt;
+
+  @HiveField(3)
+  DateTime lastUsedAt = DateTime.now();
 
   @HiveField(0)
   late String name;

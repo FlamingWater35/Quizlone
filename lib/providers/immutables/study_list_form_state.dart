@@ -1,15 +1,12 @@
 import 'package:flutter/foundation.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../models/study_list.dart';
 
+const _uuid = Uuid();
+
 @immutable
 class StudyListFormState {
-  final StudyList studyList;
-  final String rawTermsInput;
-  final String listNameInput;
-  final String? errorMessage;
-  final bool isLoading;
-
   const StudyListFormState({
     required this.studyList,
     this.rawTermsInput = "",
@@ -24,12 +21,19 @@ class StudyListFormState {
     return StudyListFormState(
       studyList:
           StudyList()
+            ..id = _uuid.v4()
             ..name = initialListName
             ..terms = [],
       listNameInput: initialListName,
       rawTermsInput: initialRawTerms,
     );
   }
+
+  final String? errorMessage;
+  final bool isLoading;
+  final String listNameInput;
+  final String rawTermsInput;
+  final StudyList studyList;
 
   StudyListFormState copyWith({
     StudyList? studyList,

@@ -74,12 +74,9 @@ class _StartScreenState extends ConsumerState<StartScreen> {
 
                   final success = await ref
                       .read(databaseServiceProvider)
-                      .renameStudyList(oldName, newName);
+                      .renameStudyList(list.id, newName);
 
                   if (success) {
-                    if (ref.read(activeStudyListIdProvider) == oldName) {
-                      ref.read(activeStudyListIdProvider.notifier).set(newName);
-                    }
                     if (context.mounted) {
                       Navigator.of(dialogContext).pop();
                     }
@@ -163,8 +160,8 @@ class _StartScreenState extends ConsumerState<StartScreen> {
                         itemBuilder: (context, index) {
                           final list = displayLists[index];
                           return Hero(
-                            key: ValueKey(list.name),
-                            tag: list.name,
+                            key: ValueKey(list.id),
+                            tag: list.id,
                             child: Card(
                               margin: const EdgeInsets.symmetric(vertical: 6),
                               child: Material(
@@ -201,7 +198,7 @@ class _StartScreenState extends ConsumerState<StartScreen> {
                                         .read(
                                           activeStudyListIdProvider.notifier,
                                         )
-                                        .set(list.name);
+                                        .set(list.id);
                                     if (context.mounted) {
                                       context.router.push(
                                         const ModeSelectionRoute(),
@@ -282,7 +279,7 @@ class _StartScreenState extends ConsumerState<StartScreen> {
                                             if (ref.read(
                                                   activeStudyListIdProvider,
                                                 ) ==
-                                                list.name) {
+                                                list.id) {
                                               ref
                                                   .read(
                                                     activeStudyListIdProvider
@@ -292,7 +289,7 @@ class _StartScreenState extends ConsumerState<StartScreen> {
                                             }
                                             await ref
                                                 .read(databaseServiceProvider)
-                                                .deleteStudyList(list.name);
+                                                .deleteStudyList(list.id);
                                           }
                                         },
                                       ),
@@ -317,7 +314,7 @@ class _StartScreenState extends ConsumerState<StartScreen> {
                             _localLists = currentLists;
 
                             final newOrderOfKeys =
-                                currentLists.map((l) => l.name).toList();
+                                currentLists.map((l) => l.id).toList();
                             ref
                                 .read(databaseServiceProvider)
                                 .saveStudyListOrder(newOrderOfKeys);
