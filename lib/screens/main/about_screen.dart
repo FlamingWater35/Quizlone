@@ -1,7 +1,9 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:quizlone/i18n/translations.g.dart';
+import 'package:quizlone/routing/app_router.dart';
 import 'package:quizlone/widgets/centered_view.dart';
 
 @RoutePage()
@@ -12,13 +14,42 @@ class AboutScreen extends StatefulWidget {
   State<AboutScreen> createState() => _AboutScreenState();
 }
 
-class _AboutScreenState extends State<AboutScreen> {
+class _AboutScreenState extends State<AboutScreen>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _fadeAnimation;
+  late Animation<double> _scaleAnimation;
   String _version = '...';
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
     super.initState();
     _initPackageInfo();
+
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 900),
+      vsync: this,
+    );
+
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.0, 0.5, curve: Curves.easeIn),
+      ),
+    );
+
+    _scaleAnimation = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.elasticOut,
+    );
+
+    _controller.forward();
   }
 
   Future<void> _initPackageInfo() async {
@@ -32,6 +63,14 @@ class _AboutScreenState extends State<AboutScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (kIsWeb && !context.router.canPop()) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (context.mounted) {
+          context.router.replaceAll([const StartRoute(), const AboutRoute()]);
+        }
+      });
+    }
+
     final t = Translations.of(context);
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
@@ -46,10 +85,16 @@ class _AboutScreenState extends State<AboutScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Spacer(),
-                SizedBox(
-                  width: 128,
-                  height: 128,
-                  child: Image.asset('assets/icon_transparent.png'),
+                FadeTransition(
+                  opacity: _fadeAnimation,
+                  child: ScaleTransition(
+                    scale: _scaleAnimation,
+                    child: SizedBox(
+                      width: 128,
+                      height: 128,
+                      child: Image.asset('assets/icon_transparent.png'),
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 24),
                 Text(

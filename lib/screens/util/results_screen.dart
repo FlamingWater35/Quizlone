@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
@@ -35,7 +36,20 @@ class ResultsScreen extends ConsumerWidget {
           data: (state) {
             if (!state.isSubmitted) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
-                if (context.mounted) context.router.pop();
+                if (context.mounted) {
+                  if (kIsWeb && !context.router.canPop()) {
+                    if (ref.read(activeStudyListIdProvider) != null) {
+                      context.router.replaceAll([
+                        const StartRoute(),
+                        const ModeSelectionRoute(),
+                      ]);
+                    } else {
+                      context.router.replaceAll([const StartRoute()]);
+                    }
+                  } else {
+                    context.router.pop();
+                  }
+                }
               });
               return const Center(child: CircularProgressIndicator());
             }

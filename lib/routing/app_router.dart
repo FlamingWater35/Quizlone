@@ -19,7 +19,10 @@ class AppRouter extends RootStackRouter {
   @override
   List<AutoRoute> get routes => [
     AutoRoute(page: StartRoute.page, initial: true),
-    AutoRoute(page: InputRoute.page),
+    CustomRoute(
+      page: InputRoute.page,
+      transitionsBuilder: buildSlideDownTransition,
+    ),
     AutoRoute(page: ModeSelectionRoute.page),
     AutoRoute(page: FlashcardRoute.page),
     AutoRoute(page: LearnRoute.page),
@@ -35,6 +38,26 @@ class AppRouter extends RootStackRouter {
       transitionsBuilder: buildSidebarTransition,
     ),
   ];
+}
+
+Widget buildSlideDownTransition(
+  BuildContext context,
+  Animation<double> animation,
+  Animation<double> secondaryAnimation,
+  Widget child,
+) {
+  const begin = Offset(0.0, -1.0);
+  const end = Offset.zero;
+  final tween = Tween(begin: begin, end: end);
+  final curvedAnimation = CurvedAnimation(
+    parent: animation,
+    curve: Curves.easeInOut,
+  );
+
+  return SlideTransition(
+    position: tween.animate(curvedAnimation),
+    child: child,
+  );
 }
 
 Widget buildSidebarTransition(

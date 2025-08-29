@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,6 +21,17 @@ class ModeSelectionScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if (kIsWeb && !context.router.canPop()) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (ref.read(activeStudyListIdProvider) != null && context.mounted) {
+          context.router.replaceAll([
+            const StartRoute(),
+            const ModeSelectionRoute(),
+          ]);
+        }
+      });
+    }
+
     final t = Translations.of(context);
     final activeStudyListAsync = ref.watch(activeStudyListProvider);
 

@@ -9,6 +9,7 @@ import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:quizlone/i18n/translations.g.dart';
+import 'package:quizlone/routing/app_router.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:universal_html/html.dart' as html;
 
@@ -320,6 +321,17 @@ class SettingsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if (kIsWeb && !context.router.canPop()) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (context.mounted) {
+          context.router.replaceAll([
+            const StartRoute(),
+            const SettingsRoute(),
+          ]);
+        }
+      });
+    }
+
     final currentTheme = ref.watch(appThemeProvider);
     final themeNotifier = ref.read(appThemeProvider.notifier);
     final currentLanguage = ref.watch(appLanguageNotifierProvider);
