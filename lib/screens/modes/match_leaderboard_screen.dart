@@ -83,15 +83,31 @@ class MatchLeaderboardScreen extends ConsumerWidget {
                           child: Text(t.matchScreen.leaderboard.noRecords),
                         );
                       }
+
+                      final newRecordIndex = records.indexWhere(
+                        (r) => r.createdAt == newRecordCreatedAt,
+                      );
+
+                      List<MatchRecord> displayRecords =
+                          records.take(15).toList();
+
+                      if (newRecordIndex >= 15) {
+                        displayRecords.add(records[newRecordIndex]);
+                      }
+
                       return ListView.builder(
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                        itemCount: records.length,
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        itemCount: displayRecords.length,
                         itemBuilder: (context, index) {
-                          final record = records[index];
+                          final record = displayRecords[index];
                           final isNewRecord =
                               record.createdAt == newRecordCreatedAt;
+
+                          final trueRank = records.indexOf(record) + 1;
+
                           final timeString = (record.timeInTenths / 10)
                               .toStringAsFixed(1);
+
                           return Card(
                             color:
                                 isNewRecord
@@ -99,7 +115,7 @@ class MatchLeaderboardScreen extends ConsumerWidget {
                                     : null,
                             child: ListTile(
                               leading: Text(
-                                "#${index + 1}",
+                                "#$trueRank",
                                 style: theme.textTheme.titleLarge?.copyWith(
                                   color: theme.colorScheme.secondary,
                                 ),
