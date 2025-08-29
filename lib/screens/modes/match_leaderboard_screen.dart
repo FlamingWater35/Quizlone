@@ -20,7 +20,7 @@ final matchRecordsProvider = FutureProvider.family<List<MatchRecord>, String>((
 });
 
 @RoutePage()
-class MatchLeaderboardScreen extends ConsumerWidget {
+class MatchLeaderboardScreen extends ConsumerStatefulWidget {
   const MatchLeaderboardScreen({
     required this.studyListName,
     required this.newRecordCreatedAt,
@@ -31,7 +31,75 @@ class MatchLeaderboardScreen extends ConsumerWidget {
   final String studyListName;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<MatchLeaderboardScreen> createState() =>
+      _MatchLeaderboardScreenState();
+}
+
+class _MatchLeaderboardScreenState extends ConsumerState<MatchLeaderboardScreen>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  final GlobalKey _newRecordKey = GlobalKey();
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1000),
+    );
+  }
+
+  void _scrollToNewRecord(int newRecordDisplayIndex) {
+    if (!mounted ||
+        newRecordDisplayIndex == -1 ||
+        !_scrollController.hasClients) {
+      return;
+    }
+
+    if (newRecordDisplayIndex < 5) {
+      _scrollController.animateTo(
+        0,
+        duration: const Duration(milliseconds: 600),
+        curve: Curves.easeInOut,
+      );
+      return;
+    }
+
+    final context = _newRecordKey.currentContext;
+
+    if (context != null) {
+      Scrollable.ensureVisible(
+        context,
+        duration: const Duration(milliseconds: 600),
+        curve: Curves.easeInOut,
+        alignment: 0.5,
+      );
+    } else {
+      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+      Future.delayed(const Duration(milliseconds: 100), () {
+        final newContext = _newRecordKey.currentContext;
+        if (newContext != null && newContext.mounted) {
+          Scrollable.ensureVisible(
+            newContext,
+            duration: const Duration(milliseconds: 600),
+            curve: Curves.easeInOut,
+            alignment: 0.5,
+          );
+        }
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     if (kIsWeb && !context.router.canPop()) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (ref.read(activeStudyListIdProvider) != null && context.mounted) {
@@ -39,15 +107,15 @@ class MatchLeaderboardScreen extends ConsumerWidget {
             const StartRoute(),
             const ModeSelectionRoute(),
             MatchLeaderboardRoute(
-              studyListName: studyListName,
-              newRecordCreatedAt: newRecordCreatedAt,
+              studyListName: widget.studyListName,
+              newRecordCreatedAt: widget.newRecordCreatedAt,
             ),
           ]);
         }
       });
     }
 
-    final recordsAsync = ref.watch(matchRecordsProvider(studyListName));
+    final recordsAsync = ref.watch(matchRecordsProvider(widget.studyListName));
     final t = Translations.of(context);
     final theme = Theme.of(context);
 
@@ -68,7 +136,7 @@ class MatchLeaderboardScreen extends ConsumerWidget {
                   textAlign: TextAlign.center,
                 ),
                 Text(
-                  studyListName,
+                  widget.studyListName,
                   style: theme.textTheme.headlineSmall?.copyWith(
                     color: theme.colorScheme.primary,
                   ),
@@ -84,55 +152,80 @@ class MatchLeaderboardScreen extends ConsumerWidget {
                         );
                       }
 
-                      final newRecordIndex = records.indexWhere(
-                        (r) => r.createdAt == newRecordCreatedAt,
-                      );
+                      _animationController.forward(from: 0.0);
 
+                      final newRecordIndex = records.indexWhere(
+                        (r) => r.createdAt == widget.newRecordCreatedAt,
+                      );
                       List<MatchRecord> displayRecords =
                           records.take(15).toList();
-
                       if (newRecordIndex >= 15) {
                         displayRecords.add(records[newRecordIndex]);
                       }
+                      final newRecordDisplayIndex = displayRecords.indexWhere(
+                        (r) => r.createdAt == widget.newRecordCreatedAt,
+                      );
+
+                      WidgetsBinding.instance.addPostFrameCallback(
+                        (_) => _scrollToNewRecord(newRecordDisplayIndex),
+                      );
 
                       return ListView.builder(
+                        controller: _scrollController,
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         itemCount: displayRecords.length,
                         itemBuilder: (context, index) {
                           final record = displayRecords[index];
                           final isNewRecord =
-                              record.createdAt == newRecordCreatedAt;
-
+                              record.createdAt == widget.newRecordCreatedAt;
                           final trueRank = records.indexOf(record) + 1;
-
                           final timeString = (record.timeInTenths / 10)
                               .toStringAsFixed(1);
 
-                          return Card(
-                            color:
-                                isNewRecord
-                                    ? theme.colorScheme.tertiaryContainer
-                                    : null,
-                            child: ListTile(
-                              leading: Text(
-                                "#$trueRank",
-                                style: theme.textTheme.titleLarge?.copyWith(
-                                  color: theme.colorScheme.secondary,
+                          final animation = CurvedAnimation(
+                            parent: _animationController,
+                            curve: Interval(
+                              (0.05 * index).clamp(0.0, 1.0),
+                              (0.5 + 0.05 * index).clamp(0.0, 1.0),
+                              curve: Curves.easeOutCubic,
+                            ),
+                          );
+
+                          return FadeTransition(
+                            opacity: animation,
+                            child: SlideTransition(
+                              position: Tween<Offset>(
+                                begin: const Offset(0.3, 0),
+                                end: Offset.zero,
+                              ).animate(animation),
+                              child: Card(
+                                key: isNewRecord ? _newRecordKey : null,
+                                color:
+                                    isNewRecord
+                                        ? theme.colorScheme.tertiaryContainer
+                                        : null,
+                                child: ListTile(
+                                  leading: Text(
+                                    "#$trueRank",
+                                    style: theme.textTheme.titleLarge?.copyWith(
+                                      color: theme.colorScheme.secondary,
+                                    ),
+                                  ),
+                                  title: Text(
+                                    t.matchScreen.leaderboard.time(
+                                      time: timeString,
+                                    ),
+                                    style: theme.textTheme.titleMedium,
+                                  ),
+                                  trailing:
+                                      isNewRecord
+                                          ? Icon(
+                                            Icons.star,
+                                            color: theme.colorScheme.tertiary,
+                                          )
+                                          : null,
                                 ),
                               ),
-                              title: Text(
-                                t.matchScreen.leaderboard.time(
-                                  time: timeString,
-                                ),
-                                style: theme.textTheme.titleMedium,
-                              ),
-                              trailing:
-                                  isNewRecord
-                                      ? Icon(
-                                        Icons.star,
-                                        color: theme.colorScheme.tertiary,
-                                      )
-                                      : null,
                             ),
                           );
                         },
