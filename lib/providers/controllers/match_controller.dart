@@ -78,7 +78,7 @@ class MatchScreenState {
   }
 }
 
-const int maxMatchPairs = 15;
+const int maxMatchPairs = 10;
 
 @riverpod
 class MatchController extends _$MatchController {
@@ -119,6 +119,7 @@ class MatchController extends _$MatchController {
             createdAt: DateTime.now(),
           );
           await db.saveMatchRecord(newRecord);
+          await db.pruneMatchRecords(listName);
         }
 
         state = AsyncData(

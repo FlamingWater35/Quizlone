@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
+import '../models/match_record.dart';
 import '../screens/main/about_screen.dart';
 import '../screens/main/controls_screen.dart';
 import '../screens/main/mode_selection_screen.dart';

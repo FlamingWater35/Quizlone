@@ -33,10 +33,7 @@ class MatchScreen extends ConsumerWidget {
             ref.invalidate(matchRecordsProvider(finalRecord.studyListName));
 
             context.router.replace(
-              MatchLeaderboardRoute(
-                studyListName: finalRecord.studyListName,
-                newRecordCreatedAt: finalRecord.createdAt,
-              ),
+              MatchLeaderboardRoute(newRecord: finalRecord),
             );
           }
         });

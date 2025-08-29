@@ -21,14 +21,9 @@ final matchRecordsProvider = FutureProvider.family<List<MatchRecord>, String>((
 
 @RoutePage()
 class MatchLeaderboardScreen extends ConsumerStatefulWidget {
-  const MatchLeaderboardScreen({
-    required this.studyListName,
-    required this.newRecordCreatedAt,
-    super.key,
-  });
+  const MatchLeaderboardScreen({required this.newRecord, super.key});
 
-  final DateTime newRecordCreatedAt;
-  final String studyListName;
+  final MatchRecord newRecord;
 
   @override
   ConsumerState<MatchLeaderboardScreen> createState() =>
@@ -106,16 +101,15 @@ class _MatchLeaderboardScreenState extends ConsumerState<MatchLeaderboardScreen>
           context.router.replaceAll([
             const StartRoute(),
             const ModeSelectionRoute(),
-            MatchLeaderboardRoute(
-              studyListName: widget.studyListName,
-              newRecordCreatedAt: widget.newRecordCreatedAt,
-            ),
+            MatchLeaderboardRoute(newRecord: widget.newRecord),
           ]);
         }
       });
     }
 
-    final recordsAsync = ref.watch(matchRecordsProvider(widget.studyListName));
+    final recordsAsync = ref.watch(
+      matchRecordsProvider(widget.newRecord.studyListName),
+    );
     final t = Translations.of(context);
     final theme = Theme.of(context);
 
@@ -136,7 +130,7 @@ class _MatchLeaderboardScreenState extends ConsumerState<MatchLeaderboardScreen>
                   textAlign: TextAlign.center,
                 ),
                 Text(
-                  widget.studyListName,
+                  widget.newRecord.studyListName,
                   style: theme.textTheme.headlineSmall?.copyWith(
                     color: theme.colorScheme.primary,
                   ),
@@ -146,29 +140,35 @@ class _MatchLeaderboardScreenState extends ConsumerState<MatchLeaderboardScreen>
                 Expanded(
                   child: recordsAsync.when(
                     data: (records) {
-                      if (records.isEmpty) {
-                        return Center(
-                          child: Text(t.matchScreen.leaderboard.noRecords),
-                        );
-                      }
-
                       _animationController.forward(from: 0.0);
 
-                      final newRecordIndex = records.indexWhere(
-                        (r) => r.createdAt == widget.newRecordCreatedAt,
+                      final newRecord = widget.newRecord;
+                      final topRecordsFromDb = List.of(records);
+
+                      final List<MatchRecord> displayRecords =
+                          topRecordsFromDb.take(15).toList();
+
+                      final isNewRecordInDisplayList = displayRecords.any(
+                        (r) => r.createdAt == newRecord.createdAt,
                       );
-                      List<MatchRecord> displayRecords =
-                          records.take(15).toList();
-                      if (newRecordIndex >= 15) {
-                        displayRecords.add(records[newRecordIndex]);
+
+                      if (!isNewRecordInDisplayList) {
+                        displayRecords.add(newRecord);
                       }
+
                       final newRecordDisplayIndex = displayRecords.indexWhere(
-                        (r) => r.createdAt == widget.newRecordCreatedAt,
+                        (r) => r.createdAt == newRecord.createdAt,
                       );
 
                       WidgetsBinding.instance.addPostFrameCallback(
                         (_) => _scrollToNewRecord(newRecordDisplayIndex),
                       );
+
+                      if (displayRecords.isEmpty) {
+                        return Center(
+                          child: Text(t.matchScreen.leaderboard.noRecords),
+                        );
+                      }
 
                       return ListView.builder(
                         controller: _scrollController,
@@ -177,10 +177,17 @@ class _MatchLeaderboardScreenState extends ConsumerState<MatchLeaderboardScreen>
                         itemBuilder: (context, index) {
                           final record = displayRecords[index];
                           final isNewRecord =
-                              record.createdAt == widget.newRecordCreatedAt;
-                          final trueRank = records.indexOf(record) + 1;
+                              record.createdAt == newRecord.createdAt;
                           final timeString = (record.timeInTenths / 10)
                               .toStringAsFixed(1);
+
+                          final trueRankIndex = topRecordsFromDb.indexOf(
+                            record,
+                          );
+                          final String rankText =
+                              trueRankIndex != -1
+                                  ? "#${trueRankIndex + 1}"
+                                  : ">100";
 
                           final animation = CurvedAnimation(
                             parent: _animationController,
@@ -206,7 +213,7 @@ class _MatchLeaderboardScreenState extends ConsumerState<MatchLeaderboardScreen>
                                         : null,
                                 child: ListTile(
                                   leading: Text(
-                                    "#$trueRank",
+                                    rankText,
                                     style: theme.textTheme.titleLarge?.copyWith(
                                       color: theme.colorScheme.secondary,
                                     ),

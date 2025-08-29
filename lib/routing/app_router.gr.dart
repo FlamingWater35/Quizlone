@@ -94,17 +94,12 @@ class LearnRoute extends PageRouteInfo<void> {
 /// [MatchLeaderboardScreen]
 class MatchLeaderboardRoute extends PageRouteInfo<MatchLeaderboardRouteArgs> {
   MatchLeaderboardRoute({
-    required String studyListName,
-    required DateTime newRecordCreatedAt,
+    required MatchRecord newRecord,
     Key? key,
     List<PageRouteInfo>? children,
   }) : super(
          MatchLeaderboardRoute.name,
-         args: MatchLeaderboardRouteArgs(
-           studyListName: studyListName,
-           newRecordCreatedAt: newRecordCreatedAt,
-           key: key,
-         ),
+         args: MatchLeaderboardRouteArgs(newRecord: newRecord, key: key),
          initialChildren: children,
        );
 
@@ -114,45 +109,32 @@ class MatchLeaderboardRoute extends PageRouteInfo<MatchLeaderboardRouteArgs> {
     name,
     builder: (data) {
       final args = data.argsAs<MatchLeaderboardRouteArgs>();
-      return MatchLeaderboardScreen(
-        studyListName: args.studyListName,
-        newRecordCreatedAt: args.newRecordCreatedAt,
-        key: args.key,
-      );
+      return MatchLeaderboardScreen(newRecord: args.newRecord, key: args.key);
     },
   );
 }
 
 class MatchLeaderboardRouteArgs {
-  const MatchLeaderboardRouteArgs({
-    required this.studyListName,
-    required this.newRecordCreatedAt,
-    this.key,
-  });
+  const MatchLeaderboardRouteArgs({required this.newRecord, this.key});
 
-  final String studyListName;
-
-  final DateTime newRecordCreatedAt;
+  final MatchRecord newRecord;
 
   final Key? key;
 
   @override
   String toString() {
-    return 'MatchLeaderboardRouteArgs{studyListName: $studyListName, newRecordCreatedAt: $newRecordCreatedAt, key: $key}';
+    return 'MatchLeaderboardRouteArgs{newRecord: $newRecord, key: $key}';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other is! MatchLeaderboardRouteArgs) return false;
-    return studyListName == other.studyListName &&
-        newRecordCreatedAt == other.newRecordCreatedAt &&
-        key == other.key;
+    return newRecord == other.newRecord && key == other.key;
   }
 
   @override
-  int get hashCode =>
-      studyListName.hashCode ^ newRecordCreatedAt.hashCode ^ key.hashCode;
+  int get hashCode => newRecord.hashCode ^ key.hashCode;
 }
 
 /// generated route for

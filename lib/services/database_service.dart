@@ -34,6 +34,28 @@ class DatabaseService {
     await _matchRecordsBox.add(record);
   }
 
+  Future<void> pruneMatchRecords(String studyListName) async {
+    final allRecords = _matchRecordsBox.toMap();
+    final List<MapEntry<dynamic, MatchRecord>> listRecords = [];
+
+    allRecords.forEach((key, value) {
+      if (value.studyListName == studyListName) {
+        listRecords.add(MapEntry(key, value));
+      }
+    });
+
+    if (listRecords.length > 100) {
+      listRecords.sort(
+        (a, b) => a.value.timeInTenths.compareTo(b.value.timeInTenths),
+      );
+      final keysToDelete =
+          listRecords.sublist(100).map((entry) => entry.key).toList();
+      if (keysToDelete.isNotEmpty) {
+        await _matchRecordsBox.deleteAll(keysToDelete);
+      }
+    }
+  }
+
   Future<List<MatchRecord>> getRecordsForList(String studyListName) async {
     final records =
         _matchRecordsBox.values
@@ -104,6 +126,26 @@ class DatabaseService {
     if (index != -1) {
       order[index] = newName;
       await saveStudyListOrder(order);
+    }
+
+    final Map<dynamic, MatchRecord> recordsToUpdate = {};
+    final allRecords = _matchRecordsBox.toMap();
+    allRecords.forEach((key, value) {
+      if (value.studyListName == oldNameKey) {
+        recordsToUpdate[key] = value;
+      }
+    });
+
+    if (recordsToUpdate.isNotEmpty) {
+      for (var entry in recordsToUpdate.entries) {
+        final oldRecord = entry.value;
+        final newRecord = MatchRecord(
+          studyListName: newName,
+          timeInTenths: oldRecord.timeInTenths,
+          createdAt: oldRecord.createdAt,
+        );
+        await _matchRecordsBox.put(entry.key, newRecord);
+      }
     }
 
     return true;
@@ -177,6 +219,18 @@ class DatabaseService {
       final order = getStudyListOrder();
       order.remove(nameKey);
       await saveStudyListOrder(order);
+
+      final List<dynamic> keysToDelete = [];
+      final allRecords = _matchRecordsBox.toMap();
+      allRecords.forEach((key, value) {
+        if (value.studyListName == nameKey) {
+          keysToDelete.add(key);
+        }
+      });
+      if (keysToDelete.isNotEmpty) {
+        await _matchRecordsBox.deleteAll(keysToDelete);
+      }
+
       return true;
     }
     return false;
