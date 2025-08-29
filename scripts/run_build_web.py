@@ -4,7 +4,6 @@ import os
 import platform
 import sys
 import threading
-import py7zr
 from colorama import Fore, Style, init as colorama_init
 
 colorama_init(autoreset=True)
