@@ -130,6 +130,11 @@
     "timeCompleted": "You finished in $time seconds!",
     "playAgain": "Play Again",
     "backToOptions": "Back to Options",
+    "leaderboard": {
+      "title": "Leaderboard",
+      "noRecords": "No records yet. Be the first!",
+      "time": "$time Seconds"
+    },
     "errors": {
       "noTerms": "No terms available for Match mode.",
       "notEnoughTerms": "At least one term/definition pair is required to play."

@@ -6,7 +6,7 @@ part of 'match_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$matchControllerHash() => r'c78abfde925349b7590153fa2013de97a3dfa235';
+String _$matchControllerHash() => r'364337b648104564acfd127ed71dcd7b6279d805';
 
 /// See also [MatchController].
 @ProviderFor(MatchController)

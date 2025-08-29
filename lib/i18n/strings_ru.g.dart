@@ -45,6 +45,7 @@ class TranslationsRu implements Translations {
 	@override late final _TranslationsModeSelectionScreenRu modeSelectionScreen = _TranslationsModeSelectionScreenRu._(_root);
 	@override late final _TranslationsFlashcardScreenRu flashcardScreen = _TranslationsFlashcardScreenRu._(_root);
 	@override late final _TranslationsLearnScreenRu learnScreen = _TranslationsLearnScreenRu._(_root);
+	@override late final _TranslationsMatchScreenRu matchScreen = _TranslationsMatchScreenRu._(_root);
 	@override late final _TranslationsTestScreenRu testScreen = _TranslationsTestScreenRu._(_root);
 	@override late final _TranslationsResultsScreenRu resultsScreen = _TranslationsResultsScreenRu._(_root);
 	@override late final _TranslationsSettingsScreenRu settingsScreen = _TranslationsSettingsScreenRu._(_root);
@@ -159,6 +160,7 @@ class _TranslationsModeSelectionScreenRu implements TranslationsModeSelectionScr
 	@override String get flashcards => 'Карточки';
 	@override String get learn => 'Обучение';
 	@override String get test => 'Тест';
+	@override String get match => 'Сопоставление';
 	@override String get backToWelcome => 'Вернуться на главный экран';
 }
 
@@ -195,6 +197,22 @@ class _TranslationsLearnScreenRu implements TranslationsLearnScreenEn {
 	@override late final _TranslationsLearnScreenErrorsRu errors = _TranslationsLearnScreenErrorsRu._(_root);
 	@override late final _TranslationsLearnScreenFeedbackRu feedback = _TranslationsLearnScreenFeedbackRu._(_root);
 	@override late final _TranslationsLearnScreenProgressRu progress = _TranslationsLearnScreenProgressRu._(_root);
+}
+
+// Path: matchScreen
+class _TranslationsMatchScreenRu implements TranslationsMatchScreenEn {
+	_TranslationsMatchScreenRu._(this._root);
+
+	final TranslationsRu _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Сопоставление';
+	@override String get congratulations => 'Поздравляем!';
+	@override String timeCompleted({required Object time}) => 'Вы закончили за ${time} секунд!';
+	@override String get playAgain => 'Играть снова';
+	@override String get backToOptions => 'Назад к опциям';
+	@override late final _TranslationsMatchScreenLeaderboardRu leaderboard = _TranslationsMatchScreenLeaderboardRu._(_root);
+	@override late final _TranslationsMatchScreenErrorsRu errors = _TranslationsMatchScreenErrorsRu._(_root);
 }
 
 // Path: testScreen
@@ -379,6 +397,29 @@ class _TranslationsLearnScreenProgressRu implements TranslationsLearnScreenProgr
 	@override String startingCycle({required Object cycleNum, required Object count}) => 'Начинается круг ${cycleNum} с ${count} элементом(ами)...';
 }
 
+// Path: matchScreen.leaderboard
+class _TranslationsMatchScreenLeaderboardRu implements TranslationsMatchScreenLeaderboardEn {
+	_TranslationsMatchScreenLeaderboardRu._(this._root);
+
+	final TranslationsRu _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Таблица лидеров';
+	@override String get noRecords => 'Рекордов пока нет. Будьте первым!';
+	@override String time({required Object time}) => '${time} секунд';
+}
+
+// Path: matchScreen.errors
+class _TranslationsMatchScreenErrorsRu implements TranslationsMatchScreenErrorsEn {
+	_TranslationsMatchScreenErrorsRu._(this._root);
+
+	final TranslationsRu _root; // ignore: unused_field
+
+	// Translations
+	@override String get noTerms => 'Нет доступных терминов для режима Сопоставления.';
+	@override String get notEnoughTerms => 'Для игры требуется хотя бы одна пара термин/определение.';
+}
+
 // Path: testScreen.errors
 class _TranslationsTestScreenErrorsRu implements TranslationsTestScreenErrorsEn {
 	_TranslationsTestScreenErrorsRu._(this._root);
@@ -516,6 +557,7 @@ extension on TranslationsRu {
 			case 'modeSelectionScreen.flashcards': return 'Карточки';
 			case 'modeSelectionScreen.learn': return 'Обучение';
 			case 'modeSelectionScreen.test': return 'Тест';
+			case 'modeSelectionScreen.match': return 'Сопоставление';
 			case 'modeSelectionScreen.backToWelcome': return 'Вернуться на главный экран';
 			case 'flashcardScreen.title': return 'Карточки';
 			case 'flashcardScreen.noCards': return 'Нет карточек для отображения.';
@@ -547,6 +589,16 @@ extension on TranslationsRu {
 				other: 'Достигнуто максимальное количество кругов. Осталось ${count} элемента для повторения.',
 			);
 			case 'learnScreen.progress.startingCycle': return ({required Object cycleNum, required Object count}) => 'Начинается круг ${cycleNum} с ${count} элементом(ами)...';
+			case 'matchScreen.title': return 'Сопоставление';
+			case 'matchScreen.congratulations': return 'Поздравляем!';
+			case 'matchScreen.timeCompleted': return ({required Object time}) => 'Вы закончили за ${time} секунд!';
+			case 'matchScreen.playAgain': return 'Играть снова';
+			case 'matchScreen.backToOptions': return 'Назад к опциям';
+			case 'matchScreen.leaderboard.title': return 'Таблица лидеров';
+			case 'matchScreen.leaderboard.noRecords': return 'Рекордов пока нет. Будьте первым!';
+			case 'matchScreen.leaderboard.time': return ({required Object time}) => '${time} секунд';
+			case 'matchScreen.errors.noTerms': return 'Нет доступных терминов для режима Сопоставления.';
+			case 'matchScreen.errors.notEnoughTerms': return 'Для игры требуется хотя бы одна пара термин/определение.';
 			case 'testScreen.title': return 'Тест';
 			case 'testScreen.noQuestions': return 'Нет вопросов для этого теста.';
 			case 'testScreen.viewResults': return 'Посмотреть результаты';

@@ -211,6 +211,7 @@ class _TranslationsMatchScreenSv extends TranslationsMatchScreenEn {
 	@override String timeCompleted({required Object time}) => 'Du klarade det på ${time} sekunder!';
 	@override String get playAgain => 'Spela igen';
 	@override String get backToOptions => 'Tillbaka till alternativ';
+	@override late final _TranslationsMatchScreenLeaderboardSv leaderboard = _TranslationsMatchScreenLeaderboardSv._(_root);
 	@override late final _TranslationsMatchScreenErrorsSv errors = _TranslationsMatchScreenErrorsSv._(_root);
 }
 
@@ -394,6 +395,18 @@ class _TranslationsLearnScreenProgressSv extends TranslationsLearnScreenProgress
 	@override String startingCycle({required Object cycleNum, required Object count}) => 'Startar omgång ${cycleNum} med ${count} fråga(or)...';
 }
 
+// Path: matchScreen.leaderboard
+class _TranslationsMatchScreenLeaderboardSv extends TranslationsMatchScreenLeaderboardEn {
+	_TranslationsMatchScreenLeaderboardSv._(TranslationsSv root) : this._root = root, super.internal(root);
+
+	final TranslationsSv _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Topplista';
+	@override String get noRecords => 'Inga rekord än. Bli den första!';
+	@override String time({required Object time}) => '${time} Sekunder';
+}
+
 // Path: matchScreen.errors
 class _TranslationsMatchScreenErrorsSv extends TranslationsMatchScreenErrorsEn {
 	_TranslationsMatchScreenErrorsSv._(TranslationsSv root) : this._root = root, super.internal(root);
@@ -575,6 +588,9 @@ extension on TranslationsSv {
 			case 'matchScreen.timeCompleted': return ({required Object time}) => 'Du klarade det på ${time} sekunder!';
 			case 'matchScreen.playAgain': return 'Spela igen';
 			case 'matchScreen.backToOptions': return 'Tillbaka till alternativ';
+			case 'matchScreen.leaderboard.title': return 'Topplista';
+			case 'matchScreen.leaderboard.noRecords': return 'Inga rekord än. Bli den första!';
+			case 'matchScreen.leaderboard.time': return ({required Object time}) => '${time} Sekunder';
 			case 'matchScreen.errors.noTerms': return 'Inga termer tillgängliga för Matcha-läget.';
 			case 'matchScreen.errors.notEnoughTerms': return 'Minst ett par med term/definition krävs för att spela.';
 			case 'testScreen.title': return 'Prov';

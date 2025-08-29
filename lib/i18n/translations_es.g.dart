@@ -211,6 +211,7 @@ class _TranslationsMatchScreenEs extends TranslationsMatchScreenEn {
 	@override String timeCompleted({required Object time}) => '¡Terminaste en ${time} segundos!';
 	@override String get playAgain => 'Jugar de nuevo';
 	@override String get backToOptions => 'Volver a las opciones';
+	@override late final _TranslationsMatchScreenLeaderboardEs leaderboard = _TranslationsMatchScreenLeaderboardEs._(_root);
 	@override late final _TranslationsMatchScreenErrorsEs errors = _TranslationsMatchScreenErrorsEs._(_root);
 }
 
@@ -394,6 +395,18 @@ class _TranslationsLearnScreenProgressEs extends TranslationsLearnScreenProgress
 	@override String startingCycle({required Object cycleNum, required Object count}) => 'Iniciando ciclo ${cycleNum} con ${count} elemento(s)...';
 }
 
+// Path: matchScreen.leaderboard
+class _TranslationsMatchScreenLeaderboardEs extends TranslationsMatchScreenLeaderboardEn {
+	_TranslationsMatchScreenLeaderboardEs._(TranslationsEs root) : this._root = root, super.internal(root);
+
+	final TranslationsEs _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Tabla de clasificación';
+	@override String get noRecords => 'Aún no hay récords. ¡Sé el primero!';
+	@override String time({required Object time}) => '${time} Segundos';
+}
+
 // Path: matchScreen.errors
 class _TranslationsMatchScreenErrorsEs extends TranslationsMatchScreenErrorsEn {
 	_TranslationsMatchScreenErrorsEs._(TranslationsEs root) : this._root = root, super.internal(root);
@@ -575,6 +588,9 @@ extension on TranslationsEs {
 			case 'matchScreen.timeCompleted': return ({required Object time}) => '¡Terminaste en ${time} segundos!';
 			case 'matchScreen.playAgain': return 'Jugar de nuevo';
 			case 'matchScreen.backToOptions': return 'Volver a las opciones';
+			case 'matchScreen.leaderboard.title': return 'Tabla de clasificación';
+			case 'matchScreen.leaderboard.noRecords': return 'Aún no hay récords. ¡Sé el primero!';
+			case 'matchScreen.leaderboard.time': return ({required Object time}) => '${time} Segundos';
 			case 'matchScreen.errors.noTerms': return 'No hay términos disponibles para el modo Combinar.';
 			case 'matchScreen.errors.notEnoughTerms': return 'Se requiere al menos un par de término/definición para jugar.';
 			case 'testScreen.title': return 'Prueba';

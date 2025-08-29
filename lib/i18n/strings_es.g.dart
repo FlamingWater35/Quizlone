@@ -45,6 +45,7 @@ class TranslationsEs implements Translations {
 	@override late final _TranslationsModeSelectionScreenEs modeSelectionScreen = _TranslationsModeSelectionScreenEs._(_root);
 	@override late final _TranslationsFlashcardScreenEs flashcardScreen = _TranslationsFlashcardScreenEs._(_root);
 	@override late final _TranslationsLearnScreenEs learnScreen = _TranslationsLearnScreenEs._(_root);
+	@override late final _TranslationsMatchScreenEs matchScreen = _TranslationsMatchScreenEs._(_root);
 	@override late final _TranslationsTestScreenEs testScreen = _TranslationsTestScreenEs._(_root);
 	@override late final _TranslationsResultsScreenEs resultsScreen = _TranslationsResultsScreenEs._(_root);
 	@override late final _TranslationsSettingsScreenEs settingsScreen = _TranslationsSettingsScreenEs._(_root);
@@ -157,6 +158,7 @@ class _TranslationsModeSelectionScreenEs implements TranslationsModeSelectionScr
 	@override String get flashcards => 'Tarjetas';
 	@override String get learn => 'Aprender';
 	@override String get test => 'Prueba';
+	@override String get match => 'Combinar';
 	@override String get backToWelcome => 'Volver a la pantalla de bienvenida';
 }
 
@@ -193,6 +195,22 @@ class _TranslationsLearnScreenEs implements TranslationsLearnScreenEn {
 	@override late final _TranslationsLearnScreenErrorsEs errors = _TranslationsLearnScreenErrorsEs._(_root);
 	@override late final _TranslationsLearnScreenFeedbackEs feedback = _TranslationsLearnScreenFeedbackEs._(_root);
 	@override late final _TranslationsLearnScreenProgressEs progress = _TranslationsLearnScreenProgressEs._(_root);
+}
+
+// Path: matchScreen
+class _TranslationsMatchScreenEs implements TranslationsMatchScreenEn {
+	_TranslationsMatchScreenEs._(this._root);
+
+	final TranslationsEs _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Combinar';
+	@override String get congratulations => '¡Felicidades!';
+	@override String timeCompleted({required Object time}) => '¡Terminaste en ${time} segundos!';
+	@override String get playAgain => 'Jugar de nuevo';
+	@override String get backToOptions => 'Volver a las opciones';
+	@override late final _TranslationsMatchScreenLeaderboardEs leaderboard = _TranslationsMatchScreenLeaderboardEs._(_root);
+	@override late final _TranslationsMatchScreenErrorsEs errors = _TranslationsMatchScreenErrorsEs._(_root);
 }
 
 // Path: testScreen
@@ -375,6 +393,29 @@ class _TranslationsLearnScreenProgressEs implements TranslationsLearnScreenProgr
 	@override String startingCycle({required Object cycleNum, required Object count}) => 'Iniciando ciclo ${cycleNum} con ${count} elemento(s)...';
 }
 
+// Path: matchScreen.leaderboard
+class _TranslationsMatchScreenLeaderboardEs implements TranslationsMatchScreenLeaderboardEn {
+	_TranslationsMatchScreenLeaderboardEs._(this._root);
+
+	final TranslationsEs _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Tabla de clasificación';
+	@override String get noRecords => 'Aún no hay récords. ¡Sé el primero!';
+	@override String time({required Object time}) => '${time} Segundos';
+}
+
+// Path: matchScreen.errors
+class _TranslationsMatchScreenErrorsEs implements TranslationsMatchScreenErrorsEn {
+	_TranslationsMatchScreenErrorsEs._(this._root);
+
+	final TranslationsEs _root; // ignore: unused_field
+
+	// Translations
+	@override String get noTerms => 'No hay términos disponibles para el modo Combinar.';
+	@override String get notEnoughTerms => 'Se requiere al menos un par de término/definición para jugar.';
+}
+
 // Path: testScreen.errors
 class _TranslationsTestScreenErrorsEs implements TranslationsTestScreenErrorsEn {
 	_TranslationsTestScreenErrorsEs._(this._root);
@@ -510,6 +551,7 @@ extension on TranslationsEs {
 			case 'modeSelectionScreen.flashcards': return 'Tarjetas';
 			case 'modeSelectionScreen.learn': return 'Aprender';
 			case 'modeSelectionScreen.test': return 'Prueba';
+			case 'modeSelectionScreen.match': return 'Combinar';
 			case 'modeSelectionScreen.backToWelcome': return 'Volver a la pantalla de bienvenida';
 			case 'flashcardScreen.title': return 'Tarjetas';
 			case 'flashcardScreen.noCards': return 'No hay tarjetas para mostrar.';
@@ -539,6 +581,16 @@ extension on TranslationsEs {
 				other: 'Se alcanzó el máximo de ciclos. Quedan ${count} elementos por repasar.',
 			);
 			case 'learnScreen.progress.startingCycle': return ({required Object cycleNum, required Object count}) => 'Iniciando ciclo ${cycleNum} con ${count} elemento(s)...';
+			case 'matchScreen.title': return 'Combinar';
+			case 'matchScreen.congratulations': return '¡Felicidades!';
+			case 'matchScreen.timeCompleted': return ({required Object time}) => '¡Terminaste en ${time} segundos!';
+			case 'matchScreen.playAgain': return 'Jugar de nuevo';
+			case 'matchScreen.backToOptions': return 'Volver a las opciones';
+			case 'matchScreen.leaderboard.title': return 'Tabla de clasificación';
+			case 'matchScreen.leaderboard.noRecords': return 'Aún no hay récords. ¡Sé el primero!';
+			case 'matchScreen.leaderboard.time': return ({required Object time}) => '${time} Segundos';
+			case 'matchScreen.errors.noTerms': return 'No hay términos disponibles para el modo Combinar.';
+			case 'matchScreen.errors.notEnoughTerms': return 'Se requiere al menos un par de término/definición para jugar.';
 			case 'testScreen.title': return 'Prueba';
 			case 'testScreen.noQuestions': return 'No hay preguntas para esta prueba.';
 			case 'testScreen.viewResults': return 'Ver resultados';

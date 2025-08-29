@@ -6,7 +6,9 @@ import 'package:logging/logging.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../i18n/translations.g.dart';
+import '../../models/match_record.dart';
 import '../../models/term.dart';
+import '../core/core_providers.dart';
 import '../study/study_list_providers.dart';
 
 part 'match_controller.g.dart';
@@ -34,13 +36,15 @@ class MatchScreenState {
     this.matchedPairIds = const {},
     this.incorrectPair = const {},
     this.isComplete = false,
-    this.elapsedSeconds = 0,
+    this.elapsedTenths = 0,
+    this.finalRecord,
     this.isLoading = true,
     this.errorMessage,
   });
 
-  final int elapsedSeconds;
+  final int elapsedTenths;
   final String? errorMessage;
+  final MatchRecord? finalRecord;
   final Set<int> incorrectPair;
   final bool isComplete;
   final bool isLoading;
@@ -54,7 +58,8 @@ class MatchScreenState {
     Set<String>? matchedPairIds,
     Set<int>? incorrectPair,
     bool? isComplete,
-    int? elapsedSeconds,
+    int? elapsedTenths,
+    MatchRecord? finalRecord,
     bool? isLoading,
     String? errorMessage,
     bool clearError = false,
@@ -65,7 +70,8 @@ class MatchScreenState {
       matchedPairIds: matchedPairIds ?? this.matchedPairIds,
       incorrectPair: incorrectPair ?? this.incorrectPair,
       isComplete: isComplete ?? this.isComplete,
-      elapsedSeconds: elapsedSeconds ?? this.elapsedSeconds,
+      elapsedTenths: elapsedTenths ?? this.elapsedTenths,
+      finalRecord: finalRecord ?? this.finalRecord,
       isLoading: isLoading ?? this.isLoading,
       errorMessage: clearError ? null : errorMessage ?? this.errorMessage,
     );
@@ -79,7 +85,7 @@ class MatchController extends _$MatchController {
   final Stopwatch _stopwatch = Stopwatch();
   Timer? _timer;
 
-  void selectItem(MatchItem item) {
+  Future<void> selectItem(MatchItem item) async {
     final currentState = state.value;
     if (currentState == null ||
         currentState.isComplete ||
@@ -100,9 +106,19 @@ class MatchController extends _$MatchController {
         final newMatched = {...currentState.matchedPairIds, item.pairId};
         final isNowComplete =
             newMatched.length == (currentState.items.length / 2);
+
+        MatchRecord? newRecord;
         if (isNowComplete) {
           _stopwatch.stop();
           _timer?.cancel();
+          final db = ref.read(databaseServiceProvider);
+          final listName = ref.read(activeStudyListProvider).value!.name;
+          newRecord = MatchRecord(
+            studyListName: listName,
+            timeInTenths: _stopwatch.elapsedMilliseconds ~/ 100,
+            createdAt: DateTime.now(),
+          );
+          await db.saveMatchRecord(newRecord);
         }
 
         state = AsyncData(
@@ -110,7 +126,8 @@ class MatchController extends _$MatchController {
             selectedItem: () => null,
             matchedPairIds: newMatched,
             isComplete: isNowComplete,
-            elapsedSeconds: _stopwatch.elapsed.inSeconds,
+            elapsedTenths: _stopwatch.elapsedMilliseconds ~/ 100,
+            finalRecord: newRecord,
           ),
         );
       } else {
@@ -188,10 +205,12 @@ class MatchController extends _$MatchController {
     _stopwatch
       ..reset()
       ..start();
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
       if (state.value?.isComplete == false) {
         state = AsyncData(
-          state.value!.copyWith(elapsedSeconds: _stopwatch.elapsed.inSeconds),
+          state.value!.copyWith(
+            elapsedTenths: _stopwatch.elapsedMilliseconds ~/ 100,
+          ),
         );
       }
     });

@@ -11,6 +11,7 @@ import 'package:quizlone/routing/app_router.dart';
 import '../../providers/controllers/match_controller.dart';
 import '../../providers/study/study_list_providers.dart';
 import '../../widgets/centered_view.dart';
+import 'match_leaderboard_screen.dart';
 
 @RoutePage()
 class MatchScreen extends ConsumerWidget {
@@ -20,6 +21,28 @@ class MatchScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen<AsyncValue<MatchScreenState>>(matchControllerProvider, (
+      prev,
+      next,
+    ) {
+      final isComplete = next.value?.isComplete ?? false;
+      final finalRecord = next.value?.finalRecord;
+      if (isComplete && finalRecord != null) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (context.mounted) {
+            ref.invalidate(matchRecordsProvider(finalRecord.studyListName));
+
+            context.router.replace(
+              MatchLeaderboardRoute(
+                studyListName: finalRecord.studyListName,
+                newRecordCreatedAt: finalRecord.createdAt,
+              ),
+            );
+          }
+        });
+      }
+    });
+
     if (kIsWeb && !context.router.canPop()) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (ref.read(activeStudyListIdProvider) != null && context.mounted) {
@@ -100,100 +123,87 @@ class _MatchView extends ConsumerWidget {
         if (state.errorMessage != null) {
           return Center(child: Text(state.errorMessage!));
         }
-        if (state.items.isEmpty) {
+        if (state.items.isEmpty || state.isComplete) {
           return const Center(child: CircularProgressIndicator());
         }
 
-        return Stack(
+        final timeString = (state.elapsedTenths / 10).toStringAsFixed(1);
+
+        return Column(
           children: [
-            Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.timer_outlined, size: 20),
-                      const SizedBox(width: 8),
-                      Text(
-                        state.elapsedSeconds.toString(),
-                        style: Theme.of(context).textTheme.titleLarge,
-                      ),
-                    ],
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.timer_outlined, size: 20),
+                  const SizedBox(width: 8),
+                  Text(
+                    timeString,
+                    style: Theme.of(context).textTheme.titleLarge,
                   ),
-                ),
-                Expanded(
-                  child: CenteredView(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: LayoutBuilder(
-                        builder: (context, constraints) {
-                          const double spacing = 12.0;
-                          final itemCount = state.items.length;
-                          if (itemCount == 0) return const SizedBox.shrink();
+                ],
+              ),
+            ),
+            Expanded(
+              child: CenteredView(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      const double spacing = 12.0;
+                      final itemCount = state.items.length;
+                      if (itemCount == 0) return const SizedBox.shrink();
 
-                          // Determine the grid layout to best fit the screen
-                          final screenRatio =
-                              constraints.maxWidth / constraints.maxHeight;
-                          final idealCols = sqrt(itemCount * screenRatio);
-                          final cols = max(2, idealCols.round());
-                          final rows = (itemCount / cols).ceil();
+                      final screenRatio =
+                          constraints.maxWidth / constraints.maxHeight;
+                      final idealCols = sqrt(itemCount * screenRatio);
+                      final cols = max(2, idealCols.round());
+                      final rows = (itemCount / cols).ceil();
 
-                          // Calculate the aspect ratio needed for cards to fill the space
-                          final cardWidth =
-                              (constraints.maxWidth - (cols - 1) * spacing) /
-                              cols;
-                          final cardHeight =
-                              (constraints.maxHeight - (rows - 1) * spacing) /
-                              rows;
-                          final aspectRatio =
-                              cardHeight > 0 ? cardWidth / cardHeight : 1.0;
+                      final cardWidth =
+                          (constraints.maxWidth - (cols - 1) * spacing) / cols;
+                      final cardHeight =
+                          (constraints.maxHeight - (rows - 1) * spacing) / rows;
+                      final aspectRatio =
+                          cardHeight > 0 ? cardWidth / cardHeight : 1.0;
 
-                          return GridView.builder(
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: cols,
-                                  crossAxisSpacing: spacing,
-                                  mainAxisSpacing: spacing,
-                                  childAspectRatio: aspectRatio,
-                                ),
-                            itemCount: itemCount,
-                            itemBuilder: (context, index) {
-                              final item = state.items[index];
-                              final isSelected =
-                                  state.selectedItem?.uniqueId == item.uniqueId;
-                              final isMatched = state.matchedPairIds.contains(
-                                item.pairId,
-                              );
-                              final isIncorrect = state.incorrectPair.contains(
-                                item.uniqueId,
-                              );
+                      return GridView.builder(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: cols,
+                          crossAxisSpacing: spacing,
+                          mainAxisSpacing: spacing,
+                          childAspectRatio: aspectRatio,
+                        ),
+                        itemCount: itemCount,
+                        itemBuilder: (context, index) {
+                          final item = state.items[index];
+                          final isSelected =
+                              state.selectedItem?.uniqueId == item.uniqueId;
+                          final isMatched = state.matchedPairIds.contains(
+                            item.pairId,
+                          );
+                          final isIncorrect = state.incorrectPair.contains(
+                            item.uniqueId,
+                          );
 
-                              return _MatchCard(
-                                item: item,
-                                isSelected: isSelected,
-                                isMatched: isMatched,
-                                isIncorrect: isIncorrect,
-                                onTap:
-                                    () => ref
-                                        .read(matchControllerProvider.notifier)
-                                        .selectItem(item),
-                              );
-                            },
+                          return _MatchCard(
+                            item: item,
+                            isSelected: isSelected,
+                            isMatched: isMatched,
+                            isIncorrect: isIncorrect,
+                            onTap:
+                                () => ref
+                                    .read(matchControllerProvider.notifier)
+                                    .selectItem(item),
                           );
                         },
-                      ),
-                    ),
+                      );
+                    },
                   ),
                 ),
-              ],
-            ),
-            if (state.isComplete)
-              _CompletionOverlay(
-                seconds: state.elapsedSeconds,
-                onRestart:
-                    () => ref.read(matchControllerProvider.notifier).restart(),
               ),
+            ),
           ],
         );
       },
@@ -268,63 +278,6 @@ class _MatchCard extends StatelessWidget {
               ),
             ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class _CompletionOverlay extends StatelessWidget {
-  const _CompletionOverlay({required this.seconds, required this.onRestart});
-
-  final VoidCallback onRestart;
-  final int seconds;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = Translations.of(context);
-    final theme = Theme.of(context);
-    final textTheme = theme.textTheme;
-
-    return Container(
-      color: Colors.black.withAlpha(90),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(
-              Icons.celebration_outlined,
-              color: Colors.amber,
-              size: 80,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              t.matchScreen.congratulations,
-              style: textTheme.displaySmall?.copyWith(color: Colors.white),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              t.matchScreen.timeCompleted(time: seconds),
-              style: textTheme.titleLarge?.copyWith(color: Colors.white70),
-            ),
-            const SizedBox(height: 32),
-            FilledButton.icon(
-              icon: const Icon(Icons.restart_alt),
-              label: Text(t.matchScreen.playAgain),
-              onPressed: onRestart,
-              style: FilledButton.styleFrom(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 12,
-                ),
-              ),
-            ),
-            const SizedBox(height: 12),
-            TextButton(
-              onPressed: () => context.router.pop(),
-              child: Text(t.matchScreen.backToOptions),
-            ),
-          ],
         ),
       ),
     );

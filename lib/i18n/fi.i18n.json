@@ -130,6 +130,11 @@
     "timeCompleted": "Suoritit pelin $time sekunnissa!",
     "playAgain": "Pelaa uudelleen",
     "backToOptions": "Takaisin valintoihin",
+    "leaderboard": {
+      "title": "Tulostaulu",
+      "noRecords": "Ei vielä tuloksia. Ole ensimmäinen!",
+      "time": "$time sekuntia"
+    },
     "errors": {
       "noTerms": "Yhdistäpelissä ei ole saatavilla termejä.",
       "notEnoughTerms": "Pelaamiseen tarvitaan vähintään yksi termi/määritelmä-pari."

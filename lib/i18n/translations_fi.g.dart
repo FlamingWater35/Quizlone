@@ -211,6 +211,7 @@ class _TranslationsMatchScreenFi extends TranslationsMatchScreenEn {
 	@override String timeCompleted({required Object time}) => 'Suoritit pelin ${time} sekunnissa!';
 	@override String get playAgain => 'Pelaa uudelleen';
 	@override String get backToOptions => 'Takaisin valintoihin';
+	@override late final _TranslationsMatchScreenLeaderboardFi leaderboard = _TranslationsMatchScreenLeaderboardFi._(_root);
 	@override late final _TranslationsMatchScreenErrorsFi errors = _TranslationsMatchScreenErrorsFi._(_root);
 }
 
@@ -394,6 +395,18 @@ class _TranslationsLearnScreenProgressFi extends TranslationsLearnScreenProgress
 	@override String startingCycle({required Object cycleNum, required Object count}) => 'Aloitetaan kierros ${cycleNum}, jossa on ${count} kohdetta...';
 }
 
+// Path: matchScreen.leaderboard
+class _TranslationsMatchScreenLeaderboardFi extends TranslationsMatchScreenLeaderboardEn {
+	_TranslationsMatchScreenLeaderboardFi._(TranslationsFi root) : this._root = root, super.internal(root);
+
+	final TranslationsFi _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Tulostaulu';
+	@override String get noRecords => 'Ei vielä tuloksia. Ole ensimmäinen!';
+	@override String time({required Object time}) => '${time} sekuntia';
+}
+
 // Path: matchScreen.errors
 class _TranslationsMatchScreenErrorsFi extends TranslationsMatchScreenErrorsEn {
 	_TranslationsMatchScreenErrorsFi._(TranslationsFi root) : this._root = root, super.internal(root);
@@ -575,6 +588,9 @@ extension on TranslationsFi {
 			case 'matchScreen.timeCompleted': return ({required Object time}) => 'Suoritit pelin ${time} sekunnissa!';
 			case 'matchScreen.playAgain': return 'Pelaa uudelleen';
 			case 'matchScreen.backToOptions': return 'Takaisin valintoihin';
+			case 'matchScreen.leaderboard.title': return 'Tulostaulu';
+			case 'matchScreen.leaderboard.noRecords': return 'Ei vielä tuloksia. Ole ensimmäinen!';
+			case 'matchScreen.leaderboard.time': return ({required Object time}) => '${time} sekuntia';
 			case 'matchScreen.errors.noTerms': return 'Yhdistäpelissä ei ole saatavilla termejä.';
 			case 'matchScreen.errors.notEnoughTerms': return 'Pelaamiseen tarvitaan vähintään yksi termi/määritelmä-pari.';
 			case 'testScreen.title': return 'Testi';

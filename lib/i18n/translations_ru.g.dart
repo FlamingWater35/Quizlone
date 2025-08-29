@@ -213,6 +213,7 @@ class _TranslationsMatchScreenRu extends TranslationsMatchScreenEn {
 	@override String timeCompleted({required Object time}) => 'Вы закончили за ${time} секунд!';
 	@override String get playAgain => 'Играть снова';
 	@override String get backToOptions => 'Назад к опциям';
+	@override late final _TranslationsMatchScreenLeaderboardRu leaderboard = _TranslationsMatchScreenLeaderboardRu._(_root);
 	@override late final _TranslationsMatchScreenErrorsRu errors = _TranslationsMatchScreenErrorsRu._(_root);
 }
 
@@ -396,6 +397,18 @@ class _TranslationsLearnScreenProgressRu extends TranslationsLearnScreenProgress
 		other: 'Достигнуто максимальное количество кругов. Осталось ${count} элемента для повторения.',
 	);
 	@override String startingCycle({required Object cycleNum, required Object count}) => 'Начинается круг ${cycleNum} с ${count} элементом(ами)...';
+}
+
+// Path: matchScreen.leaderboard
+class _TranslationsMatchScreenLeaderboardRu extends TranslationsMatchScreenLeaderboardEn {
+	_TranslationsMatchScreenLeaderboardRu._(TranslationsRu root) : this._root = root, super.internal(root);
+
+	final TranslationsRu _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Таблица лидеров';
+	@override String get noRecords => 'Рекордов пока нет. Будьте первым!';
+	@override String time({required Object time}) => '${time} секунд';
 }
 
 // Path: matchScreen.errors
@@ -583,6 +596,9 @@ extension on TranslationsRu {
 			case 'matchScreen.timeCompleted': return ({required Object time}) => 'Вы закончили за ${time} секунд!';
 			case 'matchScreen.playAgain': return 'Играть снова';
 			case 'matchScreen.backToOptions': return 'Назад к опциям';
+			case 'matchScreen.leaderboard.title': return 'Таблица лидеров';
+			case 'matchScreen.leaderboard.noRecords': return 'Рекордов пока нет. Будьте первым!';
+			case 'matchScreen.leaderboard.time': return ({required Object time}) => '${time} секунд';
 			case 'matchScreen.errors.noTerms': return 'Нет доступных терминов для режима Сопоставления.';
 			case 'matchScreen.errors.notEnoughTerms': return 'Для игры требуется хотя бы одна пара термин/определение.';
 			case 'testScreen.title': return 'Тест';

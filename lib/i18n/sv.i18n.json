@@ -130,6 +130,11 @@
     "timeCompleted": "Du klarade det på $time sekunder!",
     "playAgain": "Spela igen",
     "backToOptions": "Tillbaka till alternativ",
+    "leaderboard": {
+      "title": "Topplista",
+      "noRecords": "Inga rekord än. Bli den första!",
+      "time": "$time Sekunder"
+    },
     "errors": {
       "noTerms": "Inga termer tillgängliga för Matcha-läget.",
       "notEnoughTerms": "Minst ett par med term/definition krävs för att spela."

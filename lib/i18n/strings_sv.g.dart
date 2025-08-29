@@ -45,6 +45,7 @@ class TranslationsSv implements Translations {
 	@override late final _TranslationsModeSelectionScreenSv modeSelectionScreen = _TranslationsModeSelectionScreenSv._(_root);
 	@override late final _TranslationsFlashcardScreenSv flashcardScreen = _TranslationsFlashcardScreenSv._(_root);
 	@override late final _TranslationsLearnScreenSv learnScreen = _TranslationsLearnScreenSv._(_root);
+	@override late final _TranslationsMatchScreenSv matchScreen = _TranslationsMatchScreenSv._(_root);
 	@override late final _TranslationsTestScreenSv testScreen = _TranslationsTestScreenSv._(_root);
 	@override late final _TranslationsResultsScreenSv resultsScreen = _TranslationsResultsScreenSv._(_root);
 	@override late final _TranslationsSettingsScreenSv settingsScreen = _TranslationsSettingsScreenSv._(_root);
@@ -157,6 +158,7 @@ class _TranslationsModeSelectionScreenSv implements TranslationsModeSelectionScr
 	@override String get flashcards => 'Bildkort';
 	@override String get learn => 'Inlärning';
 	@override String get test => 'Prov';
+	@override String get match => 'Matcha';
 	@override String get backToWelcome => 'Tillbaka till välkomstskärmen';
 }
 
@@ -193,6 +195,22 @@ class _TranslationsLearnScreenSv implements TranslationsLearnScreenEn {
 	@override late final _TranslationsLearnScreenErrorsSv errors = _TranslationsLearnScreenErrorsSv._(_root);
 	@override late final _TranslationsLearnScreenFeedbackSv feedback = _TranslationsLearnScreenFeedbackSv._(_root);
 	@override late final _TranslationsLearnScreenProgressSv progress = _TranslationsLearnScreenProgressSv._(_root);
+}
+
+// Path: matchScreen
+class _TranslationsMatchScreenSv implements TranslationsMatchScreenEn {
+	_TranslationsMatchScreenSv._(this._root);
+
+	final TranslationsSv _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Matcha';
+	@override String get congratulations => 'Grattis!';
+	@override String timeCompleted({required Object time}) => 'Du klarade det på ${time} sekunder!';
+	@override String get playAgain => 'Spela igen';
+	@override String get backToOptions => 'Tillbaka till alternativ';
+	@override late final _TranslationsMatchScreenLeaderboardSv leaderboard = _TranslationsMatchScreenLeaderboardSv._(_root);
+	@override late final _TranslationsMatchScreenErrorsSv errors = _TranslationsMatchScreenErrorsSv._(_root);
 }
 
 // Path: testScreen
@@ -375,6 +393,29 @@ class _TranslationsLearnScreenProgressSv implements TranslationsLearnScreenProgr
 	@override String startingCycle({required Object cycleNum, required Object count}) => 'Startar omgång ${cycleNum} med ${count} fråga(or)...';
 }
 
+// Path: matchScreen.leaderboard
+class _TranslationsMatchScreenLeaderboardSv implements TranslationsMatchScreenLeaderboardEn {
+	_TranslationsMatchScreenLeaderboardSv._(this._root);
+
+	final TranslationsSv _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Topplista';
+	@override String get noRecords => 'Inga rekord än. Bli den första!';
+	@override String time({required Object time}) => '${time} Sekunder';
+}
+
+// Path: matchScreen.errors
+class _TranslationsMatchScreenErrorsSv implements TranslationsMatchScreenErrorsEn {
+	_TranslationsMatchScreenErrorsSv._(this._root);
+
+	final TranslationsSv _root; // ignore: unused_field
+
+	// Translations
+	@override String get noTerms => 'Inga termer tillgängliga för Matcha-läget.';
+	@override String get notEnoughTerms => 'Minst ett par med term/definition krävs för att spela.';
+}
+
 // Path: testScreen.errors
 class _TranslationsTestScreenErrorsSv implements TranslationsTestScreenErrorsEn {
 	_TranslationsTestScreenErrorsSv._(this._root);
@@ -510,6 +551,7 @@ extension on TranslationsSv {
 			case 'modeSelectionScreen.flashcards': return 'Bildkort';
 			case 'modeSelectionScreen.learn': return 'Inlärning';
 			case 'modeSelectionScreen.test': return 'Prov';
+			case 'modeSelectionScreen.match': return 'Matcha';
 			case 'modeSelectionScreen.backToWelcome': return 'Tillbaka till välkomstskärmen';
 			case 'flashcardScreen.title': return 'Bildkort';
 			case 'flashcardScreen.noCards': return 'Inga bildkort att visa.';
@@ -539,6 +581,16 @@ extension on TranslationsSv {
 				other: 'Max antal omgångar nåddes. ${count} frågor kvar att repetera.',
 			);
 			case 'learnScreen.progress.startingCycle': return ({required Object cycleNum, required Object count}) => 'Startar omgång ${cycleNum} med ${count} fråga(or)...';
+			case 'matchScreen.title': return 'Matcha';
+			case 'matchScreen.congratulations': return 'Grattis!';
+			case 'matchScreen.timeCompleted': return ({required Object time}) => 'Du klarade det på ${time} sekunder!';
+			case 'matchScreen.playAgain': return 'Spela igen';
+			case 'matchScreen.backToOptions': return 'Tillbaka till alternativ';
+			case 'matchScreen.leaderboard.title': return 'Topplista';
+			case 'matchScreen.leaderboard.noRecords': return 'Inga rekord än. Bli den första!';
+			case 'matchScreen.leaderboard.time': return ({required Object time}) => '${time} Sekunder';
+			case 'matchScreen.errors.noTerms': return 'Inga termer tillgängliga för Matcha-läget.';
+			case 'matchScreen.errors.notEnoughTerms': return 'Minst ett par med term/definition krävs för att spela.';
 			case 'testScreen.title': return 'Prov';
 			case 'testScreen.noQuestions': return 'Inga frågor för detta prov.';
 			case 'testScreen.viewResults': return 'Visa resultat';

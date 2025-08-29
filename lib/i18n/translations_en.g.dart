@@ -356,6 +356,7 @@ class TranslationsMatchScreenEn {
 	/// en: 'Back to Options'
 	String get backToOptions => 'Back to Options';
 
+	late final TranslationsMatchScreenLeaderboardEn leaderboard = TranslationsMatchScreenLeaderboardEn.internal(_root);
 	late final TranslationsMatchScreenErrorsEn errors = TranslationsMatchScreenErrorsEn.internal(_root);
 }
 
@@ -687,6 +688,24 @@ class TranslationsLearnScreenProgressEn {
 	String startingCycle({required Object cycleNum, required Object count}) => 'Starting Cycle ${cycleNum} with ${count} item(s)...';
 }
 
+// Path: matchScreen.leaderboard
+class TranslationsMatchScreenLeaderboardEn {
+	TranslationsMatchScreenLeaderboardEn.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Leaderboard'
+	String get title => 'Leaderboard';
+
+	/// en: 'No records yet. Be the first!'
+	String get noRecords => 'No records yet. Be the first!';
+
+	/// en: '$time Seconds'
+	String time({required Object time}) => '${time} Seconds';
+}
+
 // Path: matchScreen.errors
 class TranslationsMatchScreenErrorsEn {
 	TranslationsMatchScreenErrorsEn.internal(this._root);
@@ -912,6 +931,9 @@ extension on Translations {
 			case 'matchScreen.timeCompleted': return ({required Object time}) => 'You finished in ${time} seconds!';
 			case 'matchScreen.playAgain': return 'Play Again';
 			case 'matchScreen.backToOptions': return 'Back to Options';
+			case 'matchScreen.leaderboard.title': return 'Leaderboard';
+			case 'matchScreen.leaderboard.noRecords': return 'No records yet. Be the first!';
+			case 'matchScreen.leaderboard.time': return ({required Object time}) => '${time} Seconds';
 			case 'matchScreen.errors.noTerms': return 'No terms available for Match mode.';
 			case 'matchScreen.errors.notEnoughTerms': return 'At least one term/definition pair is required to play.';
 			case 'testScreen.title': return 'Test';

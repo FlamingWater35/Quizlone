@@ -45,6 +45,7 @@ class TranslationsFi implements Translations {
 	@override late final _TranslationsModeSelectionScreenFi modeSelectionScreen = _TranslationsModeSelectionScreenFi._(_root);
 	@override late final _TranslationsFlashcardScreenFi flashcardScreen = _TranslationsFlashcardScreenFi._(_root);
 	@override late final _TranslationsLearnScreenFi learnScreen = _TranslationsLearnScreenFi._(_root);
+	@override late final _TranslationsMatchScreenFi matchScreen = _TranslationsMatchScreenFi._(_root);
 	@override late final _TranslationsTestScreenFi testScreen = _TranslationsTestScreenFi._(_root);
 	@override late final _TranslationsResultsScreenFi resultsScreen = _TranslationsResultsScreenFi._(_root);
 	@override late final _TranslationsSettingsScreenFi settingsScreen = _TranslationsSettingsScreenFi._(_root);
@@ -157,6 +158,7 @@ class _TranslationsModeSelectionScreenFi implements TranslationsModeSelectionScr
 	@override String get flashcards => 'Muistikortit';
 	@override String get learn => 'Opi';
 	@override String get test => 'Testi';
+	@override String get match => 'Yhdistäpeli';
 	@override String get backToWelcome => 'Takaisin aloitusnäyttöön';
 }
 
@@ -193,6 +195,22 @@ class _TranslationsLearnScreenFi implements TranslationsLearnScreenEn {
 	@override late final _TranslationsLearnScreenErrorsFi errors = _TranslationsLearnScreenErrorsFi._(_root);
 	@override late final _TranslationsLearnScreenFeedbackFi feedback = _TranslationsLearnScreenFeedbackFi._(_root);
 	@override late final _TranslationsLearnScreenProgressFi progress = _TranslationsLearnScreenProgressFi._(_root);
+}
+
+// Path: matchScreen
+class _TranslationsMatchScreenFi implements TranslationsMatchScreenEn {
+	_TranslationsMatchScreenFi._(this._root);
+
+	final TranslationsFi _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Yhdistäpeli';
+	@override String get congratulations => 'Onneksi olkoon!';
+	@override String timeCompleted({required Object time}) => 'Suoritit pelin ${time} sekunnissa!';
+	@override String get playAgain => 'Pelaa uudelleen';
+	@override String get backToOptions => 'Takaisin valintoihin';
+	@override late final _TranslationsMatchScreenLeaderboardFi leaderboard = _TranslationsMatchScreenLeaderboardFi._(_root);
+	@override late final _TranslationsMatchScreenErrorsFi errors = _TranslationsMatchScreenErrorsFi._(_root);
 }
 
 // Path: testScreen
@@ -375,6 +393,29 @@ class _TranslationsLearnScreenProgressFi implements TranslationsLearnScreenProgr
 	@override String startingCycle({required Object cycleNum, required Object count}) => 'Aloitetaan kierros ${cycleNum}, jossa on ${count} kohdetta...';
 }
 
+// Path: matchScreen.leaderboard
+class _TranslationsMatchScreenLeaderboardFi implements TranslationsMatchScreenLeaderboardEn {
+	_TranslationsMatchScreenLeaderboardFi._(this._root);
+
+	final TranslationsFi _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Tulostaulu';
+	@override String get noRecords => 'Ei vielä tuloksia. Ole ensimmäinen!';
+	@override String time({required Object time}) => '${time} sekuntia';
+}
+
+// Path: matchScreen.errors
+class _TranslationsMatchScreenErrorsFi implements TranslationsMatchScreenErrorsEn {
+	_TranslationsMatchScreenErrorsFi._(this._root);
+
+	final TranslationsFi _root; // ignore: unused_field
+
+	// Translations
+	@override String get noTerms => 'Yhdistäpelissä ei ole saatavilla termejä.';
+	@override String get notEnoughTerms => 'Pelaamiseen tarvitaan vähintään yksi termi/määritelmä-pari.';
+}
+
 // Path: testScreen.errors
 class _TranslationsTestScreenErrorsFi implements TranslationsTestScreenErrorsEn {
 	_TranslationsTestScreenErrorsFi._(this._root);
@@ -510,6 +551,7 @@ extension on TranslationsFi {
 			case 'modeSelectionScreen.flashcards': return 'Muistikortit';
 			case 'modeSelectionScreen.learn': return 'Opi';
 			case 'modeSelectionScreen.test': return 'Testi';
+			case 'modeSelectionScreen.match': return 'Yhdistäpeli';
 			case 'modeSelectionScreen.backToWelcome': return 'Takaisin aloitusnäyttöön';
 			case 'flashcardScreen.title': return 'Muistikortit';
 			case 'flashcardScreen.noCards': return 'Ei näytettäviä muistikortteja.';
@@ -539,6 +581,16 @@ extension on TranslationsFi {
 				other: 'Enimmäismäärä kierroksia saavutettu. ${count} kohdetta vielä kertaamatta.',
 			);
 			case 'learnScreen.progress.startingCycle': return ({required Object cycleNum, required Object count}) => 'Aloitetaan kierros ${cycleNum}, jossa on ${count} kohdetta...';
+			case 'matchScreen.title': return 'Yhdistäpeli';
+			case 'matchScreen.congratulations': return 'Onneksi olkoon!';
+			case 'matchScreen.timeCompleted': return ({required Object time}) => 'Suoritit pelin ${time} sekunnissa!';
+			case 'matchScreen.playAgain': return 'Pelaa uudelleen';
+			case 'matchScreen.backToOptions': return 'Takaisin valintoihin';
+			case 'matchScreen.leaderboard.title': return 'Tulostaulu';
+			case 'matchScreen.leaderboard.noRecords': return 'Ei vielä tuloksia. Ole ensimmäinen!';
+			case 'matchScreen.leaderboard.time': return ({required Object time}) => '${time} sekuntia';
+			case 'matchScreen.errors.noTerms': return 'Yhdistäpelissä ei ole saatavilla termejä.';
+			case 'matchScreen.errors.notEnoughTerms': return 'Pelaamiseen tarvitaan vähintään yksi termi/määritelmä-pari.';
 			case 'testScreen.title': return 'Testi';
 			case 'testScreen.noQuestions': return 'Tässä testissä ei ole kysymyksiä.';
 			case 'testScreen.viewResults': return 'Näytä tulokset';

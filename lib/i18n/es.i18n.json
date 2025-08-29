@@ -130,6 +130,11 @@
     "timeCompleted": "¡Terminaste en $time segundos!",
     "playAgain": "Jugar de nuevo",
     "backToOptions": "Volver a las opciones",
+    "leaderboard": {
+      "title": "Tabla de clasificación",
+      "noRecords": "Aún no hay récords. ¡Sé el primero!",
+      "time": "$time Segundos"
+    },
     "errors": {
       "noTerms": "No hay términos disponibles para el modo Combinar.",
       "notEnoughTerms": "Se requiere al menos un par de término/definición para jugar."

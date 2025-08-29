@@ -51,6 +51,7 @@ class Translations implements BaseTranslations<AppLocale, Translations> {
 	late final TranslationsModeSelectionScreenEn modeSelectionScreen = TranslationsModeSelectionScreenEn._(_root);
 	late final TranslationsFlashcardScreenEn flashcardScreen = TranslationsFlashcardScreenEn._(_root);
 	late final TranslationsLearnScreenEn learnScreen = TranslationsLearnScreenEn._(_root);
+	late final TranslationsMatchScreenEn matchScreen = TranslationsMatchScreenEn._(_root);
 	late final TranslationsTestScreenEn testScreen = TranslationsTestScreenEn._(_root);
 	late final TranslationsResultsScreenEn resultsScreen = TranslationsResultsScreenEn._(_root);
 	late final TranslationsSettingsScreenEn settingsScreen = TranslationsSettingsScreenEn._(_root);
@@ -261,6 +262,9 @@ class TranslationsModeSelectionScreenEn {
 	/// en: 'Test'
 	String get test => 'Test';
 
+	/// en: 'Match'
+	String get match => 'Match';
+
 	/// en: 'Back to Welcome Screen'
 	String get backToWelcome => 'Back to Welcome Screen';
 }
@@ -327,6 +331,33 @@ class TranslationsLearnScreenEn {
 	late final TranslationsLearnScreenErrorsEn errors = TranslationsLearnScreenErrorsEn._(_root);
 	late final TranslationsLearnScreenFeedbackEn feedback = TranslationsLearnScreenFeedbackEn._(_root);
 	late final TranslationsLearnScreenProgressEn progress = TranslationsLearnScreenProgressEn._(_root);
+}
+
+// Path: matchScreen
+class TranslationsMatchScreenEn {
+	TranslationsMatchScreenEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Match'
+	String get title => 'Match';
+
+	/// en: 'Congratulations!'
+	String get congratulations => 'Congratulations!';
+
+	/// en: 'You finished in $time seconds!'
+	String timeCompleted({required Object time}) => 'You finished in ${time} seconds!';
+
+	/// en: 'Play Again'
+	String get playAgain => 'Play Again';
+
+	/// en: 'Back to Options'
+	String get backToOptions => 'Back to Options';
+
+	late final TranslationsMatchScreenLeaderboardEn leaderboard = TranslationsMatchScreenLeaderboardEn._(_root);
+	late final TranslationsMatchScreenErrorsEn errors = TranslationsMatchScreenErrorsEn._(_root);
 }
 
 // Path: testScreen
@@ -657,6 +688,39 @@ class TranslationsLearnScreenProgressEn {
 	String startingCycle({required Object cycleNum, required Object count}) => 'Starting Cycle ${cycleNum} with ${count} item(s)...';
 }
 
+// Path: matchScreen.leaderboard
+class TranslationsMatchScreenLeaderboardEn {
+	TranslationsMatchScreenLeaderboardEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Leaderboard'
+	String get title => 'Leaderboard';
+
+	/// en: 'No records yet. Be the first!'
+	String get noRecords => 'No records yet. Be the first!';
+
+	/// en: '$time Seconds'
+	String time({required Object time}) => '${time} Seconds';
+}
+
+// Path: matchScreen.errors
+class TranslationsMatchScreenErrorsEn {
+	TranslationsMatchScreenErrorsEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'No terms available for Match mode.'
+	String get noTerms => 'No terms available for Match mode.';
+
+	/// en: 'At least one term/definition pair is required to play.'
+	String get notEnoughTerms => 'At least one term/definition pair is required to play.';
+}
+
 // Path: testScreen.errors
 class TranslationsTestScreenErrorsEn {
 	TranslationsTestScreenErrorsEn._(this._root);
@@ -832,6 +896,7 @@ extension on Translations {
 			case 'modeSelectionScreen.flashcards': return 'Flashcards';
 			case 'modeSelectionScreen.learn': return 'Learn';
 			case 'modeSelectionScreen.test': return 'Test';
+			case 'modeSelectionScreen.match': return 'Match';
 			case 'modeSelectionScreen.backToWelcome': return 'Back to Welcome Screen';
 			case 'flashcardScreen.title': return 'Flashcards';
 			case 'flashcardScreen.noCards': return 'No flashcards to display.';
@@ -861,6 +926,16 @@ extension on Translations {
 				other: 'Max cycles reached. ${count} items still to review.',
 			);
 			case 'learnScreen.progress.startingCycle': return ({required Object cycleNum, required Object count}) => 'Starting Cycle ${cycleNum} with ${count} item(s)...';
+			case 'matchScreen.title': return 'Match';
+			case 'matchScreen.congratulations': return 'Congratulations!';
+			case 'matchScreen.timeCompleted': return ({required Object time}) => 'You finished in ${time} seconds!';
+			case 'matchScreen.playAgain': return 'Play Again';
+			case 'matchScreen.backToOptions': return 'Back to Options';
+			case 'matchScreen.leaderboard.title': return 'Leaderboard';
+			case 'matchScreen.leaderboard.noRecords': return 'No records yet. Be the first!';
+			case 'matchScreen.leaderboard.time': return ({required Object time}) => '${time} Seconds';
+			case 'matchScreen.errors.noTerms': return 'No terms available for Match mode.';
+			case 'matchScreen.errors.notEnoughTerms': return 'At least one term/definition pair is required to play.';
 			case 'testScreen.title': return 'Test';
 			case 'testScreen.noQuestions': return 'No questions for this test.';
 			case 'testScreen.viewResults': return 'View Results';

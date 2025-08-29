@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:hive_ce_flutter/hive_flutter.dart';
 
+import '../models/match_record.dart';
 import '../models/study_list.dart';
 import '../models/term.dart';
 
@@ -9,6 +10,8 @@ class DatabaseService {
   DatabaseService();
 
   static const String _activeListIdKey = 'activeListId';
+  static late Box<MatchRecord> _matchRecordsBox;
+  static const String _matchRecordsBoxName = 'matchRecordsBox';
   static late Box _settingsBox;
   static const String _settingsBoxName = 'settingsBox';
   static late Box<StudyList> _studyListBox;
@@ -20,9 +23,32 @@ class DatabaseService {
 
     Hive.registerAdapter(TermAdapter());
     Hive.registerAdapter(StudyListAdapter());
+    Hive.registerAdapter(MatchRecordAdapter());
 
     _studyListBox = await Hive.openBox<StudyList>(_studyListBoxName);
     _settingsBox = await Hive.openBox(_settingsBoxName);
+    _matchRecordsBox = await Hive.openBox<MatchRecord>(_matchRecordsBoxName);
+  }
+
+  Future<void> saveMatchRecord(MatchRecord record) async {
+    await _matchRecordsBox.add(record);
+  }
+
+  Future<List<MatchRecord>> getRecordsForList(String studyListName) async {
+    final records =
+        _matchRecordsBox.values
+            .where((r) => r.studyListName == studyListName)
+            .toList();
+    records.sort((a, b) => a.timeInTenths.compareTo(b.timeInTenths));
+    return records;
+  }
+
+  Future<List<MatchRecord>> getAllMatchRecords() async {
+    return _matchRecordsBox.values.toList();
+  }
+
+  Future<void> clearAllMatchRecords() async {
+    await _matchRecordsBox.clear();
   }
 
   Future<void> saveStudyListOrder(List<String> order) async {

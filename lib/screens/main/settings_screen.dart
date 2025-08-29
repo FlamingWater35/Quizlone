@@ -7,16 +7,48 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:quizlone/i18n/translations.g.dart';
 import 'package:quizlone/routing/app_router.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:universal_html/html.dart' as html;
 
+import '../../models/match_record.dart';
 import '../../models/study_list.dart';
 import '../../providers/core/core_providers.dart';
 import '../../providers/core/settings_provider.dart';
+import '../../providers/study/study_list_providers.dart';
 import '../../widgets/centered_view.dart';
+import '../modes/match_leaderboard_screen.dart';
+
+part 'settings_screen.g.dart';
+
+@JsonSerializable(explicitToJson: true)
+class AppData {
+  AppData({required this.studyLists, required this.matchRecords});
+
+  factory AppData.fromJson(Map<String, dynamic> json) {
+    return AppData(
+      studyLists:
+          (json['studyLists'] as List<dynamic>)
+              .map((e) => StudyList.fromJson(e as Map<String, dynamic>))
+              .toList(),
+      matchRecords:
+          (json['matchRecords'] as List<dynamic>)
+              .map((e) => MatchRecord.fromJson(e as Map<String, dynamic>))
+              .toList(),
+    );
+  }
+
+  final List<MatchRecord> matchRecords;
+  final List<StudyList> studyLists;
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+    'studyLists': studyLists.map((e) => e.toJson()).toList(),
+    'matchRecords': matchRecords.map((e) => e.toJson()).toList(),
+  };
+}
 
 @RoutePage()
 class SettingsScreen extends ConsumerWidget {
@@ -102,16 +134,19 @@ class SettingsScreen extends ConsumerWidget {
     final dbService = ref.read(databaseServiceProvider);
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     final t = Translations.of(context);
-    final lists = await dbService.getAllStudyLists();
 
-    if (lists.isEmpty) {
+    final lists = await dbService.getAllStudyLists();
+    final records = await dbService.getAllMatchRecords();
+
+    if (lists.isEmpty && records.isEmpty) {
       scaffoldMessenger.showSnackBar(
         SnackBar(content: Text(t.settingsScreen.snackbars.noDataToExport)),
       );
       return;
     }
 
-    final jsonString = jsonEncode(lists.map((l) => l.toJson()).toList());
+    final appData = AppData(studyLists: lists, matchRecords: records);
+    final jsonString = jsonEncode(appData.toJson());
     final bytes = utf8.encode(jsonString);
     const fileName = 'quizlone_backup.json';
 
@@ -256,19 +291,39 @@ class SettingsScreen extends ConsumerWidget {
           jsonString = await file.readAsString();
         }
 
-        final List<dynamic> jsonList = jsonDecode(jsonString);
-        final studyLists =
-            jsonList.map((json) => StudyList.fromJson(json)).toList();
+        final dynamic jsonData = jsonDecode(jsonString);
+        List<StudyList> studyLists = [];
+        List<MatchRecord> matchRecords = [];
+        int importCount = 0;
+
+        if (jsonData is Map<String, dynamic>) {
+          final appData = AppData.fromJson(jsonData);
+          studyLists = appData.studyLists;
+          matchRecords = appData.matchRecords;
+        } else if (jsonData is List<dynamic>) {
+          studyLists =
+              jsonData.map((json) => StudyList.fromJson(json)).toList();
+        } else {
+          throw Exception("Invalid backup file format.");
+        }
+
+        importCount = studyLists.length;
 
         for (var list in studyLists) {
           await dbService.saveStudyList(list);
         }
+
+        if (matchRecords.isNotEmpty) {
+          await dbService.clearAllMatchRecords();
+          for (var record in matchRecords) {
+            await dbService.saveMatchRecord(record);
+          }
+        }
+
         scaffoldMessenger.showSnackBar(
           SnackBar(
             content: Text(
-              t.settingsScreen.snackbars.importSuccess(
-                count: studyLists.length,
-              ),
+              t.settingsScreen.snackbars.importSuccess(count: importCount),
             ),
           ),
         );
@@ -313,6 +368,11 @@ class SettingsScreen extends ConsumerWidget {
 
     if (confirm == true) {
       await dbService.deleteAllStudyLists();
+      await dbService.clearAllMatchRecords();
+
+      ref.invalidate(studyListsProvider);
+      ref.invalidate(matchRecordsProvider);
+
       scaffoldMessenger.showSnackBar(
         SnackBar(content: Text(t.settingsScreen.snackbars.allDeleted)),
       );
