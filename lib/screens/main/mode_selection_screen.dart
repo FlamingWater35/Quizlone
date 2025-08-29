@@ -237,9 +237,17 @@ class _OptionsPanelState extends ConsumerState<_OptionsPanel> {
     final totalTerms =
         ref.watch(activeStudyListProvider).asData?.value?.terms.length ?? 0;
 
+    final bool isMCDisabled = totalTerms < 4;
+    final testFormat = ref.watch(testQuestionFormatProvider);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && isMCDisabled && testFormat == TestFormat.mc) {
+        ref.read(testQuestionFormatProvider.notifier).set(TestFormat.written);
+      }
+    });
+
     final fcStartWith = ref.watch(flashcardStartWithProvider);
     final studyAskWith = ref.watch(studyAskWithProvider);
-    final testFormat = ref.watch(testQuestionFormatProvider);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -370,6 +378,7 @@ class _OptionsPanelState extends ConsumerState<_OptionsPanel> {
                       (value) => ref
                           .read(testQuestionFormatProvider.notifier)
                           .set(value),
+                  isDisabled: isMCDisabled,
                 ),
               ],
             ),
@@ -468,10 +477,12 @@ class _CustomToggleButton<T> extends StatelessWidget {
     required this.value,
     required this.groupValue,
     required this.onChanged,
+    this.isDisabled = false,
   });
 
   final T groupValue;
   final IconData icon;
+  final bool isDisabled;
   final String label;
   final ValueChanged<T> onChanged;
   final T value;
@@ -482,43 +493,51 @@ class _CustomToggleButton<T> extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
+    final Color cardColor =
+        isDisabled
+            ? theme.disabledColor.withAlpha(6)
+            : (isSelected
+                ? colorScheme.secondaryContainer
+                : colorScheme.surface);
+
+    final Color contentColor =
+        isDisabled
+            ? theme.disabledColor
+            : (isSelected
+                ? colorScheme.onSecondaryContainer
+                : colorScheme.onSurfaceVariant);
+
+    final BorderSide borderSide = BorderSide(
+      color:
+          isDisabled
+              ? Colors.transparent
+              : (isSelected ? Colors.transparent : colorScheme.outlineVariant),
+    );
+
     return Expanded(
       child: Card(
         margin: EdgeInsets.zero,
-        elevation: isSelected ? 2 : 0,
-        color:
-            isSelected ? colorScheme.secondaryContainer : colorScheme.surface,
+        elevation: isSelected && !isDisabled ? 2 : 0,
+        color: cardColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
-          side: BorderSide(
-            color: isSelected ? Colors.transparent : colorScheme.outlineVariant,
-          ),
+          side: borderSide,
         ),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
-          onTap: () => onChanged(value),
+          onTap: isDisabled ? null : () => onChanged(value),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  icon,
-                  size: 15.0,
-                  color:
-                      isSelected
-                          ? colorScheme.onSecondaryContainer
-                          : colorScheme.onSurfaceVariant,
-                ),
+                Icon(icon, size: 15.0, color: contentColor),
                 const SizedBox(height: 8),
                 Text(
                   label,
                   textAlign: TextAlign.center,
                   style: theme.textTheme.labelLarge?.copyWith(
-                    color:
-                        isSelected
-                            ? colorScheme.onSecondaryContainer
-                            : colorScheme.onSurfaceVariant,
+                    color: contentColor,
                   ),
                 ),
               ],
