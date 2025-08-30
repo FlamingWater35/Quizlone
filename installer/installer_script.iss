@@ -34,7 +34,7 @@ SetupIconFile=.\icon_transparent.ico
 LicenseFile=..\LICENSE.md
 WizardStyle=modern
 SolidCompression=yes
-; WizardImageFile=.\wizard-image.bmp
+WizardImageFile=.\wizard-image.bmp
 ; WizardSmallImageFile=.\wizard-small-image.bmp
 
 [Languages]
