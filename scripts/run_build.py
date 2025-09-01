@@ -101,7 +101,7 @@ run_command_realtime_colored(["dart", "run", "build_runner", "build", "--delete-
 run_command_realtime_colored(["dart", "run", "slang"], "Build Localization")
 run_command_realtime_colored(["flutter", "build", "apk", "--release", "--split-per-abi"], "Android APK Build (Split Per ABI)")
 run_command_realtime_colored(["flutter", "build", "windows", "--release"], "Windows Build")
-run_command_realtime_colored(["flutter", "build", "web", "--release", f"--base-href=/{REPO_NAME}/"], "Web Build")
+run_command_realtime_colored(["flutter", "build", "web", "--wasm", "--release", f"--base-href=/{REPO_NAME}/"], "Web Build")
 
 print(Style.BRIGHT + Fore.CYAN + "-" * 60)
 print(Style.BRIGHT + Fore.CYAN + "Preparing /docs folder for GitHub Pages...")

@@ -96,7 +96,7 @@ run_command_realtime_colored(["flutter", "clean"], "Flutter Clean")
 run_command_realtime_colored(["flutter", "pub", "get"], "Flutter Pub Get")
 run_command_realtime_colored(["dart", "run", "build_runner", "build", "--delete-conflicting-outputs"], "Build Runner")
 run_command_realtime_colored(["dart", "run", "slang"], "Build Localization")
-run_command_realtime_colored(["flutter", "build", "web", "--release", f"--base-href=/{REPO_NAME}/"], "Web Build")
+run_command_realtime_colored(["flutter", "build", "web", "--wasm", "--release", f"--base-href=/{REPO_NAME}/"], "Web Build")
 
 print(Style.BRIGHT + Fore.CYAN + "-" * 60)
 print(Style.BRIGHT + Fore.CYAN + "Preparing /docs folder for GitHub Pages...")
