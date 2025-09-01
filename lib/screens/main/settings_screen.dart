@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:file_saver/file_saver.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_file_dialog/flutter_file_dialog.dart';
@@ -11,7 +12,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:quizlone/i18n/translations.g.dart';
 import 'package:quizlone/routing/app_router.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:universal_html/html.dart' as html;
 
 import '../../models/match_record.dart';
 import '../../models/settings_app_data.dart';
@@ -129,17 +129,12 @@ class SettingsScreen extends ConsumerWidget {
 
     try {
       if (kIsWeb) {
-        final blob = html.Blob([bytes]);
-        final url = html.Url.createObjectUrlFromBlob(blob);
-        final anchor =
-            html.document.createElement('a') as html.AnchorElement
-              ..href = url
-              ..style.display = 'none'
-              ..download = fileName;
-        html.document.body?.children.add(anchor);
-        anchor.click();
-        html.document.body?.children.remove(anchor);
-        html.Url.revokeObjectUrl(url);
+        await FileSaver.instance.saveFile(
+          name: 'quizlone_backup',
+          bytes: bytes,
+          fileExtension: 'json',
+          mimeType: MimeType.json,
+        );
       } else if (Platform.isAndroid && context.mounted) {
         await showDialog(
           context: context,
