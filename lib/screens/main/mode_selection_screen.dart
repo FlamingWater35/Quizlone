@@ -77,17 +77,14 @@ class ModeSelectionScreen extends ConsumerWidget {
                 tag: list.id,
                 child: Material(
                   type: MaterialType.transparency,
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.all(24.0),
-                    child: LayoutBuilder(
-                      builder: (context, constraints) {
-                        const double breakpoint = 650.0;
-                        final isWide = constraints.maxWidth >= breakpoint;
-                        return isWide
-                            ? _WideLayout(list: list)
-                            : _NarrowLayout(list: list);
-                      },
-                    ),
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      const double breakpoint = 650.0;
+                      final isWide = constraints.maxWidth >= breakpoint;
+                      return isWide
+                          ? _WideLayout(list: list)
+                          : _NarrowLayout(list: list);
+                    },
                   ),
                 ),
               ),
@@ -117,13 +114,16 @@ class _NarrowLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        _ActionPanel(list: list),
-        const Divider(),
-        const _OptionsPanel(),
-      ],
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(24.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _ActionPanel(list: list),
+          const Divider(),
+          const _OptionsPanel(),
+        ],
+      ),
     );
   }
 }
@@ -135,13 +135,22 @@ class _WideLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(flex: 2, child: _ActionPanel(list: list, isWide: true)),
-        const SizedBox(width: 24),
-        const Expanded(flex: 3, child: _OptionsPanel()),
-      ],
+    return Padding(
+      padding: const EdgeInsets.all(24.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(flex: 2, child: _ActionPanel(list: list, isWide: true)),
+          const SizedBox(width: 24),
+          const Expanded(
+            flex: 3,
+            child: SingleChildScrollView(
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              child: _OptionsPanel(),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -154,15 +163,17 @@ class _ActionPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        if (isWide) const SizedBox(height: 40),
-        _ListHeader(list: list, isWide: isWide),
-        const SizedBox(height: 48),
-        const _ActionButtons(),
-        const SizedBox(height: 20),
-      ],
+    return Center(
+      child: ListView(
+        shrinkWrap: true,
+        children: [
+          if (isWide) const SizedBox(height: 20),
+          _ListHeader(list: list, isWide: isWide),
+          const SizedBox(height: 48),
+          const _ActionButtons(),
+          const SizedBox(height: 20),
+        ],
+      ),
     );
   }
 }

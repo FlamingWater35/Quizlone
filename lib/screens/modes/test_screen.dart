@@ -208,15 +208,7 @@ class _TestViewState extends ConsumerState<_TestView> {
                 resultIcon,
                 const SizedBox(width: 12),
               ] else
-                Radio<String>(
-                  value: option,
-                  groupValue: question.userAnswerText,
-                  onChanged:
-                      isSubmitted
-                          ? null
-                          : (_) =>
-                              notifier.updateUserAnswer(questionIndex, option),
-                ),
+                Radio<String>(value: option),
               Expanded(
                 child: Text(
                   option,
@@ -296,20 +288,29 @@ class _TestViewState extends ConsumerState<_TestView> {
               )
             else if (screenState.testFormat == TestFormat.mc &&
                 question.multipleChoiceOptions != null)
-              Column(
-                children:
-                    question.multipleChoiceOptions!
-                        .map(
-                          (option) => _buildMultipleChoiceOption(
-                            context,
-                            option,
-                            question,
-                            index,
-                            notifier,
-                            isSubmitted,
-                          ),
-                        )
-                        .toList(),
+              RadioGroup<String>(
+                groupValue: question.userAnswerText,
+                onChanged: (value) {
+                  if (isSubmitted) return;
+                  if (value != null) {
+                    notifier.updateUserAnswer(index, value);
+                  }
+                },
+                child: Column(
+                  children:
+                      question.multipleChoiceOptions!
+                          .map(
+                            (option) => _buildMultipleChoiceOption(
+                              context,
+                              option,
+                              question,
+                              index,
+                              notifier,
+                              isSubmitted,
+                            ),
+                          )
+                          .toList(),
+                ),
               ),
 
             if (isSubmitted && question.isCorrect == false)

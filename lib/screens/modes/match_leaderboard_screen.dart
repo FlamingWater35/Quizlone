@@ -172,7 +172,7 @@ class _MatchLeaderboardScreenState extends ConsumerState<MatchLeaderboardScreen>
 
                       return ListView.builder(
                         controller: _scrollController,
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
                         itemCount: displayRecords.length,
                         itemBuilder: (context, index) {
                           final record = displayRecords[index];

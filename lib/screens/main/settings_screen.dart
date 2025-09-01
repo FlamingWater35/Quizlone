@@ -397,27 +397,25 @@ class SettingsScreen extends ConsumerWidget {
               _SettingsHeader(title: t.settingsScreen.appearance),
               Card(
                 clipBehavior: Clip.antiAlias,
-                child: Column(
-                  children: [
-                    RadioListTile<ThemeMode>(
-                      title: Text(t.settingsScreen.systemDefault),
-                      value: ThemeMode.system,
-                      groupValue: currentTheme,
-                      onChanged: (value) => themeNotifier.setTheme(value!),
-                    ),
-                    RadioListTile<ThemeMode>(
-                      title: Text(t.settingsScreen.light),
-                      value: ThemeMode.light,
-                      groupValue: currentTheme,
-                      onChanged: (value) => themeNotifier.setTheme(value!),
-                    ),
-                    RadioListTile<ThemeMode>(
-                      title: Text(t.settingsScreen.dark),
-                      value: ThemeMode.dark,
-                      groupValue: currentTheme,
-                      onChanged: (value) => themeNotifier.setTheme(value!),
-                    ),
-                  ],
+                child: RadioGroup<ThemeMode>(
+                  groupValue: currentTheme,
+                  onChanged: (value) => themeNotifier.setTheme(value!),
+                  child: Column(
+                    children: [
+                      RadioListTile<ThemeMode>(
+                        title: Text(t.settingsScreen.systemDefault),
+                        value: ThemeMode.system,
+                      ),
+                      RadioListTile<ThemeMode>(
+                        title: Text(t.settingsScreen.light),
+                        value: ThemeMode.light,
+                      ),
+                      RadioListTile<ThemeMode>(
+                        title: Text(t.settingsScreen.dark),
+                        value: ThemeMode.dark,
+                      ),
+                    ],
+                  ),
                 ),
               ),
               _SettingsHeader(title: t.settingsScreen.language),
