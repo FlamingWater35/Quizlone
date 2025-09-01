@@ -29,6 +29,14 @@ A modern, cross-platform flashcard and study application built with Flutter. Qui
 
 ---
 
+## Requirements
+
+* Android: Android 7 or later
+* Windows: Windows 10 64-bit or later
+* Web: Any modern browser with WebAssembly support
+
+---
+
 ## 🚀 Getting Started
 
 To get a local copy up and running, follow these simple steps.
