@@ -18,22 +18,6 @@ final _log = Logger("StudyListProviders");
 class StudyLists extends _$StudyLists {
   StreamSubscription? _subscription;
 
-  @override
-  Future<List<StudyList>> build() async {
-    _subscription = ref
-        .watch(databaseServiceProvider)
-        .listenToStudyLists()
-        .listen((lists) {
-          state = AsyncData(lists);
-        });
-
-    ref.onDispose(() {
-      _subscription?.cancel();
-    });
-
-    return ref.read(databaseServiceProvider).getAllStudyLists();
-  }
-
   Future<void> reorder(int oldIndex, int newIndex) async {
     final currentLists = state.valueOrNull;
     if (currentLists == null) return;
@@ -57,6 +41,22 @@ class StudyLists extends _$StudyLists {
       _log.severe("Failed to save reordered list", e, s);
       state = AsyncData(currentLists);
     }
+  }
+
+  @override
+  Future<List<StudyList>> build() async {
+    _subscription = ref
+        .watch(databaseServiceProvider)
+        .listenToStudyLists()
+        .listen((lists) {
+          state = AsyncData(lists);
+        });
+
+    ref.onDispose(() {
+      _subscription?.cancel();
+    });
+
+    return ref.read(databaseServiceProvider).getAllStudyLists();
   }
 }
 
@@ -130,10 +130,6 @@ class StudyListFormNotifier extends _$StudyListFormNotifier {
       _log.severe("Error saving list", e, s);
       return false;
     }
-  }
-
-  void goBackToStart() {
-    ref.invalidateSelf();
   }
 
   bool _parseAndValidateTerms() {

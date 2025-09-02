@@ -2,7 +2,7 @@
 $__dart_deferred_initializers__.current=function(a,b,c,$){var B,C,A={
 b_z(d,e,f){var w,v,u=null,t=new B.hr(d,x.c),s=new B.hr(d,x.c)
 s=new A.XE(t,s)
-s.wy(d,u,e,u)
+s.wx(d,u,e,u)
 w=s.a
 v=t.r
 v.toString
@@ -334,19 +334,19 @@ w.k2!==$&&B.a_()
 v=w.k2=new A.aKw()}return v},
 gmt(){return this.ay}}
 A.aKM.prototype={
-gy3(d){return"Tillbaka"},
+gy0(d){return"Tillbaka"},
 gow(d){return"Avbryt"},
 grz(d){return"Ta bort"},
 gjy(d){return"N\xe4sta"},
 gph(){return"F\xf6reg\xe5ende"},
-gwn(d){return"Skicka"},
-gxP(){return"Alla"},
+gwm(d){return"Skicka"},
+gxO(){return"Alla"},
 gA8(){return"Laddar..."},
 hm(d){return"Fel: "+d},
 gB_(d){return"\xc5terst\xe4ll"}}
 A.aKE.prototype={
-gw5(){return"Inst\xe4llningar"},
-gyl(d){return"Kontroller"},
+gw4(){return"Inst\xe4llningar"},
+gyk(d){return"Kontroller"},
 gtI(){return"Om"},
 gtJ(){var w=this.d
 return w===$?this.d=new A.aKA():w}}
@@ -356,10 +356,10 @@ gBr(){return"Visa licenser"}}
 A.aLV.prototype={
 gau(d){return"Quizlone"},
 gBu(){return"V\xe4lkommen!"},
-gyz(){return"Skapa ny lista"},
+gyy(){return"Skapa ny lista"},
 gA7(){return"Ladda sparad lista"},
 gAp(){return"Inga listor sparade \xe4n."},
-vm(d){var w=B.ff("sv")
+vl(d){var w=B.ff("sv")
 return w.$3$one$other(d,"1 term",""+d+" termer")},
 gu5(){var w=this.e
 return w===$?this.e=new A.aLN():w},
@@ -367,38 +367,38 @@ gnD(){var w=this.f
 return w===$?this.f=new A.aLT():w}}
 A.aKU.prototype={
 gau(d){return"Skapa ny lista"},
-guX(){return"Listans namn"},
+guW(){return"Listans namn"},
 gA2(){return"t.ex. Kapitel 1 Ordlista"},
 gAE(){return"Klistra in dina termer nedan:"},
 gAF(){return"(Term p\xe5 en rad, definition p\xe5 n\xe4sta)"},
 gBc(){return y.a},
-gvU(){return"Spara lista"},
+gvT(){return"Spara lista"},
 gd2(){var w=this.d
 return w===$?this.d=new A.aKQ():w}}
 A.aLp.prototype={
 gau(d){return"Alternativ & L\xe4ge"},
 gnu(){return y.w},
 ghP(){return"\xc5terg\xe5 till v\xe4lkomstsk\xe4rmen"},
-gzj(){return"Inst\xe4llningar f\xf6r bildkort"},
-gwa(){return"Visa term f\xf6rst"},
-gw8(){return"Visa definition f\xf6rst"},
-gwm(){return"Inst\xe4llningar f\xf6r Inl\xe4rning & Prov"},
+gzi(){return"Inst\xe4llningar f\xf6r bildkort"},
+gw9(){return"Visa term f\xf6rst"},
+gw7(){return"Visa definition f\xf6rst"},
+gwl(){return"Inst\xe4llningar f\xf6r Inl\xe4rning & Prov"},
 gtT(){return"Visa definition, fr\xe5ga efter term"},
 gtS(){return"Visa term, fr\xe5ga efter definition"},
-gwl(){return"Studiel\xe4ngd:"},
+gwk(){return"Studiel\xe4ngd:"},
 gBx(){return"Skrivet svar"},
 gAk(){return"Flerval"},
 gAY(){return"Acceptera ett kommatecken-separerat svar"},
 gAZ(){return y.q},
-gzk(){return"Bildkort"},
+gzj(){return"Bildkort"},
 gzX(){return"Inl\xe4rning"},
-gvn(){return"Prov"},
+gvm(){return"Prov"},
 gAb(d){return"Matcha"}}
 A.aKI.prototype={
 gau(d){return"Bildkort"},
 gAn(){return"Inga bildkort att visa."},
 geu(){return"Inga termer tillg\xe4ngliga att studera."},
-gwc(d){return"Blanda"},
+gwb(d){return"Blanda"},
 gB2(){return"Starta om"}}
 A.aL9.prototype={
 gau(d){return"Inl\xe4rning"},
@@ -406,7 +406,7 @@ gB3(){return"Starta om inl\xe4rningssessionen"},
 gkV(){return"Tillbaka till alternativ"},
 gtO(){return"Skriv ditt svar h\xe4r..."},
 gni(d){return"Ledtr\xe5d"},
-gwd(d){return"Hoppa \xf6ver"},
+gwc(d){return"Hoppa \xf6ver"},
 gd2(){var w=this.f
 return w===$?this.f=new A.aKY():w},
 goR(){var w=this.r
@@ -427,14 +427,14 @@ A.aM2.prototype={
 gau(d){return"Prov"},
 glg(){return"Inga fr\xe5gor f\xf6r detta prov."},
 gBs(){return"Visa resultat"},
-gwo(){return"L\xe4mna in provet"},
+gwn(){return"L\xe4mna in provet"},
 gd2(){var w=this.d
 return w===$?this.d=new A.aLZ():w}}
 A.aLt.prototype={
 gau(d){return"Provresultat"},
 glg(){return"Det fanns inga fr\xe5gor i detta prov."},
 gBz(){return"Ditt resultat"},
-vY(d,e){return""+d+" / "+e+" r\xe4tt"},
+vX(d,e){return""+d+" / "+e+" r\xe4tt"},
 gri(){return"Granska felaktiga svar:"},
 By(d){return"Ditt svar: "+d},
 gAm(){return"(Inget svar)"},
@@ -443,25 +443,25 @@ gB6(){return"F\xf6rs\xf6k igen"},
 gB8(){return"Repetera med bildkort"}}
 A.aLJ.prototype={
 gau(d){return"Inst\xe4llningar"},
-gxS(d){return"Utseende"},
-guT(d){return"Spr\xe5k"},
+gxR(d){return"Utseende"},
+guS(d){return"Spr\xe5k"},
 gzU(){return"V\xe4lj spr\xe5k"},
-gvw(){return"UI-skalning"},
+gvv(){return"UI-skalning"},
 gBl(){return y.H},
 gt_(){return"Systemstandard"},
 gA0(){return"Ljus"},
-gyF(){return"M\xf6rk"},
-gz1(){return"Engelska"},
-gzi(){return"Finska"},
+gyE(){return"M\xf6rk"},
+gz0(){return"Engelska"},
+gzh(){return"Finska"},
 gBb(){return"Ryska"},
-gwg(){return"Spanska"},
-gwt(){return"Svenska"},
-gyH(){return"Datahantering"},
-gz7(){return"Exportera data"},
-gz8(){return"Spara alla listor till en fil"},
-gzz(){return"Importera data"},
-gzA(){return"Ladda listor fr\xe5n en fil"},
-gyM(){return"Ta bort all data"},
+gwf(){return"Spanska"},
+gws(){return"Svenska"},
+gyG(){return"Datahantering"},
+gz6(){return"Exportera data"},
+gz7(){return"Spara alla listor till en fil"},
+gzy(){return"Importera data"},
+gzz(){return"Ladda listor fr\xe5n en fil"},
+gyL(){return"Ta bort all data"},
 gqP(){var w=this.w
 return w===$?this.w=new A.aLD():w},
 gqg(){var w=this.x
@@ -470,50 +470,50 @@ gmC(){var w=this.y
 return w===$?this.y=new A.aLI():w}}
 A.aKw.prototype={
 gau(d){return"Kontroller"},
-gvD(){return"Gester (Bildkort)"},
+gvC(){return"Gester (Bildkort)"},
 gzR(){return"Tangentbord (Bildkort)"},
 gpa(){return"N\xe4sta kort"},
 gpi(){return"F\xf6reg\xe5ende kort"},
 goZ(){return"V\xe4nd kort"},
-gwu(){return"Svep v\xe4nster"},
-gwv(){return"Svep h\xf6ger"},
-gww(){return"Svep upp eller ner"},
-gxX(){return"H\xf6gerpiltangent"},
-gxW(){return"V\xe4nsterpiltangent"},
-gxY(){return"Upp/ner-piltangenter eller Mellanslag"}}
+gwt(){return"Svep v\xe4nster"},
+gwu(){return"Svep h\xf6ger"},
+gwv(){return"Svep upp eller ner"},
+gxW(){return"H\xf6gerpiltangent"},
+gxV(){return"V\xe4nsterpiltangent"},
+gxX(){return"Upp/ner-piltangenter eller Mellanslag"}}
 A.aKA.prototype={
 gzZ(){return"\xa9 2025 Quizlone"},
-gyO(d){return y.t}}
+gyN(d){return y.t}}
 A.aLN.prototype={
 gau(d){return"Bekr\xe4fta borttagning"},
-yk(d,e){return"\xc4r du s\xe4ker p\xe5 att du vill ta bort '"+e+"'?"}}
+yj(d,e){return"\xc4r du s\xe4ker p\xe5 att du vill ta bort '"+e+"'?"}}
 A.aLT.prototype={
 gau(d){return"Byt namn p\xe5 listan"},
-gve(){return"Byt namn"},
-gz3(){return"En lista med detta namn finns redan."},
-gz2(){return"Listnamnet kan inte vara tomt."}}
+gvd(){return"Byt namn"},
+gz2(){return"En lista med detta namn finns redan."},
+gz1(){return"Listnamnet kan inte vara tomt."}}
 A.aKQ.prototype={
 gA1(){return"Listans namn kan inte vara tomt."},
 geu(){return"Inga termer/definitioner inmatade."},
-gzL(){return y.C},
-yY(d){return"Formatfel n\xe4ra rad "+d+". Tom term eller definition hittades."},
+gzK(){return y.C},
+yX(d){return"Formatfel n\xe4ra rad "+d+". Tom term eller definition hittades."},
 gAr(){return y.M},
-vS(d){return"Det gick inte att spara listan: "+d}}
+vR(d){return"Det gick inte att spara listan: "+d}}
 A.aKY.prototype={
 geu(){return y.g},
 ghb(){return y.U}}
 A.aL2.prototype={
-gyv(){return"R\xe4tt!"},
-zD(d){return"Fel. R\xe4tt svar: "+d},
-zv(d,e){return'Ledtr\xe5d: B\xf6rjar med "'+e+'"'},
-we(d){return"\xd6verhoppad. Svaret var: "+d}}
+gyu(){return"R\xe4tt!"},
+zC(d){return"Fel. R\xe4tt svar: "+d},
+zu(d,e){return'Ledtr\xe5d: B\xf6rjar med "'+e+'"'},
+wd(d){return"\xd6verhoppad. Svaret var: "+d}}
 A.aL7.prototype={
-gxR(){return"Alla termer inl\xe4rda!"},
+gxQ(){return"Alla termer inl\xe4rda!"},
 uc(d,e,f){return"Omg\xe5ng "+d+" | Fr\xe5ga "+e+" av "+f},
-gw2(){return"Inl\xe4rningssessionen \xe4r klar! Bra jobbat!"},
+gw1(){return"Inl\xe4rningssessionen \xe4r klar! Bra jobbat!"},
 Ac(d){var w=B.ff("sv")
 return w.$3$one$other(d,y.R,"Max antal omg\xe5ngar n\xe5ddes. "+d+" fr\xe5gor kvar att repetera.")},
-wi(d,e){return"Startar omg\xe5ng "+e+" med "+d+" fr\xe5ga(or)..."}}
+wh(d,e){return"Startar omg\xe5ng "+e+" med "+d+" fr\xe5ga(or)..."}}
 A.aLj.prototype={
 gau(d){return"Topplista"},
 gAq(){return"Inga rekord \xe4n. Bli den f\xf6rsta!"},
@@ -527,17 +527,17 @@ ghb(){return y.k}}
 A.aLD.prototype={
 gau(d){return"Bekr\xe4fta import"},
 gkY(d){return y.v},
-gvQ(d){return"Importera"}}
+gvP(d){return"Importera"}}
 A.aLx.prototype={
 gau(d){return"Bekr\xe4fta borttagning"},
 gkY(d){return y.l},
-gyL(){return"Ta bort allt"}}
+gyK(){return"Ta bort allt"}}
 A.aLI.prototype={
 gAo(){return"Det finns ingen data att exportera."},
-z9(d){return"Fel vid export av data: "+d},
-zC(d){return""+d+" listor importerades framg\xe5ngsrikt!"},
-zB(d){return"Fel vid import av data: "+d},
-gxQ(){return"Alla studielistor har tagits bort."}}
+z8(d){return"Fel vid export av data: "+d},
+zB(d){return""+d+" listor importerades framg\xe5ngsrikt!"},
+zA(d){return"Fel vid import av data: "+d},
+gxP(){return"Alla studielistor har tagits bort."}}
 var z=a.updateTypes([])
 A.aOx.prototype={
 $1(d){return A.bhI(this.a,d)},
@@ -705,4 +705,4 @@ v(B.jH,[A.aOx,A.aNc,A.aNd,A.aNe,A.aNp,A.aNA,A.aNL,A.aNW,A.aO6,A.aOh,A.aOs,A.aOw,
 B.a6f(b.typeUniverse,JSON.parse('{"XE":{"dt":[],"ic":["dR","dt"]}}'))
 var y={v:"Detta kommer att importera studielistor fr\xe5n en fil. Befintliga listor med samma namn kommer att skrivas \xf6ver. Forts\xe4tta?",t:"En enkel, modern studieapplikation byggd med Flutter.",Q:"Fel vid laddning av studielista f\xf6r provet.",M:"Inga giltiga par av term/definition hittades.",g:"Inga termer tillg\xe4ngliga f\xf6r inl\xe4rningsl\xe4get.",w:"Ingen aktiv studielista hittades eller listan kunde inte laddas.",U:"Inte tillr\xe4ckligt med termer f\xf6r den valda l\xe4ngden.",k:"Inte tillr\xe4ckligt med termer f\xf6r den valda studiel\xe4ngden.",H:"Justera storleken p\xe5 text och gr\xe4nssnittselement",R:"Max antal omg\xe5ngar n\xe5ddes. 1 fr\xe5ga kvar att repetera.",n:"Minst ett par med term/definition kr\xe4vs f\xf6r att spela.",C:"Ogiltigt format. Varje term beh\xf6ver en definition p\xe5 n\xe4sta rad.",q:"Om korrekt svar \xe4r 'a, b', accepteras 'a'",a:"R\xe4ttvisa\nPrincipen om moralisk riktighet\nSol\nEn stj\xe4rna som \xe4r centrum i ett planetsystem",l:"\xc4r du s\xe4ker p\xe5 att du vill ta bort ALLA studielistor? Denna \xe5tg\xe4rd kan inte \xe5ngras."}
 var x={c:B.an("hr<dR,dt>")}};
-(a=>{a["yW6coMrFqyWqKNAdyauw3DuduvY="]=a.current})($__dart_deferred_initializers__);
+(a=>{a["gOXUDEoss8pI3Sl92sQOwKNoSno="]=a.current})($__dart_deferred_initializers__);

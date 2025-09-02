@@ -2,7 +2,7 @@
 $__dart_deferred_initializers__.current=function(a,b,c,$){var B,C,A={
 b_w(d,e,f){var w,v,u=null,t=new B.hr(d,x.c),s=new B.hr(d,x.c)
 s=new A.XB(t,s)
-s.wy(d,u,e,u)
+s.wx(d,u,e,u)
 w=s.a
 v=t.r
 v.toString
@@ -334,19 +334,19 @@ w.k2!==$&&B.a_()
 v=w.k2=new A.aKt()}return v},
 gmt(){return this.ay}}
 A.aKJ.prototype={
-gy3(d){return"Volver"},
+gy0(d){return"Volver"},
 gow(d){return"Cancelar"},
 grz(d){return"Eliminar"},
 gjy(d){return"Siguiente"},
 gph(){return"Anterior"},
-gwn(d){return"Enviar"},
-gxP(){return"Todos"},
+gwm(d){return"Enviar"},
+gxO(){return"Todos"},
 gA8(){return"Cargando..."},
 hm(d){return"Error: "+d},
 gB_(d){return"Reiniciar"}}
 A.aKB.prototype={
-gw5(){return"Ajustes"},
-gyl(d){return"Controles"},
+gw4(){return"Ajustes"},
+gyk(d){return"Controles"},
 gtI(){return"Acerca de"},
 gtJ(){var w=this.d
 return w===$?this.d=new A.aKx():w}}
@@ -356,10 +356,10 @@ gBr(){return"Ver licencias"}}
 A.aLO.prototype={
 gau(d){return"Quizlone"},
 gBu(){return"\xa1Bienvenido!"},
-gyz(){return"Crear nueva lista"},
+gyy(){return"Crear nueva lista"},
 gA7(){return"Cargar lista guardada"},
 gAp(){return"A\xfan no hay listas guardadas."},
-vm(d){var w=B.ff("es")
+vl(d){var w=B.ff("es")
 return w.$3$one$other(d,"1 t\xe9rmino",""+d+" t\xe9rminos")},
 gu5(){var w=this.e
 return w===$?this.e=new A.aLK():w},
@@ -367,38 +367,38 @@ gnD(){var w=this.f
 return w===$?this.f=new A.aLQ():w}}
 A.aKR.prototype={
 gau(d){return"Crear nueva lista"},
-guX(){return"Nombre de la lista"},
+guW(){return"Nombre de la lista"},
 gA2(){return"p. ej., Vocabulario del Cap\xedtulo 1"},
 gAE(){return"Pega tus t\xe9rminos a continuaci\xf3n:"},
 gAF(){return y.C},
 gBc(){return y.P},
-gvU(){return"Guardar lista"},
+gvT(){return"Guardar lista"},
 gd2(){var w=this.d
 return w===$?this.d=new A.aKN():w}}
 A.aLm.prototype={
 gau(d){return"Opciones y Modo"},
 gnu(){return y.X},
 ghP(){return"Volver a la pantalla de bienvenida"},
-gzj(){return"Opciones de tarjetas"},
-gwa(){return"Mostrar t\xe9rmino primero"},
-gw8(){return"Mostrar definici\xf3n primero"},
-gwm(){return"Opciones de aprendizaje y prueba"},
+gzi(){return"Opciones de tarjetas"},
+gw9(){return"Mostrar t\xe9rmino primero"},
+gw7(){return"Mostrar definici\xf3n primero"},
+gwl(){return"Opciones de aprendizaje y prueba"},
 gtT(){return"Mostrar definici\xf3n, preguntar t\xe9rmino"},
 gtS(){return"Mostrar t\xe9rmino, preguntar definici\xf3n"},
-gwl(){return"Longitud de estudio:"},
+gwk(){return"Longitud de estudio:"},
 gBx(){return"Respuesta escrita"},
 gAk(){return"Opci\xf3n m\xfaltiple"},
 gAY(){return"Aceptar una respuesta separada por comas"},
 gAZ(){return y.v},
-gzk(){return"Tarjetas"},
+gzj(){return"Tarjetas"},
 gzX(){return"Aprender"},
-gvn(){return"Prueba"},
+gvm(){return"Prueba"},
 gAb(d){return"Combinar"}}
 A.aKF.prototype={
 gau(d){return"Tarjetas"},
 gAn(){return"No hay tarjetas para mostrar."},
 geu(){return y.f},
-gwc(d){return"Barajar"},
+gwb(d){return"Barajar"},
 gB2(){return"Reiniciar"}}
 A.aKZ.prototype={
 gau(d){return"Aprender"},
@@ -406,7 +406,7 @@ gB3(){return"Reiniciar sesi\xf3n de aprendizaje"},
 gkV(){return"Volver a las opciones"},
 gtO(){return"Escribe tu respuesta aqu\xed..."},
 gni(d){return"Pista"},
-gwd(d){return"Saltar"},
+gwc(d){return"Saltar"},
 gd2(){var w=this.f
 return w===$?this.f=new A.aKV():w},
 goR(){var w=this.r
@@ -427,14 +427,14 @@ A.aM_.prototype={
 gau(d){return"Prueba"},
 glg(){return"No hay preguntas para esta prueba."},
 gBs(){return"Ver resultados"},
-gwo(){return"Enviar prueba"},
+gwn(){return"Enviar prueba"},
 gd2(){var w=this.d
 return w===$?this.d=new A.aLW():w}}
 A.aLq.prototype={
 gau(d){return"Resultados de la prueba"},
 glg(){return"No hab\xeda preguntas en esta prueba."},
 gBz(){return"Tu puntuaci\xf3n"},
-vY(d,e){return""+d+" / "+e+" correctas"},
+vX(d,e){return""+d+" / "+e+" correctas"},
 gri(){return"Revisar respuestas incorrectas:"},
 By(d){return"Tu respuesta: "+d},
 gAm(){return"(Sin respuesta)"},
@@ -443,25 +443,25 @@ gB6(){return"Reintentar prueba"},
 gB8(){return"Revisar con tarjetas"}}
 A.aLy.prototype={
 gau(d){return"Ajustes"},
-gxS(d){return"Apariencia"},
-guT(d){return"Idioma"},
+gxR(d){return"Apariencia"},
+guS(d){return"Idioma"},
 gzU(){return"Seleccionar idioma"},
-gvw(){return"Escalado de la interfaz"},
+gvv(){return"Escalado de la interfaz"},
 gBl(){return y.L},
 gt_(){return"Predeterminado del sistema"},
 gA0(){return"Claro"},
-gyF(){return"Oscuro"},
-gz1(){return"Ingl\xe9s"},
-gzi(){return"Finland\xe9s"},
+gyE(){return"Oscuro"},
+gz0(){return"Ingl\xe9s"},
+gzh(){return"Finland\xe9s"},
 gBb(){return"Ruso"},
-gwg(){return"Espa\xf1ol"},
-gwt(){return"Sueco"},
-gyH(){return"Gesti\xf3n de datos"},
-gz7(){return"Exportar datos"},
-gz8(){return"Guardar todas las listas en un archivo"},
-gzz(){return"Importar datos"},
-gzA(){return"Cargar listas desde un archivo"},
-gyM(){return"Eliminar todos los datos"},
+gwf(){return"Espa\xf1ol"},
+gws(){return"Sueco"},
+gyG(){return"Gesti\xf3n de datos"},
+gz6(){return"Exportar datos"},
+gz7(){return"Guardar todas las listas en un archivo"},
+gzy(){return"Importar datos"},
+gzz(){return"Cargar listas desde un archivo"},
+gyL(){return"Eliminar todos los datos"},
 gqP(){var w=this.w
 return w===$?this.w=new A.aLA():w},
 gqg(){var w=this.x
@@ -470,50 +470,50 @@ gmC(){var w=this.y
 return w===$?this.y=new A.aLF():w}}
 A.aKt.prototype={
 gau(d){return"Controles"},
-gvD(){return"Gestos (Tarjetas)"},
+gvC(){return"Gestos (Tarjetas)"},
 gzR(){return"Teclado (Tarjetas)"},
 gpa(){return"Siguiente tarjeta"},
 gpi(){return"Tarjeta anterior"},
 goZ(){return"Voltear tarjeta"},
-gwu(){return"Deslizar a la izquierda"},
-gwv(){return"Deslizar a la derecha"},
-gww(){return"Deslizar hacia arriba o abajo"},
-gxX(){return"Tecla de flecha derecha"},
-gxW(){return"Tecla de flecha izquierda"},
-gxY(){return y.b}}
+gwt(){return"Deslizar a la izquierda"},
+gwu(){return"Deslizar a la derecha"},
+gwv(){return"Deslizar hacia arriba o abajo"},
+gxW(){return"Tecla de flecha derecha"},
+gxV(){return"Tecla de flecha izquierda"},
+gxX(){return y.b}}
 A.aKx.prototype={
 gzZ(){return"\xa9 2025 Quizlone"},
-gyO(d){return y.a}}
+gyN(d){return y.a}}
 A.aLK.prototype={
 gau(d){return"Confirmar eliminaci\xf3n"},
-yk(d,e){return"\xbfEst\xe1s seguro de que quieres eliminar '"+e+"'?"}}
+yj(d,e){return"\xbfEst\xe1s seguro de que quieres eliminar '"+e+"'?"}}
 A.aLQ.prototype={
 gau(d){return"Renombrar lista"},
-gve(){return"Renombrar"},
-gz3(){return"Ya existe una lista con este nombre."},
-gz2(){return y.N}}
+gvd(){return"Renombrar"},
+gz2(){return"Ya existe una lista con este nombre."},
+gz1(){return y.N}}
 A.aKN.prototype={
 gA1(){return y.N},
 geu(){return y._},
-gzL(){return y.n},
-yY(d){return"Error de formato cerca de la l\xednea "+d+y.Z},
+gzK(){return y.n},
+yX(d){return"Error de formato cerca de la l\xednea "+d+y.Z},
 gAr(){return y.O},
-vS(d){return"No se pudo guardar la lista: "+d}}
+vR(d){return"No se pudo guardar la lista: "+d}}
 A.aKV.prototype={
 geu(){return y.B},
 ghb(){return y.h}}
 A.aL_.prototype={
-gyv(){return"\xa1Correcto!"},
-zD(d){return"Incorrecto. La respuesta correcta es: "+d},
-zv(d,e){return'Pista: Empieza con "'+e+'"'},
-we(d){return"Saltado. La respuesta era: "+d}}
+gyu(){return"\xa1Correcto!"},
+zC(d){return"Incorrecto. La respuesta correcta es: "+d},
+zu(d,e){return'Pista: Empieza con "'+e+'"'},
+wd(d){return"Saltado. La respuesta era: "+d}}
 A.aL4.prototype={
-gxR(){return"\xa1Todos los t\xe9rminos aprendidos!"},
+gxQ(){return"\xa1Todos los t\xe9rminos aprendidos!"},
 uc(d,e,f){return"Ciclo "+d+" | Elemento "+e+" de "+f},
-gw2(){return y.k},
+gw1(){return y.k},
 Ac(d){var w=B.ff("es")
 return w.$3$one$other(d,y.H,"Se alcanz\xf3 el m\xe1ximo de ciclos. Quedan "+d+" elementos por repasar.")},
-wi(d,e){return"Iniciando ciclo "+e+" con "+d+" elemento(s)..."}}
+wh(d,e){return"Iniciando ciclo "+e+" con "+d+" elemento(s)..."}}
 A.aLg.prototype={
 gau(d){return"Tabla de clasificaci\xf3n"},
 gAq(){return"A\xfan no hay r\xe9cords. \xa1S\xe9 el primero!"},
@@ -527,17 +527,17 @@ ghb(){return y.W}}
 A.aLA.prototype={
 gau(d){return"Confirmar importaci\xf3n"},
 gkY(d){return y.s},
-gvQ(d){return"Importar"}}
+gvP(d){return"Importar"}}
 A.aLu.prototype={
 gau(d){return"Confirmar eliminaci\xf3n"},
 gkY(d){return y.x},
-gyL(){return"Eliminar todo"}}
+gyK(){return"Eliminar todo"}}
 A.aLF.prototype={
 gAo(){return"No hay datos para exportar."},
-z9(d){return"Error al exportar datos: "+d},
-zC(d){return"\xa1Se importaron "+d+" listas con \xe9xito!"},
-zB(d){return"Error al importar datos: "+d},
-gxQ(){return y.J}}
+z8(d){return"Error al exportar datos: "+d},
+zB(d){return"\xa1Se importaron "+d+" listas con \xe9xito!"},
+zA(d){return"Error al importar datos: "+d},
+gxP(){return y.J}}
 var z=a.updateTypes([])
 A.aOA.prototype={
 $1(d){return A.bhL(this.a,d)},
@@ -705,4 +705,4 @@ v(B.jH,[A.aOA,A.aO9,A.aOa,A.aOb,A.aOc,A.aOd,A.aOe,A.aOf,A.aOg,A.aOi,A.aOj,A.aOk,
 B.a6f(b.typeUniverse,JSON.parse('{"XB":{"dt":[],"ic":["dR","dt"]}}'))
 var y={C:"(T\xe9rmino en una l\xednea, definici\xf3n en la siguiente)",Z:". Se encontr\xf3 un t\xe9rmino o definici\xf3n vac\xedos.",L:"Ajusta el tama\xf1o del texto y los elementos de la interfaz",N:"El nombre de la lista no puede estar vac\xedo.",Q:"Error al cargar la lista de estudio para la prueba.",s:"Esto importar\xe1 listas de estudio desde un archivo. Cualquier lista existente con el mismo nombre ser\xe1 sobrescrita. \xbfContinuar?",n:"Formato inv\xe1lido. Cada t\xe9rmino necesita una definici\xf3n en la siguiente l\xednea.",P:"Justicia\nEl principio de rectitud moral\nSol\nUna estrella que es el centro de un sistema planetario",W:"No hay suficientes t\xe9rminos para la longitud de estudio seleccionada.",h:"No hay suficientes t\xe9rminos para la longitud seleccionada.",B:"No hay t\xe9rminos disponibles para el modo de aprendizaje.",f:"No hay t\xe9rminos disponibles para estudiar.",I:"No hay t\xe9rminos disponibles para la prueba.",O:"No se encontraron pares de t\xe9rmino/definici\xf3n v\xe1lidos.",X:"No se encontr\xf3 una lista de estudio activa o no se pudo cargar la lista.",_:"No se han introducido t\xe9rminos/definiciones.",H:"Se alcanz\xf3 el m\xe1ximo de ciclos. Queda 1 elemento por repasar.",R:"Se requiere al menos un par de t\xe9rmino/definici\xf3n para jugar.",v:"Si la respuesta correcta es 'a, b', se acepta 'a'",b:"Teclas de flecha arriba/abajo o Barra espaciadora",J:"Todas las listas de estudio han sido eliminadas.",a:"Una aplicaci\xf3n de estudio simple y moderna creada con Flutter.",k:"\xa1Sesi\xf3n de aprendizaje completa! \xa1Bien hecho!",x:"\xbfEst\xe1s seguro de que quieres eliminar TODAS las listas de estudio? Esta acci\xf3n no se puede deshacer."}
 var x={c:B.an("hr<dR,dt>")}};
-(a=>{a["T+uI1qvAIlEinX2tgjNVko/VNQ8="]=a.current})($__dart_deferred_initializers__);
+(a=>{a["6sFGPT/WIfypJnTRB/W/z9lGrBY="]=a.current})($__dart_deferred_initializers__);

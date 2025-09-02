@@ -24,7 +24,7 @@ final activeStudyListProvider = AutoDisposeFutureProvider<StudyList?>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef ActiveStudyListRef = AutoDisposeFutureProviderRef<StudyList?>;
-String _$studyListsHash() => r'b2540c7db7cf62fa6a23835665a0f5ed6a9d7d31';
+String _$studyListsHash() => r'5d3a33cdd20168bb1ef1ef2acd6d97ce4d98e5a9';
 
 /// See also [StudyLists].
 @ProviderFor(StudyLists)
@@ -59,7 +59,7 @@ final activeStudyListIdProvider =
 
 typedef _$ActiveStudyListId = Notifier<String?>;
 String _$studyListFormNotifierHash() =>
-    r'a2c0a07599eb33895bc6c8b6bb032787dc55342d';
+    r'a6785d0bafd028bc46f00061b5f4d24fa8858d73';
 
 /// See also [StudyListFormNotifier].
 @ProviderFor(StudyListFormNotifier)

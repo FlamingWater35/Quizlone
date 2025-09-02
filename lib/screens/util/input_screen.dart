@@ -128,7 +128,6 @@ class _InputScreenState extends ConsumerState<InputScreen> {
                             formState.isLoading
                                 ? null
                                 : () {
-                                  formNotifier.goBackToStart();
                                   context.router.pop();
                                 },
                       ),

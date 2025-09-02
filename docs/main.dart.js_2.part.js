@@ -2,7 +2,7 @@
 $__dart_deferred_initializers__.current=function(a,b,c,$){var B,C,A={
 b_x(d,e,f){var w,v,u=null,t=new B.hr(d,x.c),s=new B.hr(d,x.c)
 s=new A.XC(t,s)
-s.wy(d,u,e,u)
+s.wx(d,u,e,u)
 w=s.a
 v=t.r
 v.toString
@@ -334,19 +334,19 @@ w.k2!==$&&B.a_()
 v=w.k2=new A.aKu()}return v},
 gmt(){return this.ay}}
 A.aKK.prototype={
-gy3(d){return"Takaisin"},
+gy0(d){return"Takaisin"},
 gow(d){return"Peruuta"},
 grz(d){return"Poista"},
 gjy(d){return"Seuraava"},
 gph(){return"Edellinen"},
-gwn(d){return"L\xe4het\xe4"},
-gxP(){return"Kaikki"},
+gwm(d){return"L\xe4het\xe4"},
+gxO(){return"Kaikki"},
 gA8(){return"Ladataan..."},
 hm(d){return"Virhe: "+d},
 gB_(d){return"Nollaa"}}
 A.aKC.prototype={
-gw5(){return"Asetukset"},
-gyl(d){return"Ohjaimet"},
+gw4(){return"Asetukset"},
+gyk(d){return"Ohjaimet"},
 gtI(){return"Tietoja"},
 gtJ(){var w=this.d
 return w===$?this.d=new A.aKy():w}}
@@ -356,10 +356,10 @@ gBr(){return"N\xe4yt\xe4 lisenssit"}}
 A.aLP.prototype={
 gau(d){return"Quizlone"},
 gBu(){return"Tervetuloa!"},
-gyz(){return"Luo uusi lista"},
+gyy(){return"Luo uusi lista"},
 gA7(){return"Lataa tallennettu lista"},
 gAp(){return"Listoja ei ole viel\xe4 tallennettu."},
-vm(d){var w=B.ff("fi")
+vl(d){var w=B.ff("fi")
 return w.$3$one$other(d,"1 termi",""+d+" termi\xe4")},
 gu5(){var w=this.e
 return w===$?this.e=new A.aLL():w},
@@ -367,38 +367,38 @@ gnD(){var w=this.f
 return w===$?this.f=new A.aLR():w}}
 A.aKS.prototype={
 gau(d){return"Luo uusi lista"},
-guX(){return"Listan nimi"},
+guW(){return"Listan nimi"},
 gA2(){return"esim. Luvun 1 sanasto"},
 gAE(){return"Liit\xe4 termit alle:"},
 gAF(){return y.U},
 gBc(){return y.l},
-gvU(){return"Tallenna lista"},
+gvT(){return"Tallenna lista"},
 gd2(){var w=this.d
 return w===$?this.d=new A.aKO():w}}
 A.aLn.prototype={
 gau(d){return"Valinnat & Tila"},
 gnu(){return y.j},
 ghP(){return"Palaa aloitusn\xe4ytt\xf6\xf6n"},
-gzj(){return"Muistikorttien asetukset"},
-gwa(){return"N\xe4yt\xe4 ensin termi"},
-gw8(){return"N\xe4yt\xe4 ensin m\xe4\xe4ritelm\xe4"},
-gwm(){return"Oppimisen & Testin asetukset"},
+gzi(){return"Muistikorttien asetukset"},
+gw9(){return"N\xe4yt\xe4 ensin termi"},
+gw7(){return"N\xe4yt\xe4 ensin m\xe4\xe4ritelm\xe4"},
+gwl(){return"Oppimisen & Testin asetukset"},
 gtT(){return"N\xe4yt\xe4 m\xe4\xe4ritelm\xe4, kysy termi"},
 gtS(){return"N\xe4yt\xe4 termi, kysy m\xe4\xe4ritelm\xe4"},
-gwl(){return"Opiskelun pituus:"},
+gwk(){return"Opiskelun pituus:"},
 gBx(){return"Kirjallinen vastaus"},
 gAk(){return"Monivalinta"},
 gAY(){return"Hyv\xe4ksy yksi pilkulla erotettu vastaus"},
 gAZ(){return y.E},
-gzk(){return"Muistikortit"},
+gzj(){return"Muistikortit"},
 gzX(){return"Opi"},
-gvn(){return"Testi"},
+gvm(){return"Testi"},
 gAb(d){return"Yhdist\xe4peli"}}
 A.aKG.prototype={
 gau(d){return"Muistikortit"},
 gAn(){return"Ei n\xe4ytett\xe4vi\xe4 muistikortteja."},
 geu(){return"Opiskeltavia termej\xe4 ei ole saatavilla."},
-gwc(d){return"Sekoita"},
+gwb(d){return"Sekoita"},
 gB2(){return"Aloita alusta"}}
 A.aL3.prototype={
 gau(d){return"Opi"},
@@ -406,7 +406,7 @@ gB3(){return"Aloita oppimisistunto alusta"},
 gkV(){return"Takaisin valintoihin"},
 gtO(){return"Kirjoita vastauksesi t\xe4h\xe4n..."},
 gni(d){return"Vihje"},
-gwd(d){return"Ohita"},
+gwc(d){return"Ohita"},
 gd2(){var w=this.f
 return w===$?this.f=new A.aKW():w},
 goR(){var w=this.r
@@ -427,14 +427,14 @@ A.aM0.prototype={
 gau(d){return"Testi"},
 glg(){return"T\xe4ss\xe4 testiss\xe4 ei ole kysymyksi\xe4."},
 gBs(){return"N\xe4yt\xe4 tulokset"},
-gwo(){return"L\xe4het\xe4 testi"},
+gwn(){return"L\xe4het\xe4 testi"},
 gd2(){var w=this.d
 return w===$?this.d=new A.aLX():w}}
 A.aLr.prototype={
 gau(d){return"Testin tulokset"},
 glg(){return"T\xe4ss\xe4 testiss\xe4 ei ollut kysymyksi\xe4."},
 gBz(){return"Pisteesi"},
-vY(d,e){return""+d+" / "+e+" oikein"},
+vX(d,e){return""+d+" / "+e+" oikein"},
 gri(){return"Kertaa v\xe4\xe4r\xe4t vastaukset:"},
 By(d){return"Vastauksesi: "+d},
 gAm(){return"(Ei vastausta)"},
@@ -443,25 +443,25 @@ gB6(){return"Yrit\xe4 testi\xe4 uudelleen"},
 gB8(){return"Kertaa muistikorteilla"}}
 A.aLz.prototype={
 gau(d){return"Asetukset"},
-gxS(d){return"Ulkoasu"},
-guT(d){return"Kieli"},
+gxR(d){return"Ulkoasu"},
+guS(d){return"Kieli"},
 gzU(){return"Valitse kieli"},
-gvw(){return"N\xe4yt\xf6n skaalaus"},
+gvv(){return"N\xe4yt\xf6n skaalaus"},
 gBl(){return"S\xe4\xe4d\xe4 tekstin ja elementtien kokoa"},
 gt_(){return"J\xe4rjestelm\xe4n oletus"},
 gA0(){return"Vaalea"},
-gyF(){return"Tumma"},
-gz1(){return"Englanti"},
-gzi(){return"Suomi"},
+gyE(){return"Tumma"},
+gz0(){return"Englanti"},
+gzh(){return"Suomi"},
 gBb(){return"Ven\xe4j\xe4"},
-gwg(){return"Espanja"},
-gwt(){return"Ruotsi"},
-gyH(){return"Tietojen hallinta"},
-gz7(){return"Vie tiedot"},
-gz8(){return"Tallenna kaikki listat tiedostoon"},
-gzz(){return"Tuo tiedot"},
-gzA(){return"Lataa listat tiedostosta"},
-gyM(){return"Poista kaikki tiedot"},
+gwf(){return"Espanja"},
+gws(){return"Ruotsi"},
+gyG(){return"Tietojen hallinta"},
+gz6(){return"Vie tiedot"},
+gz7(){return"Tallenna kaikki listat tiedostoon"},
+gzy(){return"Tuo tiedot"},
+gzz(){return"Lataa listat tiedostosta"},
+gyL(){return"Poista kaikki tiedot"},
 gqP(){var w=this.w
 return w===$?this.w=new A.aLB():w},
 gqg(){var w=this.x
@@ -470,50 +470,50 @@ gmC(){var w=this.y
 return w===$?this.y=new A.aLG():w}}
 A.aKu.prototype={
 gau(d){return"Ohjaimet"},
-gvD(){return"Liikkeet (Muistikortit)"},
+gvC(){return"Liikkeet (Muistikortit)"},
 gzR(){return"N\xe4pp\xe4imist\xf6 (Muistikortit)"},
 gpa(){return"Seuraava kortti"},
 gpi(){return"Edellinen kortti"},
 goZ(){return"K\xe4\xe4nn\xe4 kortti"},
-gwu(){return"Pyyhk\xe4ise vasemmalle"},
-gwv(){return"Pyyhk\xe4ise oikealle"},
-gww(){return"Pyyhk\xe4ise yl\xf6s tai alas"},
-gxX(){return"Oikea nuolin\xe4pp\xe4in"},
-gxW(){return"Vasen nuolin\xe4pp\xe4in"},
-gxY(){return"Yl\xe4-/alanuoli tai v\xe4lily\xf6nti"}}
+gwt(){return"Pyyhk\xe4ise vasemmalle"},
+gwu(){return"Pyyhk\xe4ise oikealle"},
+gwv(){return"Pyyhk\xe4ise yl\xf6s tai alas"},
+gxW(){return"Oikea nuolin\xe4pp\xe4in"},
+gxV(){return"Vasen nuolin\xe4pp\xe4in"},
+gxX(){return"Yl\xe4-/alanuoli tai v\xe4lily\xf6nti"}}
 A.aKy.prototype={
 gzZ(){return"\xa9 2025 Quizlone"},
-gyO(d){return y.R}}
+gyN(d){return y.R}}
 A.aLL.prototype={
 gau(d){return"Vahvista poisto"},
-yk(d,e){return"Haluatko varmasti poistaa listan '"+e+"'?"}}
+yj(d,e){return"Haluatko varmasti poistaa listan '"+e+"'?"}}
 A.aLR.prototype={
 gau(d){return"Nime\xe4 lista uudelleen"},
-gve(){return"Nime\xe4 uudelleen"},
-gz3(){return"T\xe4m\xe4nniminen lista on jo olemassa."},
-gz2(){return"Listan nimi ei voi olla tyhj\xe4."}}
+gvd(){return"Nime\xe4 uudelleen"},
+gz2(){return"T\xe4m\xe4nniminen lista on jo olemassa."},
+gz1(){return"Listan nimi ei voi olla tyhj\xe4."}}
 A.aKO.prototype={
 gA1(){return"Listan nimi ei voi olla tyhj\xe4."},
 geu(){return"Termej\xe4/m\xe4\xe4ritelmi\xe4 ei ole sy\xf6tetty."},
-gzL(){return y.r},
-yY(d){return"Muotovirhe rivin "+d+y.J},
+gzK(){return y.r},
+yX(d){return"Muotovirhe rivin "+d+y.J},
 gAr(){return y.c},
-vS(d){return"Listan tallennus ep\xe4onnistui: "+d}}
+vR(d){return"Listan tallennus ep\xe4onnistui: "+d}}
 A.aKW.prototype={
 geu(){return y.b},
 ghb(){return y.B}}
 A.aL0.prototype={
-gyv(){return"Oikein!"},
-zD(d){return"V\xe4\xe4rin. Oikea vastaus: "+d},
-zv(d,e){return'Vihje: Alkaa kirjaimella "'+e+'"'},
-we(d){return"Ohitettu. Vastaus oli: "+d}}
+gyu(){return"Oikein!"},
+zC(d){return"V\xe4\xe4rin. Oikea vastaus: "+d},
+zu(d,e){return'Vihje: Alkaa kirjaimella "'+e+'"'},
+wd(d){return"Ohitettu. Vastaus oli: "+d}}
 A.aL5.prototype={
-gxR(){return"Kaikki termit opittu!"},
+gxQ(){return"Kaikki termit opittu!"},
 uc(d,e,f){return"Kierros "+d+" | Kohde "+e+" / "+f},
-gw2(){return"Oppimisistunto valmis! Hyv\xe4\xe4 ty\xf6t\xe4!"},
+gw1(){return"Oppimisistunto valmis! Hyv\xe4\xe4 ty\xf6t\xe4!"},
 Ac(d){var w=B.ff("fi")
 return w.$3$one$other(d,y.K,"Enimm\xe4ism\xe4\xe4r\xe4 kierroksia saavutettu. "+d+" kohdetta viel\xe4 kertaamatta.")},
-wi(d,e){return"Aloitetaan kierros "+e+", jossa on "+d+" kohdetta..."}}
+wh(d,e){return"Aloitetaan kierros "+e+", jossa on "+d+" kohdetta..."}}
 A.aLh.prototype={
 gau(d){return"Tulostaulu"},
 gAq(){return"Ei viel\xe4 tuloksia. Ole ensimm\xe4inen!"},
@@ -527,17 +527,17 @@ ghb(){return y._}}
 A.aLB.prototype={
 gau(d){return"Vahvista tuonti"},
 gkY(d){return y.u},
-gvQ(d){return"Tuo"}}
+gvP(d){return"Tuo"}}
 A.aLv.prototype={
 gau(d){return"Vahvista poisto"},
 gkY(d){return y.N},
-gyL(){return"Poista kaikki"}}
+gyK(){return"Poista kaikki"}}
 A.aLG.prototype={
 gAo(){return"Ei viet\xe4vi\xe4 tietoja."},
-z9(d){return"Virhe tietojen vienniss\xe4: "+d},
-zC(d){return""+d+" listaa tuotu onnistuneesti!"},
-zB(d){return"Virhe tietojen tuonnissa: "+d},
-gxQ(){return"Kaikki opiskelulistat on poistettu."}}
+z8(d){return"Virhe tietojen vienniss\xe4: "+d},
+zB(d){return""+d+" listaa tuotu onnistuneesti!"},
+zA(d){return"Virhe tietojen tuonnissa: "+d},
+gxP(){return"Kaikki opiskelulistat on poistettu."}}
 var z=a.updateTypes([])
 A.aOz.prototype={
 $1(d){return A.bhK(this.a,d)},
@@ -705,4 +705,4 @@ v(B.jH,[A.aOz,A.aNN,A.aNO,A.aNP,A.aNQ,A.aNR,A.aNS,A.aNT,A.aNU,A.aNV,A.aNX,A.aNY,
 B.a6f(b.typeUniverse,JSON.parse('{"XC":{"dt":[],"ic":["dR","dt"]}}'))
 var y={J:" l\xe4hell\xe4. L\xf6ydettiin tyhj\xe4 termi tai m\xe4\xe4ritelm\xe4.",U:"(Termi yhdelle riville, m\xe4\xe4ritelm\xe4 seuraavalle)",j:"Aktiivista opiskelulistaa ei l\xf6ytynyt tai listaa ei voitu ladata.",_:"Ei tarpeeksi termej\xe4 valitulle opiskelun pituudelle.",B:"Ei tarpeeksi termej\xe4 valitulle pituudelle.",K:"Enimm\xe4ism\xe4\xe4r\xe4 kierroksia saavutettu. 1 kohde viel\xe4 kertaamatta.",N:"Haluatko varmasti poistaa KAIKKI opiskelulistat? T\xe4t\xe4 toimintoa ei voi kumota.",E:"Jos oikea vastaus on 'a, b', 'a' hyv\xe4ksyt\xe4\xe4n",c:"Kelvollisia termi/m\xe4\xe4ritelm\xe4-pareja ei l\xf6ytynyt.",l:"Oikeus\nMoraalisen oikeudenmukaisuuden periaate\nAurinko\nT\xe4hti, joka on planeettaj\xe4rjestelm\xe4n keskus",b:"Oppimistilassa ei ole saatavilla termej\xe4.",L:"Pelaamiseen tarvitaan v\xe4hint\xe4\xe4n yksi termi/m\xe4\xe4ritelm\xe4-pari.",u:"T\xe4m\xe4 tuo opiskelulistat tiedostosta. Kaikki olemassa olevat listat, joilla on sama nimi, korvataan. Jatketaanko?",P:"Virhe ladattaessa opiskelulistaa testi\xe4 varten.",r:"Virheellinen muoto. Jokaisella termill\xe4 on oltava m\xe4\xe4ritelm\xe4 seuraavalla rivill\xe4.",R:"Yksinkertainen ja moderni opiskelusovellus, joka on rakennettu Flutterilla."}
 var x={c:B.an("hr<dR,dt>")}};
-(a=>{a["MxFYl2RKb7gI2m4J5pz9kjLOQgQ="]=a.current})($__dart_deferred_initializers__);
+(a=>{a["xkq7gVhF1wVGsNaUJEBI0C9pvQg="]=a.current})($__dart_deferred_initializers__);
