@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
@@ -40,6 +41,14 @@ class _InputScreenState extends ConsumerState<InputScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (kIsWeb && !context.router.canPop()) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (context.mounted) {
+          context.router.replaceAll([const StartRoute(), const InputRoute()]);
+        }
+      });
+    }
+
     final formState = ref.watch(studyListFormNotifierProvider);
     final formNotifier = ref.read(studyListFormNotifierProvider.notifier);
     final textTheme = Theme.of(context).textTheme;

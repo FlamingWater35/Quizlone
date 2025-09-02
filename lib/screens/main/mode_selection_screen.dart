@@ -167,7 +167,7 @@ class _ActionPanel extends StatelessWidget {
       child: ListView(
         shrinkWrap: true,
         children: [
-          if (isWide) const SizedBox(height: 20),
+          if (isWide) const SizedBox(height: 10),
           _ListHeader(list: list, isWide: isWide),
           const SizedBox(height: 48),
           const _ActionButtons(),
@@ -294,7 +294,7 @@ class _OptionsPanelState extends ConsumerState<_OptionsPanel> {
             ),
           ],
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 8),
         _SettingsCard(
           title: t.modeSelectionScreen.studyOptions,
           children: [
@@ -380,7 +380,7 @@ class _OptionsPanelState extends ConsumerState<_OptionsPanel> {
             ),
           ],
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 8),
         _SettingsCard(
           title: "${t.modeSelectionScreen.test} Options",
           children: [
