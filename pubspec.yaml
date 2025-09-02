@@ -24,6 +24,10 @@ dependencies:
   # Navigation
   auto_route: ^10.1.0+1
 
+  # Cloud database
+  supabase_flutter: ^2.10.0
+  flutter_dotenv: ^6.0.0
+
   # Utility
   logging: ^1.3.0
   animations: ^2.0.11
@@ -49,8 +53,6 @@ dependencies:
   dio: ^5.9.0
   http: ^1.5.0
   open_filex: ^4.7.0
-  supabase_flutter: ^2.10.0
-  flutter_dotenv: ^6.0.0
 
 dev_dependencies:
   flutter_test:
