@@ -247,7 +247,12 @@ class _LearnViewState extends ConsumerState<_LearnView> {
           !nextQuestionSubmitted &&
           mounted) {
         _answerController.clear();
-        _focusNode.requestFocus();
+
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) {
+            _focusNode.requestFocus();
+          }
+        });
       }
     });
 
