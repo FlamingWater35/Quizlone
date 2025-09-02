@@ -3,7 +3,7 @@
 ; ===================================================================
 
 #define MyAppName "Quizlone"
-#define MyAppVersion "1.1.1"
+#define MyAppVersion "1.1.2"
 #define MyAppPublisher "FlamingWater"
 #define MyAppURL "https://github.com/FlamingWater35/Quizlone"
 #define MyAppExeName "quizlone.exe"
