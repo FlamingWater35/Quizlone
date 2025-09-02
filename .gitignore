@@ -47,6 +47,3 @@ app.*.map.json
 # Keystore and key properties
 android/upload-keystore.jks
 android/key.properties
-
-# Installer
-installer/output
