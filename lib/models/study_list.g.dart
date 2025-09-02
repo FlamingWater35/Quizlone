@@ -26,13 +26,14 @@ class StudyListAdapter extends TypeAdapter<StudyList> {
       ..testStudyLength = (fields[6] as num?)?.toInt()
       .._testFormatString = fields[7] as String
       ..lastOpenedAt = fields[8] as DateTime?
-      ..id = fields[9] as String;
+      ..id = fields[9] as String
+      ..allowAnswerSubstring = fields[10] == null ? false : fields[10] as bool;
   }
 
   @override
   void write(BinaryWriter writer, StudyList obj) {
     writer
-      ..writeByte(10)
+      ..writeByte(11)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -52,7 +53,9 @@ class StudyListAdapter extends TypeAdapter<StudyList> {
       ..writeByte(8)
       ..write(obj.lastOpenedAt)
       ..writeByte(9)
-      ..write(obj.id);
+      ..write(obj.id)
+      ..writeByte(10)
+      ..write(obj.allowAnswerSubstring);
   }
 
   @override
@@ -72,6 +75,7 @@ class StudyListAdapter extends TypeAdapter<StudyList> {
 
 StudyList _$StudyListFromJson(Map<String, dynamic> json) =>
     StudyList()
+      ..allowAnswerSubstring = json['allowAnswerSubstring'] as bool
       ..createdAt = DateTime.parse(json['createdAt'] as String)
       ..flashcardShowTermFirst = json['flashcardShowTermFirst'] as bool
       ..id = json['id'] as String
@@ -89,6 +93,7 @@ StudyList _$StudyListFromJson(Map<String, dynamic> json) =>
       ..testStudyLength = (json['testStudyLength'] as num?)?.toInt();
 
 Map<String, dynamic> _$StudyListToJson(StudyList instance) => <String, dynamic>{
+  'allowAnswerSubstring': instance.allowAnswerSubstring,
   'createdAt': instance.createdAt.toIso8601String(),
   'flashcardShowTermFirst': instance.flashcardShowTermFirst,
   'id': instance.id,

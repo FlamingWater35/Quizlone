@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../i18n/translations.g.dart';
+import '../../i18n/generated/translations.g.dart';
 import '../../models/match_record.dart';
 import '../../models/term.dart';
 import '../core/core_providers.dart';

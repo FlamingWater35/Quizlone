@@ -155,6 +155,8 @@ class _TranslationsModeSelectionScreenEs implements TranslationsModeSelectionScr
 	@override String get testFormat => 'Formato de prueba';
 	@override String get writtenAnswer => 'Respuesta escrita';
 	@override String get multipleChoice => 'Opción múltiple';
+	@override String get requireOnlyOneAnswer => 'Aceptar una respuesta separada por comas';
+	@override String get requireOnlyOneAnswerSubtitle => 'Si la respuesta correcta es \'a, b\', se acepta \'a\'';
 	@override String get flashcards => 'Tarjetas';
 	@override String get learn => 'Aprender';
 	@override String get test => 'Prueba';
@@ -548,6 +550,8 @@ extension on TranslationsEs {
 			case 'modeSelectionScreen.testFormat': return 'Formato de prueba';
 			case 'modeSelectionScreen.writtenAnswer': return 'Respuesta escrita';
 			case 'modeSelectionScreen.multipleChoice': return 'Opción múltiple';
+			case 'modeSelectionScreen.requireOnlyOneAnswer': return 'Aceptar una respuesta separada por comas';
+			case 'modeSelectionScreen.requireOnlyOneAnswerSubtitle': return 'Si la respuesta correcta es \'a, b\', se acepta \'a\'';
 			case 'modeSelectionScreen.flashcards': return 'Tarjetas';
 			case 'modeSelectionScreen.learn': return 'Aprender';
 			case 'modeSelectionScreen.test': return 'Prueba';

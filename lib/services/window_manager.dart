@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:quizlone/i18n/translations.g.dart';
+import 'package:quizlone/i18n/generated/translations.g.dart';
 import 'package:window_manager/window_manager.dart';
 
 bool get _isWindows {

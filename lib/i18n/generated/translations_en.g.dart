@@ -253,6 +253,12 @@ class TranslationsModeSelectionScreenEn {
 	/// en: 'Multiple Choice'
 	String get multipleChoice => 'Multiple Choice';
 
+	/// en: 'Accept one comma-separated answer'
+	String get requireOnlyOneAnswer => 'Accept one comma-separated answer';
+
+	/// en: 'If correct answer is 'a, b', 'a' is accepted'
+	String get requireOnlyOneAnswerSubtitle => 'If correct answer is \'a, b\', \'a\' is accepted';
+
 	/// en: 'Flashcards'
 	String get flashcards => 'Flashcards';
 
@@ -893,6 +899,8 @@ extension on Translations {
 			case 'modeSelectionScreen.testFormat': return 'Test Format';
 			case 'modeSelectionScreen.writtenAnswer': return 'Written Answer';
 			case 'modeSelectionScreen.multipleChoice': return 'Multiple Choice';
+			case 'modeSelectionScreen.requireOnlyOneAnswer': return 'Accept one comma-separated answer';
+			case 'modeSelectionScreen.requireOnlyOneAnswerSubtitle': return 'If correct answer is \'a, b\', \'a\' is accepted';
 			case 'modeSelectionScreen.flashcards': return 'Flashcards';
 			case 'modeSelectionScreen.learn': return 'Learn';
 			case 'modeSelectionScreen.test': return 'Test';

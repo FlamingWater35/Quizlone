@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
-import 'package:quizlone/i18n/translations.g.dart';
+import 'package:quizlone/i18n/generated/translations.g.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'core_providers.dart';

@@ -80,6 +80,8 @@
     "testFormat": "Provformat",
     "writtenAnswer": "Skrivet svar",
     "multipleChoice": "Flerval",
+    "requireOnlyOneAnswer": "Acceptera ett kommatecken-separerat svar",
+    "requireOnlyOneAnswerSubtitle": "Om korrekt svar är 'a, b', accepteras 'a'",
     "flashcards": "Bildkort",
     "learn": "Inlärning",
     "test": "Prov",

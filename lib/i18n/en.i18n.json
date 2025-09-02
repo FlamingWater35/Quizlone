@@ -80,6 +80,8 @@
     "testFormat": "Test Format",
     "writtenAnswer": "Written Answer",
     "multipleChoice": "Multiple Choice",
+    "requireOnlyOneAnswer": "Accept one comma-separated answer",
+    "requireOnlyOneAnswerSubtitle": "If correct answer is 'a, b', 'a' is accepted",
     "flashcards": "Flashcards",
     "learn": "Learn",
     "test": "Test",

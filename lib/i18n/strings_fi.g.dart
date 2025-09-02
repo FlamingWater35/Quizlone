@@ -155,6 +155,8 @@ class _TranslationsModeSelectionScreenFi implements TranslationsModeSelectionScr
 	@override String get testFormat => 'Testin muoto';
 	@override String get writtenAnswer => 'Kirjallinen vastaus';
 	@override String get multipleChoice => 'Monivalinta';
+	@override String get requireOnlyOneAnswer => 'Hyväksy yksi pilkulla erotettu vastaus';
+	@override String get requireOnlyOneAnswerSubtitle => 'Jos oikea vastaus on \'a, b\', \'a\' hyväksytään';
 	@override String get flashcards => 'Muistikortit';
 	@override String get learn => 'Opi';
 	@override String get test => 'Testi';
@@ -548,6 +550,8 @@ extension on TranslationsFi {
 			case 'modeSelectionScreen.testFormat': return 'Testin muoto';
 			case 'modeSelectionScreen.writtenAnswer': return 'Kirjallinen vastaus';
 			case 'modeSelectionScreen.multipleChoice': return 'Monivalinta';
+			case 'modeSelectionScreen.requireOnlyOneAnswer': return 'Hyväksy yksi pilkulla erotettu vastaus';
+			case 'modeSelectionScreen.requireOnlyOneAnswerSubtitle': return 'Jos oikea vastaus on \'a, b\', \'a\' hyväksytään';
 			case 'modeSelectionScreen.flashcards': return 'Muistikortit';
 			case 'modeSelectionScreen.learn': return 'Opi';
 			case 'modeSelectionScreen.test': return 'Testi';

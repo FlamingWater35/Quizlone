@@ -157,6 +157,8 @@ class _TranslationsModeSelectionScreenSv extends TranslationsModeSelectionScreen
 	@override String get testFormat => 'Provformat';
 	@override String get writtenAnswer => 'Skrivet svar';
 	@override String get multipleChoice => 'Flerval';
+	@override String get requireOnlyOneAnswer => 'Acceptera ett kommatecken-separerat svar';
+	@override String get requireOnlyOneAnswerSubtitle => 'Om korrekt svar är \'a, b\', accepteras \'a\'';
 	@override String get flashcards => 'Bildkort';
 	@override String get learn => 'Inlärning';
 	@override String get test => 'Prov';
@@ -550,6 +552,8 @@ extension on TranslationsSv {
 			case 'modeSelectionScreen.testFormat': return 'Provformat';
 			case 'modeSelectionScreen.writtenAnswer': return 'Skrivet svar';
 			case 'modeSelectionScreen.multipleChoice': return 'Flerval';
+			case 'modeSelectionScreen.requireOnlyOneAnswer': return 'Acceptera ett kommatecken-separerat svar';
+			case 'modeSelectionScreen.requireOnlyOneAnswerSubtitle': return 'Om korrekt svar är \'a, b\', accepteras \'a\'';
 			case 'modeSelectionScreen.flashcards': return 'Bildkort';
 			case 'modeSelectionScreen.learn': return 'Inlärning';
 			case 'modeSelectionScreen.test': return 'Prov';

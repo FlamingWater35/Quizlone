@@ -1,6 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:quizlone/i18n/translations.g.dart';
+import 'package:quizlone/i18n/generated/translations.g.dart';
 
 import '../routing/app_router.dart';
 

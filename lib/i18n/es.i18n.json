@@ -80,6 +80,8 @@
     "testFormat": "Formato de prueba",
     "writtenAnswer": "Respuesta escrita",
     "multipleChoice": "Opción múltiple",
+    "requireOnlyOneAnswer": "Aceptar una respuesta separada por comas",
+    "requireOnlyOneAnswerSubtitle": "Si la respuesta correcta es 'a, b', se acepta 'a'",
     "flashcards": "Tarjetas",
     "learn": "Aprender",
     "test": "Prueba",

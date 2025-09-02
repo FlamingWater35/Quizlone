@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
-import 'package:quizlone/i18n/translations.g.dart';
 import 'package:quizlone/routing/app_router.dart';
 
+import '../../i18n/generated/translations.g.dart';
 import '../../models/enums/enums.dart';
 import '../../models/study_list.dart';
 import '../../providers/study/study_list_providers.dart';
@@ -259,6 +259,7 @@ class _OptionsPanelState extends ConsumerState<_OptionsPanel> {
 
     final fcStartWith = ref.watch(flashcardStartWithProvider);
     final studyAskWith = ref.watch(studyAskWithProvider);
+    final allowSubstring = ref.watch(allowAnswerSubstringProvider);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -295,7 +296,7 @@ class _OptionsPanelState extends ConsumerState<_OptionsPanel> {
         ),
         const SizedBox(height: 16),
         _SettingsCard(
-          title: "${t.modeSelectionScreen.learn} Options",
+          title: t.modeSelectionScreen.studyOptions,
           children: [
             Row(
               children: [
@@ -319,6 +320,22 @@ class _OptionsPanelState extends ConsumerState<_OptionsPanel> {
                           ref.read(studyAskWithProvider.notifier).set(value),
                 ),
               ],
+            ),
+            const Divider(height: 24),
+            SwitchListTile(
+              title: Text(t.modeSelectionScreen.requireOnlyOneAnswer),
+              subtitle: Text(
+                t.modeSelectionScreen.requireOnlyOneAnswerSubtitle,
+              ),
+              value: allowSubstring,
+              onChanged: (value) {
+                ref.read(allowAnswerSubstringProvider.notifier).set(value);
+              },
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.0),
+              ),
+              contentPadding: const EdgeInsets.only(left: 16, right: 8),
+              dense: true,
             ),
             const Divider(height: 24),
             Padding(

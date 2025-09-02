@@ -78,5 +78,23 @@ final studyLengthProvider =
     );
 
 typedef _$StudyLength = AutoDisposeNotifier<int?>;
+String _$allowAnswerSubstringHash() =>
+    r'03466e4c13fe76286f37cad759c97d86c4c6ba68';
+
+/// See also [AllowAnswerSubstring].
+@ProviderFor(AllowAnswerSubstring)
+final allowAnswerSubstringProvider =
+    AutoDisposeNotifierProvider<AllowAnswerSubstring, bool>.internal(
+      AllowAnswerSubstring.new,
+      name: r'allowAnswerSubstringProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$allowAnswerSubstringHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+typedef _$AllowAnswerSubstring = AutoDisposeNotifier<bool>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

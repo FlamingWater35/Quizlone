@@ -80,6 +80,8 @@
     "testFormat": "Testin muoto",
     "writtenAnswer": "Kirjallinen vastaus",
     "multipleChoice": "Monivalinta",
+    "requireOnlyOneAnswer": "Hyväksy yksi pilkulla erotettu vastaus",
+    "requireOnlyOneAnswerSubtitle": "Jos oikea vastaus on 'a, b', 'a' hyväksytään",
     "flashcards": "Muistikortit",
     "learn": "Opi",
     "test": "Testi",

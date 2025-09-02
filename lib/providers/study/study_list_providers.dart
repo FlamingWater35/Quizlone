@@ -5,7 +5,7 @@ import 'package:logging/logging.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '/providers/core/core_providers.dart';
-import '../../i18n/translations.g.dart';
+import '../../i18n/generated/translations.g.dart';
 import '../../models/study_list.dart';
 import '../../models/term.dart';
 import '../immutables/study_list_form_state.dart';

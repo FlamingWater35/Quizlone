@@ -2,17 +2,19 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
-import 'package:quizlone/i18n/translations.g.dart';
+import 'package:quizlone/i18n/generated/translations.g.dart';
 import 'package:quizlone/routing/app_router.dart';
 
 import 'providers/core/settings_provider.dart';
 import 'services/database_service.dart';
+import 'services/migration_service.dart';
 import 'services/window_manager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   _setupLogging();
   await DatabaseService.init();
+  await runMigrations();
 
   final dbService = DatabaseService();
   final savedLangCode = dbService.getLanguage();
@@ -60,7 +62,10 @@ class MyApp extends ConsumerWidget {
           fontSize: 14,
         ),
         actionTextColor: colorScheme.inversePrimary,
-        insetPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+        insetPadding: const EdgeInsets.symmetric(
+          horizontal: 16.0,
+          vertical: 10.0,
+        ),
         elevation: 4.0,
       );
     }

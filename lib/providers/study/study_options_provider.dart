@@ -243,3 +243,54 @@ class StudyLength extends _$StudyLength {
     );
   }
 }
+
+@riverpod
+class AllowAnswerSubstring extends _$AllowAnswerSubstring {
+  void set(bool isEnabled) {
+    final activeList = ref.read(activeStudyListProvider).asData?.value;
+    final dbService = ref.read(databaseServiceProvider);
+
+    if (activeList != null) {
+      activeList.allowAnswerSubstring = isEnabled;
+      _updateListOptionInHive(dbService, activeList).then((_) {
+        state = isEnabled;
+      });
+    } else {
+      state = isEnabled;
+    }
+  }
+
+  @override
+  bool build() {
+    final activeListAsyncValue = ref.watch(activeStudyListProvider);
+
+    return activeListAsyncValue.when(
+      data: (activeList) {
+        if (activeList != null) {
+          _log.fine(
+            "[AllowAnswerSubstring] Initializing from activeList data: ${activeList.allowAnswerSubstring}",
+          );
+          return activeList.allowAnswerSubstring;
+        }
+        _log.fine(
+          "[AllowAnswerSubstring] activeList data is null, defaulting to false",
+        );
+        return false;
+      },
+      loading: () {
+        _log.fine(
+          "[AllowAnswerSubstring] activeStudyListProvider is loading, using previous state or default.",
+        );
+        return stateOrNull ?? false;
+      },
+      error: (err, stack) {
+        _log.warning(
+          "[AllowAnswerSubstring] Error in activeStudyListProvider. Defaulting to false.",
+          err,
+          stack,
+        );
+        return false;
+      },
+    );
+  }
+}

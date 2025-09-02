@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../i18n/translations.g.dart';
+import '../../i18n/generated/translations.g.dart';
 import '../../models/enums/enums.dart';
 import '../../models/study_list.dart';
 import '../../models/term.dart';
@@ -124,13 +124,23 @@ class TestController extends _$TestController {
     final currentState = state.value!;
     if (currentState.questions.isEmpty) return;
 
+    final allowSubstring = ref.read(allowAnswerSubstringProvider);
     List<TestQuestion> gradedQuestions = [];
     for (var q in currentState.questions) {
       bool correct = false;
       if (q.userAnswerText != null) {
-        correct =
-            q.userAnswerText!.trim().toLowerCase() ==
-            q.correctAnswerText.trim().toLowerCase();
+        final userAnswer = q.userAnswerText!.trim().toLowerCase();
+        final correctAnswer = q.correctAnswerText.trim().toLowerCase();
+
+        if (allowSubstring && correctAnswer.contains(',')) {
+          final correctParts = correctAnswer
+              .split(',')
+              .map((p) => p.trim())
+              .where((p) => p.isNotEmpty);
+          correct = correctParts.contains(userAnswer);
+        } else {
+          correct = userAnswer == correctAnswer;
+        }
       }
       gradedQuestions.add(q.copyWith(isCorrect: correct));
     }

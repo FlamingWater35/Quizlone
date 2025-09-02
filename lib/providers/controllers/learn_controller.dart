@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../i18n/translations.g.dart';
+import '../../i18n/generated/translations.g.dart';
 import '../../models/enums/enums.dart';
 import '../../models/term.dart';
 import '../study/study_list_providers.dart';
@@ -152,7 +152,18 @@ class LearnController extends _$LearnController {
     final questionState = currentVal.currentQuestion!;
     final userAnswer = questionState.userAnswer.trim().toLowerCase();
     final correctAnswer = questionState.expectedAnswer.trim().toLowerCase();
-    final bool isCorrect = userAnswer == correctAnswer;
+
+    final allowSubstring = ref.read(allowAnswerSubstringProvider);
+    bool isCorrect;
+    if (allowSubstring && correctAnswer.contains(',')) {
+      final correctParts = correctAnswer
+          .split(',')
+          .map((p) => p.trim())
+          .where((p) => p.isNotEmpty);
+      isCorrect = correctParts.contains(userAnswer);
+    } else {
+      isCorrect = userAnswer == correctAnswer;
+    }
 
     List<Term> updatedIncorrect = List.from(currentVal.termsIncorrectThisCycle);
     if (!isCorrect) {

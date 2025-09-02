@@ -157,6 +157,8 @@ class _TranslationsModeSelectionScreenRu implements TranslationsModeSelectionScr
 	@override String get testFormat => 'Формат теста';
 	@override String get writtenAnswer => 'Письменный ответ';
 	@override String get multipleChoice => 'Множественный выбор';
+	@override String get requireOnlyOneAnswer => 'Принимать одну часть ответа, разделенного запятыми';
+	@override String get requireOnlyOneAnswerSubtitle => 'Если правильный ответ \'а, б\', то \'а\' принимается';
 	@override String get flashcards => 'Карточки';
 	@override String get learn => 'Обучение';
 	@override String get test => 'Тест';
@@ -554,6 +556,8 @@ extension on TranslationsRu {
 			case 'modeSelectionScreen.testFormat': return 'Формат теста';
 			case 'modeSelectionScreen.writtenAnswer': return 'Письменный ответ';
 			case 'modeSelectionScreen.multipleChoice': return 'Множественный выбор';
+			case 'modeSelectionScreen.requireOnlyOneAnswer': return 'Принимать одну часть ответа, разделенного запятыми';
+			case 'modeSelectionScreen.requireOnlyOneAnswerSubtitle': return 'Если правильный ответ \'а, б\', то \'а\' принимается';
 			case 'modeSelectionScreen.flashcards': return 'Карточки';
 			case 'modeSelectionScreen.learn': return 'Обучение';
 			case 'modeSelectionScreen.test': return 'Тест';

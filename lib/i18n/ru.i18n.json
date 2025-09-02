@@ -82,6 +82,8 @@
     "testFormat": "Формат теста",
     "writtenAnswer": "Письменный ответ",
     "multipleChoice": "Множественный выбор",
+    "requireOnlyOneAnswer": "Принимать одну часть ответа, разделенного запятыми",
+    "requireOnlyOneAnswerSubtitle": "Если правильный ответ 'а, б', то 'а' принимается",
     "flashcards": "Карточки",
     "learn": "Обучение",
     "test": "Тест",

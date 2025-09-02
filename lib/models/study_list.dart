@@ -14,6 +14,9 @@ class StudyList {
   factory StudyList.fromJson(Map<String, dynamic> json) =>
       _$StudyListFromJson(json);
 
+  @HiveField(10, defaultValue: false)
+  bool allowAnswerSubstring = false;
+
   @HiveField(2)
   DateTime createdAt = DateTime.now();
 
@@ -69,6 +72,7 @@ class StudyList {
     bool? studyShowDefinitionAskTerm,
     int? testStudyLength,
     TestFormat? testFormat,
+    bool? allowAnswerSubstring,
   }) {
     return StudyList()
       ..id = id ?? this.id
@@ -82,6 +86,8 @@ class StudyList {
       ..studyShowDefinitionAskTerm =
           studyShowDefinitionAskTerm ?? this.studyShowDefinitionAskTerm
       ..testStudyLength = testStudyLength ?? this.testStudyLength
-      ..testFormat = testFormat ?? this.testFormat;
+      ..testFormat = testFormat ?? this.testFormat
+      ..allowAnswerSubstring =
+          allowAnswerSubstring ?? this.allowAnswerSubstring;
   }
 }
