@@ -591,13 +591,13 @@ class CompiledApp {
       _1497: x0 => x0.getReader(),
       _1498: x0 => x0.read(),
       _1499: x0 => x0.cancel(),
-      _1503: f => finalizeWrapper(f, function(x0) { return dartInstance.exports._1503(f,arguments.length,x0) }),
-      _1504: f => finalizeWrapper(f, function(x0) { return dartInstance.exports._1504(f,arguments.length,x0) }),
-      _1505: x0 => x0.openCursor(),
-      _1506: x0 => x0.continue(),
-      _1507: f => finalizeWrapper(f, function(x0) { return dartInstance.exports._1507(f,arguments.length,x0) }),
-      _1508: f => finalizeWrapper(f, function(x0) { return dartInstance.exports._1508(f,arguments.length,x0) }),
-      _1511: f => finalizeWrapper(f, function(x0) { return dartInstance.exports._1511(f,arguments.length,x0) }),
+      _1505: f => finalizeWrapper(f, function(x0) { return dartInstance.exports._1505(f,arguments.length,x0) }),
+      _1512: f => finalizeWrapper(f, function(x0) { return dartInstance.exports._1512(f,arguments.length,x0) }),
+      _1513: f => finalizeWrapper(f, function(x0) { return dartInstance.exports._1513(f,arguments.length,x0) }),
+      _1514: x0 => x0.openCursor(),
+      _1515: x0 => x0.continue(),
+      _1516: f => finalizeWrapper(f, function(x0) { return dartInstance.exports._1516(f,arguments.length,x0) }),
+      _1517: f => finalizeWrapper(f, function(x0) { return dartInstance.exports._1517(f,arguments.length,x0) }),
       _1528: (s, m) => {
         try {
           return new RegExp(s, m);

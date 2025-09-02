@@ -1,15 +1,15 @@
 ((a,b)=>{a[b]=a[b]||{}})(self,"$__dart_deferred_initializers__")
 $__dart_deferred_initializers__.current=function(a,b,c,$){var B,C,A={
-aXa(d,e,f){var w,v,u=null,t=new B.ha(d,x.c),s=new B.ha(d,x.c)
-s=new A.W1(t,s)
-s.wd(d,u,e,u)
+aXZ(d,e,f){var w,v,u=null,t=new B.hc(d,x.c),s=new B.hc(d,x.c)
+s=new A.Wf(t,s)
+s.ww(d,u,e,u)
 w=s.a
 v=t.r
 v.toString
 w.r=v
-t.r=A.beh(s)
+t.r=A.bf6(s)
 return s},
-bed(d,e){var w="Quizlone",v="Asetukset",u="Ohjaimet",t="Luo uusi lista",s="Vahvista poisto",r="Listan nimi ei voi olla tyhj\xe4.",q="Muistikortit",p="Yhdist\xe4peli",o="Takaisin aloitusn\xe4ytt\xf6\xf6n",n="Takaisin valintoihin",m="Vie tiedot"
+bf2(d,e){var w="Quizlone",v="Asetukset",u="Ohjaimet",t="Luo uusi lista",s="Vahvista poisto",r="Listan nimi ei voi olla tyhj\xe4.",q="Muistikortit",p="Yhdist\xe4peli",o="Takaisin aloitusn\xe4ytt\xf6\xf6n",n="Takaisin valintoihin",m="Vie tiedot"
 switch(e){case"appName":return w
 case"general.back":return"Takaisin"
 case"general.cancel":return"Peruuta"
@@ -21,23 +21,23 @@ case"general.saveAndContinue":return"Tallenna ja jatka"
 case"general.submit":return"L\xe4het\xe4"
 case"general.all":return"Kaikki"
 case"general.loading":return"Ladataan..."
-case"general.genericError":return new A.aKz()
+case"general.genericError":return new A.aLp()
 case"general.reset":return"Nollaa"
 case"drawer.settings":return v
 case"drawer.controls":return u
 case"drawer.about":return"Tietoja"
 case"drawer.aboutDialog.legalese":return"\xa9 2025 Quizlone"
 case"drawer.aboutDialog.description":return y.R
-case"aboutScreen.version":return new A.aKB()
+case"aboutScreen.version":return new A.aLr()
 case"aboutScreen.viewLicenses":return"N\xe4yt\xe4 lisenssit"
 case"startScreen.title":return w
 case"startScreen.welcome":return"Tervetuloa!"
 case"startScreen.createNewList":return t
 case"startScreen.loadSavedList":return"Lataa tallennettu lista"
 case"startScreen.noLists":return"Listoja ei ole viel\xe4 tallennettu."
-case"startScreen.termCount":return new A.aKC(d)
+case"startScreen.termCount":return new A.aLs(d)
 case"startScreen.confirmDeleteDialog.title":return s
-case"startScreen.confirmDeleteDialog.content":return new A.aKD()
+case"startScreen.confirmDeleteDialog.content":return new A.aLt()
 case"startScreen.renameListDialog.title":return"Nime\xe4 lista uudelleen"
 case"startScreen.renameListDialog.rename":return"Nime\xe4 uudelleen"
 case"startScreen.renameListDialog.errorNameExists":return"T\xe4m\xe4nniminen lista on jo olemassa."
@@ -52,12 +52,12 @@ case"inputScreen.saveList":return"Tallenna lista"
 case"inputScreen.errors.listNameEmpty":return r
 case"inputScreen.errors.noTerms":return"Termej\xe4/m\xe4\xe4ritelmi\xe4 ei ole sy\xf6tetty."
 case"inputScreen.errors.invalidFormat":return y.r
-case"inputScreen.errors.emptyTerm":return new A.aKE()
+case"inputScreen.errors.emptyTerm":return new A.aLu()
 case"inputScreen.errors.noValidPairs":return y.c
-case"inputScreen.errors.saveFailed":return new A.aKF()
+case"inputScreen.errors.saveFailed":return new A.aLv()
 case"modeSelectionScreen.title":return"Valinnat & Tila"
 case"modeSelectionScreen.noActiveList":return y.j
-case"modeSelectionScreen.debugActiveId":return new A.aKG()
+case"modeSelectionScreen.debugActiveId":return new A.aLw()
 case"modeSelectionScreen.returnToWelcome":return"Palaa aloitusn\xe4ytt\xf6\xf6n"
 case"modeSelectionScreen.flashcardOptions":return"Muistikorttien asetukset"
 case"modeSelectionScreen.showTermFirst":return"N\xe4yt\xe4 ensin termi"
@@ -69,6 +69,8 @@ case"modeSelectionScreen.studyLength":return"Opiskelun pituus:"
 case"modeSelectionScreen.testFormat":return"Testin muoto"
 case"modeSelectionScreen.writtenAnswer":return"Kirjallinen vastaus"
 case"modeSelectionScreen.multipleChoice":return"Monivalinta"
+case"modeSelectionScreen.requireOnlyOneAnswer":return"Hyv\xe4ksy yksi pilkulla erotettu vastaus"
+case"modeSelectionScreen.requireOnlyOneAnswerSubtitle":return y.E
 case"modeSelectionScreen.flashcards":return q
 case"modeSelectionScreen.learn":return"Opi"
 case"modeSelectionScreen.test":return"Testi"
@@ -91,22 +93,22 @@ case"learnScreen.backToModeSelection":return"Takaisin tilan valintaan"
 case"learnScreen.errors.noTerms":return y.b
 case"learnScreen.errors.notEnoughTerms":return y.B
 case"learnScreen.feedback.correct":return"Oikein!"
-case"learnScreen.feedback.incorrect":return new A.aKH()
-case"learnScreen.feedback.hint":return new A.aKI()
-case"learnScreen.feedback.skipped":return new A.aKJ()
+case"learnScreen.feedback.incorrect":return new A.aLx()
+case"learnScreen.feedback.hint":return new A.aLy()
+case"learnScreen.feedback.skipped":return new A.aLz()
 case"learnScreen.progress.allLearned":return"Kaikki termit opittu!"
-case"learnScreen.progress.cycleStatus":return new A.aKK()
+case"learnScreen.progress.cycleStatus":return new A.aLA()
 case"learnScreen.progress.sessionComplete":return"Oppimisistunto valmis! Hyv\xe4\xe4 ty\xf6t\xe4!"
-case"learnScreen.progress.maxCyclesReached":return new A.aKM(d)
-case"learnScreen.progress.startingCycle":return new A.aKN()
+case"learnScreen.progress.maxCyclesReached":return new A.aLC(d)
+case"learnScreen.progress.startingCycle":return new A.aLD()
 case"matchScreen.title":return p
 case"matchScreen.congratulations":return"Onneksi olkoon!"
-case"matchScreen.timeCompleted":return new A.aKO()
+case"matchScreen.timeCompleted":return new A.aLE()
 case"matchScreen.playAgain":return"Pelaa uudelleen"
 case"matchScreen.backToOptions":return n
 case"matchScreen.leaderboard.title":return"Tulostaulu"
 case"matchScreen.leaderboard.noRecords":return"Ei viel\xe4 tuloksia. Ole ensimm\xe4inen!"
-case"matchScreen.leaderboard.time":return new A.aKP()
+case"matchScreen.leaderboard.time":return new A.aLF()
 case"matchScreen.errors.noTerms":return"Yhdist\xe4peliss\xe4 ei ole saatavilla termej\xe4."
 case"matchScreen.errors.notEnoughTerms":return y.L
 case"testScreen.title":return"Testi"
@@ -120,9 +122,9 @@ case"resultsScreen.title":return"Testin tulokset"
 case"resultsScreen.notSubmitted":return"Testi\xe4 ei ole viel\xe4 l\xe4hetetty."
 case"resultsScreen.noQuestions":return"T\xe4ss\xe4 testiss\xe4 ei ollut kysymyksi\xe4."
 case"resultsScreen.yourScore":return"Pisteesi"
-case"resultsScreen.scoreFraction":return new A.aKQ()
+case"resultsScreen.scoreFraction":return new A.aLG()
 case"resultsScreen.reviewIncorrect":return"Kertaa v\xe4\xe4r\xe4t vastaukset:"
-case"resultsScreen.yourAnswerWas":return new A.aKR()
+case"resultsScreen.yourAnswerWas":return new A.aLH()
 case"resultsScreen.noAnswer":return"(Ei vastausta)"
 case"resultsScreen.congratulations":return"Onneksi olkoon! Sait kaiken oikein!"
 case"resultsScreen.retryTest":return"Yrit\xe4 testi\xe4 uudelleen"
@@ -160,10 +162,10 @@ case"settingsScreen.deleteDialog.content":return y.N
 case"settingsScreen.deleteDialog.deleteAll":return"Poista kaikki"
 case"settingsScreen.snackbars.noDataToExport":return"Ei viet\xe4vi\xe4 tietoja."
 case"settingsScreen.snackbars.exportSuccess":return"Tiedot viety onnistuneesti!"
-case"settingsScreen.snackbars.exportError":return new A.aKS()
+case"settingsScreen.snackbars.exportError":return new A.aLI()
 case"settingsScreen.snackbars.fileSaved":return"Tiedosto tallennettu onnistuneesti!"
-case"settingsScreen.snackbars.importSuccess":return new A.aKT()
-case"settingsScreen.snackbars.importError":return new A.aKU()
+case"settingsScreen.snackbars.importSuccess":return new A.aLJ()
+case"settingsScreen.snackbars.importError":return new A.aLK()
 case"settingsScreen.snackbars.allDeleted":return"Kaikki opiskelulistat on poistettu."
 case"controlsScreen.title":return u
 case"controlsScreen.gesturesTitle":return"Liikkeet (Muistikortit)"
@@ -178,509 +180,512 @@ case"controlsScreen.arrowRight":return"Oikea nuolin\xe4pp\xe4in"
 case"controlsScreen.arrowLeft":return"Vasen nuolin\xe4pp\xe4in"
 case"controlsScreen.arrowVerticalOrSpace":return"Yl\xe4-/alanuoli tai v\xe4lily\xf6nti"
 default:return null}},
-beh(d){return new A.aLk(d)},
-W1:function W1(d,e){var _=this
+bf6(d){return new A.aMa(d)},
+Wf:function Wf(d,e){var _=this
 _.ay=d
 _.k2=_.k1=_.id=_.go=_.fy=_.fx=_.fr=_.dy=_.dx=_.db=_.cy=_.cx=_.CW=_.ch=$
 _.a=e
 _.ax=_.at=_.as=_.Q=_.z=_.y=_.x=_.w=_.r=_.f=_.e=_.d=_.c=_.b=$},
-aHz:function aHz(){},
-aHr:function aHr(d,e){var _=this
+aIp:function aIp(){},
+aIh:function aIh(d,e){var _=this
 _.c=d
 _.d=$
 _.a=e
 _.b=$},
-aHf:function aHf(){},
-aIE:function aIE(d,e){var _=this
+aI5:function aI5(){},
+aJu:function aJu(d,e){var _=this
 _.d=d
 _.f=_.e=$
 _.a=e
 _.c=_.b=$},
-aHH:function aHH(d,e){var _=this
+aIx:function aIx(d,e){var _=this
 _.c=d
 _.d=$
 _.a=e
 _.b=$},
-aIc:function aIc(){},
-aHv:function aHv(){},
-aHT:function aHT(d,e){var _=this
+aJ2:function aJ2(){},
+aIl:function aIl(){},
+aIJ:function aIJ(d,e){var _=this
 _.e=d
 _.w=_.r=_.f=$
 _.a=e
 _.d=_.c=_.b=$},
-aI4:function aI4(d,e){var _=this
+aIV:function aIV(d,e){var _=this
 _.d=d
 _.f=_.e=$
 _.a=e
 _.c=_.b=$},
-aIQ:function aIQ(d,e){var _=this
+aJG:function aJG(d,e){var _=this
 _.c=d
 _.d=$
 _.a=e
 _.b=$},
-aIg:function aIg(){},
-aIo:function aIo(d,e){var _=this
+aJ6:function aJ6(){},
+aJe:function aJe(d,e){var _=this
 _.f=d
 _.y=_.x=_.w=$
 _.a=e
 _.e=_.d=_.c=$},
-aHj:function aHj(){},
-aHn:function aHn(){},
-aIA:function aIA(){},
+aI9:function aI9(){},
+aId:function aId(){},
+aJq:function aJq(){},
+aJw:function aJw(){},
+aIt:function aIt(){},
+aIB:function aIB(){},
 aIG:function aIG(){},
-aHD:function aHD(){},
-aHL:function aHL(){},
-aHQ:function aHQ(){},
-aHV:function aHV(d,e){this.b=d
+aIL:function aIL(d,e){this.b=d
 this.a=e},
-aI6:function aI6(){},
-aI0:function aI0(){},
-aIM:function aIM(){},
-aIq:function aIq(){},
-aIk:function aIk(){},
-aIv:function aIv(){},
-aLk:function aLk(d){this.a=d},
-aKz:function aKz(){},
-aKB:function aKB(){},
-aKC:function aKC(d){this.a=d},
-aKD:function aKD(){},
-aKE:function aKE(){},
-aKF:function aKF(){},
-aKG:function aKG(){},
-aKH:function aKH(){},
-aKI:function aKI(){},
-aKJ:function aKJ(){},
-aKK:function aKK(){},
-aKM:function aKM(d){this.a=d},
-aKN:function aKN(){},
-aKO:function aKO(){},
-aKP:function aKP(){},
-aKQ:function aKQ(){},
-aKR:function aKR(){},
-aKS:function aKS(){},
-aKT:function aKT(){},
-aKU:function aKU(){}}
+aIX:function aIX(){},
+aIR:function aIR(){},
+aJC:function aJC(){},
+aJg:function aJg(){},
+aJa:function aJa(){},
+aJl:function aJl(){},
+aMa:function aMa(d){this.a=d},
+aLp:function aLp(){},
+aLr:function aLr(){},
+aLs:function aLs(d){this.a=d},
+aLt:function aLt(){},
+aLu:function aLu(){},
+aLv:function aLv(){},
+aLw:function aLw(){},
+aLx:function aLx(){},
+aLy:function aLy(){},
+aLz:function aLz(){},
+aLA:function aLA(){},
+aLC:function aLC(d){this.a=d},
+aLD:function aLD(){},
+aLE:function aLE(){},
+aLF:function aLF(){},
+aLG:function aLG(){},
+aLH:function aLH(){},
+aLI:function aLI(){},
+aLJ:function aLJ(){},
+aLK:function aLK(){}}
 B=c[0]
 C=c[2]
 A=a.updateHolder(c[4],A)
-A.W1.prototype={
-ghT(){var w=this.ch
+A.Wf.prototype={
+ghY(){var w=this.ch
 return w===$?this.ch=this:w},
-god(){return"Quizlone"},
-gdq(){var w=this,v=w.CW
-if(v===$){w.ghT()
+gos(){return"Quizlone"},
+gds(){var w=this,v=w.CW
+if(v===$){w.ghY()
 w.CW!==$&&B.Y()
-v=w.CW=new A.aHz()}return v},
-glS(){var w,v=this,u=v.cx
-if(u===$){w=v.ghT()
+v=w.CW=new A.aIp()}return v},
+glX(){var w,v=this,u=v.cx
+if(u===$){w=v.ghY()
 v.cx!==$&&B.Y()
-u=v.cx=new A.aHr(w,w)}return u},
-gts(){var w=this,v=w.cy
-if(v===$){w.ghT()
+u=v.cx=new A.aIh(w,w)}return u},
+gtJ(){var w=this,v=w.cy
+if(v===$){w.ghY()
 w.cy!==$&&B.Y()
-v=w.cy=new A.aHf()}return v},
-gfq(){var w,v=this,u=v.db
-if(u===$){w=v.ghT()
+v=w.cy=new A.aI5()}return v},
+gft(){var w,v=this,u=v.db
+if(u===$){w=v.ghY()
 v.db!==$&&B.Y()
-u=v.db=new A.aIE(w,w)}return u},
-gfF(){var w,v=this,u=v.dx
-if(u===$){w=v.ghT()
+u=v.db=new A.aJu(w,w)}return u},
+gfI(){var w,v=this,u=v.dx
+if(u===$){w=v.ghY()
 v.dx!==$&&B.Y()
-u=v.dx=new A.aHH(w,w)}return u},
-gco(){var w=this,v=w.dy
-if(v===$){w.ghT()
+u=v.dx=new A.aIx(w,w)}return u},
+gck(){var w=this,v=w.dy
+if(v===$){w.ghY()
 w.dy!==$&&B.Y()
-v=w.dy=new A.aIc()}return v},
-gn3(){var w=this,v=w.fr
-if(v===$){w.ghT()
+v=w.dy=new A.aJ2()}return v},
+gnd(){var w=this,v=w.fr
+if(v===$){w.ghY()
 w.fr!==$&&B.Y()
-v=w.fr=new A.aHv()}return v},
-geq(){var w,v=this,u=v.fx
-if(u===$){w=v.ghT()
+v=w.fr=new A.aIl()}return v},
+ger(){var w,v=this,u=v.fx
+if(u===$){w=v.ghY()
 v.fx!==$&&B.Y()
-u=v.fx=new A.aHT(w,w)}return u},
-gkk(){var w,v=this,u=v.fy
-if(u===$){w=v.ghT()
+u=v.fx=new A.aIJ(w,w)}return u},
+gkr(){var w,v=this,u=v.fy
+if(u===$){w=v.ghY()
 v.fy!==$&&B.Y()
-u=v.fy=new A.aI4(w,w)}return u},
-gll(){var w,v=this,u=v.go
-if(u===$){w=v.ghT()
+u=v.fy=new A.aIV(w,w)}return u},
+glq(){var w,v=this,u=v.go
+if(u===$){w=v.ghY()
 v.go!==$&&B.Y()
-u=v.go=new A.aIQ(w,w)}return u},
-ghI(){var w=this,v=w.id
-if(v===$){w.ghT()
+u=v.go=new A.aJG(w,w)}return u},
+ghN(){var w=this,v=w.id
+if(v===$){w.ghY()
 w.id!==$&&B.Y()
-v=w.id=new A.aIg()}return v},
-gcr(){var w,v=this,u=v.k1
-if(u===$){w=v.ghT()
+v=w.id=new A.aJ6()}return v},
+gcw(){var w,v=this,u=v.k1
+if(u===$){w=v.ghY()
 v.k1!==$&&B.Y()
-u=v.k1=new A.aIo(w,w)}return u},
-gfh(){var w=this,v=w.k2
-if(v===$){w.ghT()
+u=v.k1=new A.aJe(w,w)}return u},
+gfk(){var w=this,v=w.k2
+if(v===$){w.ghY()
 w.k2!==$&&B.Y()
-v=w.k2=new A.aHj()}return v},
-gmm(){return this.ay}}
-A.aHz.prototype={
-gxG(){return"Takaisin"},
-gog(){return"Peruuta"},
-gre(){return"Poista"},
-gjs(){return"Seuraava"},
-goW(){return"Edellinen"},
-gw2(){return"L\xe4het\xe4"},
-gxt(){return"Kaikki"},
-gzO(){return"Ladataan..."},
-hf(d){return"Virhe: "+d},
-gAD(){return"Nollaa"}}
-A.aHr.prototype={
-gvM(){return"Asetukset"},
-gxY(){return"Ohjaimet"},
-gtq(){return"Tietoja"},
-gtr(){var w=this.d
-return w===$?this.d=new A.aHn():w}}
-A.aHf.prototype={
-B3(d){return"Versio "+d},
-gB4(){return"N\xe4yt\xe4 lisenssit"}}
-A.aIE.prototype={
+v=w.k2=new A.aI9()}return v},
+gms(){return this.ay}}
+A.aIp.prototype={
+gy_(){return"Takaisin"},
+gov(){return"Peruuta"},
+grw(){return"Poista"},
+gjz(){return"Seuraava"},
+gpg(){return"Edellinen"},
+gwl(){return"L\xe4het\xe4"},
+gxN(){return"Kaikki"},
+gA6(){return"Ladataan..."},
+hj(d){return"Virhe: "+d},
+gAX(){return"Nollaa"}}
+A.aIh.prototype={
+gw3(){return"Asetukset"},
+gyj(){return"Ohjaimet"},
+gtH(){return"Tietoja"},
+gtI(){var w=this.d
+return w===$?this.d=new A.aId():w}}
+A.aI5.prototype={
+Bn(d){return"Versio "+d},
+gBo(){return"N\xe4yt\xe4 lisenssit"}}
+A.aJu.prototype={
 gau(){return"Quizlone"},
-gB7(){return"Tervetuloa!"},
-gyd(){return"Luo uusi lista"},
-gzN(){return"Lataa tallennettu lista"},
-gA4(){return"Listoja ei ole viel\xe4 tallennettu."},
-v5(d){var w=B.eZ("fi")
+gBr(){return"Tervetuloa!"},
+gyx(){return"Luo uusi lista"},
+gA5(){return"Lataa tallennettu lista"},
+gAm(){return"Listoja ei ole viel\xe4 tallennettu."},
+vl(d){var w=B.f2("fi")
 return w.$3$one$other(d,"1 termi",""+d+" termi\xe4")},
-gtP(){var w=this.e
-return w===$?this.e=new A.aIA():w},
-gnp(){var w=this.f
-return w===$?this.f=new A.aIG():w}}
-A.aHH.prototype={
+gu4(){var w=this.e
+return w===$?this.e=new A.aJq():w},
+gnC(){var w=this.f
+return w===$?this.f=new A.aJw():w}}
+A.aIx.prototype={
 gau(){return"Luo uusi lista"},
-guG(){return"Listan nimi"},
-gzI(){return"esim. Luvun 1 sanasto"},
-gAj(){return"Liit\xe4 termit alle:"},
-gAk(){return y.U},
-gAQ(){return y.l},
-gvA(){return"Tallenna lista"},
-gd0(){var w=this.d
-return w===$?this.d=new A.aHD():w}}
-A.aIc.prototype={
+guW(){return"Listan nimi"},
+gA0(){return"esim. Luvun 1 sanasto"},
+gAB(){return"Liit\xe4 termit alle:"},
+gAC(){return y.U},
+gB9(){return y.l},
+gvS(){return"Tallenna lista"},
+gd2(){var w=this.d
+return w===$?this.d=new A.aIt():w}}
+A.aJ2.prototype={
 gau(){return"Valinnat & Tila"},
-gng(){return y.j},
-ghJ(){return"Palaa aloitusn\xe4ytt\xf6\xf6n"},
-gz_(){return"Muistikorttien asetukset"},
-gvR(){return"N\xe4yt\xe4 ensin termi"},
-gvP(){return"N\xe4yt\xe4 ensin m\xe4\xe4ritelm\xe4"},
-gtB(){return"N\xe4yt\xe4 m\xe4\xe4ritelm\xe4, kysy termi"},
-gtA(){return"N\xe4yt\xe4 termi, kysy m\xe4\xe4ritelm\xe4"},
-gw1(){return"Opiskelun pituus:"},
-gBa(){return"Kirjallinen vastaus"},
-gA_(){return"Monivalinta"},
-gz0(){return"Muistikortit"},
-guD(){return"Opi"},
-gv6(){return"Testi"},
-gzR(){return"Yhdist\xe4peli"}}
-A.aHv.prototype={
+gnt(){return y.j},
+ghO(){return"Palaa aloitusn\xe4ytt\xf6\xf6n"},
+gzh(){return"Muistikorttien asetukset"},
+gw8(){return"N\xe4yt\xe4 ensin termi"},
+gw6(){return"N\xe4yt\xe4 ensin m\xe4\xe4ritelm\xe4"},
+gwk(){return"Oppimisen & Testin asetukset"},
+gtS(){return"N\xe4yt\xe4 m\xe4\xe4ritelm\xe4, kysy termi"},
+gtR(){return"N\xe4yt\xe4 termi, kysy m\xe4\xe4ritelm\xe4"},
+gwj(){return"Opiskelun pituus:"},
+gBu(){return"Kirjallinen vastaus"},
+gAh(){return"Monivalinta"},
+gAV(){return"Hyv\xe4ksy yksi pilkulla erotettu vastaus"},
+gAW(){return y.E},
+gzi(){return"Muistikortit"},
+gzW(){return"Opi"},
+gvm(){return"Testi"},
+gA9(){return"Yhdist\xe4peli"}}
+A.aIl.prototype={
 gau(){return"Muistikortit"},
-gA2(){return"Ei n\xe4ytett\xe4vi\xe4 muistikortteja."},
-ger(){return"Opiskeltavia termej\xe4 ei ole saatavilla."},
-gvT(d){return"Sekoita"},
-gAG(){return"Aloita alusta"}}
-A.aHT.prototype={
+gAk(){return"Ei n\xe4ytett\xe4vi\xe4 muistikortteja."},
+geu(){return"Opiskeltavia termej\xe4 ei ole saatavilla."},
+gwa(d){return"Sekoita"},
+gB_(){return"Aloita alusta"}}
+A.aIJ.prototype={
 gau(){return"Opi"},
-gAH(){return"Aloita oppimisistunto alusta"},
-gkP(){return"Takaisin valintoihin"},
-gtw(){return"Kirjoita vastauksesi t\xe4h\xe4n..."},
-gn7(){return"Vihje"},
-gvU(d){return"Ohita"},
-gd0(){var w=this.f
-return w===$?this.f=new A.aHL():w},
-goB(){var w=this.r
-return w===$?this.r=new A.aHQ():w},
-gm8(){var w,v=this.w
+gB0(){return"Aloita oppimisistunto alusta"},
+gkV(){return"Takaisin valintoihin"},
+gtN(){return"Kirjoita vastauksesi t\xe4h\xe4n..."},
+gnh(){return"Vihje"},
+gwb(d){return"Ohita"},
+gd2(){var w=this.f
+return w===$?this.f=new A.aIB():w},
+goQ(){var w=this.r
+return w===$?this.r=new A.aIG():w},
+gmd(){var w,v=this.w
 if(v===$){w=this.e
-v=this.w=new A.aHV(w,w)}return v}}
-A.aI4.prototype={
+v=this.w=new A.aIL(w,w)}return v}}
+A.aIV.prototype={
 gau(){return"Yhdist\xe4peli"},
-gkR(){return"Onneksi olkoon!"},
-gAo(){return"Pelaa uudelleen"},
-gkP(){return"Takaisin valintoihin"},
-gqF(){var w=this.e
-return w===$?this.e=new A.aI6():w},
-gd0(){var w=this.f
-return w===$?this.f=new A.aI0():w}}
-A.aIQ.prototype={
+gkX(){return"Onneksi olkoon!"},
+gAG(){return"Pelaa uudelleen"},
+gkV(){return"Takaisin valintoihin"},
+gqW(){var w=this.e
+return w===$?this.e=new A.aIX():w},
+gd2(){var w=this.f
+return w===$?this.f=new A.aIR():w}}
+A.aJG.prototype={
 gau(){return"Testi"},
-glb(){return"T\xe4ss\xe4 testiss\xe4 ei ole kysymyksi\xe4."},
-gB5(){return"N\xe4yt\xe4 tulokset"},
-gw3(){return"L\xe4het\xe4 testi"},
-gd0(){var w=this.d
-return w===$?this.d=new A.aIM():w}}
-A.aIg.prototype={
+glg(){return"T\xe4ss\xe4 testiss\xe4 ei ole kysymyksi\xe4."},
+gBp(){return"N\xe4yt\xe4 tulokset"},
+gwm(){return"L\xe4het\xe4 testi"},
+gd2(){var w=this.d
+return w===$?this.d=new A.aJC():w}}
+A.aJ6.prototype={
 gau(){return"Testin tulokset"},
-glb(){return"T\xe4ss\xe4 testiss\xe4 ei ollut kysymyksi\xe4."},
-gBc(){return"Pisteesi"},
-vE(d,e){return""+d+" / "+e+" oikein"},
-gr_(){return"Kertaa v\xe4\xe4r\xe4t vastaukset:"},
-Bb(d){return"Vastauksesi: "+d},
-gA1(){return"(Ei vastausta)"},
-gkR(){return"Onneksi olkoon! Sait kaiken oikein!"},
-gAK(){return"Yrit\xe4 testi\xe4 uudelleen"},
-gAM(){return"Kertaa muistikorteilla"}}
-A.aIo.prototype={
+glg(){return"T\xe4ss\xe4 testiss\xe4 ei ollut kysymyksi\xe4."},
+gBw(){return"Pisteesi"},
+vW(d,e){return""+d+" / "+e+" oikein"},
+grh(){return"Kertaa v\xe4\xe4r\xe4t vastaukset:"},
+Bv(d){return"Vastauksesi: "+d},
+gAj(){return"(Ei vastausta)"},
+gkX(){return"Onneksi olkoon! Sait kaiken oikein!"},
+gB3(){return"Yrit\xe4 testi\xe4 uudelleen"},
+gB5(){return"Kertaa muistikorteilla"}}
+A.aJe.prototype={
 gau(){return"Asetukset"},
-gxw(){return"Ulkoasu"},
-guB(){return"Kieli"},
-gzB(){return"Valitse kieli"},
-gvc(){return"N\xe4yt\xf6n skaalaus"},
-gAZ(){return"S\xe4\xe4d\xe4 tekstin ja elementtien kokoa"},
-grI(){return"J\xe4rjestelm\xe4n oletus"},
-gzG(){return"Vaalea"},
-gyj(){return"Tumma"},
-gyG(){return"Englanti"},
-gyZ(){return"Suomi"},
-gAP(){return"Ven\xe4j\xe4"},
-gvX(){return"Espanja"},
-gw8(){return"Ruotsi"},
-gyl(){return"Tietojen hallinta"},
-gyM(){return"Vie tiedot"},
-gyN(){return"Tallenna kaikki listat tiedostoon"},
-gzg(){return"Tuo tiedot"},
-gzh(){return"Lataa listat tiedostosta"},
-gyq(){return"Poista kaikki tiedot"},
-gqv(){var w=this.w
-return w===$?this.w=new A.aIq():w},
-gpZ(){var w=this.x
-return w===$?this.x=new A.aIk():w},
-gmv(){var w=this.y
-return w===$?this.y=new A.aIv():w}}
-A.aHj.prototype={
+gxQ(){return"Ulkoasu"},
+guS(){return"Kieli"},
+gzT(){return"Valitse kieli"},
+gvu(){return"N\xe4yt\xf6n skaalaus"},
+gBi(){return"S\xe4\xe4d\xe4 tekstin ja elementtien kokoa"},
+grZ(){return"J\xe4rjestelm\xe4n oletus"},
+gzZ(){return"Vaalea"},
+gyD(){return"Tumma"},
+gz_(){return"Englanti"},
+gzg(){return"Suomi"},
+gB8(){return"Ven\xe4j\xe4"},
+gwe(){return"Espanja"},
+gwr(){return"Ruotsi"},
+gyF(){return"Tietojen hallinta"},
+gz5(){return"Vie tiedot"},
+gz6(){return"Tallenna kaikki listat tiedostoon"},
+gzy(){return"Tuo tiedot"},
+gzz(){return"Lataa listat tiedostosta"},
+gyK(){return"Poista kaikki tiedot"},
+gqN(){var w=this.w
+return w===$?this.w=new A.aJg():w},
+gqe(){var w=this.x
+return w===$?this.x=new A.aJa():w},
+gmB(){var w=this.y
+return w===$?this.y=new A.aJl():w}}
+A.aI9.prototype={
 gau(){return"Ohjaimet"},
-gvj(){return"Liikkeet (Muistikortit)"},
-gzy(){return"N\xe4pp\xe4imist\xf6 (Muistikortit)"},
-goO(){return"Seuraava kortti"},
-goX(){return"Edellinen kortti"},
-goF(){return"K\xe4\xe4nn\xe4 kortti"},
-gw9(){return"Pyyhk\xe4ise vasemmalle"},
-gwa(){return"Pyyhk\xe4ise oikealle"},
-gwb(){return"Pyyhk\xe4ise yl\xf6s tai alas"},
-gxB(){return"Oikea nuolin\xe4pp\xe4in"},
-gxA(){return"Vasen nuolin\xe4pp\xe4in"},
-gxC(){return"Yl\xe4-/alanuoli tai v\xe4lily\xf6nti"}}
-A.aHn.prototype={
-gzE(){return"\xa9 2025 Quizlone"},
-gys(){return y.R}}
-A.aIA.prototype={
+gvB(){return"Liikkeet (Muistikortit)"},
+gzQ(){return"N\xe4pp\xe4imist\xf6 (Muistikortit)"},
+gp9(){return"Seuraava kortti"},
+gph(){return"Edellinen kortti"},
+goY(){return"K\xe4\xe4nn\xe4 kortti"},
+gws(){return"Pyyhk\xe4ise vasemmalle"},
+gwt(){return"Pyyhk\xe4ise oikealle"},
+gwu(){return"Pyyhk\xe4ise yl\xf6s tai alas"},
+gxV(){return"Oikea nuolin\xe4pp\xe4in"},
+gxU(){return"Vasen nuolin\xe4pp\xe4in"},
+gxW(){return"Yl\xe4-/alanuoli tai v\xe4lily\xf6nti"}}
+A.aId.prototype={
+gzX(){return"\xa9 2025 Quizlone"},
+gyM(){return y.R}}
+A.aJq.prototype={
 gau(){return"Vahvista poisto"},
-xX(d){return"Haluatko varmasti poistaa listan '"+d+"'?"}}
-A.aIG.prototype={
+yi(d){return"Haluatko varmasti poistaa listan '"+d+"'?"}}
+A.aJw.prototype={
 gau(){return"Nime\xe4 lista uudelleen"},
-guY(){return"Nime\xe4 uudelleen"},
-gyI(){return"T\xe4m\xe4nniminen lista on jo olemassa."},
-gyH(){return"Listan nimi ei voi olla tyhj\xe4."}}
-A.aHD.prototype={
-gzH(){return"Listan nimi ei voi olla tyhj\xe4."},
-ger(){return"Termej\xe4/m\xe4\xe4ritelmi\xe4 ei ole sy\xf6tetty."},
-gzs(){return y.r},
-yC(d){return"Muotovirhe rivin "+d+y.J},
-gA6(){return y.c},
-vy(d){return"Listan tallennus ep\xe4onnistui: "+d}}
-A.aHL.prototype={
-ger(){return y.b},
-gh7(){return y.B}}
-A.aHQ.prototype={
-gy9(){return"Oikein!"},
-zk(d){return"V\xe4\xe4rin. Oikea vastaus: "+d},
-zc(d){return'Vihje: Alkaa kirjaimella "'+d+'"'},
-vV(d){return"Ohitettu. Vastaus oli: "+d}}
-A.aHV.prototype={
-gxv(){return"Kaikki termit opittu!"},
-tV(d,e,f){return"Kierros "+d+" | Kohde "+e+" / "+f},
-gvJ(){return"Oppimisistunto valmis! Hyv\xe4\xe4 ty\xf6t\xe4!"},
-zT(d){var w=B.eZ("fi")
+gvd(){return"Nime\xe4 uudelleen"},
+gz1(){return"T\xe4m\xe4nniminen lista on jo olemassa."},
+gz0(){return"Listan nimi ei voi olla tyhj\xe4."}}
+A.aIt.prototype={
+gA_(){return"Listan nimi ei voi olla tyhj\xe4."},
+geu(){return"Termej\xe4/m\xe4\xe4ritelmi\xe4 ei ole sy\xf6tetty."},
+gzK(){return y.r},
+yW(d){return"Muotovirhe rivin "+d+y.J},
+gAo(){return y.c},
+vQ(d){return"Listan tallennus ep\xe4onnistui: "+d}}
+A.aIB.prototype={
+geu(){return y.b},
+gh9(){return y.B}}
+A.aIG.prototype={
+gyt(){return"Oikein!"},
+zC(d){return"V\xe4\xe4rin. Oikea vastaus: "+d},
+zu(d){return'Vihje: Alkaa kirjaimella "'+d+'"'},
+wc(d){return"Ohitettu. Vastaus oli: "+d}}
+A.aIL.prototype={
+gxP(){return"Kaikki termit opittu!"},
+ua(d,e,f){return"Kierros "+d+" | Kohde "+e+" / "+f},
+gw0(){return"Oppimisistunto valmis! Hyv\xe4\xe4 ty\xf6t\xe4!"},
+Aa(d){var w=B.f2("fi")
 return w.$3$one$other(d,y.K,"Enimm\xe4ism\xe4\xe4r\xe4 kierroksia saavutettu. "+d+" kohdetta viel\xe4 kertaamatta.")},
-vZ(d,e){return"Aloitetaan kierros "+e+", jossa on "+d+" kohdetta..."}}
-A.aI6.prototype={
+wg(d,e){return"Aloitetaan kierros "+e+", jossa on "+d+" kohdetta..."}}
+A.aIX.prototype={
 gau(){return"Tulostaulu"},
-gA5(){return"Ei viel\xe4 tuloksia. Ole ensimm\xe4inen!"},
-AU(d){return d+" sekuntia"}}
-A.aI0.prototype={
-gh7(){return y.L}}
-A.aIM.prototype={
-gzM(){return y.P},
-ger(){return"Testiss\xe4 ei ole saatavilla termej\xe4."},
-gh7(){return y._}}
-A.aIq.prototype={
+gAn(){return"Ei viel\xe4 tuloksia. Ole ensimm\xe4inen!"},
+Bd(d){return d+" sekuntia"}}
+A.aIR.prototype={
+gh9(){return y.L}}
+A.aJC.prototype={
+gA4(){return y.P},
+geu(){return"Testiss\xe4 ei ole saatavilla termej\xe4."},
+gh9(){return y._}}
+A.aJg.prototype={
 gau(){return"Vahvista tuonti"},
-gkS(){return y.u},
-gvw(){return"Tuo"}}
-A.aIk.prototype={
+gkY(){return y.u},
+gvO(){return"Tuo"}}
+A.aJa.prototype={
 gau(){return"Vahvista poisto"},
-gkS(){return y.N},
-gyp(){return"Poista kaikki"}}
-A.aIv.prototype={
-gA3(){return"Ei viet\xe4vi\xe4 tietoja."},
-yO(d){return"Virhe tietojen vienniss\xe4: "+d},
-zj(d){return""+d+" listaa tuotu onnistuneesti!"},
-zi(d){return"Virhe tietojen tuonnissa: "+d},
-gxu(){return"Kaikki opiskelulistat on poistettu."}}
+gkY(){return y.N},
+gyJ(){return"Poista kaikki"}}
+A.aJl.prototype={
+gAl(){return"Ei viet\xe4vi\xe4 tietoja."},
+z7(d){return"Virhe tietojen vienniss\xe4: "+d},
+zB(d){return""+d+" listaa tuotu onnistuneesti!"},
+zA(d){return"Virhe tietojen tuonnissa: "+d},
+gxO(){return"Kaikki opiskelulistat on poistettu."}}
 var z=a.updateTypes([])
-A.aLk.prototype={
-$1(d){return A.bed(this.a,d)},
-$S:53}
-A.aKz.prototype={
+A.aMa.prototype={
+$1(d){return A.bf2(this.a,d)},
+$S:60}
+A.aLp.prototype={
 $1$error(d){return"Virhe: "+B.h(d)},
 $C:"$1$error",
 $R:0,
 $D(){return{error:C.j}},
 $S:13}
-A.aKB.prototype={
+A.aLr.prototype={
 $1$version(d){return"Versio "+B.h(d)},
 $C:"$1$version",
 $R:0,
 $D(){return{version:C.j}},
-$S:92}
-A.aKC.prototype={
+$S:93}
+A.aLs.prototype={
 $1$count(d){var w
-this.a.ghT()
-w=B.eZ("fi")
+this.a.ghY()
+w=B.f2("fi")
 return w.$3$one$other(d,"1 termi",B.h(d)+" termi\xe4")},
 $C:"$1$count",
 $R:0,
 $D(){return{count:C.j}},
-$S:41}
-A.aKD.prototype={
+$S:42}
+A.aLt.prototype={
 $1$listName(d){return"Haluatko varmasti poistaa listan '"+B.h(d)+"'?"},
 $C:"$1$listName",
 $R:0,
 $D(){return{listName:C.j}},
 $S:94}
-A.aKE.prototype={
+A.aLu.prototype={
 $1$line(d){return"Muotovirhe rivin "+B.h(d)+y.J},
 $C:"$1$line",
 $R:0,
 $D(){return{line:C.j}},
-$S:77}
-A.aKF.prototype={
+$S:83}
+A.aLv.prototype={
 $1$error(d){return"Listan tallennus ep\xe4onnistui: "+B.h(d)},
 $C:"$1$error",
 $R:0,
 $D(){return{error:C.j}},
 $S:13}
-A.aKG.prototype={
+A.aLw.prototype={
 $1$id(d){return"Debug: Nykyinen aktiivinen ID on "+B.h(d)},
 $C:"$1$id",
 $R:0,
 $D(){return{id:C.j}},
-$S:88}
-A.aKH.prototype={
+$S:85}
+A.aLx.prototype={
 $1$answer(d){return"V\xe4\xe4rin. Oikea vastaus: "+B.h(d)},
 $C:"$1$answer",
 $R:0,
 $D(){return{answer:C.j}},
 $S:23}
-A.aKI.prototype={
+A.aLy.prototype={
 $1$char(d){return'Vihje: Alkaa kirjaimella "'+B.h(d)+'"'},
 $C:"$1$char",
 $R:0,
 $D(){return{char:C.j}},
-$S:74}
-A.aKJ.prototype={
+$S:89}
+A.aLz.prototype={
 $1$answer(d){return"Ohitettu. Vastaus oli: "+B.h(d)},
 $C:"$1$answer",
 $R:0,
 $D(){return{answer:C.j}},
 $S:23}
-A.aKK.prototype={
+A.aLA.prototype={
 $3$cycleNum$itemNum$total(d,e,f){return"Kierros "+B.h(d)+" | Kohde "+B.h(e)+" / "+B.h(f)},
 $C:"$3$cycleNum$itemNum$total",
 $R:0,
 $D(){return{cycleNum:C.j,itemNum:C.j,total:C.j}},
-$S:80}
-A.aKM.prototype={
+$S:92}
+A.aLC.prototype={
 $1$count(d){var w
-this.a.ghT()
-w=B.eZ("fi")
+this.a.ghY()
+w=B.f2("fi")
 return w.$3$one$other(d,y.K,"Enimm\xe4ism\xe4\xe4r\xe4 kierroksia saavutettu. "+B.h(d)+" kohdetta viel\xe4 kertaamatta.")},
 $C:"$1$count",
 $R:0,
 $D(){return{count:C.j}},
-$S:41}
-A.aKN.prototype={
+$S:42}
+A.aLD.prototype={
 $2$count$cycleNum(d,e){return"Aloitetaan kierros "+B.h(e)+", jossa on "+B.h(d)+" kohdetta..."},
 $C:"$2$count$cycleNum",
 $R:0,
 $D(){return{count:C.j,cycleNum:C.j}},
 $S:75}
-A.aKO.prototype={
+A.aLE.prototype={
 $1$time(d){return"Suoritit pelin "+B.h(d)+" sekunnissa!"},
 $C:"$1$time",
 $R:0,
 $D(){return{time:C.j}},
 $S:39}
-A.aKP.prototype={
+A.aLF.prototype={
 $1$time(d){return B.h(d)+" sekuntia"},
 $C:"$1$time",
 $R:0,
 $D(){return{time:C.j}},
 $S:39}
-A.aKQ.prototype={
+A.aLG.prototype={
 $2$score$total(d,e){return B.h(d)+" / "+B.h(e)+" oikein"},
 $C:"$2$score$total",
 $R:0,
 $D(){return{score:C.j,total:C.j}},
 $S:82}
-A.aKR.prototype={
+A.aLH.prototype={
 $1$answer(d){return"Vastauksesi: "+B.h(d)},
 $C:"$1$answer",
 $R:0,
 $D(){return{answer:C.j}},
 $S:23}
-A.aKS.prototype={
+A.aLI.prototype={
 $1$error(d){return"Virhe tietojen vienniss\xe4: "+B.h(d)},
 $C:"$1$error",
 $R:0,
 $D(){return{error:C.j}},
 $S:13}
-A.aKT.prototype={
+A.aLJ.prototype={
 $1$count(d){return B.h(d)+" listaa tuotu onnistuneesti!"},
 $C:"$1$count",
 $R:0,
 $D(){return{count:C.j}},
-$S:85}
-A.aKU.prototype={
+$S:78}
+A.aLK.prototype={
 $1$error(d){return"Virhe tietojen tuonnissa: "+B.h(d)},
 $C:"$1$error",
 $R:0,
 $D(){return{error:C.j}},
 $S:13};(function inheritance(){var w=a.inherit,v=a.inheritMany
-w(A.W1,B.di)
-w(A.aHz,B.ut)
-w(A.aHr,B.ur)
-w(A.aHf,B.uo)
-w(A.aIE,B.uK)
-w(A.aHH,B.uu)
-w(A.aIc,B.uD)
-w(A.aHv,B.us)
-w(A.aHT,B.uw)
-w(A.aI4,B.uA)
-w(A.aIQ,B.uM)
-w(A.aIg,B.uE)
-w(A.aIo,B.uG)
-w(A.aHj,B.up)
-w(A.aHn,B.uq)
-w(A.aIA,B.uJ)
-w(A.aIG,B.uL)
-w(A.aHD,B.uv)
-w(A.aHL,B.ux)
-w(A.aHQ,B.uy)
-w(A.aHV,B.uz)
-w(A.aI6,B.uC)
-w(A.aI0,B.uB)
-w(A.aIM,B.uN)
-w(A.aIq,B.uH)
-w(A.aIk,B.uF)
-w(A.aIv,B.uI)
-v(B.j6,[A.aLk,A.aKz,A.aKB,A.aKC,A.aKD,A.aKE,A.aKF,A.aKG,A.aKH,A.aKI,A.aKJ,A.aKK,A.aKM,A.aKN,A.aKO,A.aKP,A.aKQ,A.aKR,A.aKS,A.aKT,A.aKU])})()
-B.a3W(b.typeUniverse,JSON.parse('{"W1":{"di":[],"hL":["dD","di"]}}'))
-var y={J:" l\xe4hell\xe4. L\xf6ydettiin tyhj\xe4 termi tai m\xe4\xe4ritelm\xe4.",U:"(Termi yhdelle riville, m\xe4\xe4ritelm\xe4 seuraavalle)",j:"Aktiivista opiskelulistaa ei l\xf6ytynyt tai listaa ei voitu ladata.",_:"Ei tarpeeksi termej\xe4 valitulle opiskelun pituudelle.",B:"Ei tarpeeksi termej\xe4 valitulle pituudelle.",K:"Enimm\xe4ism\xe4\xe4r\xe4 kierroksia saavutettu. 1 kohde viel\xe4 kertaamatta.",N:"Haluatko varmasti poistaa KAIKKI opiskelulistat? T\xe4t\xe4 toimintoa ei voi kumota.",c:"Kelvollisia termi/m\xe4\xe4ritelm\xe4-pareja ei l\xf6ytynyt.",l:"Oikeus\nMoraalisen oikeudenmukaisuuden periaate\nAurinko\nT\xe4hti, joka on planeettaj\xe4rjestelm\xe4n keskus",b:"Oppimistilassa ei ole saatavilla termej\xe4.",L:"Pelaamiseen tarvitaan v\xe4hint\xe4\xe4n yksi termi/m\xe4\xe4ritelm\xe4-pari.",u:"T\xe4m\xe4 tuo opiskelulistat tiedostosta. Kaikki olemassa olevat listat, joilla on sama nimi, korvataan. Jatketaanko?",P:"Virhe ladattaessa opiskelulistaa testi\xe4 varten.",r:"Virheellinen muoto. Jokaisella termill\xe4 on oltava m\xe4\xe4ritelm\xe4 seuraavalla rivill\xe4.",R:"Yksinkertainen ja moderni opiskelusovellus, joka on rakennettu Flutterilla."}
-var x={c:B.af("ha<dD,di>")}};
-(a=>{a["Pc/WcEmtxvW4A+apgBpys3LZwpA="]=a.current})($__dart_deferred_initializers__);
+w(A.Wf,B.di)
+w(A.aIp,B.uB)
+w(A.aIh,B.uz)
+w(A.aI5,B.uw)
+w(A.aJu,B.uS)
+w(A.aIx,B.uC)
+w(A.aJ2,B.uL)
+w(A.aIl,B.uA)
+w(A.aIJ,B.uE)
+w(A.aIV,B.uI)
+w(A.aJG,B.uU)
+w(A.aJ6,B.uM)
+w(A.aJe,B.uO)
+w(A.aI9,B.ux)
+w(A.aId,B.uy)
+w(A.aJq,B.uR)
+w(A.aJw,B.uT)
+w(A.aIt,B.uD)
+w(A.aIB,B.uF)
+w(A.aIG,B.uG)
+w(A.aIL,B.uH)
+w(A.aIX,B.uK)
+w(A.aIR,B.uJ)
+w(A.aJC,B.uV)
+w(A.aJg,B.uP)
+w(A.aJa,B.uN)
+w(A.aJl,B.uQ)
+v(B.jc,[A.aMa,A.aLp,A.aLr,A.aLs,A.aLt,A.aLu,A.aLv,A.aLw,A.aLx,A.aLy,A.aLz,A.aLA,A.aLC,A.aLD,A.aLE,A.aLF,A.aLG,A.aLH,A.aLI,A.aLJ,A.aLK])})()
+B.a4f(b.typeUniverse,JSON.parse('{"Wf":{"di":[],"hN":["dG","di"]}}'))
+var y={J:" l\xe4hell\xe4. L\xf6ydettiin tyhj\xe4 termi tai m\xe4\xe4ritelm\xe4.",U:"(Termi yhdelle riville, m\xe4\xe4ritelm\xe4 seuraavalle)",j:"Aktiivista opiskelulistaa ei l\xf6ytynyt tai listaa ei voitu ladata.",_:"Ei tarpeeksi termej\xe4 valitulle opiskelun pituudelle.",B:"Ei tarpeeksi termej\xe4 valitulle pituudelle.",K:"Enimm\xe4ism\xe4\xe4r\xe4 kierroksia saavutettu. 1 kohde viel\xe4 kertaamatta.",N:"Haluatko varmasti poistaa KAIKKI opiskelulistat? T\xe4t\xe4 toimintoa ei voi kumota.",E:"Jos oikea vastaus on 'a, b', 'a' hyv\xe4ksyt\xe4\xe4n",c:"Kelvollisia termi/m\xe4\xe4ritelm\xe4-pareja ei l\xf6ytynyt.",l:"Oikeus\nMoraalisen oikeudenmukaisuuden periaate\nAurinko\nT\xe4hti, joka on planeettaj\xe4rjestelm\xe4n keskus",b:"Oppimistilassa ei ole saatavilla termej\xe4.",L:"Pelaamiseen tarvitaan v\xe4hint\xe4\xe4n yksi termi/m\xe4\xe4ritelm\xe4-pari.",u:"T\xe4m\xe4 tuo opiskelulistat tiedostosta. Kaikki olemassa olevat listat, joilla on sama nimi, korvataan. Jatketaanko?",P:"Virhe ladattaessa opiskelulistaa testi\xe4 varten.",r:"Virheellinen muoto. Jokaisella termill\xe4 on oltava m\xe4\xe4ritelm\xe4 seuraavalla rivill\xe4.",R:"Yksinkertainen ja moderni opiskelusovellus, joka on rakennettu Flutterilla."}
+var x={c:B.ag("hc<dG,di>")}};
+(a=>{a["sbfgXzq2MNZn3At2P91Fxc3N894="]=a.current})($__dart_deferred_initializers__);
