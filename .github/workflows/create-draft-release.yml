@@ -1,0 +1,166 @@
+name: Create Draft Release
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build_android:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Create .env file
+        run: |
+          echo "SUPABASE_URL=${{ secrets.SUPABASE_URL }}" >> .env
+          echo "SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}" >> .env
+        shell: bash
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: "zulu"
+          java-version: "17"
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+          cache: true
+
+      - name: Flutter Clean
+        run: flutter clean
+
+      - name: Flutter Pub Get
+        run: flutter pub get
+
+      - name: Build Runner & Localization
+        run: |
+          dart run build_runner build --delete-conflicting-outputs
+          dart run slang
+
+      - name: Build Android APK (Split Per ABI)
+        run: flutter build apk --release --split-per-abi
+
+      - name: Upload APK Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: android-apks
+          path: build/app/outputs/apk/release/*.apk
+
+  build_windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Create .env file
+        run: |
+          echo "SUPABASE_URL=${{ secrets.SUPABASE_URL }}" >> .env
+          echo "SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}" >> .env
+        shell: bash
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+          cache: true
+
+      - name: Flutter Clean
+        run: flutter clean
+
+      - name: Flutter Pub Get
+        run: flutter pub get
+
+      - name: Build Runner & Localization
+        run: |
+          dart run build_runner build --delete-conflicting-outputs
+          dart run slang
+
+      - name: Build Windows
+        run: flutter build windows --release
+
+      - name: Install 7-Zip
+        run: choco install 7zip
+        shell: powershell
+
+      - name: Compress Windows Build
+        run: 7z a Windows-portable.7z ./build/windows/x64/runner/Release/*
+        shell: bash
+
+      - name: Upload Windows Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: windows-build
+          path: Windows-portable.7z
+
+  build_web:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Create .env file
+        run: |
+          echo "SUPABASE_URL=${{ secrets.SUPABASE_URL }}" >> .env
+          echo "SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}" >> .env
+        shell: bash
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+          cache: true
+
+      - name: Flutter Clean
+        run: flutter clean
+
+      - name: Flutter Pub Get
+        run: flutter pub get
+
+      - name: Build Runner & Localization
+        run: |
+          dart run build_runner build --delete-conflicting-outputs
+          dart run slang
+
+      - name: Build Web
+        run: flutter build web --wasm --release --base-href /Quizlone/
+
+      - name: Zip Web Build
+        run: zip -r web-build.zip ./build/web
+        shell: bash
+
+      - name: Upload Web Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: web-build
+          path: web-build.zip
+
+  create_release:
+    runs-on: ubuntu-latest
+    needs: [build_android, build_windows, build_web]
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download all build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: artifacts
+
+      - name: Display structure of downloaded files
+        run: ls -R artifacts
+
+      - name: Create Draft Release
+        uses: ncipollo/release-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          artifacts: "artifacts/**/*"
+          draft: true
+          allowUpdates: true
+          tag: "dev-build-${{ github.run_number }}"
+          name: "Development Build ${{ github.run_number }}"
+          body: |
+            Automated development build.
+            Triggered by commit: `${{ github.sha }}`

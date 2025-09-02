@@ -2,10 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
+import 'package:quizlone/providers/core/core_providers.dart';
 import 'package:quizlone/routing/app_router.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'providers/core/settings_provider.dart';
 import 'providers/core/updater_provider.dart';
@@ -13,15 +16,25 @@ import 'services/database_service.dart';
 import 'services/migration_service.dart';
 import 'services/window_manager.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   _setupLogging();
+
+  await dotenv.load(fileName: ".env");
+
+  await Supabase.initialize(
+    url: dotenv.env['SUPABASE_URL']!,
+    anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
+  );
+
   await DatabaseService.init();
   await runMigrations();
 
-  final dbService = DatabaseService();
+  final container = ProviderContainer();
+  final dbService = container.read(databaseServiceProvider);
   final savedLangCode = dbService.getLanguage();
   AppLanguageExtension.fromCode(savedLangCode).applyLocale();
+  container.dispose();
 
   setupWindow();
   runApp(ProviderScope(child: TranslationProvider(child: const MyApp())));

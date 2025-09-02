@@ -13,7 +13,6 @@ import 'package:quizlone/i18n/generated/translations.g.dart';
 import 'package:quizlone/routing/app_router.dart';
 import 'package:share_plus/share_plus.dart';
 
-import '../../models/match_record.dart';
 import '../../models/settings_app_data.dart';
 import '../../models/study_list.dart';
 import '../../providers/core/core_providers.dart';
@@ -265,40 +264,24 @@ class SettingsScreen extends ConsumerWidget {
         }
 
         final dynamic jsonData = jsonDecode(jsonString);
-        List<StudyList> studyLists = [];
-        List<MatchRecord> matchRecords = [];
-        List<String> studyListOrder = [];
-        int importCount = 0;
+        AppData appData;
 
         if (jsonData is Map<String, dynamic>) {
-          final appData = AppData.fromJson(jsonData);
-          studyLists = appData.studyLists;
-          matchRecords = appData.matchRecords;
-          studyListOrder = appData.studyListOrder;
+          appData = AppData.fromJson(jsonData);
         } else if (jsonData is List<dynamic>) {
-          studyLists =
+          final studyLists =
               jsonData.map((json) => StudyList.fromJson(json)).toList();
-          studyListOrder = studyLists.map((list) => list.id).toList();
+          appData = AppData(
+            studyLists: studyLists,
+            matchRecords: [],
+            studyListOrder: studyLists.map((list) => list.id).toList(),
+          );
         } else {
           throw Exception("Invalid backup file format.");
         }
 
-        importCount = studyLists.length;
-
-        for (var list in studyLists) {
-          await dbService.saveStudyList(list);
-        }
-
-        if (matchRecords.isNotEmpty) {
-          await dbService.clearAllMatchRecords();
-          for (var record in matchRecords) {
-            await dbService.saveMatchRecord(record);
-          }
-        }
-
-        if (studyListOrder.isNotEmpty) {
-          await dbService.saveStudyListOrder(studyListOrder);
-        }
+        await dbService.applyCloudData(appData);
+        await dbService.triggerCloudUpload();
 
         ref.invalidate(studyListsProvider);
         ref.invalidate(matchRecordsProvider);
@@ -306,7 +289,9 @@ class SettingsScreen extends ConsumerWidget {
         scaffoldMessenger.showSnackBar(
           SnackBar(
             content: Text(
-              t.settingsScreen.snackbars.importSuccess(count: importCount),
+              t.settingsScreen.snackbars.importSuccess(
+                count: appData.studyLists.length,
+              ),
             ),
           ),
         );
@@ -352,6 +337,8 @@ class SettingsScreen extends ConsumerWidget {
     if (confirm == true) {
       await dbService.deleteAllStudyLists();
       await dbService.clearAllMatchRecords();
+
+      await dbService.triggerCloudUpload();
 
       ref.invalidate(studyListsProvider);
       ref.invalidate(matchRecordsProvider);
