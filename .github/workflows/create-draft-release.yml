@@ -50,6 +50,8 @@ jobs:
 
   build_windows:
     runs-on: windows-latest
+    outputs:
+      app_version: ${{ steps.get_version.outputs.app_version }}
     steps:
       - uses: actions/checkout@v4
       - name: Create .env file
@@ -67,11 +69,13 @@ jobs:
           choco install 7zip
           7z a Windows-portable.7z ./build/windows/x64/runner/Release/*
         shell: bash
+
       - name: Extract App Version
         id: get_version
         run: |
           $version = (Get-Content pubspec.yaml | Select-String -Pattern "version:\s*([0-9A-Za-z\-+.]+)").Matches.Groups[1].Value.Trim()
-          echo "APP_VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          echo "APP_VERSION_FOR_STEP=$version" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          echo "app_version=$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
           echo "Detected app version: $version"
         shell: powershell
 
@@ -79,7 +83,7 @@ jobs:
         uses: Minionguyjpro/Inno-Setup-Action@v1.2.2
         with:
           path: scripts/installer_script.iss
-          options: /DMyAppVersion="${{ env.APP_VERSION }}"
+          options: /DMyAppVersion=${{ env.APP_VERSION_FOR_STEP }}
 
       - name: Upload Windows Artifacts
         uses: actions/upload-artifact@v4
@@ -140,16 +144,14 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-
           artifacts: |
             artifacts/**/*.apk
             artifacts/**/*.7z
             artifacts/**/*.exe
-
           draft: true
           allowUpdates: true
-          tag: "dev-build-${{ github.run_number }}"
-          name: "Development Build ${{ github.run_number }}"
+          tag: "v${{ needs.build_windows.outputs.app_version }}"
+          name: "${{ env.APP_NAME }} v${{ needs.build_windows.outputs.app_version }}"
           body: |
             Automated development build.
             Triggered by commit: `${{ github.sha }}`
