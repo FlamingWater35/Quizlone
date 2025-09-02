@@ -18,6 +18,7 @@ import '../../models/settings_app_data.dart';
 import '../../models/study_list.dart';
 import '../../providers/core/core_providers.dart';
 import '../../providers/core/settings_provider.dart';
+import '../../providers/core/updater_provider.dart';
 import '../../providers/study/study_list_providers.dart';
 import '../../widgets/centered_view.dart';
 import '../modes/match_leaderboard_screen.dart';
@@ -474,6 +475,10 @@ class SettingsScreen extends ConsumerWidget {
                   ],
                 ),
               ),
+              if (!kIsWeb && Platform.isAndroid) ...[
+                _SettingsHeader(title: t.settingsScreen.update),
+                const _UpdaterCard(),
+              ],
               _SettingsHeader(title: t.settingsScreen.dataManagement),
               Card(
                 clipBehavior: Clip.antiAlias,
@@ -530,6 +535,90 @@ class _SettingsHeader extends StatelessWidget {
           color: Theme.of(context).colorScheme.primary,
         ),
       ),
+    );
+  }
+}
+
+class _UpdaterCard extends ConsumerWidget {
+  const _UpdaterCard();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final updateState = ref.watch(updaterControllerProvider);
+    final updaterNotifier = ref.read(updaterControllerProvider.notifier);
+    final t = Translations.of(context);
+    final theme = Theme.of(context);
+
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      child: switch (updateState) {
+        UpdateInitial() => ListTile(
+          leading: const Icon(Icons.update),
+          title: Text(t.settingsScreen.checkForUpdate),
+          onTap: updaterNotifier.checkForUpdate,
+        ),
+        UpdateChecking() => ListTile(
+          leading: const SizedBox(
+            width: 24,
+            height: 24,
+            child: CircularProgressIndicator(strokeWidth: 3),
+          ),
+          title: Text(t.settingsScreen.checkingForUpdate),
+        ),
+        UpdateNotAvailable() => ListTile(
+          leading: Icon(
+            Icons.check_circle_outline,
+            color: theme.colorScheme.primary,
+          ),
+          title: Text(t.settingsScreen.upToDate),
+          subtitle: Text(t.settingsScreen.noNewVersion),
+          onTap: updaterNotifier.checkForUpdate,
+        ),
+        UpdateAvailable(info: final info) => Column(
+          children: [
+            ListTile(
+              leading: Icon(
+                Icons.download_for_offline_outlined,
+                color: theme.colorScheme.secondary,
+              ),
+              title: Text(
+                t.settingsScreen.updateAvailable(version: info.version),
+              ),
+              subtitle: Text(t.settingsScreen.tapToInstall),
+              onTap: updaterNotifier.downloadUpdate,
+            ),
+            if (info.releaseNotes != null && info.releaseNotes!.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                child: ExpansionTile(
+                  title: Text(t.settingsScreen.viewReleaseNotes),
+                  childrenPadding: const EdgeInsets.all(8.0),
+                  children: [Text(info.releaseNotes!)],
+                ),
+              ),
+          ],
+        ),
+        UpdateDownloading(progress: final progress) => ListTile(
+          title: Text(t.settingsScreen.downloadingUpdate),
+          subtitle: Padding(
+            padding: const EdgeInsets.only(top: 8.0, bottom: 4.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                LinearProgressIndicator(value: progress),
+                const SizedBox(height: 4),
+                Text("${(progress * 100).toStringAsFixed(0)}%"),
+              ],
+            ),
+          ),
+        ),
+        UpdateError(message: final message) => ListTile(
+          leading: Icon(Icons.error_outline, color: theme.colorScheme.error),
+          title: Text(t.settingsScreen.updateCheckFailed),
+          subtitle: Text(message),
+          onTap: updaterNotifier.checkForUpdate,
+        ),
+      },
     );
   }
 }

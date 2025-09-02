@@ -484,6 +484,36 @@ class TranslationsSettingsScreenEn {
 	/// en: 'Swedish'
 	String get swedish => 'Swedish';
 
+	/// en: 'Update'
+	String get update => 'Update';
+
+	/// en: 'Check for Updates'
+	String get checkForUpdate => 'Check for Updates';
+
+	/// en: 'Checking for updates...'
+	String get checkingForUpdate => 'Checking for updates...';
+
+	/// en: 'You are up to date'
+	String get upToDate => 'You are up to date';
+
+	/// en: 'No new version found.'
+	String get noNewVersion => 'No new version found.';
+
+	/// en: 'Update Available: v$version'
+	String updateAvailable({required Object version}) => 'Update Available: v${version}';
+
+	/// en: 'Tap to download and install'
+	String get tapToInstall => 'Tap to download and install';
+
+	/// en: 'View release notes'
+	String get viewReleaseNotes => 'View release notes';
+
+	/// en: 'Downloading update...'
+	String get downloadingUpdate => 'Downloading update...';
+
+	/// en: 'Update Check Failed'
+	String get updateCheckFailed => 'Update Check Failed';
+
 	/// en: 'Data Management'
 	String get dataManagement => 'Data Management';
 
@@ -977,6 +1007,16 @@ extension on Translations {
 			case 'settingsScreen.russian': return 'Russian';
 			case 'settingsScreen.spanish': return 'Spanish';
 			case 'settingsScreen.swedish': return 'Swedish';
+			case 'settingsScreen.update': return 'Update';
+			case 'settingsScreen.checkForUpdate': return 'Check for Updates';
+			case 'settingsScreen.checkingForUpdate': return 'Checking for updates...';
+			case 'settingsScreen.upToDate': return 'You are up to date';
+			case 'settingsScreen.noNewVersion': return 'No new version found.';
+			case 'settingsScreen.updateAvailable': return ({required Object version}) => 'Update Available: v${version}';
+			case 'settingsScreen.tapToInstall': return 'Tap to download and install';
+			case 'settingsScreen.viewReleaseNotes': return 'View release notes';
+			case 'settingsScreen.downloadingUpdate': return 'Downloading update...';
+			case 'settingsScreen.updateCheckFailed': return 'Update Check Failed';
 			case 'settingsScreen.dataManagement': return 'Data Management';
 			case 'settingsScreen.exportData': return 'Export Data';
 			case 'settingsScreen.exportDataSubtitle': return 'Save all lists to a file';
