@@ -62,17 +62,15 @@ jobs:
       - run: flutter pub get
       - run: dart run build_runner build --delete-conflicting-outputs && dart run slang
       - run: flutter build windows --release
-
       - name: Compress Portable Build
         run: |
           choco install 7zip
           7z a Windows-portable.7z ./build/windows/x64/runner/Release/*
         shell: bash
-
       - name: Extract App Version
         id: get_version
         run: |
-          $version = (Get-Content pubspec.yaml | Select-String -Pattern "version:\s*(.+)").Matches.Groups[1].Value.Trim()
+          $version = (Get-Content pubspec.yaml | Select-String -Pattern "version:\s*([0-9A-Za-z\-+.]+)").Matches.Groups[1].Value.Trim()
           echo "APP_VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           echo "Detected app version: $version"
         shell: powershell
@@ -81,7 +79,7 @@ jobs:
         uses: Minionguyjpro/Inno-Setup-Action@v1.2.2
         with:
           path: scripts/installer_script.iss
-          options: /DMyAppVersion=${{ env.APP_VERSION }}
+          options: /DMyAppVersion="${{ env.APP_VERSION }}"
 
       - name: Upload Windows Artifacts
         uses: actions/upload-artifact@v4
@@ -130,16 +128,24 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/download-artifact@v4
+      - name: Download all build artifacts
+        uses: actions/download-artifact@v4
         with:
           path: artifacts
+
       - name: Display structure of downloaded files
         run: ls -R artifacts
+
       - name: Create Draft Release
         uses: ncipollo/release-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          artifacts: "artifacts/**/*"
+
+          artifacts: |
+            artifacts/**/*.apk
+            artifacts/**/*.7z
+            artifacts/**/*.exe
+
           draft: true
           allowUpdates: true
           tag: "dev-build-${{ github.run_number }}"
