@@ -3,7 +3,7 @@
 ; ===================================================================
 
 #define MyAppName "Quizlone"
-#define MyAppVersion "0.0.0"
+#define MyAppVersion "1.0.0"
 #define MyAppPublisher "FlamingWater"
 #define MyAppURL "https://github.com/FlamingWater35/Quizlone"
 #define MyAppExeName "quizlone.exe"
@@ -29,7 +29,7 @@ ArchitecturesInstallIn64BitMode=x64compatible
 DisableProgramGroupPage=yes
 
 OutputDir=.\output
-OutputBaseFilename=Quizlone-{#MyAppVersion}-Windows-Setup
+OutputBaseFilename=Quizlone-Windows-Setup
 SetupIconFile=.\icon_transparent.ico
 LicenseFile=..\LICENSE.md
 WizardStyle=modern
