@@ -21,6 +21,22 @@
     "aboutDialog": {
       "legalese": "© 2025 Quizlone",
       "description": "En enkel, modern studieapplikation byggd med Flutter."
+    },
+    "cloudSync": "Molnsynkronisering",
+    "loggedInAs": "Inloggad som:",
+    "noEmail": "Ingen e-post",
+    "logout": "Logga ut",
+    "email": "E-post",
+    "password": "Lösenord",
+    "signIn": "Logga in",
+    "signUp": "Registrera dig",
+    "validation": {
+      "emailEmpty": "Vänligen ange en e-postadress",
+      "passwordEmpty": "Vänligen ange ett lösenord"
+    },
+    "snackbars": {
+      "confirmationSent": "Bekräftelsemejl har skickats! Kontrollera din inkorg.",
+      "unexpectedError": "Ett oväntat fel inträffade"
     }
   },
   "aboutScreen": {
@@ -135,7 +151,9 @@
     "leaderboard": {
       "title": "Topplista",
       "noRecords": "Inga rekord än. Bli den första!",
-      "time": "$time Sekunder"
+      "time": "$time Sekunder",
+      "rank": "#$rank",
+      "rankOver100": ">100"
     },
     "errors": {
       "noTerms": "Inga termer tillgängliga för Matcha-läget.",
@@ -202,7 +220,8 @@
       "title": "Exportera data",
       "content": "Hur vill du exportera din data?",
       "share": "Dela fil",
-      "save": "Spara på enheten"
+      "save": "Spara på enheten",
+      "shareText": "Här är din Quizlone-säkerhetskopia."
     },
     "importDialog": {
       "title": "Bekräfta import",

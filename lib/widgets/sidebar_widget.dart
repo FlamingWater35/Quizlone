@@ -30,6 +30,7 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
   Future<void> _signIn() async {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _isLoading = true);
+    final t = Translations.of(context);
     try {
       await ref
           .read(authControllerProvider.notifier)
@@ -43,7 +44,7 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
     } catch (error) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: const Text('An unexpected error occurred')),
+          SnackBar(content: Text(t.drawer.snackbars.unexpectedError)),
         );
       }
     } finally {
@@ -56,15 +57,14 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
   Future<void> _signUp() async {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _isLoading = true);
+    final t = Translations.of(context);
     try {
       await ref
           .read(authControllerProvider.notifier)
           .signUp(_emailController.text, _passwordController.text);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Confirmation email sent! Please check your inbox.'),
-          ),
+          SnackBar(content: Text(t.drawer.snackbars.confirmationSent)),
         );
       }
     } on AuthException catch (error) {
@@ -76,7 +76,7 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
     } catch (error) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: const Text('An unexpected error occurred')),
+          SnackBar(content: Text(t.drawer.snackbars.unexpectedError)),
         );
       }
     } finally {
@@ -90,11 +90,14 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text("Cloud Sync", style: TextStyle(fontWeight: FontWeight.bold)),
-        const SizedBox(height: 8),
-        Text("Logged in as:", style: Theme.of(context).textTheme.bodySmall),
         Text(
-          user.email ?? "No email",
+          t.drawer.cloudSync,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 8),
+        Text(t.drawer.loggedInAs, style: Theme.of(context).textTheme.bodySmall),
+        Text(
+          user.email ?? t.drawer.noEmail,
           style: const TextStyle(fontWeight: FontWeight.w500),
           overflow: TextOverflow.ellipsis,
         ),
@@ -103,7 +106,7 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
           width: double.infinity,
           child: OutlinedButton.icon(
             icon: const Icon(Icons.logout),
-            label: const Text("Logout"),
+            label: Text(t.drawer.logout),
             onPressed: () {
               ref.read(authControllerProvider.notifier).signOut();
             },
@@ -125,36 +128,36 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            "Cloud Sync",
-            style: TextStyle(fontWeight: FontWeight.bold),
+          Text(
+            t.drawer.cloudSync,
+            style: const TextStyle(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 12),
           TextFormField(
             controller: _emailController,
-            decoration: const InputDecoration(
-              labelText: 'Email',
+            decoration: InputDecoration(
+              labelText: t.drawer.email,
               isDense: true,
             ),
             validator:
                 (value) =>
                     value == null || value.isEmpty
-                        ? 'Please enter an email'
+                        ? t.drawer.validation.emailEmpty
                         : null,
             keyboardType: TextInputType.emailAddress,
           ),
           const SizedBox(height: 8),
           TextFormField(
             controller: _passwordController,
-            decoration: const InputDecoration(
-              labelText: 'Password',
+            decoration: InputDecoration(
+              labelText: t.drawer.password,
               isDense: true,
             ),
             obscureText: true,
             validator:
                 (value) =>
                     value == null || value.isEmpty
-                        ? 'Please enter a password'
+                        ? t.drawer.validation.passwordEmpty
                         : null,
           ),
           const SizedBox(height: 16),
@@ -166,14 +169,14 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
                 Expanded(
                   child: OutlinedButton(
                     onPressed: _signIn,
-                    child: const Text('Sign In'),
+                    child: Text(t.drawer.signIn),
                   ),
                 ),
                 const SizedBox(width: 8),
                 Expanded(
                   child: FilledButton(
                     onPressed: _signUp,
-                    child: const Text('Sign Up'),
+                    child: Text(t.drawer.signUp),
                   ),
                 ),
               ],

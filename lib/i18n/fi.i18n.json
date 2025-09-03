@@ -21,6 +21,22 @@
     "aboutDialog": {
       "legalese": "© 2025 Quizlone",
       "description": "Yksinkertainen ja moderni opiskelusovellus, joka on rakennettu Flutterilla."
+    },
+    "cloudSync": "Pilvisynkronointi",
+    "loggedInAs": "Kirjautuneena nimellä:",
+    "noEmail": "Ei sähköpostia",
+    "logout": "Kirjaudu ulos",
+    "email": "Sähköposti",
+    "password": "Salasana",
+    "signIn": "Kirjaudu sisään",
+    "signUp": "Rekisteröidy",
+    "validation": {
+      "emailEmpty": "Syötä sähköpostiosoite",
+      "passwordEmpty": "Syötä salasana"
+    },
+    "snackbars": {
+      "confirmationSent": "Vahvistusviesti lähetetty! Tarkista sähköpostisi.",
+      "unexpectedError": "Tapahtui odottamaton virhe"
     }
   },
   "aboutScreen": {
@@ -135,7 +151,9 @@
     "leaderboard": {
       "title": "Tulostaulu",
       "noRecords": "Ei vielä tuloksia. Ole ensimmäinen!",
-      "time": "$time sekuntia"
+      "time": "$time sekuntia",
+      "rank": "#$rank",
+      "rankOver100": ">100"
     },
     "errors": {
       "noTerms": "Yhdistäpelissä ei ole saatavilla termejä.",
@@ -202,7 +220,8 @@
       "title": "Vie tiedot",
       "content": "Miten haluat viedä tietosi?",
       "share": "Jaa tiedosto",
-      "save": "Tallenna laitteelle"
+      "save": "Tallenna laitteelle",
+      "shareText": "Tässä on Quizlone-varmuuskopiosi."
     },
     "importDialog": {
       "title": "Vahvista tuonti",

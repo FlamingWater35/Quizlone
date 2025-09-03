@@ -21,6 +21,22 @@
     "aboutDialog": {
       "legalese": "© 2025 Quizlone",
       "description": "A simple, modern study application built with Flutter."
+    },
+    "cloudSync": "Cloud Sync",
+    "loggedInAs": "Logged in as:",
+    "noEmail": "No email",
+    "logout": "Logout",
+    "email": "Email",
+    "password": "Password",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "validation": {
+      "emailEmpty": "Please enter an email",
+      "passwordEmpty": "Please enter a password"
+    },
+    "snackbars": {
+      "confirmationSent": "Confirmation email sent! Please check your inbox.",
+      "unexpectedError": "An unexpected error occurred"
     }
   },
   "aboutScreen": {
@@ -135,7 +151,9 @@
     "leaderboard": {
       "title": "Leaderboard",
       "noRecords": "No records yet. Be the first!",
-      "time": "$time Seconds"
+      "time": "$time Seconds",
+      "rank": "#$rank",
+      "rankOver100": ">100"
     },
     "errors": {
       "noTerms": "No terms available for Match mode.",
@@ -202,7 +220,8 @@
       "title": "Export Data",
       "content": "How would you like to export your data?",
       "share": "Share File",
-      "save": "Save to Device"
+      "save": "Save to Device",
+      "shareText": "Here is your Quizlone backup."
     },
     "importDialog": {
       "title": "Confirm Import",

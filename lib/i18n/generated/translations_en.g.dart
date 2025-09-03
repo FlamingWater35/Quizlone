@@ -121,6 +121,33 @@ class TranslationsDrawerEn {
 	String get about => 'About';
 
 	late final TranslationsDrawerAboutDialogEn aboutDialog = TranslationsDrawerAboutDialogEn.internal(_root);
+
+	/// en: 'Cloud Sync'
+	String get cloudSync => 'Cloud Sync';
+
+	/// en: 'Logged in as:'
+	String get loggedInAs => 'Logged in as:';
+
+	/// en: 'No email'
+	String get noEmail => 'No email';
+
+	/// en: 'Logout'
+	String get logout => 'Logout';
+
+	/// en: 'Email'
+	String get email => 'Email';
+
+	/// en: 'Password'
+	String get password => 'Password';
+
+	/// en: 'Sign In'
+	String get signIn => 'Sign In';
+
+	/// en: 'Sign Up'
+	String get signUp => 'Sign Up';
+
+	late final TranslationsDrawerValidationEn validation = TranslationsDrawerValidationEn.internal(_root);
+	late final TranslationsDrawerSnackbarsEn snackbars = TranslationsDrawerSnackbarsEn.internal(_root);
 }
 
 // Path: aboutScreen
@@ -598,6 +625,36 @@ class TranslationsDrawerAboutDialogEn {
 	String get description => 'A simple, modern study application built with Flutter.';
 }
 
+// Path: drawer.validation
+class TranslationsDrawerValidationEn {
+	TranslationsDrawerValidationEn.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Please enter an email'
+	String get emailEmpty => 'Please enter an email';
+
+	/// en: 'Please enter a password'
+	String get passwordEmpty => 'Please enter a password';
+}
+
+// Path: drawer.snackbars
+class TranslationsDrawerSnackbarsEn {
+	TranslationsDrawerSnackbarsEn.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Confirmation email sent! Please check your inbox.'
+	String get confirmationSent => 'Confirmation email sent! Please check your inbox.';
+
+	/// en: 'An unexpected error occurred'
+	String get unexpectedError => 'An unexpected error occurred';
+}
+
 // Path: startScreen.confirmDeleteDialog
 class TranslationsStartScreenConfirmDeleteDialogEn {
 	TranslationsStartScreenConfirmDeleteDialogEn.internal(this._root);
@@ -740,6 +797,12 @@ class TranslationsMatchScreenLeaderboardEn {
 
 	/// en: '$time Seconds'
 	String time({required Object time}) => '${time} Seconds';
+
+	/// en: '#$rank'
+	String rank({required Object rank}) => '#${rank}';
+
+	/// en: '>100'
+	String get rankOver100 => '>100';
 }
 
 // Path: matchScreen.errors
@@ -794,6 +857,9 @@ class TranslationsSettingsScreenExportDialogEn {
 
 	/// en: 'Save to Device'
 	String get save => 'Save to Device';
+
+	/// en: 'Here is your Quizlone backup.'
+	String get shareText => 'Here is your Quizlone backup.';
 }
 
 // Path: settingsScreen.importDialog
@@ -885,6 +951,18 @@ extension on Translations {
 			case 'drawer.about': return 'About';
 			case 'drawer.aboutDialog.legalese': return '© 2025 Quizlone';
 			case 'drawer.aboutDialog.description': return 'A simple, modern study application built with Flutter.';
+			case 'drawer.cloudSync': return 'Cloud Sync';
+			case 'drawer.loggedInAs': return 'Logged in as:';
+			case 'drawer.noEmail': return 'No email';
+			case 'drawer.logout': return 'Logout';
+			case 'drawer.email': return 'Email';
+			case 'drawer.password': return 'Password';
+			case 'drawer.signIn': return 'Sign In';
+			case 'drawer.signUp': return 'Sign Up';
+			case 'drawer.validation.emailEmpty': return 'Please enter an email';
+			case 'drawer.validation.passwordEmpty': return 'Please enter a password';
+			case 'drawer.snackbars.confirmationSent': return 'Confirmation email sent! Please check your inbox.';
+			case 'drawer.snackbars.unexpectedError': return 'An unexpected error occurred';
 			case 'aboutScreen.version': return ({required Object version}) => 'Version ${version}';
 			case 'aboutScreen.viewLicenses': return 'View Licenses';
 			case 'startScreen.title': return 'Quizlone';
@@ -972,6 +1050,8 @@ extension on Translations {
 			case 'matchScreen.leaderboard.title': return 'Leaderboard';
 			case 'matchScreen.leaderboard.noRecords': return 'No records yet. Be the first!';
 			case 'matchScreen.leaderboard.time': return ({required Object time}) => '${time} Seconds';
+			case 'matchScreen.leaderboard.rank': return ({required Object rank}) => '#${rank}';
+			case 'matchScreen.leaderboard.rankOver100': return '>100';
 			case 'matchScreen.errors.noTerms': return 'No terms available for Match mode.';
 			case 'matchScreen.errors.notEnoughTerms': return 'At least one term/definition pair is required to play.';
 			case 'testScreen.title': return 'Test';
@@ -1027,6 +1107,7 @@ extension on Translations {
 			case 'settingsScreen.exportDialog.content': return 'How would you like to export your data?';
 			case 'settingsScreen.exportDialog.share': return 'Share File';
 			case 'settingsScreen.exportDialog.save': return 'Save to Device';
+			case 'settingsScreen.exportDialog.shareText': return 'Here is your Quizlone backup.';
 			case 'settingsScreen.importDialog.title': return 'Confirm Import';
 			case 'settingsScreen.importDialog.content': return 'This will import study lists from a file. Any existing lists with the same name will be overwritten. Continue?';
 			case 'settingsScreen.importDialog.import': return 'Import';

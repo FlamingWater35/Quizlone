@@ -152,7 +152,7 @@ class SettingsScreen extends ConsumerWidget {
                       await SharePlus.instance.share(
                         ShareParams(
                           files: [XFile(filePath)],
-                          text: 'Here is your Quizlone backup.',
+                          text: t.settingsScreen.exportDialog.shareText,
                         ),
                       );
                     },
@@ -187,7 +187,7 @@ class SettingsScreen extends ConsumerWidget {
         await SharePlus.instance.share(
           ShareParams(
             files: [XFile(filePath)],
-            text: 'Here is your Quizlone backup.',
+            text: t.settingsScreen.exportDialog.shareText,
           ),
         );
       } else {

@@ -21,6 +21,22 @@
     "aboutDialog": {
       "legalese": "© 2025 Quizlone",
       "description": "Una aplicación de estudio simple y moderna creada con Flutter."
+    },
+    "cloudSync": "Sincronización en la nube",
+    "loggedInAs": "Sesión iniciada como:",
+    "noEmail": "Sin correo electrónico",
+    "logout": "Cerrar sesión",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "signIn": "Iniciar sesión",
+    "signUp": "Registrarse",
+    "validation": {
+      "emailEmpty": "Por favor, introduce un correo electrónico",
+      "passwordEmpty": "Por favor, introduce una contraseña"
+    },
+    "snackbars": {
+      "confirmationSent": "¡Correo de confirmación enviado! Revisa tu bandeja de entrada.",
+      "unexpectedError": "Ocurrió un error inesperado"
     }
   },
   "aboutScreen": {
@@ -135,7 +151,9 @@
     "leaderboard": {
       "title": "Tabla de clasificación",
       "noRecords": "Aún no hay récords. ¡Sé el primero!",
-      "time": "$time Segundos"
+      "time": "$time Segundos",
+      "rank": "#$rank",
+      "rankOver100": ">100"
     },
     "errors": {
       "noTerms": "No hay términos disponibles para el modo Combinar.",
@@ -202,7 +220,8 @@
       "title": "Exportar datos",
       "content": "¿Cómo te gustaría exportar tus datos?",
       "share": "Compartir archivo",
-      "save": "Guardar en el dispositivo"
+      "save": "Guardar en el dispositivo",
+      "shareText": "Aquí está tu copia de seguridad de Quizlone."
     },
     "importDialog": {
       "title": "Confirmar importación",

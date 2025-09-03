@@ -86,6 +86,16 @@ class _TranslationsDrawerRu extends TranslationsDrawerEn {
 	@override String get controls => 'Управление';
 	@override String get about => 'О приложении';
 	@override late final _TranslationsDrawerAboutDialogRu aboutDialog = _TranslationsDrawerAboutDialogRu._(_root);
+	@override String get cloudSync => 'Облачная синхронизация';
+	@override String get loggedInAs => 'Вы вошли как:';
+	@override String get noEmail => 'Нет email';
+	@override String get logout => 'Выйти';
+	@override String get email => 'Email';
+	@override String get password => 'Пароль';
+	@override String get signIn => 'Войти';
+	@override String get signUp => 'Регистрация';
+	@override late final _TranslationsDrawerValidationRu validation = _TranslationsDrawerValidationRu._(_root);
+	@override late final _TranslationsDrawerSnackbarsRu snackbars = _TranslationsDrawerSnackbarsRu._(_root);
 }
 
 // Path: aboutScreen
@@ -329,6 +339,28 @@ class _TranslationsDrawerAboutDialogRu extends TranslationsDrawerAboutDialogEn {
 	@override String get description => 'Простое, современное приложение для обучения, созданное с помощью Flutter.';
 }
 
+// Path: drawer.validation
+class _TranslationsDrawerValidationRu extends TranslationsDrawerValidationEn {
+	_TranslationsDrawerValidationRu._(TranslationsRu root) : this._root = root, super.internal(root);
+
+	final TranslationsRu _root; // ignore: unused_field
+
+	// Translations
+	@override String get emailEmpty => 'Пожалуйста, введите email';
+	@override String get passwordEmpty => 'Пожалуйста, введите пароль';
+}
+
+// Path: drawer.snackbars
+class _TranslationsDrawerSnackbarsRu extends TranslationsDrawerSnackbarsEn {
+	_TranslationsDrawerSnackbarsRu._(TranslationsRu root) : this._root = root, super.internal(root);
+
+	final TranslationsRu _root; // ignore: unused_field
+
+	// Translations
+	@override String get confirmationSent => 'Письмо с подтверждением отправлено! Проверьте свой почтовый ящик.';
+	@override String get unexpectedError => 'Произошла непредвиденная ошибка';
+}
+
 // Path: startScreen.confirmDeleteDialog
 class _TranslationsStartScreenConfirmDeleteDialogRu extends TranslationsStartScreenConfirmDeleteDialogEn {
 	_TranslationsStartScreenConfirmDeleteDialogRu._(TranslationsRu root) : this._root = root, super.internal(root);
@@ -421,6 +453,8 @@ class _TranslationsMatchScreenLeaderboardRu extends TranslationsMatchScreenLeade
 	@override String get title => 'Таблица лидеров';
 	@override String get noRecords => 'Рекордов пока нет. Будьте первым!';
 	@override String time({required Object time}) => '${time} секунд';
+	@override String rank({required Object rank}) => '#${rank}';
+	@override String get rankOver100 => '>100';
 }
 
 // Path: matchScreen.errors
@@ -457,6 +491,7 @@ class _TranslationsSettingsScreenExportDialogRu extends TranslationsSettingsScre
 	@override String get content => 'Как вы хотите экспортировать ваши данные?';
 	@override String get share => 'Поделиться файлом';
 	@override String get save => 'Сохранить на устройство';
+	@override String get shareText => 'Вот ваша резервная копия Quizlone.';
 }
 
 // Path: settingsScreen.importDialog
@@ -522,6 +557,18 @@ extension on TranslationsRu {
 			case 'drawer.about': return 'О приложении';
 			case 'drawer.aboutDialog.legalese': return '© 2025 Quizlone';
 			case 'drawer.aboutDialog.description': return 'Простое, современное приложение для обучения, созданное с помощью Flutter.';
+			case 'drawer.cloudSync': return 'Облачная синхронизация';
+			case 'drawer.loggedInAs': return 'Вы вошли как:';
+			case 'drawer.noEmail': return 'Нет email';
+			case 'drawer.logout': return 'Выйти';
+			case 'drawer.email': return 'Email';
+			case 'drawer.password': return 'Пароль';
+			case 'drawer.signIn': return 'Войти';
+			case 'drawer.signUp': return 'Регистрация';
+			case 'drawer.validation.emailEmpty': return 'Пожалуйста, введите email';
+			case 'drawer.validation.passwordEmpty': return 'Пожалуйста, введите пароль';
+			case 'drawer.snackbars.confirmationSent': return 'Письмо с подтверждением отправлено! Проверьте свой почтовый ящик.';
+			case 'drawer.snackbars.unexpectedError': return 'Произошла непредвиденная ошибка';
 			case 'aboutScreen.version': return ({required Object version}) => 'Версия ${version}';
 			case 'aboutScreen.viewLicenses': return 'Просмотреть лицензии';
 			case 'startScreen.title': return 'Quizlone';
@@ -613,6 +660,8 @@ extension on TranslationsRu {
 			case 'matchScreen.leaderboard.title': return 'Таблица лидеров';
 			case 'matchScreen.leaderboard.noRecords': return 'Рекордов пока нет. Будьте первым!';
 			case 'matchScreen.leaderboard.time': return ({required Object time}) => '${time} секунд';
+			case 'matchScreen.leaderboard.rank': return ({required Object rank}) => '#${rank}';
+			case 'matchScreen.leaderboard.rankOver100': return '>100';
 			case 'matchScreen.errors.noTerms': return 'Нет доступных терминов для режима Сопоставления.';
 			case 'matchScreen.errors.notEnoughTerms': return 'Для игры требуется хотя бы одна пара термин/определение.';
 			case 'testScreen.title': return 'Тест';
@@ -668,6 +717,7 @@ extension on TranslationsRu {
 			case 'settingsScreen.exportDialog.content': return 'Как вы хотите экспортировать ваши данные?';
 			case 'settingsScreen.exportDialog.share': return 'Поделиться файлом';
 			case 'settingsScreen.exportDialog.save': return 'Сохранить на устройство';
+			case 'settingsScreen.exportDialog.shareText': return 'Вот ваша резервная копия Quizlone.';
 			case 'settingsScreen.importDialog.title': return 'Подтвердите импорт';
 			case 'settingsScreen.importDialog.content': return 'Это импортирует учебные списки из файла. Любые существующие списки с таким же именем будут перезаписаны. Продолжить?';
 			case 'settingsScreen.importDialog.import': return 'Импорт';
