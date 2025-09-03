@@ -6,6 +6,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../providers/core/auth_provider.dart';
 import '../routing/app_router.dart';
+import 'error_snackbar.dart';
 
 class AppDrawer extends ConsumerStatefulWidget {
   const AppDrawer({super.key});
@@ -37,15 +38,11 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
           .signIn(_emailController.text, _passwordController.text);
     } on AuthException catch (error) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(error.message)));
+        showErrorSnackBar(context, message: error.message);
       }
     } catch (error) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(t.drawer.snackbars.unexpectedError)),
-        );
+        showErrorSnackBar(context, message: t.drawer.snackbars.unexpectedError);
       }
     } finally {
       if (mounted) {
@@ -69,15 +66,11 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
       }
     } on AuthException catch (error) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(error.message)));
+        showErrorSnackBar(context, message: error.message);
       }
     } catch (error) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(t.drawer.snackbars.unexpectedError)),
-        );
+        showErrorSnackBar(context, message: t.drawer.snackbars.unexpectedError);
       }
     } finally {
       if (mounted) {

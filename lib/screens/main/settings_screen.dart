@@ -11,6 +11,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
 import 'package:quizlone/routing/app_router.dart';
+import 'package:quizlone/widgets/error_snackbar.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../models/settings_app_data.dart';
@@ -203,13 +204,12 @@ class SettingsScreen extends ConsumerWidget {
         }
       }
     } catch (e) {
-      scaffoldMessenger.showSnackBar(
-        SnackBar(
-          content: Text(
-            t.settingsScreen.snackbars.exportError(error: e.toString()),
-          ),
-        ),
-      );
+      if (context.mounted) {
+        showErrorSnackBar(
+          context,
+          message: t.settingsScreen.snackbars.exportError(error: e.toString()),
+        );
+      }
     }
   }
 
@@ -296,13 +296,14 @@ class SettingsScreen extends ConsumerWidget {
           ),
         );
       } catch (e) {
-        scaffoldMessenger.showSnackBar(
-          SnackBar(
-            content: Text(
-              t.settingsScreen.snackbars.importError(error: e.toString()),
+        if (context.mounted) {
+          showErrorSnackBar(
+            context,
+            message: t.settingsScreen.snackbars.importError(
+              error: e.toString(),
             ),
-          ),
-        );
+          );
+        }
       }
     }
   }

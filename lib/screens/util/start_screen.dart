@@ -5,6 +5,7 @@ import 'package:logging/logging.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
 import 'package:quizlone/models/study_list.dart';
 import 'package:quizlone/routing/app_router.dart';
+import 'package:quizlone/widgets/error_snackbar.dart';
 
 import '../../providers/core/core_providers.dart';
 import '../../providers/study/study_list_providers.dart';
@@ -23,7 +24,6 @@ class StartScreen extends ConsumerWidget {
     StudyList list,
   ) async {
     final t = Translations.of(context);
-    final scaffoldMessenger = ScaffoldMessenger.of(context);
     final controller = TextEditingController(text: list.name);
     final formKey = GlobalKey<FormState>();
 
@@ -75,12 +75,9 @@ class StartScreen extends ConsumerWidget {
                     }
                   } else {
                     if (context.mounted) {
-                      scaffoldMessenger.showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            t.startScreen.renameListDialog.errorNameExists,
-                          ),
-                        ),
+                      showErrorSnackBar(
+                        context,
+                        message: t.startScreen.renameListDialog.errorNameExists,
                       );
                     }
                   }
