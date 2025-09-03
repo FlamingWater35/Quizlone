@@ -19,10 +19,12 @@ AppData _$AppDataFromJson(Map<String, dynamic> json) => AppData(
       (json['studyListOrder'] as List<dynamic>)
           .map((e) => e as String)
           .toList(),
+  lastUpdatedBy: json['lastUpdatedBy'] as String?,
 );
 
 Map<String, dynamic> _$AppDataToJson(AppData instance) => <String, dynamic>{
-  'studyLists': instance.studyLists.map((e) => e.toJson()).toList(),
+  'lastUpdatedBy': instance.lastUpdatedBy,
   'matchRecords': instance.matchRecords.map((e) => e.toJson()).toList(),
   'studyListOrder': instance.studyListOrder,
+  'studyLists': instance.studyLists.map((e) => e.toJson()).toList(),
 };

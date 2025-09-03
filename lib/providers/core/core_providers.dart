@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:uuid/uuid.dart';
 
 import '/services/cloud_sync_service.dart';
 import '/services/database_service.dart';
@@ -13,5 +14,10 @@ DatabaseService databaseService(Ref ref) {
 
 @riverpod
 CloudSyncService cloudSyncService(Ref ref) {
-  return CloudSyncService();
+  return CloudSyncService(ref);
+}
+
+@Riverpod(keepAlive: true)
+String instanceId(Ref ref) {
+  return const Uuid().v4();
 }

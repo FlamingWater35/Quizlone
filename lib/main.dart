@@ -6,6 +6,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
+import 'package:quizlone/providers/core/auth_provider.dart';
 import 'package:quizlone/providers/core/core_providers.dart';
 import 'package:quizlone/routing/app_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -64,6 +65,8 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     MyApp._log.info("Building MyApp widget");
+
+    ref.watch(authControllerProvider);
 
     if (!kIsWeb && Platform.isAndroid) {
       ref.watch(updaterControllerProvider);

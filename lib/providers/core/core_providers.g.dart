@@ -24,7 +24,7 @@ final databaseServiceProvider = Provider<DatabaseService>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef DatabaseServiceRef = ProviderRef<DatabaseService>;
-String _$cloudSyncServiceHash() => r'0dfee3e4d9d77b3c6dc5db9cd88ba92b64787ac6';
+String _$cloudSyncServiceHash() => r'1cde2e1e82648e8cb502429393049e78896f571e';
 
 /// See also [cloudSyncService].
 @ProviderFor(cloudSyncService)
@@ -42,5 +42,21 @@ final cloudSyncServiceProvider = AutoDisposeProvider<CloudSyncService>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef CloudSyncServiceRef = AutoDisposeProviderRef<CloudSyncService>;
+String _$instanceIdHash() => r'363777fcb010dc9b7eb84df05bbcb3352d3e5102';
+
+/// See also [instanceId].
+@ProviderFor(instanceId)
+final instanceIdProvider = Provider<String>.internal(
+  instanceId,
+  name: r'instanceIdProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$instanceIdHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef InstanceIdRef = ProviderRef<String>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

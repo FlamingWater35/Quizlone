@@ -26,37 +26,34 @@ class StudyLists extends _$StudyLists {
       newIndex -= 1;
     }
 
-    final reorderedLists = List<StudyList>.from(currentLists);
-    final movedList = reorderedLists.removeAt(oldIndex);
-    reorderedLists.insert(newIndex, movedList);
+    final dbService = ref.read(databaseServiceProvider);
+    final currentOrder = dbService.getStudyListOrder();
 
-    state = AsyncData(reorderedLists);
+    final movedId = currentOrder.removeAt(oldIndex);
+    currentOrder.insert(newIndex, movedId);
 
-    final newOrderOfKeys = reorderedLists.map((l) => l.id).toList();
-    try {
-      await ref
-          .read(databaseServiceProvider)
-          .saveStudyListOrder(newOrderOfKeys);
-    } catch (e, s) {
-      _log.severe("Failed to save reordered list", e, s);
-      state = AsyncData(currentLists);
-    }
+    // This will save the new order and trigger the stream, which will update the state.
+    await dbService.saveStudyListOrder(currentOrder);
   }
 
   @override
   Future<List<StudyList>> build() async {
-    _subscription = ref
-        .watch(databaseServiceProvider)
-        .listenToStudyLists()
-        .listen((lists) {
-          state = AsyncData(lists);
-        });
+    final dbService = ref.watch(databaseServiceProvider);
+
+    // Cancel any existing subscription when the provider is rebuilt.
+    _subscription?.cancel();
+
+    // Listen to the new, unified stream.
+    _subscription = dbService.listenToStudyLists().listen((lists) {
+      state = AsyncData(lists);
+    });
 
     ref.onDispose(() {
       _subscription?.cancel();
     });
 
-    return ref.read(databaseServiceProvider).getAllStudyLists();
+    // Return the initial, correctly sorted list.
+    return dbService.getAllStudyLists();
   }
 }
 

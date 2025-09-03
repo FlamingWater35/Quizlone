@@ -1,19 +1,30 @@
 import 'dart:async';
 
+import 'package:flutter/widgets.dart';
 import 'package:logging/logging.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '/providers/core/core_providers.dart';
-import '../study/study_list_providers.dart';
 
 part 'auth_provider.g.dart';
 
 final _log = Logger("AuthProvider");
 
-@riverpod
-class AuthController extends _$AuthController {
+@Riverpod(keepAlive: true)
+class AuthController extends _$AuthController with WidgetsBindingObserver {
   StreamSubscription<AuthState>? _authStateSubscription;
+  bool _initialSyncDone = false;
+  bool _isSyncing = false;
+  Timer? _syncTimer;
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _log.info("App resumed. Checking for cloud updates.");
+      _checkForCloudUpdates();
+    }
+  }
 
   Future<void> signIn(String email, String password) async {
     try {
@@ -48,53 +59,101 @@ class AuthController extends _$AuthController {
     }
   }
 
-  Future<void> _onSignIn() async {
+  Future<void> _checkForCloudUpdates({bool force = false}) async {
+    if (_isSyncing) {
+      _log.fine("Sync operation already in progress. Skipping.");
+      return;
+    }
+
+    final user = Supabase.instance.client.auth.currentUser;
+    if (user == null) return;
+
+    _isSyncing = true;
+    _log.fine("Checking for cloud updates...");
+
     final cloudSyncService = ref.read(cloudSyncServiceProvider);
     final dbService = ref.read(databaseServiceProvider);
 
     try {
-      _log.info("User signed in. Attempting to download cloud data.");
-      final cloudData = await cloudSyncService.downloadData();
+      final response = await cloudSyncService.getCloudData();
+      final cloudData = response.data;
+      final cloudTimestamp = response.timestamp;
 
-      if (cloudData != null) {
-        _log.info("Cloud data found, applying to local database.");
-        await dbService.applyCloudData(cloudData);
-
-        ref.invalidate(studyListsProvider);
-        _log.info("Local database synced with cloud data.");
-      } else {
-        _log.info(
-          "No cloud data found. Triggering initial upload from local data.",
-        );
+      if (cloudData == null || cloudTimestamp == null) {
+        _log.info("No cloud data exists. Triggering initial upload.");
         await dbService.triggerCloudUpload();
+        return;
+      }
+
+      final localTimestamp = dbService.getLastSyncTimestamp();
+
+      if (force ||
+          localTimestamp == null ||
+          cloudTimestamp.isAfter(localTimestamp)) {
+        _log.info(
+          "Cloud data is newer (Cloud: $cloudTimestamp, Local: $localTimestamp). Applying...",
+        );
+        await dbService.applyCloudData(cloudData);
+        await dbService.saveLastSyncTimestamp(cloudTimestamp);
+        _log.info("Successfully synced with cloud data.");
+      } else {
+        _log.fine("Local data is up to date.");
       }
     } catch (e, s) {
-      _log.severe("Error during post-signin sync", e, s);
+      _log.severe("Error during cloud update check", e, s);
+    } finally {
+      _isSyncing = false;
     }
   }
 
   void _onSignOut() {
-    _log.info("User signed out. Local data remains.");
+    _log.info("User signed out. Stopping sync timer.");
+    _stopPolling();
+  }
+
+  void _startPolling() {
+    _stopPolling();
+    _log.info("Starting periodic sync timer (every 10 seconds).");
+    _syncTimer = Timer.periodic(
+      const Duration(seconds: 10),
+      (timer) => _checkForCloudUpdates(),
+    );
+  }
+
+  void _stopPolling() {
+    _syncTimer?.cancel();
+    _syncTimer = null;
+    _log.fine("Sync timer stopped.");
   }
 
   @override
   AsyncValue<User?> build() {
     _authStateSubscription?.cancel();
+    WidgetsBinding.instance.addObserver(this);
+
     _authStateSubscription = Supabase.instance.client.auth.onAuthStateChange
         .listen((data) async {
           final session = data.session;
           state = AsyncData(session?.user);
-          _log.fine("AuthState changed. User is now: ${session?.user.id}");
+          _log.fine(
+            "AuthState changed. Event: ${data.event}, User: ${session?.user.id}",
+          );
 
-          if (data.event == AuthChangeEvent.signedIn) {
-            await _onSignIn();
+          if (session != null && !_initialSyncDone) {
+            _log.info("Initial session detected. Performing first sync.");
+            await _checkForCloudUpdates(force: true);
+            _startPolling();
+            _initialSyncDone = true;
           } else if (data.event == AuthChangeEvent.signedOut) {
             _onSignOut();
+            _initialSyncDone = false;
           }
         });
 
     ref.onDispose(() {
       _authStateSubscription?.cancel();
+      _stopPolling();
+      WidgetsBinding.instance.removeObserver(this);
     });
 
     final initialUser = Supabase.instance.client.auth.currentUser;

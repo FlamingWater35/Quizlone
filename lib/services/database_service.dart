@@ -1,5 +1,6 @@
-import 'dart:collection';
+import 'dart:async';
 
+import 'package:async/async.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 
@@ -15,6 +16,7 @@ class DatabaseService {
   final Ref ref;
 
   static const String _activeListIdKey = 'activeListId';
+  static const String _lastSyncTimestampKey = 'lastSyncTimestamp';
   static late Box<MatchRecord> _matchRecordsBox;
   static const String _matchRecordsBoxName = 'matchRecordsBox';
   static late Box _settingsBox;
@@ -46,6 +48,7 @@ class DatabaseService {
       studyListOrder: order,
     );
     await ref.read(cloudSyncServiceProvider).uploadData(appData);
+    await saveLastSyncTimestamp(DateTime.now().toUtc());
   }
 
   Future<void> applyCloudData(AppData data) async {
@@ -58,7 +61,19 @@ class DatabaseService {
     for (final record in data.matchRecords) {
       await _matchRecordsBox.add(record);
     }
-    await saveStudyListOrder(data.studyListOrder);
+    await _saveStudyListOrderSilently(data.studyListOrder);
+  }
+
+  Future<void> saveLastSyncTimestamp(DateTime timestamp) async {
+    await _settingsBox.put(_lastSyncTimestampKey, timestamp.toIso8601String());
+  }
+
+  DateTime? getLastSyncTimestamp() {
+    final timestampStr = _settingsBox.get(_lastSyncTimestampKey);
+    if (timestampStr is String) {
+      return DateTime.tryParse(timestampStr);
+    }
+    return null;
   }
 
   Future<void> saveMatchRecord(MatchRecord record) async {
@@ -122,10 +137,9 @@ class DatabaseService {
   Future<String> saveStudyList(StudyList list) async {
     final isNew = !_box.containsKey(list.id);
     await _box.put(list.id, list);
+
     if (isNew) {
-      final order = getStudyListOrder();
-      order.insert(0, list.id);
-      await saveStudyListOrder(order);
+      await saveStudyListOrder(getStudyListOrder());
     } else {
       await triggerCloudUpload();
     }
@@ -184,55 +198,31 @@ class DatabaseService {
 
     var order = getStudyListOrder();
     final listMap = {for (var list in allListsFromBox) list.id: list};
-    final validOrderedKeys =
-        order.where((key) => listMap.containsKey(key)).toList();
 
-    if (validOrderedKeys.length != order.length) {
-      await saveStudyListOrder(validOrderedKeys);
+    final originalOrderLength = order.length;
+    order.removeWhere((key) => !listMap.containsKey(key));
+
+    final Set<String> orderKeys = order.toSet();
+    final List<String> newKeys =
+        listMap.keys.where((key) => !orderKeys.contains(key)).toList();
+
+    if (newKeys.isNotEmpty) {
+      order.insertAll(0, newKeys);
     }
-    return validOrderedKeys.map((key) => listMap[key]!).toList();
+
+    if (newKeys.isNotEmpty || order.length != originalOrderLength) {
+      await _saveStudyListOrderSilently(order);
+    }
+
+    return order.map((key) => listMap[key]!).whereType<StudyList>().toList();
   }
 
-  Stream<List<StudyList>> listenToStudyLists() async* {
-    List<StudyList> getSortedLists() {
-      final allListsFromBox = _box.values.toList();
-      if (allListsFromBox.isEmpty) {
-        saveStudyListOrder([]);
-        return [];
-      }
+  Stream<List<StudyList>> listenToStudyLists() {
+    final listChanges = _studyListBox.watch();
+    final orderChanges = _settingsBox.watch(key: _studyListOrderKey);
 
-      var order = getStudyListOrder();
-      final listMap = {for (var list in allListsFromBox) list.id: list};
-      final Set<String> boxKeys = listMap.keys.toSet();
-
-      final originalOrderLength = order.length;
-      final uniqueOrderedKeys = LinkedHashSet<String>.from(order).toList();
-      order = uniqueOrderedKeys;
-
-      final originalUniqueOrderLength = order.length;
-      order.removeWhere((key) => !boxKeys.contains(key));
-
-      final Set<String> orderKeys = order.toSet();
-      final List<String> newKeys =
-          boxKeys.where((key) => !orderKeys.contains(key)).toList();
-
-      if (newKeys.isNotEmpty) {
-        order.insertAll(0, newKeys);
-      }
-
-      if (order.length != originalUniqueOrderLength ||
-          newKeys.isNotEmpty ||
-          originalOrderLength != uniqueOrderedKeys.length) {
-        saveStudyListOrder(order);
-      }
-
-      return order.map((key) => listMap[key]!).whereType<StudyList>().toList();
-    }
-
-    yield getSortedLists();
-
-    yield* _box.watch().map((event) {
-      return getSortedLists();
+    return StreamGroup.merge([listChanges, orderChanges]).asyncMap((_) {
+      return getAllStudyLists();
     });
   }
 
@@ -312,6 +302,10 @@ class DatabaseService {
 
   String? getActiveListId() {
     return _settingsBox.get(_activeListIdKey);
+  }
+
+  Future<void> _saveStudyListOrderSilently(List<String> order) async {
+    await _settingsBox.put(_studyListOrderKey, order);
   }
 
   Box<StudyList> get _box => _studyListBox;
