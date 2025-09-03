@@ -69,11 +69,11 @@ class UpdaterService {
     return null;
   }
 
-  Future<void> downloadAndInstallUpdate(
+  Future<String?> downloadAndInstallUpdate(
     UpdateInfo updateInfo,
     void Function(int, int) onReceiveProgress,
   ) async {
-    if (!Platform.isAndroid) return;
+    if (!Platform.isAndroid) return null;
 
     try {
       final tempDir = await getTemporaryDirectory();
@@ -94,6 +94,7 @@ class UpdaterService {
         _log.warning('Failed to open APK installer: ${result.message}');
         throw Exception('Could not open APK file: ${result.message}');
       }
+      return filePath;
     } catch (e, s) {
       _log.severe('Error during update download/install', e, s);
       rethrow;

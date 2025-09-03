@@ -16,6 +16,7 @@ class DatabaseService {
   final Ref ref;
 
   static const String _activeListIdKey = 'activeListId';
+  static const String _apkCleanupPathKey = 'apkCleanupPath';
   static const String _lastSyncTimestampKey = 'lastSyncTimestamp';
   static late Box<MatchRecord> _matchRecordsBox;
   static const String _matchRecordsBoxName = 'matchRecordsBox';
@@ -35,6 +36,18 @@ class DatabaseService {
     _studyListBox = await Hive.openBox<StudyList>(_studyListBoxName);
     _settingsBox = await Hive.openBox(_settingsBoxName);
     _matchRecordsBox = await Hive.openBox<MatchRecord>(_matchRecordsBoxName);
+  }
+
+  Future<void> setApkPathForCleanup(String path) async {
+    await _settingsBox.put(_apkCleanupPathKey, path);
+  }
+
+  String? getApkPathForCleanup() {
+    return _settingsBox.get(_apkCleanupPathKey);
+  }
+
+  Future<void> clearApkPathForCleanup() async {
+    await _settingsBox.delete(_apkCleanupPathKey);
   }
 
   Future<void> triggerCloudUpload() async {

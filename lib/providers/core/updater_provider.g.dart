@@ -24,7 +24,7 @@ final updaterServiceProvider = AutoDisposeProvider<UpdaterService>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef UpdaterServiceRef = AutoDisposeProviderRef<UpdaterService>;
-String _$updaterControllerHash() => r'3973aa62a51d39a88132706f11c01281cbfa8247';
+String _$updaterControllerHash() => r'b4fa79a981e9aa285624b66d76ddcc0f29887386';
 
 /// See also [UpdaterController].
 @ProviderFor(UpdaterController)

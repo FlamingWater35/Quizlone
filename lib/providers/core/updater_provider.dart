@@ -7,6 +7,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../models/update_info.dart';
 import '../../services/updater_service.dart';
+import 'core_providers.dart';
 
 part 'updater_provider.g.dart';
 
@@ -74,14 +75,19 @@ class UpdaterController extends _$UpdaterController {
     state = const UpdateDownloading(0);
     final service = ref.read(updaterServiceProvider);
     try {
-      await service.downloadAndInstallUpdate(currentState.info, (
-        received,
-        total,
-      ) {
-        if (total != -1) {
-          state = UpdateDownloading(received / total);
-        }
-      });
+      final downloadedPath = await service.downloadAndInstallUpdate(
+        currentState.info,
+        (received, total) {
+          if (total != -1 && state is UpdateDownloading) {
+            state = UpdateDownloading(received / total);
+          }
+        },
+      );
+      if (downloadedPath != null) {
+        await ref
+            .read(databaseServiceProvider)
+            .setApkPathForCleanup(downloadedPath);
+      }
       state = currentState;
     } catch (e) {
       state = UpdateError(e.toString());

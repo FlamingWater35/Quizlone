@@ -17,6 +17,8 @@ import 'services/database_service.dart';
 import 'services/migration_service.dart';
 import 'services/window_manager.dart';
 
+final _log = Logger('main');
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   _setupLogging();
@@ -29,6 +31,7 @@ Future<void> main() async {
   );
 
   await DatabaseService.init();
+  await _runCleanupTasks();
   await runMigrations();
 
   final container = ProviderContainer();
@@ -39,6 +42,30 @@ Future<void> main() async {
 
   setupWindow();
   runApp(ProviderScope(child: TranslationProvider(child: const MyApp())));
+}
+
+Future<void> _runCleanupTasks() async {
+  final container = ProviderContainer();
+  final dbService = container.read(databaseServiceProvider);
+
+  try {
+    final apkPath = dbService.getApkPathForCleanup();
+    if (apkPath != null) {
+      _log.info("Found pending APK cleanup for: $apkPath");
+      final file = File(apkPath);
+      if (await file.exists()) {
+        await file.delete();
+        _log.info("Successfully deleted old APK file.");
+      } else {
+        _log.warning("Old APK file not found at path, skipping delete.");
+      }
+      await dbService.clearApkPathForCleanup();
+    }
+  } catch (e, s) {
+    _log.severe("Error during APK cleanup task", e, s);
+  } finally {
+    container.dispose();
+  }
 }
 
 void _setupLogging() {
