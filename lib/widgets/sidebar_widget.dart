@@ -80,101 +80,119 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
   }
 
   Widget _buildUserInfo(User user, Translations t) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          t.drawer.cloudSync,
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 8),
-        Text(t.drawer.loggedInAs, style: Theme.of(context).textTheme.bodySmall),
-        Text(
-          user.email ?? t.drawer.noEmail,
-          style: const TextStyle(fontWeight: FontWeight.w500),
-          overflow: TextOverflow.ellipsis,
-        ),
-        const SizedBox(height: 12),
-        SizedBox(
-          width: double.infinity,
-          child: OutlinedButton.icon(
-            icon: const Icon(Icons.logout),
-            label: Text(t.drawer.logout),
-            onPressed: () {
-              ref.read(authControllerProvider.notifier).signOut();
-            },
-            style: OutlinedButton.styleFrom(
-              foregroundColor: Theme.of(context).colorScheme.error,
-              side: BorderSide(
-                color: Theme.of(context).colorScheme.error.withAlpha(64),
+    final theme = Theme.of(context);
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              t.drawer.cloudSync.toUpperCase(),
+              style: theme.textTheme.labelLarge?.copyWith(
+                color: theme.colorScheme.primary,
               ),
             ),
-          ),
+            const SizedBox(height: 16),
+            Text(t.drawer.loggedInAs, style: theme.textTheme.bodySmall),
+            const SizedBox(height: 4),
+            Text(
+              user.email ?? t.drawer.noEmail,
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: 16),
+            OutlinedButton.icon(
+              icon: const Icon(Icons.logout),
+              label: Text(t.drawer.logout),
+              onPressed: () {
+                ref.read(authControllerProvider.notifier).signOut();
+              },
+              style: OutlinedButton.styleFrom(
+                foregroundColor: theme.colorScheme.error,
+                side: BorderSide(color: theme.colorScheme.error.withAlpha(64)),
+              ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 
   Widget _buildLoginForm(Translations t) {
-    return Form(
-      key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            t.drawer.cloudSync,
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 12),
-          TextFormField(
-            controller: _emailController,
-            decoration: InputDecoration(
-              labelText: t.drawer.email,
-              isDense: true,
-            ),
-            validator:
-                (value) =>
-                    value == null || value.isEmpty
-                        ? t.drawer.validation.emailEmpty
-                        : null,
-            keyboardType: TextInputType.emailAddress,
-          ),
-          const SizedBox(height: 8),
-          TextFormField(
-            controller: _passwordController,
-            decoration: InputDecoration(
-              labelText: t.drawer.password,
-              isDense: true,
-            ),
-            obscureText: true,
-            validator:
-                (value) =>
-                    value == null || value.isEmpty
-                        ? t.drawer.validation.passwordEmpty
-                        : null,
-          ),
-          const SizedBox(height: 16),
-          if (_isLoading)
-            const Center(child: CircularProgressIndicator())
-          else
-            Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: _signIn,
-                    child: Text(t.drawer.signIn),
-                  ),
+    final theme = Theme.of(context);
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                t.drawer.cloudSync.toUpperCase(),
+                style: theme.textTheme.labelLarge?.copyWith(
+                  color: theme.colorScheme.primary,
                 ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: FilledButton(
-                    onPressed: _signUp,
-                    child: Text(t.drawer.signUp),
-                  ),
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _emailController,
+                decoration: InputDecoration(
+                  labelText: t.drawer.email,
+                  prefixIcon: const Icon(Icons.email_outlined),
+                  border: const OutlineInputBorder(),
+                  isDense: true,
                 ),
-              ],
-            ),
-        ],
+                validator:
+                    (value) =>
+                        value == null || value.isEmpty
+                            ? t.drawer.validation.emailEmpty
+                            : null,
+                keyboardType: TextInputType.emailAddress,
+              ),
+              const SizedBox(height: 12),
+              TextFormField(
+                controller: _passwordController,
+                decoration: InputDecoration(
+                  labelText: t.drawer.password,
+                  prefixIcon: const Icon(Icons.lock_outline),
+                  border: const OutlineInputBorder(),
+                  isDense: true,
+                ),
+                obscureText: true,
+                validator:
+                    (value) =>
+                        value == null || value.isEmpty
+                            ? t.drawer.validation.passwordEmpty
+                            : null,
+              ),
+              const SizedBox(height: 16),
+              if (_isLoading)
+                const Center(child: CircularProgressIndicator())
+              else
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: _signIn,
+                        child: Text(t.drawer.signIn),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: FilledButton(
+                        onPressed: _signUp,
+                        child: Text(t.drawer.signUp),
+                      ),
+                    ),
+                  ],
+                ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -235,7 +253,7 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
           ),
           const Divider(indent: 16, endIndent: 16),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            padding: const EdgeInsets.fromLTRB(8, 0, 8, 16),
             child: authState.when(
               data: (user) {
                 if (user == null) {
