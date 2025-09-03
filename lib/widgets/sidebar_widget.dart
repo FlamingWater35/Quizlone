@@ -36,20 +36,14 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
           .signIn(_emailController.text, _passwordController.text);
     } on AuthException catch (error) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(error.message),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(error.message)));
       }
     } catch (error) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('An unexpected error occurred'),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
+          SnackBar(content: const Text('An unexpected error occurred')),
         );
       }
     } finally {
@@ -75,20 +69,14 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
       }
     } on AuthException catch (error) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(error.message),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(error.message)));
       }
     } catch (error) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('An unexpected error occurred'),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
+          SnackBar(content: const Text('An unexpected error occurred')),
         );
       }
     } finally {
