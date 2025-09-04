@@ -84,6 +84,17 @@ class _TranslationsDrawerSv implements TranslationsDrawerEn {
 	@override String get controls => 'Kontroller';
 	@override String get about => 'Om';
 	@override late final _TranslationsDrawerAboutDialogSv aboutDialog = _TranslationsDrawerAboutDialogSv._(_root);
+	@override String get cloudSync => 'Molnsynkronisering';
+	@override String get loggedInAs => 'Inloggad som:';
+	@override String get noEmail => 'Ingen e-post';
+	@override String get logout => 'Logga ut';
+	@override String get email => 'E-post';
+	@override String get password => 'Lösenord';
+	@override String get signIn => 'Logga in';
+	@override String get signUp => 'Registrera dig';
+	@override late final _TranslationsDrawerValidationSv validation = _TranslationsDrawerValidationSv._(_root);
+	@override late final _TranslationsDrawerSnackbarsSv snackbars = _TranslationsDrawerSnackbarsSv._(_root);
+	@override late final _TranslationsDrawerConfirmEmailDialogSv confirmEmailDialog = _TranslationsDrawerConfirmEmailDialogSv._(_root);
 }
 
 // Path: aboutScreen
@@ -325,6 +336,40 @@ class _TranslationsDrawerAboutDialogSv implements TranslationsDrawerAboutDialogE
 	@override String get description => 'En enkel, modern studieapplikation byggd med Flutter.';
 }
 
+// Path: drawer.validation
+class _TranslationsDrawerValidationSv implements TranslationsDrawerValidationEn {
+	_TranslationsDrawerValidationSv._(this._root);
+
+	final TranslationsSv _root; // ignore: unused_field
+
+	// Translations
+	@override String get emailEmpty => 'Vänligen ange en e-postadress';
+	@override String get passwordEmpty => 'Vänligen ange ett lösenord';
+}
+
+// Path: drawer.snackbars
+class _TranslationsDrawerSnackbarsSv implements TranslationsDrawerSnackbarsEn {
+	_TranslationsDrawerSnackbarsSv._(this._root);
+
+	final TranslationsSv _root; // ignore: unused_field
+
+	// Translations
+	@override String get confirmationSent => 'Bekräftelsemejl har skickats! Kontrollera din inkorg.';
+	@override String get unexpectedError => 'Ett oväntat fel inträffade';
+}
+
+// Path: drawer.confirmEmailDialog
+class _TranslationsDrawerConfirmEmailDialogSv implements TranslationsDrawerConfirmEmailDialogEn {
+	_TranslationsDrawerConfirmEmailDialogSv._(this._root);
+
+	final TranslationsSv _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Bekräfta e-post';
+	@override String content({required Object email}) => 'Genom att klicka på bekräfta godkänner du att ${email} är din korrekta e-postadress.';
+	@override String get confirm => 'Bekräfta';
+}
+
 // Path: startScreen.confirmDeleteDialog
 class _TranslationsStartScreenConfirmDeleteDialogSv implements TranslationsStartScreenConfirmDeleteDialogEn {
 	_TranslationsStartScreenConfirmDeleteDialogSv._(this._root);
@@ -415,6 +460,8 @@ class _TranslationsMatchScreenLeaderboardSv implements TranslationsMatchScreenLe
 	@override String get title => 'Topplista';
 	@override String get noRecords => 'Inga rekord än. Bli den första!';
 	@override String time({required Object time}) => '${time} Sekunder';
+	@override String rank({required Object rank}) => '#${rank}';
+	@override String get rankOver100 => '>100';
 }
 
 // Path: matchScreen.errors
@@ -451,6 +498,7 @@ class _TranslationsSettingsScreenExportDialogSv implements TranslationsSettingsS
 	@override String get content => 'Hur vill du exportera din data?';
 	@override String get share => 'Dela fil';
 	@override String get save => 'Spara på enheten';
+	@override String get shareText => 'Här är din Quizlone-säkerhetskopia.';
 }
 
 // Path: settingsScreen.importDialog
@@ -516,6 +564,21 @@ extension on TranslationsSv {
 			case 'drawer.about': return 'Om';
 			case 'drawer.aboutDialog.legalese': return '© 2025 Quizlone';
 			case 'drawer.aboutDialog.description': return 'En enkel, modern studieapplikation byggd med Flutter.';
+			case 'drawer.cloudSync': return 'Molnsynkronisering';
+			case 'drawer.loggedInAs': return 'Inloggad som:';
+			case 'drawer.noEmail': return 'Ingen e-post';
+			case 'drawer.logout': return 'Logga ut';
+			case 'drawer.email': return 'E-post';
+			case 'drawer.password': return 'Lösenord';
+			case 'drawer.signIn': return 'Logga in';
+			case 'drawer.signUp': return 'Registrera dig';
+			case 'drawer.validation.emailEmpty': return 'Vänligen ange en e-postadress';
+			case 'drawer.validation.passwordEmpty': return 'Vänligen ange ett lösenord';
+			case 'drawer.snackbars.confirmationSent': return 'Bekräftelsemejl har skickats! Kontrollera din inkorg.';
+			case 'drawer.snackbars.unexpectedError': return 'Ett oväntat fel inträffade';
+			case 'drawer.confirmEmailDialog.title': return 'Bekräfta e-post';
+			case 'drawer.confirmEmailDialog.content': return ({required Object email}) => 'Genom att klicka på bekräfta godkänner du att ${email} är din korrekta e-postadress.';
+			case 'drawer.confirmEmailDialog.confirm': return 'Bekräfta';
 			case 'aboutScreen.version': return ({required Object version}) => 'Version ${version}';
 			case 'aboutScreen.viewLicenses': return 'Visa licenser';
 			case 'startScreen.title': return 'Quizlone';
@@ -603,6 +666,8 @@ extension on TranslationsSv {
 			case 'matchScreen.leaderboard.title': return 'Topplista';
 			case 'matchScreen.leaderboard.noRecords': return 'Inga rekord än. Bli den första!';
 			case 'matchScreen.leaderboard.time': return ({required Object time}) => '${time} Sekunder';
+			case 'matchScreen.leaderboard.rank': return ({required Object rank}) => '#${rank}';
+			case 'matchScreen.leaderboard.rankOver100': return '>100';
 			case 'matchScreen.errors.noTerms': return 'Inga termer tillgängliga för Matcha-läget.';
 			case 'matchScreen.errors.notEnoughTerms': return 'Minst ett par med term/definition krävs för att spela.';
 			case 'testScreen.title': return 'Prov';
@@ -658,6 +723,7 @@ extension on TranslationsSv {
 			case 'settingsScreen.exportDialog.content': return 'Hur vill du exportera din data?';
 			case 'settingsScreen.exportDialog.share': return 'Dela fil';
 			case 'settingsScreen.exportDialog.save': return 'Spara på enheten';
+			case 'settingsScreen.exportDialog.shareText': return 'Här är din Quizlone-säkerhetskopia.';
 			case 'settingsScreen.importDialog.title': return 'Bekräfta import';
 			case 'settingsScreen.importDialog.content': return 'Detta kommer att importera studielistor från en fil. Befintliga listor med samma namn kommer att skrivas över. Fortsätta?';
 			case 'settingsScreen.importDialog.import': return 'Importera';

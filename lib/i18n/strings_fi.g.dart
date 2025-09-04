@@ -84,6 +84,17 @@ class _TranslationsDrawerFi implements TranslationsDrawerEn {
 	@override String get controls => 'Ohjaimet';
 	@override String get about => 'Tietoja';
 	@override late final _TranslationsDrawerAboutDialogFi aboutDialog = _TranslationsDrawerAboutDialogFi._(_root);
+	@override String get cloudSync => 'Pilvisynkronointi';
+	@override String get loggedInAs => 'Kirjautuneena nimellä:';
+	@override String get noEmail => 'Ei sähköpostia';
+	@override String get logout => 'Kirjaudu ulos';
+	@override String get email => 'Sähköposti';
+	@override String get password => 'Salasana';
+	@override String get signIn => 'Kirjaudu sisään';
+	@override String get signUp => 'Rekisteröidy';
+	@override late final _TranslationsDrawerValidationFi validation = _TranslationsDrawerValidationFi._(_root);
+	@override late final _TranslationsDrawerSnackbarsFi snackbars = _TranslationsDrawerSnackbarsFi._(_root);
+	@override late final _TranslationsDrawerConfirmEmailDialogFi confirmEmailDialog = _TranslationsDrawerConfirmEmailDialogFi._(_root);
 }
 
 // Path: aboutScreen
@@ -325,6 +336,40 @@ class _TranslationsDrawerAboutDialogFi implements TranslationsDrawerAboutDialogE
 	@override String get description => 'Yksinkertainen ja moderni opiskelusovellus, joka on rakennettu Flutterilla.';
 }
 
+// Path: drawer.validation
+class _TranslationsDrawerValidationFi implements TranslationsDrawerValidationEn {
+	_TranslationsDrawerValidationFi._(this._root);
+
+	final TranslationsFi _root; // ignore: unused_field
+
+	// Translations
+	@override String get emailEmpty => 'Syötä sähköpostiosoite';
+	@override String get passwordEmpty => 'Syötä salasana';
+}
+
+// Path: drawer.snackbars
+class _TranslationsDrawerSnackbarsFi implements TranslationsDrawerSnackbarsEn {
+	_TranslationsDrawerSnackbarsFi._(this._root);
+
+	final TranslationsFi _root; // ignore: unused_field
+
+	// Translations
+	@override String get confirmationSent => 'Vahvistusviesti lähetetty! Tarkista sähköpostisi.';
+	@override String get unexpectedError => 'Tapahtui odottamaton virhe';
+}
+
+// Path: drawer.confirmEmailDialog
+class _TranslationsDrawerConfirmEmailDialogFi implements TranslationsDrawerConfirmEmailDialogEn {
+	_TranslationsDrawerConfirmEmailDialogFi._(this._root);
+
+	final TranslationsFi _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Vahvista sähköposti';
+	@override String content({required Object email}) => 'Vahvista-painiketta napsauttamalla hyväksyt, että ${email} on oikea sähköpostiosoitteesi.';
+	@override String get confirm => 'Vahvista';
+}
+
 // Path: startScreen.confirmDeleteDialog
 class _TranslationsStartScreenConfirmDeleteDialogFi implements TranslationsStartScreenConfirmDeleteDialogEn {
 	_TranslationsStartScreenConfirmDeleteDialogFi._(this._root);
@@ -415,6 +460,8 @@ class _TranslationsMatchScreenLeaderboardFi implements TranslationsMatchScreenLe
 	@override String get title => 'Tulostaulu';
 	@override String get noRecords => 'Ei vielä tuloksia. Ole ensimmäinen!';
 	@override String time({required Object time}) => '${time} sekuntia';
+	@override String rank({required Object rank}) => '#${rank}';
+	@override String get rankOver100 => '>100';
 }
 
 // Path: matchScreen.errors
@@ -451,6 +498,7 @@ class _TranslationsSettingsScreenExportDialogFi implements TranslationsSettingsS
 	@override String get content => 'Miten haluat viedä tietosi?';
 	@override String get share => 'Jaa tiedosto';
 	@override String get save => 'Tallenna laitteelle';
+	@override String get shareText => 'Tässä on Quizlone-varmuuskopiosi.';
 }
 
 // Path: settingsScreen.importDialog
@@ -516,6 +564,21 @@ extension on TranslationsFi {
 			case 'drawer.about': return 'Tietoja';
 			case 'drawer.aboutDialog.legalese': return '© 2025 Quizlone';
 			case 'drawer.aboutDialog.description': return 'Yksinkertainen ja moderni opiskelusovellus, joka on rakennettu Flutterilla.';
+			case 'drawer.cloudSync': return 'Pilvisynkronointi';
+			case 'drawer.loggedInAs': return 'Kirjautuneena nimellä:';
+			case 'drawer.noEmail': return 'Ei sähköpostia';
+			case 'drawer.logout': return 'Kirjaudu ulos';
+			case 'drawer.email': return 'Sähköposti';
+			case 'drawer.password': return 'Salasana';
+			case 'drawer.signIn': return 'Kirjaudu sisään';
+			case 'drawer.signUp': return 'Rekisteröidy';
+			case 'drawer.validation.emailEmpty': return 'Syötä sähköpostiosoite';
+			case 'drawer.validation.passwordEmpty': return 'Syötä salasana';
+			case 'drawer.snackbars.confirmationSent': return 'Vahvistusviesti lähetetty! Tarkista sähköpostisi.';
+			case 'drawer.snackbars.unexpectedError': return 'Tapahtui odottamaton virhe';
+			case 'drawer.confirmEmailDialog.title': return 'Vahvista sähköposti';
+			case 'drawer.confirmEmailDialog.content': return ({required Object email}) => 'Vahvista-painiketta napsauttamalla hyväksyt, että ${email} on oikea sähköpostiosoitteesi.';
+			case 'drawer.confirmEmailDialog.confirm': return 'Vahvista';
 			case 'aboutScreen.version': return ({required Object version}) => 'Versio ${version}';
 			case 'aboutScreen.viewLicenses': return 'Näytä lisenssit';
 			case 'startScreen.title': return 'Quizlone';
@@ -603,6 +666,8 @@ extension on TranslationsFi {
 			case 'matchScreen.leaderboard.title': return 'Tulostaulu';
 			case 'matchScreen.leaderboard.noRecords': return 'Ei vielä tuloksia. Ole ensimmäinen!';
 			case 'matchScreen.leaderboard.time': return ({required Object time}) => '${time} sekuntia';
+			case 'matchScreen.leaderboard.rank': return ({required Object rank}) => '#${rank}';
+			case 'matchScreen.leaderboard.rankOver100': return '>100';
 			case 'matchScreen.errors.noTerms': return 'Yhdistäpelissä ei ole saatavilla termejä.';
 			case 'matchScreen.errors.notEnoughTerms': return 'Pelaamiseen tarvitaan vähintään yksi termi/määritelmä-pari.';
 			case 'testScreen.title': return 'Testi';
@@ -658,6 +723,7 @@ extension on TranslationsFi {
 			case 'settingsScreen.exportDialog.content': return 'Miten haluat viedä tietosi?';
 			case 'settingsScreen.exportDialog.share': return 'Jaa tiedosto';
 			case 'settingsScreen.exportDialog.save': return 'Tallenna laitteelle';
+			case 'settingsScreen.exportDialog.shareText': return 'Tässä on Quizlone-varmuuskopiosi.';
 			case 'settingsScreen.importDialog.title': return 'Vahvista tuonti';
 			case 'settingsScreen.importDialog.content': return 'Tämä tuo opiskelulistat tiedostosta. Kaikki olemassa olevat listat, joilla on sama nimi, korvataan. Jatketaanko?';
 			case 'settingsScreen.importDialog.import': return 'Tuo';

@@ -1,14 +1,18 @@
 import 'dart:async';
 
 import 'package:async/async.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
+import 'package:logging/logging.dart';
 
 import '../models/match_record.dart';
 import '../models/settings_app_data.dart';
 import '../models/study_list.dart';
 import '../models/term.dart';
 import '../providers/core/core_providers.dart';
+
+final _log = Logger("DatabaseService");
 
 class DatabaseService {
   DatabaseService(this.ref);
@@ -51,6 +55,12 @@ class DatabaseService {
   }
 
   Future<void> triggerCloudUpload() async {
+    final connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult.contains(ConnectivityResult.none)) {
+      _log.info("Offline mode: Skipping cloud upload.");
+      return;
+    }
+
     final lists = await getAllStudyLists();
     final records = await getAllMatchRecords();
     final order = getStudyListOrder();

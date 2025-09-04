@@ -1,11 +1,13 @@
 import 'dart:async';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/widgets.dart';
 import 'package:logging/logging.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '/providers/core/core_providers.dart';
+import 'connectivity_provider.dart';
 
 part 'auth_provider.g.dart';
 
@@ -60,6 +62,12 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
   }
 
   Future<void> _checkForCloudUpdates({bool force = false}) async {
+    final connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult.contains(ConnectivityResult.none)) {
+      _log.info("Offline mode: Sync check skipped.");
+      return;
+    }
+
     if (_isSyncing) {
       _log.fine("Sync operation already in progress. Skipping.");
       return;
@@ -130,6 +138,19 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
   AsyncValue<User?> build() {
     _authStateSubscription?.cancel();
     WidgetsBinding.instance.addObserver(this);
+
+    ref.listen<AsyncValue<ConnectivityResult>>(connectivityProvider, (
+      previous,
+      next,
+    ) {
+      final isConnected = next.valueOrNull != ConnectivityResult.none;
+      final wasConnected = previous?.valueOrNull != ConnectivityResult.none;
+
+      if (!wasConnected && isConnected) {
+        _log.info("Connection restored. Triggering a full cloud sync.");
+        _checkForCloudUpdates(force: true);
+      }
+    });
 
     _authStateSubscription = Supabase.instance.client.auth.onAuthStateChange
         .listen((data) async {
