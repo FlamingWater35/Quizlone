@@ -45,7 +45,7 @@ A modern, cross-platform flashcard and study application built with Flutter. Qui
 * **Framework:** [Flutter](https://flutter.dev/)
 * **State Management:** [Riverpod](https://riverpod.dev/)
 * **Backend & Auth:** [Supabase](https://supabase.com/)
-* **Local Database:** [Hive](https://pub.dev/packages/hive_ce)
+* **Local Database:** [Hive CE](https://pub.dev/packages/hive_ce)
 * **Routing:** [auto_route](https://pub.dev/packages/auto_route)
 * **Localization:** [slang](https://pub.dev/packages/slang)
 
