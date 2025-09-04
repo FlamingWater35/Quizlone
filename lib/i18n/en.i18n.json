@@ -42,6 +42,12 @@
       "title": "Confirm Email",
       "content": "By clicking confirm, you agree that $email is your correct email address.",
       "confirm": "Confirm"
+    },
+    "confirmLogoutDialog": {
+      "title": "Confirm Logout",
+      "content": "Signing out will keep your data in the cloud. Do you also want to remove all study data from this device?",
+      "logoutOnly": "Logout Only",
+      "deleteAndLogout": "Delete & Logout"
     }
   },
   "aboutScreen": {

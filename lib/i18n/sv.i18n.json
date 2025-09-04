@@ -42,6 +42,12 @@
       "title": "Bekräfta e-post",
       "content": "Genom att klicka på bekräfta godkänner du att $email är din korrekta e-postadress.",
       "confirm": "Bekräfta"
+    },
+      "confirmLogoutDialog": {
+      "title": "Bekräfta utloggning",
+      "content": "Utloggning behåller dina data i molnet. Vill du också ta bort all studiedata från den här enheten?",
+      "logoutOnly": "Endast logga ut",
+      "deleteAndLogout": "Ta bort & logga ut"
     }
   },
   "aboutScreen": {

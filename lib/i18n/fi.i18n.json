@@ -42,6 +42,12 @@
       "title": "Vahvista sähköposti",
       "content": "Vahvista-painiketta napsauttamalla hyväksyt, että $email on oikea sähköpostiosoitteesi.",
       "confirm": "Vahvista"
+    },
+      "confirmLogoutDialog": {
+      "title": "Vahvista uloskirjautuminen",
+      "content": "Uloskirjautuminen säilyttää tietosi pilvessä. Haluatko myös poistaa kaikki opiskelutiedot tältä laitteelta?",
+      "logoutOnly": "Vain uloskirjautuminen",
+      "deleteAndLogout": "Poista ja kirjaudu ulos"
     }
   },
   "aboutScreen": {

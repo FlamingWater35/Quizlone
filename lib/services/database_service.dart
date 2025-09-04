@@ -144,6 +144,15 @@ class DatabaseService {
     await triggerCloudUpload();
   }
 
+  Future<void> clearAllUserData() async {
+    _log.info("Clearing all user-specific local data.");
+    await _studyListBox.clear();
+    await _matchRecordsBox.clear();
+    await _settingsBox.delete(_studyListOrderKey);
+    await _settingsBox.delete(_activeListIdKey);
+    await _settingsBox.delete(_lastSyncTimestampKey);
+  }
+
   Future<void> saveStudyListOrder(List<String> order) async {
     await _settingsBox.put(_studyListOrderKey, order);
     await triggerCloudUpload();

@@ -42,6 +42,12 @@
       "title": "Confirmar correo electrónico",
       "content": "Al hacer clic en confirmar, acepta que $email es su dirección de correo electrónico correcta.",
       "confirm": "Confirmar"
+    },
+      "confirmLogoutDialog": {
+      "title": "Confirmar cierre de sesión",
+      "content": "Cerrar sesión mantendrá tus datos en la nube. ¿Deseas también eliminar todos los datos de estudio de este dispositivo?",
+      "logoutOnly": "Solo cerrar sesión",
+      "deleteAndLogout": "Eliminar y cerrar sesión"
     }
   },
   "aboutScreen": {

@@ -6,5 +6,10 @@ part 'connectivity_provider.g.dart';
 
 @riverpod
 Stream<ConnectivityResult> connectivity(Ref ref) {
-  return Connectivity().onConnectivityChanged.map((results) => results.first);
+  return Connectivity().onConnectivityChanged.map((results) {
+    if (results.contains(ConnectivityResult.none)) {
+      return ConnectivityResult.none;
+    }
+    return results.first;
+  });
 }

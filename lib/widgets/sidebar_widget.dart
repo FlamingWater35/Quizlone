@@ -28,6 +28,51 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
     super.dispose();
   }
 
+  Future<void> _handleSignOut() async {
+    final t = Translations.of(context);
+    final authNotifier = ref.read(authControllerProvider.notifier);
+    final navigator = Navigator.of(context);
+
+    final result = await showDialog<bool?>(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: Text(t.drawer.confirmLogoutDialog.title),
+            content: Text(t.drawer.confirmLogoutDialog.content),
+            actions: [
+              TextButton(
+                onPressed: () => navigator.pop(null),
+                child: Text(t.general.cancel),
+              ),
+              OutlinedButton(
+                onPressed: () => navigator.pop(false),
+                child: Text(t.drawer.confirmLogoutDialog.logoutOnly),
+              ),
+              FilledButton(
+                onPressed: () => navigator.pop(true),
+                style: FilledButton.styleFrom(
+                  backgroundColor: Theme.of(context).colorScheme.error,
+                ),
+                child: Text(
+                  t.drawer.confirmLogoutDialog.deleteAndLogout,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onError,
+                  ),
+                ),
+              ),
+            ],
+          ),
+    );
+
+    if (result == null) return;
+
+    if (result == true) {
+      await authNotifier.clearLocalDataOnSignOut();
+    }
+
+    await authNotifier.signOut();
+  }
+
   Future<void> _signIn() async {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _isLoading = true);
@@ -139,9 +184,7 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
             OutlinedButton.icon(
               icon: const Icon(Icons.logout),
               label: Text(t.drawer.logout),
-              onPressed: () {
-                ref.read(authControllerProvider.notifier).signOut();
-              },
+              onPressed: _handleSignOut,
               style: OutlinedButton.styleFrom(
                 foregroundColor: theme.colorScheme.error,
                 side: BorderSide(color: theme.colorScheme.error.withAlpha(64)),
