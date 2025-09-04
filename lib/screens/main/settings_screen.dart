@@ -7,6 +7,7 @@ import 'package:file_saver/file_saver.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_file_dialog/flutter_file_dialog.dart';
+import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
@@ -578,10 +579,22 @@ class _UpdaterCard extends ConsumerWidget {
             if (info.releaseNotes != null && info.releaseNotes!.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                child: ExpansionTile(
-                  title: Text(t.settingsScreen.viewReleaseNotes),
-                  childrenPadding: const EdgeInsets.all(8.0),
-                  children: [Text(info.releaseNotes!)],
+                child: Card(
+                  margin: EdgeInsets.zero,
+                  clipBehavior: Clip.antiAlias,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: ExpansionTile(
+                    title: Text(t.settingsScreen.viewReleaseNotes),
+                    childrenPadding: const EdgeInsets.all(8.0),
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: MarkdownBody(data: info.releaseNotes!),
+                      ),
+                    ],
+                  ),
                 ),
               ),
           ],
