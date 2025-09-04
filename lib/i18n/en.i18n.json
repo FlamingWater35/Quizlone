@@ -37,6 +37,11 @@
     "snackbars": {
       "confirmationSent": "Confirmation email sent! Please check your inbox.",
       "unexpectedError": "An unexpected error occurred"
+    },
+    "confirmEmailDialog": {
+      "title": "Confirm Email",
+      "content": "By clicking confirm, you agree that $email is your correct email address.",
+      "confirm": "Confirm"
     }
   },
   "aboutScreen": {

@@ -96,6 +96,7 @@ class _TranslationsDrawerRu extends TranslationsDrawerEn {
 	@override String get signUp => 'Регистрация';
 	@override late final _TranslationsDrawerValidationRu validation = _TranslationsDrawerValidationRu._(_root);
 	@override late final _TranslationsDrawerSnackbarsRu snackbars = _TranslationsDrawerSnackbarsRu._(_root);
+	@override late final _TranslationsDrawerConfirmEmailDialogRu confirmEmailDialog = _TranslationsDrawerConfirmEmailDialogRu._(_root);
 }
 
 // Path: aboutScreen
@@ -361,6 +362,18 @@ class _TranslationsDrawerSnackbarsRu extends TranslationsDrawerSnackbarsEn {
 	@override String get unexpectedError => 'Произошла непредвиденная ошибка';
 }
 
+// Path: drawer.confirmEmailDialog
+class _TranslationsDrawerConfirmEmailDialogRu extends TranslationsDrawerConfirmEmailDialogEn {
+	_TranslationsDrawerConfirmEmailDialogRu._(TranslationsRu root) : this._root = root, super.internal(root);
+
+	final TranslationsRu _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Подтвердите Email';
+	@override String content({required Object email}) => 'Нажимая кнопку «Подтвердить», вы соглашаетесь с тем, что ${email} — ваш правильный адрес электронной почты.';
+	@override String get confirm => 'Подтвердить';
+}
+
 // Path: startScreen.confirmDeleteDialog
 class _TranslationsStartScreenConfirmDeleteDialogRu extends TranslationsStartScreenConfirmDeleteDialogEn {
 	_TranslationsStartScreenConfirmDeleteDialogRu._(TranslationsRu root) : this._root = root, super.internal(root);
@@ -569,6 +582,9 @@ extension on TranslationsRu {
 			case 'drawer.validation.passwordEmpty': return 'Пожалуйста, введите пароль';
 			case 'drawer.snackbars.confirmationSent': return 'Письмо с подтверждением отправлено! Проверьте свой почтовый ящик.';
 			case 'drawer.snackbars.unexpectedError': return 'Произошла непредвиденная ошибка';
+			case 'drawer.confirmEmailDialog.title': return 'Подтвердите Email';
+			case 'drawer.confirmEmailDialog.content': return ({required Object email}) => 'Нажимая кнопку «Подтвердить», вы соглашаетесь с тем, что ${email} — ваш правильный адрес электронной почты.';
+			case 'drawer.confirmEmailDialog.confirm': return 'Подтвердить';
 			case 'aboutScreen.version': return ({required Object version}) => 'Версия ${version}';
 			case 'aboutScreen.viewLicenses': return 'Просмотреть лицензии';
 			case 'startScreen.title': return 'Quizlone';

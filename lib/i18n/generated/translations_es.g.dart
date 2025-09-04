@@ -96,6 +96,7 @@ class _TranslationsDrawerEs extends TranslationsDrawerEn {
 	@override String get signUp => 'Registrarse';
 	@override late final _TranslationsDrawerValidationEs validation = _TranslationsDrawerValidationEs._(_root);
 	@override late final _TranslationsDrawerSnackbarsEs snackbars = _TranslationsDrawerSnackbarsEs._(_root);
+	@override late final _TranslationsDrawerConfirmEmailDialogEs confirmEmailDialog = _TranslationsDrawerConfirmEmailDialogEs._(_root);
 }
 
 // Path: aboutScreen
@@ -359,6 +360,18 @@ class _TranslationsDrawerSnackbarsEs extends TranslationsDrawerSnackbarsEn {
 	@override String get unexpectedError => 'Ocurrió un error inesperado';
 }
 
+// Path: drawer.confirmEmailDialog
+class _TranslationsDrawerConfirmEmailDialogEs extends TranslationsDrawerConfirmEmailDialogEn {
+	_TranslationsDrawerConfirmEmailDialogEs._(TranslationsEs root) : this._root = root, super.internal(root);
+
+	final TranslationsEs _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Confirmar correo electrónico';
+	@override String content({required Object email}) => 'Al hacer clic en confirmar, acepta que ${email} es su dirección de correo electrónico correcta.';
+	@override String get confirm => 'Confirmar';
+}
+
 // Path: startScreen.confirmDeleteDialog
 class _TranslationsStartScreenConfirmDeleteDialogEs extends TranslationsStartScreenConfirmDeleteDialogEn {
 	_TranslationsStartScreenConfirmDeleteDialogEs._(TranslationsEs root) : this._root = root, super.internal(root);
@@ -565,6 +578,9 @@ extension on TranslationsEs {
 			case 'drawer.validation.passwordEmpty': return 'Por favor, introduce una contraseña';
 			case 'drawer.snackbars.confirmationSent': return '¡Correo de confirmación enviado! Revisa tu bandeja de entrada.';
 			case 'drawer.snackbars.unexpectedError': return 'Ocurrió un error inesperado';
+			case 'drawer.confirmEmailDialog.title': return 'Confirmar correo electrónico';
+			case 'drawer.confirmEmailDialog.content': return ({required Object email}) => 'Al hacer clic en confirmar, acepta que ${email} es su dirección de correo electrónico correcta.';
+			case 'drawer.confirmEmailDialog.confirm': return 'Confirmar';
 			case 'aboutScreen.version': return ({required Object version}) => 'Versión ${version}';
 			case 'aboutScreen.viewLicenses': return 'Ver licencias';
 			case 'startScreen.title': return 'Quizlone';

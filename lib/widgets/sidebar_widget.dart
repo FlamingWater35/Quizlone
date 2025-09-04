@@ -38,10 +38,12 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
           .signIn(_emailController.text, _passwordController.text);
     } on AuthException catch (error) {
       if (mounted) {
+        Navigator.pop(context);
         showErrorSnackBar(context, message: error.message);
       }
     } catch (error) {
       if (mounted) {
+        Navigator.pop(context);
         showErrorSnackBar(context, message: t.drawer.snackbars.unexpectedError);
       }
     } finally {
@@ -53,23 +55,53 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
 
   Future<void> _signUp() async {
     if (!_formKey.currentState!.validate()) return;
-    setState(() => _isLoading = true);
+
     final t = Translations.of(context);
+    final email = _emailController.text;
+
+    final bool? didConfirm = await showDialog<bool>(
+      context: context,
+      builder:
+          (dialogContext) => AlertDialog(
+            title: Text(t.drawer.confirmEmailDialog.title),
+            content: Text(t.drawer.confirmEmailDialog.content(email: email)),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(dialogContext, false),
+                child: Text(t.general.cancel),
+              ),
+              FilledButton(
+                onPressed: () => Navigator.pop(dialogContext, true),
+                child: Text(t.drawer.confirmEmailDialog.confirm),
+              ),
+            ],
+          ),
+    );
+
+    if (didConfirm != true) {
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
     try {
       await ref
           .read(authControllerProvider.notifier)
-          .signUp(_emailController.text, _passwordController.text);
+          .signUp(email, _passwordController.text);
       if (mounted) {
+        Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(t.drawer.snackbars.confirmationSent)),
         );
       }
     } on AuthException catch (error) {
       if (mounted) {
+        Navigator.pop(context);
         showErrorSnackBar(context, message: error.message);
       }
     } catch (error) {
       if (mounted) {
+        Navigator.pop(context);
         showErrorSnackBar(context, message: t.drawer.snackbars.unexpectedError);
       }
     } finally {

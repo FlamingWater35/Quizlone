@@ -148,6 +148,7 @@ class TranslationsDrawerEn {
 
 	late final TranslationsDrawerValidationEn validation = TranslationsDrawerValidationEn.internal(_root);
 	late final TranslationsDrawerSnackbarsEn snackbars = TranslationsDrawerSnackbarsEn.internal(_root);
+	late final TranslationsDrawerConfirmEmailDialogEn confirmEmailDialog = TranslationsDrawerConfirmEmailDialogEn.internal(_root);
 }
 
 // Path: aboutScreen
@@ -655,6 +656,24 @@ class TranslationsDrawerSnackbarsEn {
 	String get unexpectedError => 'An unexpected error occurred';
 }
 
+// Path: drawer.confirmEmailDialog
+class TranslationsDrawerConfirmEmailDialogEn {
+	TranslationsDrawerConfirmEmailDialogEn.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Confirm Email'
+	String get title => 'Confirm Email';
+
+	/// en: 'By clicking confirm, you agree that $email is your correct email address.'
+	String content({required Object email}) => 'By clicking confirm, you agree that ${email} is your correct email address.';
+
+	/// en: 'Confirm'
+	String get confirm => 'Confirm';
+}
+
 // Path: startScreen.confirmDeleteDialog
 class TranslationsStartScreenConfirmDeleteDialogEn {
 	TranslationsStartScreenConfirmDeleteDialogEn.internal(this._root);
@@ -963,6 +982,9 @@ extension on Translations {
 			case 'drawer.validation.passwordEmpty': return 'Please enter a password';
 			case 'drawer.snackbars.confirmationSent': return 'Confirmation email sent! Please check your inbox.';
 			case 'drawer.snackbars.unexpectedError': return 'An unexpected error occurred';
+			case 'drawer.confirmEmailDialog.title': return 'Confirm Email';
+			case 'drawer.confirmEmailDialog.content': return ({required Object email}) => 'By clicking confirm, you agree that ${email} is your correct email address.';
+			case 'drawer.confirmEmailDialog.confirm': return 'Confirm';
 			case 'aboutScreen.version': return ({required Object version}) => 'Version ${version}';
 			case 'aboutScreen.viewLicenses': return 'View Licenses';
 			case 'startScreen.title': return 'Quizlone';

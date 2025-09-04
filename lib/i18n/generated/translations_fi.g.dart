@@ -96,6 +96,7 @@ class _TranslationsDrawerFi extends TranslationsDrawerEn {
 	@override String get signUp => 'Rekisteröidy';
 	@override late final _TranslationsDrawerValidationFi validation = _TranslationsDrawerValidationFi._(_root);
 	@override late final _TranslationsDrawerSnackbarsFi snackbars = _TranslationsDrawerSnackbarsFi._(_root);
+	@override late final _TranslationsDrawerConfirmEmailDialogFi confirmEmailDialog = _TranslationsDrawerConfirmEmailDialogFi._(_root);
 }
 
 // Path: aboutScreen
@@ -359,6 +360,18 @@ class _TranslationsDrawerSnackbarsFi extends TranslationsDrawerSnackbarsEn {
 	@override String get unexpectedError => 'Tapahtui odottamaton virhe';
 }
 
+// Path: drawer.confirmEmailDialog
+class _TranslationsDrawerConfirmEmailDialogFi extends TranslationsDrawerConfirmEmailDialogEn {
+	_TranslationsDrawerConfirmEmailDialogFi._(TranslationsFi root) : this._root = root, super.internal(root);
+
+	final TranslationsFi _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Vahvista sähköposti';
+	@override String content({required Object email}) => 'Vahvista-painiketta napsauttamalla hyväksyt, että ${email} on oikea sähköpostiosoitteesi.';
+	@override String get confirm => 'Vahvista';
+}
+
 // Path: startScreen.confirmDeleteDialog
 class _TranslationsStartScreenConfirmDeleteDialogFi extends TranslationsStartScreenConfirmDeleteDialogEn {
 	_TranslationsStartScreenConfirmDeleteDialogFi._(TranslationsFi root) : this._root = root, super.internal(root);
@@ -565,6 +578,9 @@ extension on TranslationsFi {
 			case 'drawer.validation.passwordEmpty': return 'Syötä salasana';
 			case 'drawer.snackbars.confirmationSent': return 'Vahvistusviesti lähetetty! Tarkista sähköpostisi.';
 			case 'drawer.snackbars.unexpectedError': return 'Tapahtui odottamaton virhe';
+			case 'drawer.confirmEmailDialog.title': return 'Vahvista sähköposti';
+			case 'drawer.confirmEmailDialog.content': return ({required Object email}) => 'Vahvista-painiketta napsauttamalla hyväksyt, että ${email} on oikea sähköpostiosoitteesi.';
+			case 'drawer.confirmEmailDialog.confirm': return 'Vahvista';
 			case 'aboutScreen.version': return ({required Object version}) => 'Versio ${version}';
 			case 'aboutScreen.viewLicenses': return 'Näytä lisenssit';
 			case 'startScreen.title': return 'Quizlone';

@@ -37,6 +37,11 @@
     "snackbars": {
       "confirmationSent": "Bekräftelsemejl har skickats! Kontrollera din inkorg.",
       "unexpectedError": "Ett oväntat fel inträffade"
+    },
+    "confirmEmailDialog": {
+      "title": "Bekräfta e-post",
+      "content": "Genom att klicka på bekräfta godkänner du att $email är din korrekta e-postadress.",
+      "confirm": "Bekräfta"
     }
   },
   "aboutScreen": {

@@ -96,6 +96,7 @@ class _TranslationsDrawerSv extends TranslationsDrawerEn {
 	@override String get signUp => 'Registrera dig';
 	@override late final _TranslationsDrawerValidationSv validation = _TranslationsDrawerValidationSv._(_root);
 	@override late final _TranslationsDrawerSnackbarsSv snackbars = _TranslationsDrawerSnackbarsSv._(_root);
+	@override late final _TranslationsDrawerConfirmEmailDialogSv confirmEmailDialog = _TranslationsDrawerConfirmEmailDialogSv._(_root);
 }
 
 // Path: aboutScreen
@@ -359,6 +360,18 @@ class _TranslationsDrawerSnackbarsSv extends TranslationsDrawerSnackbarsEn {
 	@override String get unexpectedError => 'Ett oväntat fel inträffade';
 }
 
+// Path: drawer.confirmEmailDialog
+class _TranslationsDrawerConfirmEmailDialogSv extends TranslationsDrawerConfirmEmailDialogEn {
+	_TranslationsDrawerConfirmEmailDialogSv._(TranslationsSv root) : this._root = root, super.internal(root);
+
+	final TranslationsSv _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Bekräfta e-post';
+	@override String content({required Object email}) => 'Genom att klicka på bekräfta godkänner du att ${email} är din korrekta e-postadress.';
+	@override String get confirm => 'Bekräfta';
+}
+
 // Path: startScreen.confirmDeleteDialog
 class _TranslationsStartScreenConfirmDeleteDialogSv extends TranslationsStartScreenConfirmDeleteDialogEn {
 	_TranslationsStartScreenConfirmDeleteDialogSv._(TranslationsSv root) : this._root = root, super.internal(root);
@@ -565,6 +578,9 @@ extension on TranslationsSv {
 			case 'drawer.validation.passwordEmpty': return 'Vänligen ange ett lösenord';
 			case 'drawer.snackbars.confirmationSent': return 'Bekräftelsemejl har skickats! Kontrollera din inkorg.';
 			case 'drawer.snackbars.unexpectedError': return 'Ett oväntat fel inträffade';
+			case 'drawer.confirmEmailDialog.title': return 'Bekräfta e-post';
+			case 'drawer.confirmEmailDialog.content': return ({required Object email}) => 'Genom att klicka på bekräfta godkänner du att ${email} är din korrekta e-postadress.';
+			case 'drawer.confirmEmailDialog.confirm': return 'Bekräfta';
 			case 'aboutScreen.version': return ({required Object version}) => 'Version ${version}';
 			case 'aboutScreen.viewLicenses': return 'Visa licenser';
 			case 'startScreen.title': return 'Quizlone';

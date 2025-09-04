@@ -37,6 +37,11 @@
     "snackbars": {
       "confirmationSent": "Vahvistusviesti lähetetty! Tarkista sähköpostisi.",
       "unexpectedError": "Tapahtui odottamaton virhe"
+    },
+    "confirmEmailDialog": {
+      "title": "Vahvista sähköposti",
+      "content": "Vahvista-painiketta napsauttamalla hyväksyt, että $email on oikea sähköpostiosoitteesi.",
+      "confirm": "Vahvista"
     }
   },
   "aboutScreen": {
