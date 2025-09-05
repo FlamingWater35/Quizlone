@@ -73,54 +73,57 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
     ref.read(activeStudyListIdProvider.notifier).set(null);
   }
 
-  AppData _mergeData({required AppData local, required AppData remote}) {
+  AppData _mergeData({
+    required AppData local,
+    required AppData remote,
+    required DateTime? localTimestamp,
+  }) {
     _log.fine("Merging local and remote data...");
-    final Map<String, StudyList> mergedListsMap = {};
 
-    for (final list in local.studyLists) {
-      mergedListsMap[list.id] = list;
-    }
+    final remoteListsMap = {for (var list in remote.studyLists) list.id: list};
+    final mergedListsMap = Map<String, StudyList>.from(remoteListsMap);
 
-    for (final remoteList in remote.studyLists) {
-      if (mergedListsMap.containsKey(remoteList.id)) {
-        final localList = mergedListsMap[remoteList.id]!;
-        if (remoteList.lastUsedAt.isAfter(localList.lastUsedAt)) {
-          mergedListsMap[remoteList.id] = remoteList;
+    for (final localList in local.studyLists) {
+      if (remoteListsMap.containsKey(localList.id)) {
+        final remoteList = remoteListsMap[localList.id]!;
+        if (localList.lastUsedAt.isAfter(remoteList.lastUsedAt)) {
+          mergedListsMap[localList.id] = localList;
         }
       } else {
-        mergedListsMap[remoteList.id] = remoteList;
+        if (localTimestamp == null ||
+            localList.createdAt.isAfter(localTimestamp)) {
+          mergedListsMap[localList.id] = localList;
+        }
       }
     }
     final mergedLists = mergedListsMap.values.toList();
     _log.fine("Merged ${mergedLists.length} lists.");
 
-    final Map<String, MatchRecord> mergedRecordsMap = {};
-    for (final record in local.matchRecords) {
-      final key =
-          "${record.studyListName}-${record.createdAt.toIso8601String()}";
-      mergedRecordsMap[key] = record;
-    }
-    for (final record in remote.matchRecords) {
-      final key =
-          "${record.studyListName}-${record.createdAt.toIso8601String()}";
-      mergedRecordsMap[key] = record;
-    }
-    final mergedRecords = mergedRecordsMap.values.toList();
-    _log.fine("Merged ${mergedRecords.length} records.");
+    final remoteRecordsSet =
+        remote.matchRecords
+            .map((r) => "${r.studyListName}-${r.createdAt.toIso8601String()}")
+            .toSet();
+    final mergedRecords = List<MatchRecord>.from(remote.matchRecords);
 
-    final remoteOrderSet = remote.studyListOrder.toSet();
-    final mergedOrder = List<String>.from(remote.studyListOrder);
-    for (final localId in local.studyListOrder) {
-      if (!remoteOrderSet.contains(localId)) {
-        mergedOrder.add(localId);
+    for (final localRecord in local.matchRecords) {
+      final key =
+          "${localRecord.studyListName}-${localRecord.createdAt.toIso8601String()}";
+      if (!remoteRecordsSet.contains(key)) {
+        mergedRecords.add(localRecord);
       }
     }
+    _log.fine("Merged ${mergedRecords.length} records.");
 
     final mergedListIds = mergedLists.map((e) => e.id).toSet();
-    mergedOrder.retainWhere(mergedListIds.contains);
-    for (final listId in mergedListIds) {
-      if (!mergedOrder.contains(listId)) {
-        mergedOrder.insert(0, listId);
+    final mergedOrder =
+        remote.studyListOrder
+            .where((id) => mergedListIds.contains(id))
+            .toList();
+    final mergedOrderSet = mergedOrder.toSet();
+
+    for (final list in mergedLists) {
+      if (!mergedOrderSet.contains(list.id)) {
+        mergedOrder.add(list.id);
       }
     }
     _log.fine("Merged list order with ${mergedOrder.length} items.");
@@ -211,7 +214,11 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
               matchRecords: localRecords,
               studyListOrder: localOrder,
             );
-            final mergedData = _mergeData(local: localData, remote: cloudData);
+            final mergedData = _mergeData(
+              local: localData,
+              remote: cloudData,
+              localTimestamp: localTimestamp,
+            );
             await dbService.applyCloudData(mergedData);
             await dbService.saveLastSyncTimestamp(cloudTimestamp);
             await dbService.triggerCloudUpload();
