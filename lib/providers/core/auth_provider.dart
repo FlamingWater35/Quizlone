@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/widgets.dart';
@@ -219,10 +220,22 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
               remote: cloudData,
               localTimestamp: localTimestamp,
             );
-            await dbService.applyCloudData(mergedData);
-            await dbService.saveLastSyncTimestamp(cloudTimestamp);
-            await dbService.triggerCloudUpload();
-            _log.info("Merge complete and new data uploaded.");
+
+            final localDataJson = jsonEncode(localData.toJson());
+            final mergedDataJson = jsonEncode(mergedData.toJson());
+
+            if (localDataJson == mergedDataJson) {
+              _log.info(
+                "Merge result is identical to local data. Skipping database write.",
+              );
+              await dbService.saveLastSyncTimestamp(cloudTimestamp);
+            } else {
+              _log.info("Local data changed after merge. Applying updates.");
+              await dbService.applyCloudData(mergedData);
+              await dbService.saveLastSyncTimestamp(cloudTimestamp);
+              await dbService.triggerCloudUpload();
+              _log.info("Merge complete and new data uploaded.");
+            }
           } else {
             _log.info("Local data is up-to-date or newer. Uploading to cloud.");
             await dbService.triggerCloudUpload();

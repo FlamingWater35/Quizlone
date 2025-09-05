@@ -15,8 +15,22 @@ import '../../widgets/sidebar_widget.dart';
 final _log = Logger("StartScreen");
 
 @RoutePage()
-class StartScreen extends ConsumerWidget {
+class StartScreen extends ConsumerStatefulWidget {
   const StartScreen({super.key});
+
+  @override
+  ConsumerState<StartScreen> createState() => _StartScreenState();
+}
+
+class _StartScreenState extends ConsumerState<StartScreen> {
+  List<StudyList> _currentLists = [];
+  final Set<String> _justAddedItemIds = {};
+
+  @override
+  void initState() {
+    super.initState();
+    _currentLists = ref.read(studyListsProvider).asData?.value ?? [];
+  }
 
   Future<void> _showRenameDialog(
     BuildContext context,
@@ -91,7 +105,28 @@ class StartScreen extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
+    ref.listen<AsyncValue<List<StudyList>>>(studyListsProvider, (
+      previous,
+      next,
+    ) {
+      final prevList = previous?.asData?.value ?? _currentLists;
+      final newList = next.asData?.value ?? [];
+
+      final prevIds = prevList.map((e) => e.id).toSet();
+      final newIds = newList.map((e) => e.id).toSet();
+
+      final addedIds = newIds.difference(prevIds);
+
+      if (addedIds.isNotEmpty && mounted) {
+        setState(() {
+          _justAddedItemIds.addAll(addedIds);
+        });
+      }
+
+      _currentLists = newList;
+    });
+
     final studyListsAsync = ref.watch(studyListsProvider);
     final colorScheme = Theme.of(context).colorScheme;
     final t = Translations.of(context);
@@ -137,7 +172,9 @@ class StartScreen extends ConsumerWidget {
                         itemCount: lists.length,
                         itemBuilder: (context, index) {
                           final list = lists[index];
-                          return Hero(
+                          final isNew = _justAddedItemIds.contains(list.id);
+
+                          final cardItem = Hero(
                             key: ValueKey(list.id),
                             tag: list.id,
                             child: Card(
@@ -277,6 +314,25 @@ class StartScreen extends ConsumerWidget {
                               ),
                             ),
                           );
+
+                          if (isNew) {
+                            return _AnimateInWrapper(
+                              key: ValueKey('${list.id}_anim'),
+                              onAnimationComplete: () {
+                                WidgetsBinding.instance.addPostFrameCallback((
+                                  _,
+                                ) {
+                                  if (mounted) {
+                                    setState(() {
+                                      _justAddedItemIds.remove(list.id);
+                                    });
+                                  }
+                                });
+                              },
+                              child: cardItem,
+                            );
+                          }
+                          return cardItem;
                         },
                         onReorder: (int oldIndex, int newIndex) {
                           ref
@@ -306,6 +362,67 @@ class StartScreen extends ConsumerWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _AnimateInWrapper extends StatefulWidget {
+  const _AnimateInWrapper({
+    super.key,
+    required this.child,
+    required this.onAnimationComplete,
+  });
+
+  final Widget child;
+  final VoidCallback onAnimationComplete;
+
+  @override
+  State<_AnimateInWrapper> createState() => __AnimateInWrapperState();
+}
+
+class __AnimateInWrapperState extends State<_AnimateInWrapper>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _fadeAnimation;
+  late Animation<Offset> _slideAnimation;
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 500),
+      vsync: this,
+    );
+
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, 0.3),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
+
+    _controller.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        widget.onAnimationComplete();
+      }
+    });
+
+    _controller.forward();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeTransition(
+      opacity: _fadeAnimation,
+      child: SlideTransition(position: _slideAnimation, child: widget.child),
     );
   }
 }
