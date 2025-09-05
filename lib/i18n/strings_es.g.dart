@@ -95,6 +95,7 @@ class _TranslationsDrawerEs implements TranslationsDrawerEn {
 	@override late final _TranslationsDrawerValidationEs validation = _TranslationsDrawerValidationEs._(_root);
 	@override late final _TranslationsDrawerSnackbarsEs snackbars = _TranslationsDrawerSnackbarsEs._(_root);
 	@override late final _TranslationsDrawerConfirmEmailDialogEs confirmEmailDialog = _TranslationsDrawerConfirmEmailDialogEs._(_root);
+	@override late final _TranslationsDrawerConfirmLogoutDialogEs confirmLogoutDialog = _TranslationsDrawerConfirmLogoutDialogEs._(_root);
 }
 
 // Path: aboutScreen
@@ -370,6 +371,19 @@ class _TranslationsDrawerConfirmEmailDialogEs implements TranslationsDrawerConfi
 	@override String get confirm => 'Confirmar';
 }
 
+// Path: drawer.confirmLogoutDialog
+class _TranslationsDrawerConfirmLogoutDialogEs implements TranslationsDrawerConfirmLogoutDialogEn {
+	_TranslationsDrawerConfirmLogoutDialogEs._(this._root);
+
+	final TranslationsEs _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Confirmar cierre de sesión';
+	@override String get content => 'Cerrar sesión mantendrá tus datos en la nube. ¿Deseas también eliminar todos los datos de estudio de este dispositivo?';
+	@override String get logoutOnly => 'Solo cerrar sesión';
+	@override String get deleteAndLogout => 'Eliminar y cerrar sesión';
+}
+
 // Path: startScreen.confirmDeleteDialog
 class _TranslationsStartScreenConfirmDeleteDialogEs implements TranslationsStartScreenConfirmDeleteDialogEn {
 	_TranslationsStartScreenConfirmDeleteDialogEs._(this._root);
@@ -579,6 +593,10 @@ extension on TranslationsEs {
 			case 'drawer.confirmEmailDialog.title': return 'Confirmar correo electrónico';
 			case 'drawer.confirmEmailDialog.content': return ({required Object email}) => 'Al hacer clic en confirmar, acepta que ${email} es su dirección de correo electrónico correcta.';
 			case 'drawer.confirmEmailDialog.confirm': return 'Confirmar';
+			case 'drawer.confirmLogoutDialog.title': return 'Confirmar cierre de sesión';
+			case 'drawer.confirmLogoutDialog.content': return 'Cerrar sesión mantendrá tus datos en la nube. ¿Deseas también eliminar todos los datos de estudio de este dispositivo?';
+			case 'drawer.confirmLogoutDialog.logoutOnly': return 'Solo cerrar sesión';
+			case 'drawer.confirmLogoutDialog.deleteAndLogout': return 'Eliminar y cerrar sesión';
 			case 'aboutScreen.version': return ({required Object version}) => 'Versión ${version}';
 			case 'aboutScreen.viewLicenses': return 'Ver licencias';
 			case 'startScreen.title': return 'Quizlone';

@@ -149,6 +149,7 @@ class TranslationsDrawerEn {
 	late final TranslationsDrawerValidationEn validation = TranslationsDrawerValidationEn._(_root);
 	late final TranslationsDrawerSnackbarsEn snackbars = TranslationsDrawerSnackbarsEn._(_root);
 	late final TranslationsDrawerConfirmEmailDialogEn confirmEmailDialog = TranslationsDrawerConfirmEmailDialogEn._(_root);
+	late final TranslationsDrawerConfirmLogoutDialogEn confirmLogoutDialog = TranslationsDrawerConfirmLogoutDialogEn._(_root);
 }
 
 // Path: aboutScreen
@@ -674,6 +675,27 @@ class TranslationsDrawerConfirmEmailDialogEn {
 	String get confirm => 'Confirm';
 }
 
+// Path: drawer.confirmLogoutDialog
+class TranslationsDrawerConfirmLogoutDialogEn {
+	TranslationsDrawerConfirmLogoutDialogEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Confirm Logout'
+	String get title => 'Confirm Logout';
+
+	/// en: 'Signing out will keep your data in the cloud. Do you also want to remove all study data from this device?'
+	String get content => 'Signing out will keep your data in the cloud. Do you also want to remove all study data from this device?';
+
+	/// en: 'Logout Only'
+	String get logoutOnly => 'Logout Only';
+
+	/// en: 'Delete & Logout'
+	String get deleteAndLogout => 'Delete & Logout';
+}
+
 // Path: startScreen.confirmDeleteDialog
 class TranslationsStartScreenConfirmDeleteDialogEn {
 	TranslationsStartScreenConfirmDeleteDialogEn._(this._root);
@@ -985,6 +1007,10 @@ extension on Translations {
 			case 'drawer.confirmEmailDialog.title': return 'Confirm Email';
 			case 'drawer.confirmEmailDialog.content': return ({required Object email}) => 'By clicking confirm, you agree that ${email} is your correct email address.';
 			case 'drawer.confirmEmailDialog.confirm': return 'Confirm';
+			case 'drawer.confirmLogoutDialog.title': return 'Confirm Logout';
+			case 'drawer.confirmLogoutDialog.content': return 'Signing out will keep your data in the cloud. Do you also want to remove all study data from this device?';
+			case 'drawer.confirmLogoutDialog.logoutOnly': return 'Logout Only';
+			case 'drawer.confirmLogoutDialog.deleteAndLogout': return 'Delete & Logout';
 			case 'aboutScreen.version': return ({required Object version}) => 'Version ${version}';
 			case 'aboutScreen.viewLicenses': return 'View Licenses';
 			case 'startScreen.title': return 'Quizlone';

@@ -95,6 +95,7 @@ class _TranslationsDrawerFi implements TranslationsDrawerEn {
 	@override late final _TranslationsDrawerValidationFi validation = _TranslationsDrawerValidationFi._(_root);
 	@override late final _TranslationsDrawerSnackbarsFi snackbars = _TranslationsDrawerSnackbarsFi._(_root);
 	@override late final _TranslationsDrawerConfirmEmailDialogFi confirmEmailDialog = _TranslationsDrawerConfirmEmailDialogFi._(_root);
+	@override late final _TranslationsDrawerConfirmLogoutDialogFi confirmLogoutDialog = _TranslationsDrawerConfirmLogoutDialogFi._(_root);
 }
 
 // Path: aboutScreen
@@ -370,6 +371,19 @@ class _TranslationsDrawerConfirmEmailDialogFi implements TranslationsDrawerConfi
 	@override String get confirm => 'Vahvista';
 }
 
+// Path: drawer.confirmLogoutDialog
+class _TranslationsDrawerConfirmLogoutDialogFi implements TranslationsDrawerConfirmLogoutDialogEn {
+	_TranslationsDrawerConfirmLogoutDialogFi._(this._root);
+
+	final TranslationsFi _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Vahvista uloskirjautuminen';
+	@override String get content => 'Uloskirjautuminen säilyttää tietosi pilvessä. Haluatko myös poistaa kaikki opiskelutiedot tältä laitteelta?';
+	@override String get logoutOnly => 'Vain uloskirjautuminen';
+	@override String get deleteAndLogout => 'Poista ja kirjaudu ulos';
+}
+
 // Path: startScreen.confirmDeleteDialog
 class _TranslationsStartScreenConfirmDeleteDialogFi implements TranslationsStartScreenConfirmDeleteDialogEn {
 	_TranslationsStartScreenConfirmDeleteDialogFi._(this._root);
@@ -579,6 +593,10 @@ extension on TranslationsFi {
 			case 'drawer.confirmEmailDialog.title': return 'Vahvista sähköposti';
 			case 'drawer.confirmEmailDialog.content': return ({required Object email}) => 'Vahvista-painiketta napsauttamalla hyväksyt, että ${email} on oikea sähköpostiosoitteesi.';
 			case 'drawer.confirmEmailDialog.confirm': return 'Vahvista';
+			case 'drawer.confirmLogoutDialog.title': return 'Vahvista uloskirjautuminen';
+			case 'drawer.confirmLogoutDialog.content': return 'Uloskirjautuminen säilyttää tietosi pilvessä. Haluatko myös poistaa kaikki opiskelutiedot tältä laitteelta?';
+			case 'drawer.confirmLogoutDialog.logoutOnly': return 'Vain uloskirjautuminen';
+			case 'drawer.confirmLogoutDialog.deleteAndLogout': return 'Poista ja kirjaudu ulos';
 			case 'aboutScreen.version': return ({required Object version}) => 'Versio ${version}';
 			case 'aboutScreen.viewLicenses': return 'Näytä lisenssit';
 			case 'startScreen.title': return 'Quizlone';

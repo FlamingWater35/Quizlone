@@ -95,6 +95,7 @@ class _TranslationsDrawerRu implements TranslationsDrawerEn {
 	@override late final _TranslationsDrawerValidationRu validation = _TranslationsDrawerValidationRu._(_root);
 	@override late final _TranslationsDrawerSnackbarsRu snackbars = _TranslationsDrawerSnackbarsRu._(_root);
 	@override late final _TranslationsDrawerConfirmEmailDialogRu confirmEmailDialog = _TranslationsDrawerConfirmEmailDialogRu._(_root);
+	@override late final _TranslationsDrawerConfirmLogoutDialogRu confirmLogoutDialog = _TranslationsDrawerConfirmLogoutDialogRu._(_root);
 }
 
 // Path: aboutScreen
@@ -372,6 +373,19 @@ class _TranslationsDrawerConfirmEmailDialogRu implements TranslationsDrawerConfi
 	@override String get confirm => 'Подтвердить';
 }
 
+// Path: drawer.confirmLogoutDialog
+class _TranslationsDrawerConfirmLogoutDialogRu implements TranslationsDrawerConfirmLogoutDialogEn {
+	_TranslationsDrawerConfirmLogoutDialogRu._(this._root);
+
+	final TranslationsRu _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Подтвердите выход';
+	@override String get content => 'При выходе ваши данные останутся в облаке. Вы также хотите удалить все учебные данные с этого устройства?';
+	@override String get logoutOnly => 'Только выйти';
+	@override String get deleteAndLogout => 'Удалить и выйти';
+}
+
 // Path: startScreen.confirmDeleteDialog
 class _TranslationsStartScreenConfirmDeleteDialogRu implements TranslationsStartScreenConfirmDeleteDialogEn {
 	_TranslationsStartScreenConfirmDeleteDialogRu._(this._root);
@@ -583,6 +597,10 @@ extension on TranslationsRu {
 			case 'drawer.confirmEmailDialog.title': return 'Подтвердите Email';
 			case 'drawer.confirmEmailDialog.content': return ({required Object email}) => 'Нажимая кнопку «Подтвердить», вы соглашаетесь с тем, что ${email} — ваш правильный адрес электронной почты.';
 			case 'drawer.confirmEmailDialog.confirm': return 'Подтвердить';
+			case 'drawer.confirmLogoutDialog.title': return 'Подтвердите выход';
+			case 'drawer.confirmLogoutDialog.content': return 'При выходе ваши данные останутся в облаке. Вы также хотите удалить все учебные данные с этого устройства?';
+			case 'drawer.confirmLogoutDialog.logoutOnly': return 'Только выйти';
+			case 'drawer.confirmLogoutDialog.deleteAndLogout': return 'Удалить и выйти';
 			case 'aboutScreen.version': return ({required Object version}) => 'Версия ${version}';
 			case 'aboutScreen.viewLicenses': return 'Просмотреть лицензии';
 			case 'startScreen.title': return 'Quizlone';
