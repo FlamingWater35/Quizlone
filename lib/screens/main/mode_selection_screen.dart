@@ -351,34 +351,40 @@ class _OptionsPanelState extends ConsumerState<_OptionsPanel> {
                 children: [
                   Text(t.modeSelectionScreen.studyLength),
                   const SizedBox(width: 16),
-                  SizedBox(
-                    width: 80,
-                    child: TextFormField(
-                      controller: _studyLengthController,
-                      decoration: InputDecoration(
-                        hintText: t.general.all,
-                        border: const OutlineInputBorder(),
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 8,
+                  Flexible(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 100),
+                      child: TextFormField(
+                        controller: _studyLengthController,
+                        decoration: InputDecoration(
+                          hintText: t.general.all,
+                          border: const OutlineInputBorder(),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 8,
+                          ),
+                          isDense: true,
+                          suffixText: totalTerms > 0 ? "/ $totalTerms" : null,
                         ),
-                        isDense: true,
-                        suffixText: totalTerms > 0 ? "/ $totalTerms" : null,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                        ],
+                        onChanged: (value) {
+                          final intVal = int.tryParse(value);
+                          final notifier = ref.read(
+                            studyLengthProvider.notifier,
+                          );
+                          if (value.isEmpty || intVal == null) {
+                            notifier.clear();
+                          } else if (intVal > totalTerms && totalTerms > 0) {
+                            notifier.set(totalTerms);
+                          } else {
+                            notifier.set(intVal);
+                          }
+                        },
+                        textAlign: TextAlign.center,
                       ),
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                      onChanged: (value) {
-                        final intVal = int.tryParse(value);
-                        final notifier = ref.read(studyLengthProvider.notifier);
-                        if (value.isEmpty || intVal == null) {
-                          notifier.clear();
-                        } else if (intVal > totalTerms && totalTerms > 0) {
-                          notifier.set(totalTerms);
-                        } else {
-                          notifier.set(intVal);
-                        }
-                      },
-                      textAlign: TextAlign.center,
                     ),
                   ),
                 ],
