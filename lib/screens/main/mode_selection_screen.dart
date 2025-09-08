@@ -267,30 +267,33 @@ class _OptionsPanelState extends ConsumerState<_OptionsPanel> {
         _SettingsCard(
           title: t.modeSelectionScreen.flashcardOptions,
           children: [
-            Row(
-              children: [
-                _CustomToggleButton<FlashcardStartSide>(
-                  label: t.modeSelectionScreen.showTermFirst,
-                  icon: Icons.rectangle_outlined,
-                  value: FlashcardStartSide.term,
-                  groupValue: fcStartWith,
-                  onChanged:
-                      (value) => ref
-                          .read(flashcardStartWithProvider.notifier)
-                          .set(value),
-                ),
-                const SizedBox(width: 8),
-                _CustomToggleButton<FlashcardStartSide>(
-                  label: t.modeSelectionScreen.showDefFirst,
-                  icon: Icons.notes_outlined,
-                  value: FlashcardStartSide.definition,
-                  groupValue: fcStartWith,
-                  onChanged:
-                      (value) => ref
-                          .read(flashcardStartWithProvider.notifier)
-                          .set(value),
-                ),
-              ],
+            IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _CustomToggleButton<FlashcardStartSide>(
+                    label: t.modeSelectionScreen.showTermFirst,
+                    icon: Icons.rectangle_outlined,
+                    value: FlashcardStartSide.term,
+                    groupValue: fcStartWith,
+                    onChanged:
+                        (value) => ref
+                            .read(flashcardStartWithProvider.notifier)
+                            .set(value),
+                  ),
+                  const SizedBox(width: 8),
+                  _CustomToggleButton<FlashcardStartSide>(
+                    label: t.modeSelectionScreen.showDefFirst,
+                    icon: Icons.notes_outlined,
+                    value: FlashcardStartSide.definition,
+                    groupValue: fcStartWith,
+                    onChanged:
+                        (value) => ref
+                            .read(flashcardStartWithProvider.notifier)
+                            .set(value),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -298,28 +301,31 @@ class _OptionsPanelState extends ConsumerState<_OptionsPanel> {
         _SettingsCard(
           title: t.modeSelectionScreen.studyOptions,
           children: [
-            Row(
-              children: [
-                _CustomToggleButton<StudyQuestionType>(
-                  label: t.modeSelectionScreen.askForTerm,
-                  icon: Icons.notes_outlined,
-                  value: StudyQuestionType.definition,
-                  groupValue: studyAskWith,
-                  onChanged:
-                      (value) =>
-                          ref.read(studyAskWithProvider.notifier).set(value),
-                ),
-                const SizedBox(width: 8),
-                _CustomToggleButton<StudyQuestionType>(
-                  label: t.modeSelectionScreen.askForDef,
-                  icon: Icons.rectangle_outlined,
-                  value: StudyQuestionType.term,
-                  groupValue: studyAskWith,
-                  onChanged:
-                      (value) =>
-                          ref.read(studyAskWithProvider.notifier).set(value),
-                ),
-              ],
+            IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _CustomToggleButton<StudyQuestionType>(
+                    label: t.modeSelectionScreen.askForTerm,
+                    icon: Icons.notes_outlined,
+                    value: StudyQuestionType.definition,
+                    groupValue: studyAskWith,
+                    onChanged:
+                        (value) =>
+                            ref.read(studyAskWithProvider.notifier).set(value),
+                  ),
+                  const SizedBox(width: 8),
+                  _CustomToggleButton<StudyQuestionType>(
+                    label: t.modeSelectionScreen.askForDef,
+                    icon: Icons.rectangle_outlined,
+                    value: StudyQuestionType.term,
+                    groupValue: studyAskWith,
+                    onChanged:
+                        (value) =>
+                            ref.read(studyAskWithProvider.notifier).set(value),
+                  ),
+                ],
+              ),
             ),
             const Divider(height: 24),
             SwitchListTile(
@@ -384,31 +390,34 @@ class _OptionsPanelState extends ConsumerState<_OptionsPanel> {
         _SettingsCard(
           title: "${t.modeSelectionScreen.test} Options",
           children: [
-            Row(
-              children: [
-                _CustomToggleButton<TestFormat>(
-                  label: t.modeSelectionScreen.writtenAnswer,
-                  icon: Icons.edit_note_outlined,
-                  value: TestFormat.written,
-                  groupValue: testFormat,
-                  onChanged:
-                      (value) => ref
-                          .read(testQuestionFormatProvider.notifier)
-                          .set(value),
-                ),
-                const SizedBox(width: 8),
-                _CustomToggleButton<TestFormat>(
-                  label: t.modeSelectionScreen.multipleChoice,
-                  icon: Icons.check_box_outlined,
-                  value: TestFormat.mc,
-                  groupValue: testFormat,
-                  onChanged:
-                      (value) => ref
-                          .read(testQuestionFormatProvider.notifier)
-                          .set(value),
-                  isDisabled: isMCDisabled,
-                ),
-              ],
+            IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _CustomToggleButton<TestFormat>(
+                    label: t.modeSelectionScreen.writtenAnswer,
+                    icon: Icons.edit_note_outlined,
+                    value: TestFormat.written,
+                    groupValue: testFormat,
+                    onChanged:
+                        (value) => ref
+                            .read(testQuestionFormatProvider.notifier)
+                            .set(value),
+                  ),
+                  const SizedBox(width: 8),
+                  _CustomToggleButton<TestFormat>(
+                    label: t.modeSelectionScreen.multipleChoice,
+                    icon: Icons.check_box_outlined,
+                    value: TestFormat.mc,
+                    groupValue: testFormat,
+                    onChanged:
+                        (value) => ref
+                            .read(testQuestionFormatProvider.notifier)
+                            .set(value),
+                    isDisabled: isMCDisabled,
+                  ),
+                ],
+              ),
             ),
           ],
         ),
