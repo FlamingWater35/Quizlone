@@ -6,7 +6,21 @@ part of 'match_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$matchControllerHash() => r'5a45449a78b5512ba21acb0f07f6e762ac9d1762';
+String _$matchTimerHash() => r'8294ec6124c700c6e38bb1dfa6c5303e039020b7';
+
+/// See also [MatchTimer].
+@ProviderFor(MatchTimer)
+final matchTimerProvider = NotifierProvider<MatchTimer, String>.internal(
+  MatchTimer.new,
+  name: r'matchTimerProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$matchTimerHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$MatchTimer = Notifier<String>;
+String _$matchControllerHash() => r'7a439499852c28155f04ebe26ba35a24fee0f641';
 
 /// See also [MatchController].
 @ProviderFor(MatchController)

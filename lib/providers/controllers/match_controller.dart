@@ -15,6 +15,16 @@ part 'match_controller.g.dart';
 
 final _log = Logger("MatchController");
 
+@Riverpod(keepAlive: true)
+class MatchTimer extends _$MatchTimer {
+  @override
+  String build() => "0.0";
+
+  void set(String value) {
+    state = value;
+  }
+}
+
 @immutable
 class MatchItem {
   const MatchItem({
@@ -36,13 +46,11 @@ class MatchScreenState {
     this.matchedPairIds = const {},
     this.incorrectPair = const {},
     this.isComplete = false,
-    this.elapsedTenths = 0,
     this.finalRecord,
     this.isLoading = true,
     this.errorMessage,
   });
 
-  final int elapsedTenths;
   final String? errorMessage;
   final MatchRecord? finalRecord;
   final Set<int> incorrectPair;
@@ -58,7 +66,6 @@ class MatchScreenState {
     Set<String>? matchedPairIds,
     Set<int>? incorrectPair,
     bool? isComplete,
-    int? elapsedTenths,
     MatchRecord? finalRecord,
     bool? isLoading,
     String? errorMessage,
@@ -70,7 +77,6 @@ class MatchScreenState {
       matchedPairIds: matchedPairIds ?? this.matchedPairIds,
       incorrectPair: incorrectPair ?? this.incorrectPair,
       isComplete: isComplete ?? this.isComplete,
-      elapsedTenths: elapsedTenths ?? this.elapsedTenths,
       finalRecord: finalRecord ?? this.finalRecord,
       isLoading: isLoading ?? this.isLoading,
       errorMessage: clearError ? null : errorMessage ?? this.errorMessage,
@@ -84,6 +90,26 @@ const int maxMatchPairs = 10;
 class MatchController extends _$MatchController {
   final Stopwatch _stopwatch = Stopwatch();
   Timer? _timer;
+
+  void _initializeAndStartTimer() {
+    final timerNotifier = ref.read(matchTimerProvider.notifier);
+    timerNotifier.set("0.0");
+
+    _stopwatch
+      ..reset()
+      ..start();
+
+    _timer?.cancel();
+    _timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
+      if (state.value?.isComplete == false) {
+        final timeString = (_stopwatch.elapsedMilliseconds / 1000)
+            .toStringAsFixed(1);
+        ref.read(matchTimerProvider.notifier).set(timeString);
+      } else {
+        timer.cancel();
+      }
+    });
+  }
 
   Future<void> selectItem(MatchItem item) async {
     final currentState = state.value;
@@ -127,7 +153,6 @@ class MatchController extends _$MatchController {
             selectedItem: () => null,
             matchedPairIds: newMatched,
             isComplete: isNowComplete,
-            elapsedTenths: _stopwatch.elapsedMilliseconds ~/ 100,
             finalRecord: newRecord,
           ),
         );
@@ -156,7 +181,9 @@ class MatchController extends _$MatchController {
   @override
   Future<MatchScreenState> build() async {
     _log.fine("[MatchController] build started");
+
     ref.onDispose(() {
+      _log.fine("[MatchController] disposed, cancelling timer.");
       _timer?.cancel();
       _stopwatch.stop();
     });
@@ -203,18 +230,7 @@ class MatchController extends _$MatchController {
     }
     items.shuffle(Random());
 
-    _stopwatch
-      ..reset()
-      ..start();
-    _timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
-      if (state.value?.isComplete == false) {
-        state = AsyncData(
-          state.value!.copyWith(
-            elapsedTenths: _stopwatch.elapsedMilliseconds ~/ 100,
-          ),
-        );
-      }
-    });
+    Future.microtask(_initializeAndStartTimer);
 
     return MatchScreenState(items: items, isLoading: false);
   }

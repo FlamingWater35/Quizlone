@@ -107,6 +107,26 @@ class MatchScreen extends ConsumerWidget {
   }
 }
 
+class _TimerDisplay extends ConsumerWidget {
+  const _TimerDisplay();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final timeString = ref.watch(matchTimerProvider);
+    return Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.timer_outlined, size: 20),
+          const SizedBox(width: 8),
+          Text(timeString, style: Theme.of(context).textTheme.titleLarge),
+        ],
+      ),
+    );
+  }
+}
+
 class _MatchView extends ConsumerWidget {
   const _MatchView();
 
@@ -124,24 +144,9 @@ class _MatchView extends ConsumerWidget {
           return const Center(child: CircularProgressIndicator());
         }
 
-        final timeString = (state.elapsedTenths / 10).toStringAsFixed(1);
-
         return Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.timer_outlined, size: 20),
-                  const SizedBox(width: 8),
-                  Text(
-                    timeString,
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
-                ],
-              ),
-            ),
+            const _TimerDisplay(),
             Expanded(
               child: CenteredView(
                 child: Padding(
