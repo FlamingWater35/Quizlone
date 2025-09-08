@@ -237,49 +237,58 @@ class _MatchCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    Color cardColor = colorScheme.surfaceContainerHighest;
-    Color textColor = colorScheme.onSurfaceVariant;
+    Color cardColor;
+    Color contentColor;
     Border? border;
+    Widget child;
 
-    if (isIncorrect) {
+    if (isMatched) {
+      cardColor = theme.disabledColor.withAlpha(15);
+      contentColor = theme.disabledColor;
+      child = Icon(Icons.check, color: contentColor, size: 28);
+    } else if (isIncorrect) {
       cardColor = colorScheme.errorContainer;
-      textColor = colorScheme.onErrorContainer;
+      contentColor = colorScheme.onErrorContainer;
+      child = Text(
+        item.text,
+        textAlign: TextAlign.center,
+        style: theme.textTheme.bodyLarge?.copyWith(color: contentColor),
+      );
     } else if (isSelected) {
       cardColor = colorScheme.primaryContainer;
-      textColor = colorScheme.onPrimaryContainer;
+      contentColor = colorScheme.onPrimaryContainer;
       border = Border.all(color: colorScheme.primary, width: 2.0);
+      child = Text(
+        item.text,
+        textAlign: TextAlign.center,
+        style: theme.textTheme.bodyLarge?.copyWith(color: contentColor),
+      );
+    } else {
+      cardColor = colorScheme.surfaceContainerHighest;
+      contentColor = colorScheme.onSurfaceVariant;
+      child = Text(
+        item.text,
+        textAlign: TextAlign.center,
+        style: theme.textTheme.bodyLarge?.copyWith(color: contentColor),
+      );
     }
 
-    return AnimatedOpacity(
-      duration: const Duration(milliseconds: 300),
-      opacity: isMatched ? 0.0 : 1.0,
-      child: IgnorePointer(
-        ignoring: isMatched,
-        child: Card(
-          margin: EdgeInsets.zero,
-          elevation: isSelected ? 4.0 : 1.0,
-          color: cardColor,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12.0),
-            side:
-                border != null
-                    ? border.top
-                    : BorderSide(color: colorScheme.outlineVariant),
-          ),
-          clipBehavior: Clip.antiAlias,
-          child: InkWell(
-            onTap: onTap,
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  item.text,
-                  textAlign: TextAlign.center,
-                  style: theme.textTheme.bodyLarge?.copyWith(color: textColor),
-                ),
-              ),
-            ),
-          ),
+    return Card(
+      margin: EdgeInsets.zero,
+      elevation: isSelected ? 4.0 : 1.0,
+      color: cardColor,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12.0),
+        side:
+            border != null
+                ? border.top
+                : BorderSide(color: colorScheme.outlineVariant),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: isMatched ? null : onTap,
+        child: Center(
+          child: Padding(padding: const EdgeInsets.all(8.0), child: child),
         ),
       ),
     );
