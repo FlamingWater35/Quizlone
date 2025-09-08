@@ -48,7 +48,7 @@ A modern, cross-platform flashcard and study application built with Flutter. Qui
 * **Local Database:** [Hive CE](https://pub.dev/packages/hive_ce)
 * **Routing:** [auto_route](https://pub.dev/packages/auto_route)
 * **Localization:** [slang](https://pub.dev/packages/slang)
-* **UI Components:** [flutter_markdown](https://pub.dev/packages/flutter_markdown)
+* **UI Components:** [flutter_markdown_plus](https://pub.dev/packages/flutter_markdown_plus)
 
 ---
 
