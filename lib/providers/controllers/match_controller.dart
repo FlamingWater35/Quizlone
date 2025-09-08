@@ -111,7 +111,7 @@ class MatchController extends _$MatchController {
     });
   }
 
-  Future<void> selectItem(MatchItem item) async {
+  void selectItem(MatchItem item) {
     final currentState = state.value;
     if (currentState == null ||
         currentState.isComplete ||
@@ -144,8 +144,14 @@ class MatchController extends _$MatchController {
             timeInTenths: _stopwatch.elapsedMilliseconds ~/ 100,
             createdAt: DateTime.now(),
           );
-          await db.saveMatchRecord(newRecord);
-          await db.pruneMatchRecords(listName);
+          db
+              .saveMatchRecord(newRecord)
+              .then((_) {
+                db.pruneMatchRecords(listName);
+              })
+              .catchError((e, s) {
+                _log.severe("Error saving or pruning match records", e, s);
+              });
         }
 
         state = AsyncData(

@@ -204,11 +204,7 @@ class _StartScreenState extends ConsumerState<StartScreen> {
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12),
                                   ),
-                                  onTap: () async {
-                                    list.lastOpenedAt = DateTime.now();
-                                    await ref
-                                        .read(databaseServiceProvider)
-                                        .saveStudyList(list);
+                                  onTap: () {
                                     ref
                                         .read(
                                           activeStudyListIdProvider.notifier,
@@ -219,6 +215,19 @@ class _StartScreenState extends ConsumerState<StartScreen> {
                                         const ModeSelectionRoute(),
                                       );
                                     }
+
+                                    list.lastOpenedAt = DateTime.now();
+                                    ref
+                                        .read(databaseServiceProvider)
+                                        .saveStudyList(list)
+                                        .catchError((e, s) {
+                                          _log.severe(
+                                            "Failed to save lastOpenedAt in background",
+                                            e,
+                                            s,
+                                          );
+                                          return list.id;
+                                        });
                                   },
                                   trailing: Row(
                                     mainAxisSize: MainAxisSize.min,

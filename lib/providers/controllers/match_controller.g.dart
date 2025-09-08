@@ -20,7 +20,7 @@ final matchTimerProvider = NotifierProvider<MatchTimer, String>.internal(
 );
 
 typedef _$MatchTimer = Notifier<String>;
-String _$matchControllerHash() => r'7a439499852c28155f04ebe26ba35a24fee0f641';
+String _$matchControllerHash() => r'c88617a8c609c32186dd6244de6c74e3866e779e';
 
 /// See also [MatchController].
 @ProviderFor(MatchController)
