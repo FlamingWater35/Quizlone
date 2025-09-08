@@ -22,28 +22,21 @@ Future<void> _updateListOptionInHive(
 @riverpod
 class FlashcardStartWith extends _$FlashcardStartWith {
   void set(FlashcardStartSide side) {
+    state = side;
+
     final activeList = ref.read(activeStudyListProvider).asData?.value;
     final dbService = ref.read(databaseServiceProvider);
 
     if (activeList != null) {
       activeList.flashcardShowTermFirst = (side == FlashcardStartSide.term);
-      _updateListOptionInHive(dbService, activeList)
-          .then((_) {
-            state = side;
-            _log.fine(
-              "[FlashcardStartWith] Set to $side and updated Hive for ${activeList.name}",
-            );
-          })
-          .catchError((e, s) {
-            _log.warning(
-              "[FlashcardStartWith] Error updating Hive for list ${activeList.name}",
-              e,
-              s,
-            );
-            state = side;
-          });
+      _updateListOptionInHive(dbService, activeList).catchError((e, s) {
+        _log.warning(
+          "[FlashcardStartWith] Error during background save for ${activeList.name}",
+          e,
+          s,
+        );
+      });
     } else {
-      state = side;
       _log.warning(
         "[FlashcardStartWith] No activeList, set to $side (session only)",
       );
@@ -90,17 +83,21 @@ class FlashcardStartWith extends _$FlashcardStartWith {
 @riverpod
 class StudyAskWith extends _$StudyAskWith {
   void set(StudyQuestionType type) {
+    state = type;
+
     final activeList = ref.read(activeStudyListProvider).asData?.value;
     final dbService = ref.read(databaseServiceProvider);
 
     if (activeList != null) {
       activeList.studyShowDefinitionAskTerm =
           (type == StudyQuestionType.definition);
-      _updateListOptionInHive(dbService, activeList).then((_) {
-        state = type;
+      _updateListOptionInHive(dbService, activeList).catchError((e, s) {
+        _log.warning(
+          "[StudyAskWith] Error during background save for ${activeList.name}",
+          e,
+          s,
+        );
       });
-    } else {
-      state = type;
     }
   }
 
@@ -142,16 +139,20 @@ class StudyAskWith extends _$StudyAskWith {
 @riverpod
 class TestQuestionFormat extends _$TestQuestionFormat {
   void set(TestFormat format) {
+    state = format;
+
     final activeList = ref.read(activeStudyListProvider).asData?.value;
     final dbService = ref.read(databaseServiceProvider);
 
     if (activeList != null) {
       activeList.testFormat = format;
-      _updateListOptionInHive(dbService, activeList).then((_) {
-        state = format;
+      _updateListOptionInHive(dbService, activeList).catchError((e, s) {
+        _log.warning(
+          "[TestQuestionFormat] Error during background save for ${activeList.name}",
+          e,
+          s,
+        );
       });
-    } else {
-      state = format;
     }
   }
 
@@ -194,16 +195,21 @@ class TestQuestionFormat extends _$TestQuestionFormat {
 class StudyLength extends _$StudyLength {
   void set(int? length) {
     final newLength = (length != null && length <= 0) ? null : length;
+
+    state = newLength;
+
     final activeList = ref.read(activeStudyListProvider).asData?.value;
     final dbService = ref.read(databaseServiceProvider);
 
     if (activeList != null) {
       activeList.testStudyLength = newLength;
-      _updateListOptionInHive(dbService, activeList).then((_) {
-        state = newLength;
+      _updateListOptionInHive(dbService, activeList).catchError((e, s) {
+        _log.warning(
+          "[StudyLength] Error during background save for ${activeList.name}",
+          e,
+          s,
+        );
       });
-    } else {
-      state = newLength;
     }
   }
 
@@ -247,16 +253,20 @@ class StudyLength extends _$StudyLength {
 @riverpod
 class AllowAnswerSubstring extends _$AllowAnswerSubstring {
   void set(bool isEnabled) {
+    state = isEnabled;
+
     final activeList = ref.read(activeStudyListProvider).asData?.value;
     final dbService = ref.read(databaseServiceProvider);
 
     if (activeList != null) {
       activeList.allowAnswerSubstring = isEnabled;
-      _updateListOptionInHive(dbService, activeList).then((_) {
-        state = isEnabled;
+      _updateListOptionInHive(dbService, activeList).catchError((e, s) {
+        _log.warning(
+          "[AllowAnswerSubstring] Error during background save for ${activeList.name}",
+          e,
+          s,
+        );
       });
-    } else {
-      state = isEnabled;
     }
   }
 
