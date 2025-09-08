@@ -1,6 +1,6 @@
 # Quizlone
 
-A modern, cross-platform flashcard and study application built with Flutter. Quizlone allows you to create, manage, and study your own term lists using multiple learning modes. It's designed to be simple, fast, and available on any device, with optional cloud sync to keep your data in harmony.
+A modern, cross-platform flashcard and study application built with Flutter. Quizlone allows you to create, manage, and study your own term lists using multiple learning modes. It's designed to be simple, fast, and available on any device, with intelligent cloud sync to merge your progress across devices.
 
 ---
 
@@ -20,8 +20,8 @@ A modern, cross-platform flashcard and study application built with Flutter. Qui
 * **🧩 Match Mode:**
   * A fast-paced game to match terms with their definitions against the clock.
   * Local leaderboards for tracking your best times for each list.
-* **☁️ Cloud Sync (Optional):** Create a free account to sync your study lists and progress across the web, desktop, and mobile.
-* **💾 Hybrid Storage:** Works seamlessly offline with secure local storage, and syncs to the cloud when you're connected.
+* **☁️ Cloud Sync (Optional):** Create a free account to sync your study lists and progress. The sync logic is designed to intelligently merge changes from multiple devices, protecting offline work.
+* **💾 Works Offline:** The app is fully functional offline with secure local storage. Your changes will sync automatically when you reconnect.
 * **🎨 Theme Customization:** Choose between System, Light, and Dark themes.
 * **🌍 Multi-Language Support:** Enjoy the app in English, Finnish, Russian, Spanish, and Swedish.
 * **🔎 UI Scaling:** Adjust the user interface size for better readability on any screen.
@@ -36,7 +36,7 @@ A modern, cross-platform flashcard and study application built with Flutter. Qui
 
 * **Android:** Android 7 or later
 * **Windows:** Windows 10 64-bit or later
-* **Web:** Any modern browser with WebAssembly support
+* **Web:** Any modern browser with WebAssembly support (e.g., Chrome, Firefox, Safari, Edge).
 
 ---
 
@@ -48,6 +48,7 @@ A modern, cross-platform flashcard and study application built with Flutter. Qui
 * **Local Database:** [Hive CE](https://pub.dev/packages/hive_ce)
 * **Routing:** [auto_route](https://pub.dev/packages/auto_route)
 * **Localization:** [slang](https://pub.dev/packages/slang)
+* **UI Components:** [flutter_markdown](https://pub.dev/packages/flutter_markdown)
 
 ---
 
@@ -70,7 +71,7 @@ To get a local copy up and running, follow these simple steps.
     ```
 
 2. **Set up Supabase:**
-  This project uses Supabase for authentication and cloud storage. You will need to set up your own free Supabase project to run the app locally.
+    This project uses Supabase for authentication and cloud storage. You will need to set up your own free Supabase project to run the app locally.
 
 3. **Configure Environment Variables:**
     The app loads your Supabase credentials from a `.env` file, which is not checked into version control.
@@ -98,7 +99,7 @@ To get a local copy up and running, follow these simple steps.
 
     ```bash
     dart run build_runner build --delete-conflicting-outputs
-    dart run slang # For localization
+    dart run slang
     ```
 
 6. **Run the application:**
