@@ -97,12 +97,16 @@ class _MatchLeaderboardScreenState extends ConsumerState<MatchLeaderboardScreen>
   Widget build(BuildContext context) {
     if (kIsWeb && !context.router.canPop()) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (ref.read(activeStudyListIdProvider) != null && context.mounted) {
-          context.router.replaceAll([
-            const StartRoute(),
-            const ModeSelectionRoute(),
-            MatchLeaderboardRoute(newRecord: widget.newRecord),
-          ]);
+        if (context.mounted) {
+          if (ref.read(activeStudyListIdProvider) != null) {
+            context.router.replaceAll([
+              const StartRoute(),
+              const ModeSelectionRoute(),
+              MatchLeaderboardRoute(newRecord: widget.newRecord),
+            ]);
+          } else {
+            context.router.replaceAll([const StartRoute()]);
+          }
         }
       });
     }

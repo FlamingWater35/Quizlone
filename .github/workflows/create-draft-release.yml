@@ -81,7 +81,7 @@ jobs:
         shell: powershell
 
       - name: Compile Inno Setup Installer
-        uses: Minionguyjpro/Inno-Setup-Action@v1
+        uses: Minionguyjpro/Inno-Setup-Action@v1.2.7
         with:
           path: scripts/installer_script.iss
 
