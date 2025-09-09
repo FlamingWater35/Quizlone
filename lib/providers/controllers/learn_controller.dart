@@ -160,7 +160,8 @@ class LearnController extends _$LearnController {
           .split(',')
           .map((p) => p.trim())
           .where((p) => p.isNotEmpty);
-      isCorrect = correctParts.contains(userAnswer);
+      isCorrect =
+          (userAnswer == correctAnswer) || correctParts.contains(userAnswer);
     } else {
       isCorrect = userAnswer == correctAnswer;
     }
