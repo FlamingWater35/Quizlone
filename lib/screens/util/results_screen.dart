@@ -195,9 +195,6 @@ class ResultsScreen extends ConsumerWidget {
                       ),
                       onPressed: () {
                         testNotifier.restartTest();
-                        if (context.mounted) {
-                          context.router.replace(const TestModeRoute());
-                        }
                       },
                     ),
                     const SizedBox(height: 12),

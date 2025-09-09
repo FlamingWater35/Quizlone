@@ -345,9 +345,14 @@ class _TestViewState extends ConsumerState<_TestView> {
       next,
     ) {
       final wasSubmitted = previous?.asData?.value.isSubmitted ?? false;
+      final isSubmittedNow = next.asData?.value.isSubmitted ?? false;
 
-      if (next is AsyncData<TestScreenState> && !next.value.isSubmitted) {
-        if (wasSubmitted) {
+      if (wasSubmitted && !isSubmittedNow) {
+        if (mounted) {
+          for (var controller in _writtenAnswerControllers.values) {
+            controller.clear();
+          }
+          _writtenAnswerControllers.clear();
           if (_scrollController.hasClients) {
             _scrollController.jumpTo(0);
           }

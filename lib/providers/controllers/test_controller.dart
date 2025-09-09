@@ -137,7 +137,9 @@ class TestController extends _$TestController {
               .split(',')
               .map((p) => p.trim())
               .where((p) => p.isNotEmpty);
-          correct = correctParts.contains(userAnswer);
+          correct =
+              (userAnswer == correctAnswer) ||
+              correctParts.contains(userAnswer);
         } else {
           correct = userAnswer == correctAnswer;
         }

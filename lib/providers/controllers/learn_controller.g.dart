@@ -6,7 +6,7 @@ part of 'learn_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$learnControllerHash() => r'5a4f9204663b000c3004320e7fdd71b0aefe5280';
+String _$learnControllerHash() => r'2ad01c4a7cf36b3ce55ba67566ad55d518be6017';
 
 /// See also [LearnController].
 @ProviderFor(LearnController)
