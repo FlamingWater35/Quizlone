@@ -94,7 +94,7 @@ class LearnRoute extends PageRouteInfo<void> {
 /// [MatchLeaderboardScreen]
 class MatchLeaderboardRoute extends PageRouteInfo<MatchLeaderboardRouteArgs> {
   MatchLeaderboardRoute({
-    required MatchRecord newRecord,
+    MatchRecord? newRecord,
     Key? key,
     List<PageRouteInfo>? children,
   }) : super(
@@ -108,16 +108,18 @@ class MatchLeaderboardRoute extends PageRouteInfo<MatchLeaderboardRouteArgs> {
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      final args = data.argsAs<MatchLeaderboardRouteArgs>();
+      final args = data.argsAs<MatchLeaderboardRouteArgs>(
+        orElse: () => const MatchLeaderboardRouteArgs(),
+      );
       return MatchLeaderboardScreen(newRecord: args.newRecord, key: args.key);
     },
   );
 }
 
 class MatchLeaderboardRouteArgs {
-  const MatchLeaderboardRouteArgs({required this.newRecord, this.key});
+  const MatchLeaderboardRouteArgs({this.newRecord, this.key});
 
-  final MatchRecord newRecord;
+  final MatchRecord? newRecord;
 
   final Key? key;
 
