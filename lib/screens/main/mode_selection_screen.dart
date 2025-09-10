@@ -138,9 +138,15 @@ class _WideLayout extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(24.0),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Expanded(flex: 2, child: _ActionPanel(list: list, isWide: true)),
+          Expanded(
+            flex: 2,
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: _ActionPanel(list: list, isWide: true),
+            ),
+          ),
           const SizedBox(width: 24),
           const Expanded(
             flex: 3,
@@ -163,17 +169,15 @@ class _ActionPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: ListView(
-        shrinkWrap: true,
-        children: [
-          if (isWide) const SizedBox(height: 10),
-          _ListHeader(list: list, isWide: isWide),
-          const SizedBox(height: 48),
-          const _ActionButtons(),
-          const SizedBox(height: 20),
-        ],
-      ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        if (isWide) const SizedBox(height: 10),
+        _ListHeader(list: list, isWide: isWide),
+        const SizedBox(height: 48),
+        const _ActionButtons(),
+        const SizedBox(height: 20),
+      ],
     );
   }
 }
@@ -353,7 +357,7 @@ class _OptionsPanelState extends ConsumerState<_OptionsPanel> {
                   const SizedBox(width: 16),
                   Flexible(
                     child: ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 100),
+                      constraints: const BoxConstraints(maxWidth: 120),
                       child: TextFormField(
                         controller: _studyLengthController,
                         decoration: InputDecoration(
