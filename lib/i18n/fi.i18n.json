@@ -112,7 +112,7 @@
     "flashcards": "Muistikortit",
     "learn": "Opi",
     "test": "Testi",
-    "match": "Yhdistäpeli",
+    "match": "Yhdistä",
     "backToWelcome": "Takaisin aloitusnäyttöön"
   },
   "flashcardScreen": {
@@ -154,7 +154,7 @@
     }
   },
   "matchScreen": {
-    "title": "Yhdistäpeli",
+    "title": "Yhdistä",
     "congratulations": "Onneksi olkoon!",
     "timeCompleted": "Suoritit pelin $time sekunnissa!",
     "playAgain": "Pelaa uudelleen",
@@ -167,7 +167,7 @@
       "rankOver100": ">100"
     },
     "errors": {
-      "noTerms": "Yhdistäpelissä ei ole saatavilla termejä.",
+      "noTerms": "Yhdistä-pelissä ei ole saatavilla termejä.",
       "notEnoughTerms": "Pelaamiseen tarvitaan vähintään yksi termi/määritelmä-pari."
     }
   },

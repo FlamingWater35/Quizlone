@@ -174,7 +174,7 @@ class _TranslationsModeSelectionScreenFi extends TranslationsModeSelectionScreen
 	@override String get flashcards => 'Muistikortit';
 	@override String get learn => 'Opi';
 	@override String get test => 'Testi';
-	@override String get match => 'Yhdistäpeli';
+	@override String get match => 'Yhdistä';
 	@override String get backToWelcome => 'Takaisin aloitusnäyttöön';
 }
 
@@ -220,7 +220,7 @@ class _TranslationsMatchScreenFi extends TranslationsMatchScreenEn {
 	final TranslationsFi _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'Yhdistäpeli';
+	@override String get title => 'Yhdistä';
 	@override String get congratulations => 'Onneksi olkoon!';
 	@override String timeCompleted({required Object time}) => 'Suoritit pelin ${time} sekunnissa!';
 	@override String get playAgain => 'Pelaa uudelleen';
@@ -487,7 +487,7 @@ class _TranslationsMatchScreenErrorsFi extends TranslationsMatchScreenErrorsEn {
 	final TranslationsFi _root; // ignore: unused_field
 
 	// Translations
-	@override String get noTerms => 'Yhdistäpelissä ei ole saatavilla termejä.';
+	@override String get noTerms => 'Yhdistä-pelissä ei ole saatavilla termejä.';
 	@override String get notEnoughTerms => 'Pelaamiseen tarvitaan vähintään yksi termi/määritelmä-pari.';
 }
 
@@ -648,7 +648,7 @@ extension on TranslationsFi {
 			case 'modeSelectionScreen.flashcards': return 'Muistikortit';
 			case 'modeSelectionScreen.learn': return 'Opi';
 			case 'modeSelectionScreen.test': return 'Testi';
-			case 'modeSelectionScreen.match': return 'Yhdistäpeli';
+			case 'modeSelectionScreen.match': return 'Yhdistä';
 			case 'modeSelectionScreen.backToWelcome': return 'Takaisin aloitusnäyttöön';
 			case 'flashcardScreen.title': return 'Muistikortit';
 			case 'flashcardScreen.noCards': return 'Ei näytettäviä muistikortteja.';
@@ -678,7 +678,7 @@ extension on TranslationsFi {
 				other: 'Enimmäismäärä kierroksia saavutettu. ${count} kohdetta vielä kertaamatta.',
 			);
 			case 'learnScreen.progress.startingCycle': return ({required Object cycleNum, required Object count}) => 'Aloitetaan kierros ${cycleNum}, jossa on ${count} kohdetta...';
-			case 'matchScreen.title': return 'Yhdistäpeli';
+			case 'matchScreen.title': return 'Yhdistä';
 			case 'matchScreen.congratulations': return 'Onneksi olkoon!';
 			case 'matchScreen.timeCompleted': return ({required Object time}) => 'Suoritit pelin ${time} sekunnissa!';
 			case 'matchScreen.playAgain': return 'Pelaa uudelleen';
@@ -688,7 +688,7 @@ extension on TranslationsFi {
 			case 'matchScreen.leaderboard.time': return ({required Object time}) => '${time} sekuntia';
 			case 'matchScreen.leaderboard.rank': return ({required Object rank}) => '#${rank}';
 			case 'matchScreen.leaderboard.rankOver100': return '>100';
-			case 'matchScreen.errors.noTerms': return 'Yhdistäpelissä ei ole saatavilla termejä.';
+			case 'matchScreen.errors.noTerms': return 'Yhdistä-pelissä ei ole saatavilla termejä.';
 			case 'matchScreen.errors.notEnoughTerms': return 'Pelaamiseen tarvitaan vähintään yksi termi/määritelmä-pari.';
 			case 'testScreen.title': return 'Testi';
 			case 'testScreen.noQuestions': return 'Tässä testissä ei ole kysymyksiä.';
