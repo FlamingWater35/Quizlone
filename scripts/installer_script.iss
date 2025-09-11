@@ -10,7 +10,7 @@
 #define SourcePath "..\build\windows\x64\runner\Release"
 
 [Setup]
-AppId={{A2744763-0808-44B5-9AEA-5A8BC8A7C016}
+AppId={A2744763-0808-44B5-9AEA-5A8BC8A7C016}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 AppVerName={#MyAppName} {#MyAppVersion}
@@ -42,7 +42,6 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "finnish"; MessagesFile: "compiler:Languages\Finnish.isl"
 Name: "russian"; MessagesFile: "compiler:Languages\Russian.isl"
 Name: "spanish"; MessagesFile: "compiler:Languages\Spanish.isl"
-Name: "swedish"; MessagesFile: "compiler:Languages\Swedish.isl"
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
