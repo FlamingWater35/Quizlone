@@ -3,10 +3,10 @@
 /// Source: lib/i18n
 /// To regenerate, run: `dart run slang`
 ///
-/// Locales: 5
-/// Strings: 1019 (203 per locale)
+/// Locales: 4
+/// Strings: 816 (204 per locale)
 ///
-/// Built on 2025-09-09 at 16:35 UTC
+/// Built on 2025-09-11 at 14:43 UTC
 
 // coverage:ignore-file
 // ignore_for_file: type=lint, unused_import
@@ -20,7 +20,6 @@ export 'package:slang_flutter/slang_flutter.dart';
 import 'strings_es.g.dart' deferred as l_es;
 import 'strings_fi.g.dart' deferred as l_fi;
 import 'strings_ru.g.dart' deferred as l_ru;
-import 'strings_sv.g.dart' deferred as l_sv;
 part 'strings_en.g.dart';
 
 /// Supported locales.
@@ -33,8 +32,7 @@ enum AppLocale with BaseAppLocale<AppLocale, Translations> {
 	en(languageCode: 'en'),
 	es(languageCode: 'es'),
 	fi(languageCode: 'fi'),
-	ru(languageCode: 'ru'),
-	sv(languageCode: 'sv');
+	ru(languageCode: 'ru');
 
 	const AppLocale({
 		required this.languageCode,
@@ -80,13 +78,6 @@ enum AppLocale with BaseAppLocale<AppLocale, Translations> {
 					cardinalResolver: cardinalResolver,
 					ordinalResolver: ordinalResolver,
 				);
-			case AppLocale.sv:
-				await l_sv.loadLibrary();
-				return l_sv.TranslationsSv(
-					overrides: overrides,
-					cardinalResolver: cardinalResolver,
-					ordinalResolver: ordinalResolver,
-				);
 		}
 	}
 
@@ -117,12 +108,6 @@ enum AppLocale with BaseAppLocale<AppLocale, Translations> {
 				);
 			case AppLocale.ru:
 				return l_ru.TranslationsRu(
-					overrides: overrides,
-					cardinalResolver: cardinalResolver,
-					ordinalResolver: ordinalResolver,
-				);
-			case AppLocale.sv:
-				return l_sv.TranslationsSv(
 					overrides: overrides,
 					cardinalResolver: cardinalResolver,
 					ordinalResolver: ordinalResolver,

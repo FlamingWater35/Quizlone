@@ -22,7 +22,6 @@ class AppTheme extends _$AppTheme {
         themeName = 'dark';
         break;
       case ThemeMode.system:
-      default:
         themeName = 'system';
         break;
     }
@@ -45,7 +44,7 @@ class AppTheme extends _$AppTheme {
   }
 }
 
-enum AppLanguage { system, en, fi, ru, es, sv }
+enum AppLanguage { system, en, fi, ru, es }
 
 extension AppLanguageExtension on AppLanguage {
   String get code {
@@ -58,10 +57,7 @@ extension AppLanguageExtension on AppLanguage {
         return 'ru';
       case AppLanguage.es:
         return 'es';
-      case AppLanguage.sv:
-        return 'sv';
       case AppLanguage.system:
-      default:
         return 'system';
     }
   }
@@ -76,8 +72,6 @@ extension AppLanguageExtension on AppLanguage {
         return AppLanguage.ru;
       case 'es':
         return AppLanguage.es;
-      case 'sv':
-        return AppLanguage.sv;
       default:
         return AppLanguage.system;
     }
@@ -93,10 +87,7 @@ extension AppLanguageExtension on AppLanguage {
         return t.settingsScreen.russian;
       case AppLanguage.es:
         return t.settingsScreen.spanish;
-      case AppLanguage.sv:
-        return t.settingsScreen.swedish;
       case AppLanguage.system:
-      default:
         return t.settingsScreen.systemDefault;
     }
   }
@@ -115,11 +106,7 @@ extension AppLanguageExtension on AppLanguage {
       case AppLanguage.es:
         LocaleSettings.setLocale(AppLocale.es);
         break;
-      case AppLanguage.sv:
-        LocaleSettings.setLocale(AppLocale.sv);
-        break;
       case AppLanguage.system:
-      default:
         LocaleSettings.useDeviceLocale();
         break;
     }
