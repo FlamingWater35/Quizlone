@@ -3,14 +3,16 @@
 ; ===================================================================
 
 #define MyAppName "Quizlone"
-#define MyAppVersion "1.0.0"
+#ifndef MyAppVersion
+  #define MyAppVersion "1.0.0"
+#endif
 #define MyAppPublisher "FlamingWater"
 #define MyAppURL "https://github.com/FlamingWater35/Quizlone"
 #define MyAppExeName "quizlone.exe"
 #define SourcePath "..\build\windows\x64\runner\Release"
 
 [Setup]
-AppId={A2744763-0808-44B5-9AEA-5A8BC8A7C016}
+AppId={{A2744763-0808-44B5-9AEA-5A8BC8A7C016}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 AppVerName={#MyAppName} {#MyAppVersion}

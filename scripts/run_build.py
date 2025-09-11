@@ -265,9 +265,13 @@ def run_full_build():
 
         if iscc_path:
             print(Fore.GREEN + f"Found Inno Setup Compiler at: {iscc_path}")
-            run_command_realtime_colored(
-                [iscc_path, INNO_SCRIPT_PATH], "Compile Inno Setup Installer"
-            )
+            # Define MyAppVersion using the version from pubspec.yaml
+            command_to_run = [
+                iscc_path,
+                f"/DMyAppVersion={APP_VERSION}",
+                INNO_SCRIPT_PATH
+            ]
+            run_command_realtime_colored(command_to_run, "Compile Inno Setup Installer")
         else:
             print(
                 Fore.YELLOW
