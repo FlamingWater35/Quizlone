@@ -119,7 +119,14 @@ jobs:
         run: |
           mkdir -p AppDir/usr/bin
           cp -r build/linux/x64/release/bundle/* AppDir/usr/bin/
-          echo "#!/bin/bash\nexec \$APPDIR/usr/bin/${{ env.APP_NAME }}" > AppDir/AppRun
+
+          cat <<'EOF' > AppDir/AppRun
+          #!/bin/bash
+          HERE="$(dirname "$(readlink -f "${0}")")"
+          cd "${HERE}/usr/bin"
+          exec "./${{ env.APP_NAME }}" "$@"
+          EOF
+
           chmod +x AppDir/AppRun
           echo "[Desktop Entry]
           Name=${{ env.APP_NAME }}
