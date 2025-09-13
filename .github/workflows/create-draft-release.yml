@@ -120,11 +120,14 @@ jobs:
           mkdir -p AppDir/usr/bin
           cp -r build/linux/x64/release/bundle/* AppDir/usr/bin/
 
-          cat <<'EOF' > AppDir/AppRun
+          EXECUTABLE_NAME=$(find build/linux/x64/release/bundle -maxdepth 1 -type f -executable -exec basename {} \; | grep -v '\.so$')
+          echo "Found executable file: ${EXECUTABLE_NAME}"
+
+          cat <<EOF > AppDir/AppRun
           #!/bin/bash
-          HERE="$(dirname "$(readlink -f "${0}")")"
-          cd "${HERE}/usr/bin"
-          exec "./${{ env.APP_NAME }}" "$@"
+          HERE="\$(dirname "\$(readlink -f "\${0}")")"
+          cd "\${HERE}/usr/bin"
+          exec "./${EXECUTABLE_NAME}" "\$@"
           EOF
 
           chmod +x AppDir/AppRun
@@ -133,9 +136,10 @@ jobs:
           Exec=AppRun
           Type=Application
           Terminal=false
-          Icon=${{ env.APP_NAME }}
-          Categories=Utility;" > AppDir/${{ env.APP_NAME }}.desktop
-          cp assets/icon_transparent.png AppDir/${{ env.APP_NAME }}.png
+          Icon=${EXECUTABLE_NAME}
+          Categories=Utility;" > AppDir/${EXECUTABLE_NAME}.desktop
+
+          cp assets/icon_transparent.png AppDir/${EXECUTABLE_NAME}.png
           ./appimagetool-x86_64.AppImage AppDir ${{ env.APP_NAME }}-linux.AppImage
       - name: Upload Linux Artifacts
         uses: actions/upload-artifact@v4
