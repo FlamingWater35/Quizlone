@@ -2,7 +2,7 @@
 
 A modern, cross-platform flashcard and study application built with Flutter. Quizlone allows you to create, manage, and study your own term lists using multiple learning modes. It's designed to be simple, fast, and available on any device, with intelligent cloud sync to merge your progress across devices.
 
-## Try it our right now at
+## Try it out right now
 
 <https://flamingwater35.github.io/Quizlone/>
 
