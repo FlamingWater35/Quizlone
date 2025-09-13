@@ -126,6 +126,7 @@ jobs:
           Exec=AppRun
           Type=Application
           Terminal=false
+          Icon=${{ env.APP_NAME }}
           Categories=Utility;" > AppDir/${{ env.APP_NAME }}.desktop
           cp assets/icon_transparent.png AppDir/${{ env.APP_NAME }}.png
           ./appimagetool-x86_64.AppImage AppDir ${{ env.APP_NAME }}-linux.AppImage
