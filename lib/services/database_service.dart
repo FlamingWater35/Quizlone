@@ -171,7 +171,9 @@ class DatabaseService {
     await _box.put(list.id, list);
 
     if (isNew) {
-      await saveStudyListOrder(getStudyListOrder());
+      final currentOrder = getStudyListOrder();
+      currentOrder.insert(0, list.id);
+      await saveStudyListOrder(currentOrder);
     } else {
       await triggerCloudUpload();
     }

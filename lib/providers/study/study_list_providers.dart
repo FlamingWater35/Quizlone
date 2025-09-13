@@ -32,7 +32,6 @@ class StudyLists extends _$StudyLists {
     final movedId = currentOrder.removeAt(oldIndex);
     currentOrder.insert(newIndex, movedId);
 
-    // This will save the new order and trigger the stream, which will update the state.
     await dbService.saveStudyListOrder(currentOrder);
   }
 
@@ -40,10 +39,8 @@ class StudyLists extends _$StudyLists {
   Future<List<StudyList>> build() async {
     final dbService = ref.watch(databaseServiceProvider);
 
-    // Cancel any existing subscription when the provider is rebuilt.
     _subscription?.cancel();
 
-    // Listen to the new, unified stream.
     _subscription = dbService.listenToStudyLists().listen((lists) {
       state = AsyncData(lists);
     });
@@ -52,7 +49,6 @@ class StudyLists extends _$StudyLists {
       _subscription?.cancel();
     });
 
-    // Return the initial, correctly sorted list.
     return dbService.getAllStudyLists();
   }
 }
