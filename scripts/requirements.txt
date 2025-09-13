@@ -1,0 +1,3 @@
+# Requirements for run_build.py
+py7zr
+colorama

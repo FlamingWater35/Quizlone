@@ -7,7 +7,7 @@ A modern, cross-platform flashcard and study application built with Flutter. Qui
 ## ✨ Features
 
 * **📚 Create & Manage Study Lists:** Easily create new study lists by pasting terms and definitions.
-* **💻 Cross-Platform:** A single codebase that runs on Web, Android and Windows.
+* **💻 Cross-Platform:** A single codebase that runs on Web, Android, Windows and Linux.
 * **🃏 Flashcard Mode:**
   * Smooth animations for flipping and navigating.
   * Keyboard controls (`←`, `→`, `↑`, `↓`, `Space`) for desktop users.
@@ -132,6 +132,8 @@ The project includes a comprehensive Python build script that automates the enti
     ```bash
     python scripts/run_build.py
     ```
+
+    After running, select option 3 to start the full build process.
 
     This script will:
     * Clean the project.
