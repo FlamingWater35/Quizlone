@@ -137,8 +137,9 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
   }
 
   Future<void> _syncWithCloud({bool isInitialSync = false}) async {
-    final connectivityResult = await Connectivity().checkConnectivity();
-    if (connectivityResult.contains(ConnectivityResult.none)) {
+    final connectivityStatus = await ref.read(connectivityProvider.future);
+
+    if (connectivityStatus == ConnectivityResult.none) {
       _log.info("Offline mode: Sync check skipped.");
       return;
     }
@@ -280,8 +281,8 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
       previous,
       next,
     ) {
-      final isConnected = next.valueOrNull != ConnectivityResult.none;
       final wasConnected = previous?.valueOrNull != ConnectivityResult.none;
+      final isConnected = next.valueOrNull != ConnectivityResult.none;
 
       if (!wasConnected && isConnected) {
         _log.info("Connection restored. Triggering a cloud sync.");
