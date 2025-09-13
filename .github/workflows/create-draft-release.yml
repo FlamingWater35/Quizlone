@@ -119,15 +119,15 @@ jobs:
         run: |
           mkdir -p AppDir/usr/bin
           cp -r build/linux/x64/release/bundle/* AppDir/usr/bin/
-          mkdir -p AppDir/usr/share/applications
+          echo "#!/bin/bash\nexec \$APPDIR/usr/bin/${{ env.APP_NAME }}" > AppDir/AppRun
+          chmod +x AppDir/AppRun
           echo "[Desktop Entry]
           Name=${{ env.APP_NAME }}
-          Exec=${{ env.APP_NAME }}
+          Exec=AppRun
           Type=Application
           Terminal=false
-          Categories=Utility;" > AppDir/usr/share/applications/${{ env.APP_NAME }}.desktop
-          mkdir -p AppDir/usr/share/icons/hicolor/256x256/apps
-          cp assets/icon_transparent.png AppDir/usr/share/icons/hicolor/256x256/apps/${{ env.APP_NAME }}.png
+          Categories=Utility;" > AppDir/${{ env.APP_NAME }}.desktop
+          cp assets/icon_transparent.png AppDir/${{ env.APP_NAME }}.png
           ./appimagetool-x86_64.AppImage AppDir ${{ env.APP_NAME }}-linux.AppImage
       - name: Upload Linux Artifacts
         uses: actions/upload-artifact@v4
