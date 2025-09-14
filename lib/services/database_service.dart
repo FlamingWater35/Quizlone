@@ -10,7 +10,7 @@ import '../models/match_record.dart';
 import '../models/settings_app_data.dart';
 import '../models/study_list.dart';
 import '../models/term.dart';
-import '../providers/core/core_providers.dart';
+import '../providers/core/auth_provider.dart';
 
 final _log = Logger("DatabaseService");
 
@@ -57,21 +57,12 @@ class DatabaseService {
   Future<void> triggerCloudUpload() async {
     final connectivityResult = await Connectivity().checkConnectivity();
     if (connectivityResult.contains(ConnectivityResult.none)) {
-      _log.info("Offline mode: Skipping cloud upload.");
+      _log.info("Offline mode: Skipping cloud upload trigger.");
       return;
     }
 
-    final lists = await getAllStudyLists();
-    final records = await getAllMatchRecords();
-    final order = getStudyListOrder();
-
-    final appData = AppData(
-      studyLists: lists,
-      matchRecords: records,
-      studyListOrder: order,
-    );
-    await ref.read(cloudSyncServiceProvider).uploadData(appData);
-    await saveLastSyncTimestamp(DateTime.now().toUtc());
+    _log.fine("Requesting a cloud sync from DatabaseService.");
+    await ref.read(authControllerProvider.notifier).requestCloudSync();
   }
 
   Future<void> applyCloudData(AppData data) async {

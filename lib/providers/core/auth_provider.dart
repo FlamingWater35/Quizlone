@@ -23,13 +23,14 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
   StreamSubscription<AuthState>? _authStateSubscription;
   bool _initialSyncDone = false;
   bool _isSyncing = false;
+  bool _syncPending = false;
   Timer? _syncTimer;
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      _log.info("App resumed. Checking for cloud updates.");
-      _syncWithCloud();
+      _log.info("App resumed. Requesting cloud sync check.");
+      requestCloudSync();
     }
   }
 
@@ -72,6 +73,29 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
     await dbService.clearAllUserData();
     ref.invalidate(studyListsProvider);
     ref.read(activeStudyListIdProvider.notifier).set(null);
+  }
+
+  Future<void> requestCloudSync({bool isInitialSync = false}) async {
+    if (_isSyncing) {
+      _log.fine("Sync already in progress, scheduling a new one.");
+      _syncPending = true;
+      return;
+    }
+
+    _isSyncing = true;
+    do {
+      _syncPending = false;
+
+      try {
+        await _performSync(isInitialSync: isInitialSync);
+      } catch (e, s) {
+        _log.severe("Error during cloud sync execution", e, s);
+      }
+      isInitialSync = false;
+    } while (_syncPending);
+
+    _isSyncing = false;
+    _log.info("Sync queue is empty. Exiting sync loop.");
   }
 
   AppData _mergeData({
@@ -136,7 +160,24 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
     );
   }
 
-  Future<void> _syncWithCloud({bool isInitialSync = false}) async {
+  Future<void> _performUpload() async {
+    final dbService = ref.read(databaseServiceProvider);
+    final cloudSyncService = ref.read(cloudSyncServiceProvider);
+
+    final lists = await dbService.getAllStudyLists();
+    final records = await dbService.getAllMatchRecords();
+    final order = dbService.getStudyListOrder();
+
+    final appData = AppData(
+      studyLists: lists,
+      matchRecords: records,
+      studyListOrder: order,
+    );
+    await cloudSyncService.uploadData(appData);
+    await dbService.saveLastSyncTimestamp(DateTime.now().toUtc());
+  }
+
+  Future<void> _performSync({bool isInitialSync = false}) async {
     final connectivityStatus = await ref.read(connectivityProvider.future);
 
     if (connectivityStatus == ConnectivityResult.none) {
@@ -144,15 +185,9 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
       return;
     }
 
-    if (_isSyncing) {
-      _log.fine("Sync operation already in progress. Skipping.");
-      return;
-    }
-
     final user = Supabase.instance.client.auth.currentUser;
     if (user == null) return;
 
-    _isSyncing = true;
     _log.info("Starting cloud sync... (Initial: $isInitialSync)");
 
     final cloudSyncService = ref.read(cloudSyncServiceProvider);
@@ -174,28 +209,26 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
       if (isInitialSync) {
         if (hasCloudData) {
           _log.info(
-            "Initial sync: Cloud data found. Overwriting local data to ensure account consistency.",
+            "Initial sync: Cloud data found. Applying to local storage.",
           );
           await dbService.applyCloudData(cloudData);
           if (cloudTimestamp != null) {
             await dbService.saveLastSyncTimestamp(cloudTimestamp);
           }
         } else if (hasLocalData) {
-          _log.info(
-            "Initial sync: No cloud data found for this account. Uploading local data as the first version.",
-          );
-          await dbService.triggerCloudUpload();
+          _log.info("Initial sync: No cloud data. Uploading local data.");
+          await _performUpload();
         } else {
           _log.info("Initial sync: No local or cloud data. Nothing to sync.");
         }
       } else {
         if (!hasCloudData && hasLocalData) {
           _log.info("No cloud data found. Uploading local data.");
-          await dbService.triggerCloudUpload();
+          await _performUpload();
         } else if (hasCloudData && !hasLocalData) {
           _log.info("No local data found. Downloading cloud data.");
+          await dbService.applyCloudData(cloudData);
           if (cloudTimestamp != null) {
-            await dbService.applyCloudData(cloudData);
             await dbService.saveLastSyncTimestamp(cloudTimestamp);
           }
         } else if (hasCloudData && hasLocalData) {
@@ -208,9 +241,7 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
                   cloudTimestamp.isAfter(localTimestamp));
 
           if (isCloudNewer && cloudInstanceId != localInstanceId) {
-            _log.info(
-              "Cloud data is newer and from another instance. Merging...",
-            );
+            _log.info("Cloud data is newer. Merging...");
             final localData = AppData(
               studyLists: localLists,
               matchRecords: localRecords,
@@ -227,26 +258,24 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
 
             if (localDataJson == mergedDataJson) {
               _log.info(
-                "Merge result is identical to local data. Skipping database write.",
+                "Merge result is identical to local data. Skipping DB write.",
               );
               await dbService.saveLastSyncTimestamp(cloudTimestamp);
             } else {
-              _log.info("Local data changed after merge. Applying updates.");
+              _log.info("Applying merged data and re-uploading.");
               await dbService.applyCloudData(mergedData);
               await dbService.saveLastSyncTimestamp(cloudTimestamp);
-              await dbService.triggerCloudUpload();
-              _log.info("Merge complete and new data uploaded.");
+              await _performUpload();
             }
           } else {
             _log.info("Local data is up-to-date or newer. Uploading to cloud.");
-            await dbService.triggerCloudUpload();
+            await _performUpload();
           }
         }
       }
     } catch (e, s) {
       _log.severe("Error during cloud sync", e, s);
     } finally {
-      _isSyncing = false;
       _log.info("Cloud sync finished.");
     }
   }
@@ -262,7 +291,7 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
     _log.info("Starting periodic sync timer (every 10 seconds).");
     _syncTimer = Timer.periodic(
       const Duration(seconds: 10),
-      (timer) => _syncWithCloud(),
+      (timer) => requestCloudSync(),
     );
   }
 
@@ -286,7 +315,7 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
 
       if (!wasConnected && isConnected) {
         _log.info("Connection restored. Triggering a cloud sync.");
-        _syncWithCloud();
+        requestCloudSync();
       }
     });
 
@@ -298,9 +327,13 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
             "AuthState changed. Event: ${data.event}, User: ${session?.user.id}",
           );
 
-          if (session != null && !_initialSyncDone) {
-            _log.info("Initial session detected. Performing first sync.");
-            await _syncWithCloud(isInitialSync: true);
+          final isSignInEvent =
+              data.event == AuthChangeEvent.initialSession ||
+              data.event == AuthChangeEvent.signedIn;
+
+          if (isSignInEvent && session != null && !_initialSyncDone) {
+            _log.info("Initial sign-in detected. Performing first sync.");
+            await requestCloudSync(isInitialSync: true);
             _startPolling();
             _initialSyncDone = true;
           } else if (data.event == AuthChangeEvent.signedOut) {
