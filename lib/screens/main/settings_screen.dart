@@ -9,11 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
 import 'package:quizlone/routing/app_router.dart';
 import 'package:quizlone/widgets/error_snackbar.dart';
-import 'package:share_plus/share_plus.dart';
 
 import '../../models/settings_app_data.dart';
 import '../../models/study_list.dart';
@@ -130,79 +128,34 @@ class SettingsScreen extends ConsumerWidget {
     const fileName = 'quizlone_backup.json';
 
     try {
+      String? savedPath;
+
       if (kIsWeb) {
         await FileSaver.instance.saveFile(
-          name: 'quizlone_backup',
+          name: fileName.split('.').first,
           bytes: bytes,
           fileExtension: 'json',
           mimeType: MimeType.json,
         );
-      } else if (Platform.isAndroid && context.mounted) {
-        await showDialog(
-          context: context,
-          builder:
-              (context) => AlertDialog(
-                title: Text(t.settingsScreen.exportDialog.title),
-                content: Text(t.settingsScreen.exportDialog.content),
-                actions: [
-                  TextButton(
-                    onPressed: () async {
-                      Navigator.of(context).pop();
-                      final tempDir = await getTemporaryDirectory();
-                      final filePath = '${tempDir.path}/$fileName';
-                      await File(filePath).writeAsBytes(bytes);
-                      await SharePlus.instance.share(
-                        ShareParams(
-                          files: [XFile(filePath)],
-                          text: t.settingsScreen.exportDialog.shareText,
-                        ),
-                      );
-                    },
-                    child: Text(t.settingsScreen.exportDialog.share),
-                  ),
-                  TextButton(
-                    onPressed: () async {
-                      Navigator.of(context).pop();
-                      final filePath = await FlutterFileDialog.saveFile(
-                        params: SaveFileDialogParams(
-                          data: bytes,
-                          fileName: fileName,
-                        ),
-                      );
-                      if (filePath != null) {
-                        scaffoldMessenger.showSnackBar(
-                          SnackBar(
-                            content: Text(t.settingsScreen.snackbars.fileSaved),
-                          ),
-                        );
-                      }
-                    },
-                    child: Text(t.settingsScreen.exportDialog.save),
-                  ),
-                ],
-              ),
-        );
-      } else if (Platform.isIOS) {
-        final tempDir = await getTemporaryDirectory();
-        final filePath = '${tempDir.path}/$fileName';
-        await File(filePath).writeAsBytes(bytes);
-        await SharePlus.instance.share(
-          ShareParams(
-            files: [XFile(filePath)],
-            text: t.settingsScreen.exportDialog.shareText,
-          ),
+        savedPath = 'downloaded';
+      } else if (Platform.isAndroid || Platform.isIOS) {
+        savedPath = await FlutterFileDialog.saveFile(
+          params: SaveFileDialogParams(data: bytes, fileName: fileName),
         );
       } else {
-        final String? outputFile = await FilePicker.platform.saveFile(
+        savedPath = await FilePicker.platform.saveFile(
           dialogTitle: 'Please select an output file:',
           fileName: fileName,
         );
-        if (outputFile != null) {
-          await File(outputFile).writeAsBytes(bytes);
-          scaffoldMessenger.showSnackBar(
-            SnackBar(content: Text(t.settingsScreen.snackbars.exportSuccess)),
-          );
+        if (savedPath != null) {
+          await File(savedPath).writeAsBytes(bytes);
         }
+      }
+
+      if (savedPath != null && context.mounted) {
+        scaffoldMessenger.showSnackBar(
+          SnackBar(content: Text(t.settingsScreen.snackbars.exportSuccess)),
+        );
       }
     } catch (e) {
       if (context.mounted) {
@@ -230,7 +183,7 @@ class SettingsScreen extends ConsumerWidget {
                 onPressed: () => Navigator.of(context).pop(false),
                 child: Text(t.general.cancel),
               ),
-              TextButton(
+              FilledButton(
                 onPressed: () => Navigator.of(context).pop(true),
                 child: Text(t.settingsScreen.importDialog.import),
               ),
@@ -325,12 +278,13 @@ class SettingsScreen extends ConsumerWidget {
                 onPressed: () => Navigator.of(context).pop(false),
                 child: Text(t.general.cancel),
               ),
-              TextButton(
+              FilledButton(
                 onPressed: () => Navigator.of(context).pop(true),
-                child: Text(
-                  t.settingsScreen.deleteDialog.deleteAll,
-                  style: TextStyle(color: Theme.of(context).colorScheme.error),
+                style: FilledButton.styleFrom(
+                  backgroundColor: Theme.of(context).colorScheme.error,
+                  foregroundColor: Theme.of(context).colorScheme.onError,
                 ),
+                child: Text(t.settingsScreen.deleteDialog.deleteAll),
               ),
             ],
           ),
