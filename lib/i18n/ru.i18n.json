@@ -115,7 +115,10 @@
     "learn": "Обучение",
     "test": "Тест",
     "match": "Сопоставление",
-    "backToWelcome": "Вернуться на главный экран"
+    "backToWelcome": "Вернуться на главный экран",
+    "errors": {
+        "saveSettingFailed": "Не удалось сохранить настройку: $error"
+    }
   },
   "flashcardScreen": {
     "title": "Карточки",

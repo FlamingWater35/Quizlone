@@ -113,7 +113,10 @@
     "learn": "Aprender",
     "test": "Prueba",
     "match": "Combinar",
-    "backToWelcome": "Volver a la pantalla de bienvenida"
+    "backToWelcome": "Volver a la pantalla de bienvenida",
+    "errors": {
+        "saveSettingFailed": "Error al guardar el ajuste: $error"
+    }
   },
   "flashcardScreen": {
     "title": "Tarjetas",

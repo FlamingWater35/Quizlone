@@ -247,9 +247,12 @@ class _OptionsPanelState extends ConsumerState<_OptionsPanel> {
       await updateFunction();
     } catch (e) {
       if (mounted) {
+        final t = Translations.of(context);
         showErrorSnackBar(
           context,
-          message: "Failed to save setting: ${e.toString()}",
+          message: t.modeSelectionScreen.errors.saveSettingFailed(
+            error: e.toString(),
+          ),
         );
       }
     }

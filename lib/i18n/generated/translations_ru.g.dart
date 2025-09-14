@@ -178,6 +178,7 @@ class _TranslationsModeSelectionScreenRu extends TranslationsModeSelectionScreen
 	@override String get test => 'Тест';
 	@override String get match => 'Сопоставление';
 	@override String get backToWelcome => 'Вернуться на главный экран';
+	@override late final _TranslationsModeSelectionScreenErrorsRu errors = _TranslationsModeSelectionScreenErrorsRu._(_root);
 }
 
 // Path: flashcardScreen
@@ -427,6 +428,16 @@ class _TranslationsInputScreenErrorsRu extends TranslationsInputScreenErrorsEn {
 	@override String saveFailed({required Object error}) => 'Не удалось сохранить список: ${error}';
 }
 
+// Path: modeSelectionScreen.errors
+class _TranslationsModeSelectionScreenErrorsRu extends TranslationsModeSelectionScreenErrorsEn {
+	_TranslationsModeSelectionScreenErrorsRu._(TranslationsRu root) : this._root = root, super.internal(root);
+
+	final TranslationsRu _root; // ignore: unused_field
+
+	// Translations
+	@override String saveSettingFailed({required Object error}) => 'Не удалось сохранить настройку: ${error}';
+}
+
 // Path: learnScreen.errors
 class _TranslationsLearnScreenErrorsRu extends TranslationsLearnScreenErrorsEn {
 	_TranslationsLearnScreenErrorsRu._(TranslationsRu root) : this._root = root, super.internal(root);
@@ -656,6 +667,7 @@ extension on TranslationsRu {
 			case 'modeSelectionScreen.test': return 'Тест';
 			case 'modeSelectionScreen.match': return 'Сопоставление';
 			case 'modeSelectionScreen.backToWelcome': return 'Вернуться на главный экран';
+			case 'modeSelectionScreen.errors.saveSettingFailed': return ({required Object error}) => 'Не удалось сохранить настройку: ${error}';
 			case 'flashcardScreen.title': return 'Карточки';
 			case 'flashcardScreen.noCards': return 'Нет карточек для отображения.';
 			case 'flashcardScreen.noTerms': return 'Нет доступных терминов для изучения.';

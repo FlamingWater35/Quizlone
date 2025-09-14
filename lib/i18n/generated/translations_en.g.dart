@@ -302,6 +302,8 @@ class TranslationsModeSelectionScreenEn {
 
 	/// en: 'Back to Welcome Screen'
 	String get backToWelcome => 'Back to Welcome Screen';
+
+	late final TranslationsModeSelectionScreenErrorsEn errors = TranslationsModeSelectionScreenErrorsEn.internal(_root);
 }
 
 // Path: flashcardScreen
@@ -759,6 +761,18 @@ class TranslationsInputScreenErrorsEn {
 	String saveFailed({required Object error}) => 'Failed to save list: ${error}';
 }
 
+// Path: modeSelectionScreen.errors
+class TranslationsModeSelectionScreenErrorsEn {
+	TranslationsModeSelectionScreenErrorsEn.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Failed to save setting: $error'
+	String saveSettingFailed({required Object error}) => 'Failed to save setting: ${error}';
+}
+
 // Path: learnScreen.errors
 class TranslationsLearnScreenErrorsEn {
 	TranslationsLearnScreenErrorsEn.internal(this._root);
@@ -1062,6 +1076,7 @@ extension on Translations {
 			case 'modeSelectionScreen.test': return 'Test';
 			case 'modeSelectionScreen.match': return 'Match';
 			case 'modeSelectionScreen.backToWelcome': return 'Back to Welcome Screen';
+			case 'modeSelectionScreen.errors.saveSettingFailed': return ({required Object error}) => 'Failed to save setting: ${error}';
 			case 'flashcardScreen.title': return 'Flashcards';
 			case 'flashcardScreen.noCards': return 'No flashcards to display.';
 			case 'flashcardScreen.noTerms': return 'No terms available to study.';

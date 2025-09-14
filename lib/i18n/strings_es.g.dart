@@ -174,6 +174,7 @@ class _TranslationsModeSelectionScreenEs implements TranslationsModeSelectionScr
 	@override String get test => 'Prueba';
 	@override String get match => 'Combinar';
 	@override String get backToWelcome => 'Volver a la pantalla de bienvenida';
+	@override late final _TranslationsModeSelectionScreenErrorsEs errors = _TranslationsModeSelectionScreenErrorsEs._(_root);
 }
 
 // Path: flashcardScreen
@@ -423,6 +424,16 @@ class _TranslationsInputScreenErrorsEs implements TranslationsInputScreenErrorsE
 	@override String saveFailed({required Object error}) => 'No se pudo guardar la lista: ${error}';
 }
 
+// Path: modeSelectionScreen.errors
+class _TranslationsModeSelectionScreenErrorsEs implements TranslationsModeSelectionScreenErrorsEn {
+	_TranslationsModeSelectionScreenErrorsEs._(this._root);
+
+	final TranslationsEs _root; // ignore: unused_field
+
+	// Translations
+	@override String saveSettingFailed({required Object error}) => 'Error al guardar el ajuste: ${error}';
+}
+
 // Path: learnScreen.errors
 class _TranslationsLearnScreenErrorsEs implements TranslationsLearnScreenErrorsEn {
 	_TranslationsLearnScreenErrorsEs._(this._root);
@@ -648,6 +659,7 @@ extension on TranslationsEs {
 			case 'modeSelectionScreen.test': return 'Prueba';
 			case 'modeSelectionScreen.match': return 'Combinar';
 			case 'modeSelectionScreen.backToWelcome': return 'Volver a la pantalla de bienvenida';
+			case 'modeSelectionScreen.errors.saveSettingFailed': return ({required Object error}) => 'Error al guardar el ajuste: ${error}';
 			case 'flashcardScreen.title': return 'Tarjetas';
 			case 'flashcardScreen.noCards': return 'No hay tarjetas para mostrar.';
 			case 'flashcardScreen.noTerms': return 'No hay términos disponibles para estudiar.';

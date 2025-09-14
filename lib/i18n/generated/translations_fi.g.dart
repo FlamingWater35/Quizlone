@@ -176,6 +176,7 @@ class _TranslationsModeSelectionScreenFi extends TranslationsModeSelectionScreen
 	@override String get test => 'Testi';
 	@override String get match => 'Yhdistä';
 	@override String get backToWelcome => 'Takaisin aloitusnäyttöön';
+	@override late final _TranslationsModeSelectionScreenErrorsFi errors = _TranslationsModeSelectionScreenErrorsFi._(_root);
 }
 
 // Path: flashcardScreen
@@ -425,6 +426,16 @@ class _TranslationsInputScreenErrorsFi extends TranslationsInputScreenErrorsEn {
 	@override String saveFailed({required Object error}) => 'Listan tallennus epäonnistui: ${error}';
 }
 
+// Path: modeSelectionScreen.errors
+class _TranslationsModeSelectionScreenErrorsFi extends TranslationsModeSelectionScreenErrorsEn {
+	_TranslationsModeSelectionScreenErrorsFi._(TranslationsFi root) : this._root = root, super.internal(root);
+
+	final TranslationsFi _root; // ignore: unused_field
+
+	// Translations
+	@override String saveSettingFailed({required Object error}) => 'Asetuksen tallennus epäonnistui: ${error}';
+}
+
 // Path: learnScreen.errors
 class _TranslationsLearnScreenErrorsFi extends TranslationsLearnScreenErrorsEn {
 	_TranslationsLearnScreenErrorsFi._(TranslationsFi root) : this._root = root, super.internal(root);
@@ -650,6 +661,7 @@ extension on TranslationsFi {
 			case 'modeSelectionScreen.test': return 'Testi';
 			case 'modeSelectionScreen.match': return 'Yhdistä';
 			case 'modeSelectionScreen.backToWelcome': return 'Takaisin aloitusnäyttöön';
+			case 'modeSelectionScreen.errors.saveSettingFailed': return ({required Object error}) => 'Asetuksen tallennus epäonnistui: ${error}';
 			case 'flashcardScreen.title': return 'Muistikortit';
 			case 'flashcardScreen.noCards': return 'Ei näytettäviä muistikortteja.';
 			case 'flashcardScreen.noTerms': return 'Opiskeltavia termejä ei ole saatavilla.';

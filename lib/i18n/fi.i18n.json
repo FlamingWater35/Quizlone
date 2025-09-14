@@ -113,7 +113,10 @@
     "learn": "Opi",
     "test": "Testi",
     "match": "Yhdistä",
-    "backToWelcome": "Takaisin aloitusnäyttöön"
+    "backToWelcome": "Takaisin aloitusnäyttöön",
+    "errors": {
+        "saveSettingFailed": "Asetuksen tallennus epäonnistui: $error"
+    }
   },
   "flashcardScreen": {
     "title": "Muistikortit",

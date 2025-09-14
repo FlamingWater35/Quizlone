@@ -113,7 +113,10 @@
     "learn": "Learn",
     "test": "Test",
     "match": "Match",
-    "backToWelcome": "Back to Welcome Screen"
+    "backToWelcome": "Back to Welcome Screen",
+    "errors": {
+      "saveSettingFailed": "Failed to save setting: $error"
+    }
   },
   "flashcardScreen": {
     "title": "Flashcards",
