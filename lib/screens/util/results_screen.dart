@@ -202,7 +202,9 @@ class ResultsScreen extends ConsumerWidget {
                       icon: const Icon(Icons.style_outlined),
                       label: Text(t.resultsScreen.reviewFlashcards),
                       onPressed: () {
-                        ref.invalidate(flashcardControllerProvider);
+                        ref
+                            .read(flashcardControllerProvider.notifier)
+                            .refreshWithOptions();
                         context.router.replace(const FlashcardRoute());
                       },
                     ),

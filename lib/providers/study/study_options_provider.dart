@@ -163,11 +163,26 @@ class TestQuestionFormat extends _$TestQuestionFormat {
     return activeListAsyncValue.when(
       data: (activeList) {
         if (activeList != null) {
+          _log.fine(
+            "[TestQuestionFormat] Initializing from activeList data: ${activeList.testFormat}",
+          );
+          final hasEnoughTermsForMC = activeList.terms.length >= 4;
+          if (!hasEnoughTermsForMC && activeList.testFormat == TestFormat.mc) {
+            return TestFormat.written;
+          }
           return activeList.testFormat;
         }
+        _log.fine(
+          "[TestQuestionFormat] activeList data is null, defaulting to written",
+        );
         return TestFormat.written;
       },
-      loading: () => stateOrNull ?? TestFormat.written,
+      loading: () {
+        _log.fine(
+          "[TestQuestionFormat] activeStudyListProvider is loading, using previous state or default.",
+        );
+        return stateOrNull ?? TestFormat.written;
+      },
       error: (err, stack) {
         _log.warning(
           "[TestQuestionFormat] Error in activeStudyListProvider. Defaulting to written.",

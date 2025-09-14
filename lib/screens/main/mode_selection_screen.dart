@@ -224,10 +224,12 @@ class _OptionsPanel extends ConsumerStatefulWidget {
 
 class _OptionsPanelState extends ConsumerState<_OptionsPanel> {
   late final TextEditingController _studyLengthController;
+  late final FocusNode _studyLengthFocusNode;
 
   @override
   void dispose() {
     _studyLengthController.dispose();
+    _studyLengthFocusNode.dispose();
     super.dispose();
   }
 
@@ -238,6 +240,31 @@ class _OptionsPanelState extends ConsumerState<_OptionsPanel> {
     _studyLengthController = TextEditingController(
       text: initialValue?.toString() ?? '',
     );
+
+    _studyLengthFocusNode = FocusNode();
+    _studyLengthFocusNode.addListener(() {
+      if (!_studyLengthFocusNode.hasFocus) {
+        _updateStudyLength();
+      }
+    });
+  }
+
+  void _updateStudyLength() {
+    final value = _studyLengthController.text;
+    final intVal = int.tryParse(value);
+    final totalTerms =
+        ref.read(activeStudyListProvider).asData?.value?.terms.length ?? 0;
+    final notifier = ref.read(studyLengthProvider.notifier);
+
+    _handleSettingChange(() {
+      if (value.isEmpty || intVal == null) {
+        return notifier.clear();
+      } else if (intVal > totalTerms && totalTerms > 0) {
+        return notifier.set(totalTerms);
+      } else {
+        return notifier.set(intVal);
+      }
+    });
   }
 
   Future<void> _handleSettingChange(
@@ -271,18 +298,8 @@ class _OptionsPanelState extends ConsumerState<_OptionsPanel> {
     final totalTerms =
         ref.watch(activeStudyListProvider).asData?.value?.terms.length ?? 0;
 
-    final bool isMCDisabled = totalTerms < 4;
     final testFormat = ref.watch(testQuestionFormatProvider);
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted && isMCDisabled && testFormat == TestFormat.mc) {
-        _handleSettingChange(
-          () => ref
-              .read(testQuestionFormatProvider.notifier)
-              .set(TestFormat.written),
-        );
-      }
-    });
+    final bool isMCDisabled = totalTerms < 4;
 
     final fcStartWith = ref.watch(flashcardStartWithProvider);
     final studyAskWith = ref.watch(studyAskWithProvider);
@@ -397,6 +414,7 @@ class _OptionsPanelState extends ConsumerState<_OptionsPanel> {
                       constraints: const BoxConstraints(maxWidth: 120),
                       child: TextFormField(
                         controller: _studyLengthController,
+                        focusNode: _studyLengthFocusNode,
                         decoration: InputDecoration(
                           hintText: t.general.all,
                           border: const OutlineInputBorder(),
@@ -411,21 +429,7 @@ class _OptionsPanelState extends ConsumerState<_OptionsPanel> {
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly,
                         ],
-                        onChanged: (value) {
-                          final intVal = int.tryParse(value);
-                          final notifier = ref.read(
-                            studyLengthProvider.notifier,
-                          );
-                          if (value.isEmpty || intVal == null) {
-                            _handleSettingChange(() => notifier.clear());
-                          } else if (intVal > totalTerms && totalTerms > 0) {
-                            _handleSettingChange(
-                              () => notifier.set(totalTerms),
-                            );
-                          } else {
-                            _handleSettingChange(() => notifier.set(intVal));
-                          }
-                        },
+                        onEditingComplete: _updateStudyLength,
                         textAlign: TextAlign.center,
                       ),
                     ),
