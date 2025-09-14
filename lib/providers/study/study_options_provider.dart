@@ -21,22 +21,28 @@ Future<void> _updateListOptionInHive(
 
 @riverpod
 class FlashcardStartWith extends _$FlashcardStartWith {
-  void set(FlashcardStartSide side) {
-    state = side;
-
+  Future<void> set(FlashcardStartSide side) async {
     final activeList = ref.read(activeStudyListProvider).asData?.value;
     final dbService = ref.read(databaseServiceProvider);
 
     if (activeList != null) {
+      final previousState = state;
+      state = side;
+
       activeList.flashcardShowTermFirst = (side == FlashcardStartSide.term);
-      _updateListOptionInHive(dbService, activeList).catchError((e, s) {
-        _log.warning(
-          "[FlashcardStartWith] Error during background save for ${activeList.name}",
+      try {
+        await _updateListOptionInHive(dbService, activeList);
+      } catch (e, s) {
+        state = previousState;
+        _log.severe(
+          "[FlashcardStartWith] Error during save for ${activeList.name}",
           e,
           s,
         );
-      });
+        rethrow;
+      }
     } else {
+      state = side;
       _log.warning(
         "[FlashcardStartWith] No activeList, set to $side (session only)",
       );
@@ -50,24 +56,13 @@ class FlashcardStartWith extends _$FlashcardStartWith {
     return activeListAsyncValue.when(
       data: (activeList) {
         if (activeList != null) {
-          _log.fine(
-            "[FlashcardStartWith] Initializing from activeList data: ${activeList.flashcardShowTermFirst}",
-          );
           return activeList.flashcardShowTermFirst
               ? FlashcardStartSide.term
               : FlashcardStartSide.definition;
         }
-        _log.fine(
-          "[FlashcardStartWith] activeList data is null, defaulting to term",
-        );
         return FlashcardStartSide.term;
       },
-      loading: () {
-        _log.fine(
-          "[FlashcardStartWith] activeStudyListProvider is loading, using previous state or default.",
-        );
-        return stateOrNull ?? FlashcardStartSide.term;
-      },
+      loading: () => stateOrNull ?? FlashcardStartSide.term,
       error: (err, stack) {
         _log.warning(
           "[FlashcardStartWith] Error in activeStudyListProvider. Defaulting to term.",
@@ -82,22 +77,29 @@ class FlashcardStartWith extends _$FlashcardStartWith {
 
 @riverpod
 class StudyAskWith extends _$StudyAskWith {
-  void set(StudyQuestionType type) {
-    state = type;
-
+  Future<void> set(StudyQuestionType type) async {
     final activeList = ref.read(activeStudyListProvider).asData?.value;
     final dbService = ref.read(databaseServiceProvider);
 
     if (activeList != null) {
+      final previousState = state;
+      state = type;
+
       activeList.studyShowDefinitionAskTerm =
           (type == StudyQuestionType.definition);
-      _updateListOptionInHive(dbService, activeList).catchError((e, s) {
-        _log.warning(
-          "[StudyAskWith] Error during background save for ${activeList.name}",
+      try {
+        await _updateListOptionInHive(dbService, activeList);
+      } catch (e, s) {
+        state = previousState;
+        _log.severe(
+          "[StudyAskWith] Error during save for ${activeList.name}",
           e,
           s,
         );
-      });
+        rethrow;
+      }
+    } else {
+      state = type;
     }
   }
 
@@ -108,22 +110,13 @@ class StudyAskWith extends _$StudyAskWith {
     return activeListAsyncValue.when(
       data: (activeList) {
         if (activeList != null) {
-          _log.fine(
-            "[StudyAskWith] Initializing from activeList data: ${activeList.studyShowDefinitionAskTerm}",
-          );
           return activeList.studyShowDefinitionAskTerm
               ? StudyQuestionType.definition
               : StudyQuestionType.term;
         }
-        _log.fine("[StudyAskWith] activeList data is null, defaulting to term");
         return StudyQuestionType.definition;
       },
-      loading: () {
-        _log.fine(
-          "[StudyAskWith] activeStudyListProvider is loading, using previous state or default.",
-        );
-        return stateOrNull ?? StudyQuestionType.definition;
-      },
+      loading: () => stateOrNull ?? StudyQuestionType.definition,
       error: (err, stack) {
         _log.warning(
           "[StudyAskWith] Error in activeStudyListProvider. Defaulting to definition.",
@@ -138,21 +131,28 @@ class StudyAskWith extends _$StudyAskWith {
 
 @riverpod
 class TestQuestionFormat extends _$TestQuestionFormat {
-  void set(TestFormat format) {
-    state = format;
-
+  Future<void> set(TestFormat format) async {
     final activeList = ref.read(activeStudyListProvider).asData?.value;
     final dbService = ref.read(databaseServiceProvider);
 
     if (activeList != null) {
+      final previousState = state;
+      state = format;
+
       activeList.testFormat = format;
-      _updateListOptionInHive(dbService, activeList).catchError((e, s) {
-        _log.warning(
-          "[TestQuestionFormat] Error during background save for ${activeList.name}",
+      try {
+        await _updateListOptionInHive(dbService, activeList);
+      } catch (e, s) {
+        state = previousState;
+        _log.severe(
+          "[TestQuestionFormat] Error during save for ${activeList.name}",
           e,
           s,
         );
-      });
+        rethrow;
+      }
+    } else {
+      state = format;
     }
   }
 
@@ -163,22 +163,11 @@ class TestQuestionFormat extends _$TestQuestionFormat {
     return activeListAsyncValue.when(
       data: (activeList) {
         if (activeList != null) {
-          _log.fine(
-            "[TestQuestionFormat] Initializing from activeList data: ${activeList.testFormat}",
-          );
           return activeList.testFormat;
         }
-        _log.fine(
-          "[TestQuestionFormat] activeList data is null, defaulting to written",
-        );
         return TestFormat.written;
       },
-      loading: () {
-        _log.fine(
-          "[TestQuestionFormat] activeStudyListProvider is loading, using previous state or default.",
-        );
-        return stateOrNull ?? TestFormat.written;
-      },
+      loading: () => stateOrNull ?? TestFormat.written,
       error: (err, stack) {
         _log.warning(
           "[TestQuestionFormat] Error in activeStudyListProvider. Defaulting to written.",
@@ -193,28 +182,34 @@ class TestQuestionFormat extends _$TestQuestionFormat {
 
 @riverpod
 class StudyLength extends _$StudyLength {
-  void set(int? length) {
+  Future<void> set(int? length) async {
     final newLength = (length != null && length <= 0) ? null : length;
-
-    state = newLength;
-
     final activeList = ref.read(activeStudyListProvider).asData?.value;
     final dbService = ref.read(databaseServiceProvider);
 
     if (activeList != null) {
+      final previousState = state;
+      state = newLength;
+
       activeList.testStudyLength = newLength;
-      _updateListOptionInHive(dbService, activeList).catchError((e, s) {
-        _log.warning(
-          "[StudyLength] Error during background save for ${activeList.name}",
+      try {
+        await _updateListOptionInHive(dbService, activeList);
+      } catch (e, s) {
+        state = previousState;
+        _log.severe(
+          "[StudyLength] Error during save for ${activeList.name}",
           e,
           s,
         );
-      });
+        rethrow;
+      }
+    } else {
+      state = newLength;
     }
   }
 
-  void clear() {
-    set(null);
+  Future<void> clear() async {
+    await set(null);
   }
 
   @override
@@ -224,20 +219,11 @@ class StudyLength extends _$StudyLength {
     return activeListAsyncValue.when(
       data: (activeList) {
         if (activeList != null) {
-          _log.fine(
-            "[StudyLength] Initializing from activeList data: ${activeList.testStudyLength}",
-          );
           return activeList.testStudyLength;
         }
-        _log.fine("[StudyLength] activeList data is null");
         return null;
       },
-      loading: () {
-        _log.fine(
-          "[StudyLength] activeStudyListProvider is loading, using previous state or default.",
-        );
-        return stateOrNull;
-      },
+      loading: () => stateOrNull,
       error: (err, stack) {
         _log.warning(
           "[StudyLength] Error in activeStudyListProvider. Defaulting to null.",
@@ -252,21 +238,28 @@ class StudyLength extends _$StudyLength {
 
 @riverpod
 class AllowAnswerSubstring extends _$AllowAnswerSubstring {
-  void set(bool isEnabled) {
-    state = isEnabled;
-
+  Future<void> set(bool isEnabled) async {
     final activeList = ref.read(activeStudyListProvider).asData?.value;
     final dbService = ref.read(databaseServiceProvider);
 
     if (activeList != null) {
+      final previousState = state;
+      state = isEnabled;
+
       activeList.allowAnswerSubstring = isEnabled;
-      _updateListOptionInHive(dbService, activeList).catchError((e, s) {
-        _log.warning(
-          "[AllowAnswerSubstring] Error during background save for ${activeList.name}",
+      try {
+        await _updateListOptionInHive(dbService, activeList);
+      } catch (e, s) {
+        state = previousState;
+        _log.severe(
+          "[AllowAnswerSubstring] Error during save for ${activeList.name}",
           e,
           s,
         );
-      });
+        rethrow;
+      }
+    } else {
+      state = isEnabled;
     }
   }
 
@@ -277,22 +270,11 @@ class AllowAnswerSubstring extends _$AllowAnswerSubstring {
     return activeListAsyncValue.when(
       data: (activeList) {
         if (activeList != null) {
-          _log.fine(
-            "[AllowAnswerSubstring] Initializing from activeList data: ${activeList.allowAnswerSubstring}",
-          );
           return activeList.allowAnswerSubstring;
         }
-        _log.fine(
-          "[AllowAnswerSubstring] activeList data is null, defaulting to false",
-        );
         return false;
       },
-      loading: () {
-        _log.fine(
-          "[AllowAnswerSubstring] activeStudyListProvider is loading, using previous state or default.",
-        );
-        return stateOrNull ?? false;
-      },
+      loading: () => stateOrNull ?? false,
       error: (err, stack) {
         _log.warning(
           "[AllowAnswerSubstring] Error in activeStudyListProvider. Defaulting to false.",

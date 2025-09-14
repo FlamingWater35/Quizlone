@@ -7,7 +7,7 @@ part of 'study_options_provider.dart';
 // **************************************************************************
 
 String _$flashcardStartWithHash() =>
-    r'bd5e88e9cfeb22a5da17423f0aa8e7418b5a5d09';
+    r'f9df087aefccde633584e2674767acce89d8b123';
 
 /// See also [FlashcardStartWith].
 @ProviderFor(FlashcardStartWith)
@@ -26,7 +26,7 @@ final flashcardStartWithProvider = AutoDisposeNotifierProvider<
 );
 
 typedef _$FlashcardStartWith = AutoDisposeNotifier<FlashcardStartSide>;
-String _$studyAskWithHash() => r'7fb816b5808b5bc066ec6e765a9ada60c535c53f';
+String _$studyAskWithHash() => r'e9f67c620c7980c7f0ca858e4a010839d3cc0a52';
 
 /// See also [StudyAskWith].
 @ProviderFor(StudyAskWith)
@@ -44,7 +44,7 @@ final studyAskWithProvider =
 
 typedef _$StudyAskWith = AutoDisposeNotifier<StudyQuestionType>;
 String _$testQuestionFormatHash() =>
-    r'86b140a38bb1c78e41aef0bf468ee5c223d489cf';
+    r'417abf974fc541f89cf497777841528e9c5d1925';
 
 /// See also [TestQuestionFormat].
 @ProviderFor(TestQuestionFormat)
@@ -61,7 +61,7 @@ final testQuestionFormatProvider =
     );
 
 typedef _$TestQuestionFormat = AutoDisposeNotifier<TestFormat>;
-String _$studyLengthHash() => r'f5bf2bab1c11432ec19c4824e3a7c9886eabcf87';
+String _$studyLengthHash() => r'10580f8b51ef871c60fd13327b0bb99569bd832f';
 
 /// See also [StudyLength].
 @ProviderFor(StudyLength)
@@ -79,7 +79,7 @@ final studyLengthProvider =
 
 typedef _$StudyLength = AutoDisposeNotifier<int?>;
 String _$allowAnswerSubstringHash() =>
-    r'44bb4f8b2ce6b5ac5fcae1b251b5c8dc2f46f2ac';
+    r'400f1b9b20e4a92db1dd66a85375dbd8b11f1488';
 
 /// See also [AllowAnswerSubstring].
 @ProviderFor(AllowAnswerSubstring)

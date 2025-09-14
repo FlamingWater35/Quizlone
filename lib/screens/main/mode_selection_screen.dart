@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:quizlone/routing/app_router.dart';
+import 'package:quizlone/widgets/error_snackbar.dart';
 
 import '../../i18n/generated/translations.g.dart';
 import '../../models/enums/enums.dart';
@@ -239,6 +240,21 @@ class _OptionsPanelState extends ConsumerState<_OptionsPanel> {
     );
   }
 
+  Future<void> _handleSettingChange(
+    Future<void> Function() updateFunction,
+  ) async {
+    try {
+      await updateFunction();
+    } catch (e) {
+      if (mounted) {
+        showErrorSnackBar(
+          context,
+          message: "Failed to save setting: ${e.toString()}",
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     ref.listen<int?>(studyLengthProvider, (previous, next) {
@@ -257,7 +273,11 @@ class _OptionsPanelState extends ConsumerState<_OptionsPanel> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted && isMCDisabled && testFormat == TestFormat.mc) {
-        ref.read(testQuestionFormatProvider.notifier).set(TestFormat.written);
+        _handleSettingChange(
+          () => ref
+              .read(testQuestionFormatProvider.notifier)
+              .set(TestFormat.written),
+        );
       }
     });
 
@@ -281,9 +301,11 @@ class _OptionsPanelState extends ConsumerState<_OptionsPanel> {
                     value: FlashcardStartSide.term,
                     groupValue: fcStartWith,
                     onChanged:
-                        (value) => ref
-                            .read(flashcardStartWithProvider.notifier)
-                            .set(value),
+                        (value) => _handleSettingChange(
+                          () => ref
+                              .read(flashcardStartWithProvider.notifier)
+                              .set(value),
+                        ),
                   ),
                   const SizedBox(width: 8),
                   _CustomToggleButton<FlashcardStartSide>(
@@ -292,9 +314,11 @@ class _OptionsPanelState extends ConsumerState<_OptionsPanel> {
                     value: FlashcardStartSide.definition,
                     groupValue: fcStartWith,
                     onChanged:
-                        (value) => ref
-                            .read(flashcardStartWithProvider.notifier)
-                            .set(value),
+                        (value) => _handleSettingChange(
+                          () => ref
+                              .read(flashcardStartWithProvider.notifier)
+                              .set(value),
+                        ),
                   ),
                 ],
               ),
@@ -315,8 +339,11 @@ class _OptionsPanelState extends ConsumerState<_OptionsPanel> {
                     value: StudyQuestionType.definition,
                     groupValue: studyAskWith,
                     onChanged:
-                        (value) =>
-                            ref.read(studyAskWithProvider.notifier).set(value),
+                        (value) => _handleSettingChange(
+                          () => ref
+                              .read(studyAskWithProvider.notifier)
+                              .set(value),
+                        ),
                   ),
                   const SizedBox(width: 8),
                   _CustomToggleButton<StudyQuestionType>(
@@ -325,8 +352,11 @@ class _OptionsPanelState extends ConsumerState<_OptionsPanel> {
                     value: StudyQuestionType.term,
                     groupValue: studyAskWith,
                     onChanged:
-                        (value) =>
-                            ref.read(studyAskWithProvider.notifier).set(value),
+                        (value) => _handleSettingChange(
+                          () => ref
+                              .read(studyAskWithProvider.notifier)
+                              .set(value),
+                        ),
                   ),
                 ],
               ),
@@ -339,7 +369,11 @@ class _OptionsPanelState extends ConsumerState<_OptionsPanel> {
               ),
               value: allowSubstring,
               onChanged: (value) {
-                ref.read(allowAnswerSubstringProvider.notifier).set(value);
+                _handleSettingChange(
+                  () => ref
+                      .read(allowAnswerSubstringProvider.notifier)
+                      .set(value),
+                );
               },
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.0),
@@ -380,11 +414,13 @@ class _OptionsPanelState extends ConsumerState<_OptionsPanel> {
                             studyLengthProvider.notifier,
                           );
                           if (value.isEmpty || intVal == null) {
-                            notifier.clear();
+                            _handleSettingChange(() => notifier.clear());
                           } else if (intVal > totalTerms && totalTerms > 0) {
-                            notifier.set(totalTerms);
+                            _handleSettingChange(
+                              () => notifier.set(totalTerms),
+                            );
                           } else {
-                            notifier.set(intVal);
+                            _handleSettingChange(() => notifier.set(intVal));
                           }
                         },
                         textAlign: TextAlign.center,
@@ -410,9 +446,11 @@ class _OptionsPanelState extends ConsumerState<_OptionsPanel> {
                     value: TestFormat.written,
                     groupValue: testFormat,
                     onChanged:
-                        (value) => ref
-                            .read(testQuestionFormatProvider.notifier)
-                            .set(value),
+                        (value) => _handleSettingChange(
+                          () => ref
+                              .read(testQuestionFormatProvider.notifier)
+                              .set(value),
+                        ),
                   ),
                   const SizedBox(width: 8),
                   _CustomToggleButton<TestFormat>(
@@ -421,9 +459,11 @@ class _OptionsPanelState extends ConsumerState<_OptionsPanel> {
                     value: TestFormat.mc,
                     groupValue: testFormat,
                     onChanged:
-                        (value) => ref
-                            .read(testQuestionFormatProvider.notifier)
-                            .set(value),
+                        (value) => _handleSettingChange(
+                          () => ref
+                              .read(testQuestionFormatProvider.notifier)
+                              .set(value),
+                        ),
                     isDisabled: isMCDisabled,
                   ),
                 ],
