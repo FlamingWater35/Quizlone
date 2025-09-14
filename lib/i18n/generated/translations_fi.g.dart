@@ -526,6 +526,8 @@ class _TranslationsSettingsScreenExportDialogFi extends TranslationsSettingsScre
 	@override String get share => 'Jaa tiedosto';
 	@override String get save => 'Tallenna laitteelle';
 	@override String get shareText => 'Tässä on Quizlone-varmuuskopiosi.';
+	@override String get saveFileTitle => 'Valitse tallennustiedosto:';
+	@override String get backupFileName => 'quizlone_varmuuskopio';
 }
 
 // Path: settingsScreen.importDialog
@@ -756,6 +758,8 @@ extension on TranslationsFi {
 			case 'settingsScreen.exportDialog.share': return 'Jaa tiedosto';
 			case 'settingsScreen.exportDialog.save': return 'Tallenna laitteelle';
 			case 'settingsScreen.exportDialog.shareText': return 'Tässä on Quizlone-varmuuskopiosi.';
+			case 'settingsScreen.exportDialog.saveFileTitle': return 'Valitse tallennustiedosto:';
+			case 'settingsScreen.exportDialog.backupFileName': return 'quizlone_varmuuskopio';
 			case 'settingsScreen.importDialog.title': return 'Vahvista tuonti';
 			case 'settingsScreen.importDialog.content': return 'Tämä tuo opiskelulistat tiedostosta. Kaikki olemassa olevat listat, joilla on sama nimi, korvataan. Jatketaanko?';
 			case 'settingsScreen.importDialog.import': return 'Tuo';

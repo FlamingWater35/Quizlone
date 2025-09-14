@@ -205,7 +205,9 @@ class _MatchLeaderboardScreenState extends ConsumerState<MatchLeaderboardScreen>
                               );
                               final String rankText =
                                   trueRankIndex != -1
-                                      ? "#${trueRankIndex + 1}"
+                                      ? t.matchScreen.leaderboard.rank(
+                                        rank: trueRankIndex + 1,
+                                      )
                                       : t.matchScreen.leaderboard.rankOver100;
 
                               final animation = CurvedAnimation(

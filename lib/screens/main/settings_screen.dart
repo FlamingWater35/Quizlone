@@ -125,7 +125,7 @@ class SettingsScreen extends ConsumerWidget {
     );
     final jsonString = jsonEncode(appData.toJson());
     final bytes = utf8.encode(jsonString);
-    const fileName = 'quizlone_backup.json';
+    final fileName = '${t.settingsScreen.exportDialog.backupFileName}.json';
 
     try {
       String? savedPath;
@@ -144,7 +144,7 @@ class SettingsScreen extends ConsumerWidget {
         );
       } else {
         savedPath = await FilePicker.platform.saveFile(
-          dialogTitle: 'Please select an output file:',
+          dialogTitle: t.settingsScreen.exportDialog.saveFileTitle,
           fileName: fileName,
         );
         if (savedPath != null) {

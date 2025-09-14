@@ -915,6 +915,12 @@ class TranslationsSettingsScreenExportDialogEn {
 
 	/// en: 'Here is your Quizlone backup.'
 	String get shareText => 'Here is your Quizlone backup.';
+
+	/// en: 'Please select an output file:'
+	String get saveFileTitle => 'Please select an output file:';
+
+	/// en: 'quizlone_backup'
+	String get backupFileName => 'quizlone_backup';
 }
 
 // Path: settingsScreen.importDialog
@@ -1171,6 +1177,8 @@ extension on Translations {
 			case 'settingsScreen.exportDialog.share': return 'Share File';
 			case 'settingsScreen.exportDialog.save': return 'Save to Device';
 			case 'settingsScreen.exportDialog.shareText': return 'Here is your Quizlone backup.';
+			case 'settingsScreen.exportDialog.saveFileTitle': return 'Please select an output file:';
+			case 'settingsScreen.exportDialog.backupFileName': return 'quizlone_backup';
 			case 'settingsScreen.importDialog.title': return 'Confirm Import';
 			case 'settingsScreen.importDialog.content': return 'This will import study lists from a file. Any existing lists with the same name will be overwritten. Continue?';
 			case 'settingsScreen.importDialog.import': return 'Import';

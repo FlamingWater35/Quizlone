@@ -166,7 +166,7 @@
       "title": "Tabla de clasificación",
       "noRecords": "Aún no hay récords. ¡Sé el primero!",
       "time": "$time Segundos",
-      "rank": "#$rank",
+      "rank": "N.º $rank",
       "rankOver100": ">100"
     },
     "errors": {
@@ -235,7 +235,9 @@
       "content": "¿Cómo te gustaría exportar tus datos?",
       "share": "Compartir archivo",
       "save": "Guardar en el dispositivo",
-      "shareText": "Aquí está tu copia de seguridad de Quizlone."
+      "shareText": "Aquí está tu copia de seguridad de Quizlone.",
+      "saveFileTitle": "Por favor, seleccione un archivo de salida:",
+      "backupFileName": "copia_de_seguridad_quizlone"
     },
     "importDialog": {
       "title": "Confirmar importación",

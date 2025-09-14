@@ -487,7 +487,7 @@ class _TranslationsMatchScreenLeaderboardEs extends TranslationsMatchScreenLeade
 	@override String get title => 'Tabla de clasificación';
 	@override String get noRecords => 'Aún no hay récords. ¡Sé el primero!';
 	@override String time({required Object time}) => '${time} Segundos';
-	@override String rank({required Object rank}) => '#${rank}';
+	@override String rank({required Object rank}) => 'N.º ${rank}';
 	@override String get rankOver100 => '>100';
 }
 
@@ -526,6 +526,8 @@ class _TranslationsSettingsScreenExportDialogEs extends TranslationsSettingsScre
 	@override String get share => 'Compartir archivo';
 	@override String get save => 'Guardar en el dispositivo';
 	@override String get shareText => 'Aquí está tu copia de seguridad de Quizlone.';
+	@override String get saveFileTitle => 'Por favor, seleccione un archivo de salida:';
+	@override String get backupFileName => 'copia_de_seguridad_quizlone';
 }
 
 // Path: settingsScreen.importDialog
@@ -698,7 +700,7 @@ extension on TranslationsEs {
 			case 'matchScreen.leaderboard.title': return 'Tabla de clasificación';
 			case 'matchScreen.leaderboard.noRecords': return 'Aún no hay récords. ¡Sé el primero!';
 			case 'matchScreen.leaderboard.time': return ({required Object time}) => '${time} Segundos';
-			case 'matchScreen.leaderboard.rank': return ({required Object rank}) => '#${rank}';
+			case 'matchScreen.leaderboard.rank': return ({required Object rank}) => 'N.º ${rank}';
 			case 'matchScreen.leaderboard.rankOver100': return '>100';
 			case 'matchScreen.errors.noTerms': return 'No hay términos disponibles para el modo Combinar.';
 			case 'matchScreen.errors.notEnoughTerms': return 'Se requiere al menos un par de término/definición para jugar.';
@@ -756,6 +758,8 @@ extension on TranslationsEs {
 			case 'settingsScreen.exportDialog.share': return 'Compartir archivo';
 			case 'settingsScreen.exportDialog.save': return 'Guardar en el dispositivo';
 			case 'settingsScreen.exportDialog.shareText': return 'Aquí está tu copia de seguridad de Quizlone.';
+			case 'settingsScreen.exportDialog.saveFileTitle': return 'Por favor, seleccione un archivo de salida:';
+			case 'settingsScreen.exportDialog.backupFileName': return 'copia_de_seguridad_quizlone';
 			case 'settingsScreen.importDialog.title': return 'Confirmar importación';
 			case 'settingsScreen.importDialog.content': return 'Esto importará listas de estudio desde un archivo. Cualquier lista existente con el mismo nombre será sobrescrita. ¿Continuar?';
 			case 'settingsScreen.importDialog.import': return 'Importar';

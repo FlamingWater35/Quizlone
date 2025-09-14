@@ -235,7 +235,9 @@
       "content": "Miten haluat viedä tietosi?",
       "share": "Jaa tiedosto",
       "save": "Tallenna laitteelle",
-      "shareText": "Tässä on Quizlone-varmuuskopiosi."
+      "shareText": "Tässä on Quizlone-varmuuskopiosi.",
+      "saveFileTitle": "Valitse tallennustiedosto:",
+      "backupFileName": "quizlone_varmuuskopio"
     },
     "importDialog": {
       "title": "Vahvista tuonti",

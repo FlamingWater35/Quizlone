@@ -489,7 +489,7 @@ class _TranslationsMatchScreenLeaderboardRu implements TranslationsMatchScreenLe
 	@override String get title => 'Таблица лидеров';
 	@override String get noRecords => 'Рекордов пока нет. Будьте первым!';
 	@override String time({required Object time}) => '${time} секунд';
-	@override String rank({required Object rank}) => '#${rank}';
+	@override String rank({required Object rank}) => '№${rank}';
 	@override String get rankOver100 => '>100';
 }
 
@@ -528,6 +528,8 @@ class _TranslationsSettingsScreenExportDialogRu implements TranslationsSettingsS
 	@override String get share => 'Поделиться файлом';
 	@override String get save => 'Сохранить на устройство';
 	@override String get shareText => 'Вот ваша резервная копия Quizlone.';
+	@override String get saveFileTitle => 'Пожалуйста, выберите файл для сохранения:';
+	@override String get backupFileName => 'quizlone_резервная_копия';
 }
 
 // Path: settingsScreen.importDialog
@@ -704,7 +706,7 @@ extension on TranslationsRu {
 			case 'matchScreen.leaderboard.title': return 'Таблица лидеров';
 			case 'matchScreen.leaderboard.noRecords': return 'Рекордов пока нет. Будьте первым!';
 			case 'matchScreen.leaderboard.time': return ({required Object time}) => '${time} секунд';
-			case 'matchScreen.leaderboard.rank': return ({required Object rank}) => '#${rank}';
+			case 'matchScreen.leaderboard.rank': return ({required Object rank}) => '№${rank}';
 			case 'matchScreen.leaderboard.rankOver100': return '>100';
 			case 'matchScreen.errors.noTerms': return 'Нет доступных терминов для режима Сопоставления.';
 			case 'matchScreen.errors.notEnoughTerms': return 'Для игры требуется хотя бы одна пара термин/определение.';
@@ -762,6 +764,8 @@ extension on TranslationsRu {
 			case 'settingsScreen.exportDialog.share': return 'Поделиться файлом';
 			case 'settingsScreen.exportDialog.save': return 'Сохранить на устройство';
 			case 'settingsScreen.exportDialog.shareText': return 'Вот ваша резервная копия Quizlone.';
+			case 'settingsScreen.exportDialog.saveFileTitle': return 'Пожалуйста, выберите файл для сохранения:';
+			case 'settingsScreen.exportDialog.backupFileName': return 'quizlone_резервная_копия';
 			case 'settingsScreen.importDialog.title': return 'Подтвердите импорт';
 			case 'settingsScreen.importDialog.content': return 'Это импортирует учебные списки из файла. Любые существующие списки с таким же именем будут перезаписаны. Продолжить?';
 			case 'settingsScreen.importDialog.import': return 'Импорт';

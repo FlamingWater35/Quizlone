@@ -235,7 +235,9 @@
       "content": "How would you like to export your data?",
       "share": "Share File",
       "save": "Save to Device",
-      "shareText": "Here is your Quizlone backup."
+      "shareText": "Here is your Quizlone backup.",
+      "saveFileTitle": "Please select an output file:",
+      "backupFileName": "quizlone_backup"
     },
     "importDialog": {
       "title": "Confirm Import",
