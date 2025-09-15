@@ -38,6 +38,7 @@ jobs:
         run: |
           find build/app/outputs/apk/release -name "*x86_64*.apk" -delete
           cd build/app/outputs/apk/release
+          shopt -s nullglob
           for file in app-*-release.apk; do
             arch=$(echo "$file" | sed -e 's/app-//' -e 's/-release.apk//')
             new_name="${{ env.APP_NAME }}-${arch}.apk"
