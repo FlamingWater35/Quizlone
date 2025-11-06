@@ -46,10 +46,9 @@ class TermAdapter extends TypeAdapter<Term> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-Term _$TermFromJson(Map<String, dynamic> json) =>
-    Term()
-      ..definitionText = json['definitionText'] as String
-      ..termText = json['termText'] as String;
+Term _$TermFromJson(Map<String, dynamic> json) => Term()
+  ..definitionText = json['definitionText'] as String
+  ..termText = json['termText'] as String;
 
 Map<String, dynamic> _$TermToJson(Term instance) => <String, dynamic>{
   'definitionText': instance.definitionText,

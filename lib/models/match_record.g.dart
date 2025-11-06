@@ -53,10 +53,9 @@ class MatchRecordAdapter extends TypeAdapter<MatchRecord> {
 MatchRecord _$MatchRecordFromJson(Map<String, dynamic> json) => MatchRecord(
   studyListName: json['studyListName'] as String,
   timeInTenths: (json['timeInTenths'] as num).toInt(),
-  createdAt:
-      json['createdAt'] == null
-          ? null
-          : DateTime.parse(json['createdAt'] as String),
+  createdAt: json['createdAt'] == null
+      ? null
+      : DateTime.parse(json['createdAt'] as String),
 );
 
 Map<String, dynamic> _$MatchRecordToJson(MatchRecord instance) =>

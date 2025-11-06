@@ -7,18 +7,15 @@ part of 'settings_app_data.dart';
 // **************************************************************************
 
 AppData _$AppDataFromJson(Map<String, dynamic> json) => AppData(
-  studyLists:
-      (json['studyLists'] as List<dynamic>)
-          .map((e) => StudyList.fromJson(e as Map<String, dynamic>))
-          .toList(),
-  matchRecords:
-      (json['matchRecords'] as List<dynamic>)
-          .map((e) => MatchRecord.fromJson(e as Map<String, dynamic>))
-          .toList(),
-  studyListOrder:
-      (json['studyListOrder'] as List<dynamic>)
-          .map((e) => e as String)
-          .toList(),
+  studyLists: (json['studyLists'] as List<dynamic>)
+      .map((e) => StudyList.fromJson(e as Map<String, dynamic>))
+      .toList(),
+  matchRecords: (json['matchRecords'] as List<dynamic>)
+      .map((e) => MatchRecord.fromJson(e as Map<String, dynamic>))
+      .toList(),
+  studyListOrder: (json['studyListOrder'] as List<dynamic>)
+      .map((e) => e as String)
+      .toList(),
   lastUpdatedBy: json['lastUpdatedBy'] as String?,
 );
 

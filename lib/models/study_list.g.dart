@@ -73,24 +73,21 @@ class StudyListAdapter extends TypeAdapter<StudyList> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-StudyList _$StudyListFromJson(Map<String, dynamic> json) =>
-    StudyList()
-      ..allowAnswerSubstring = json['allowAnswerSubstring'] as bool
-      ..createdAt = DateTime.parse(json['createdAt'] as String)
-      ..flashcardShowTermFirst = json['flashcardShowTermFirst'] as bool
-      ..id = json['id'] as String
-      ..lastOpenedAt =
-          json['lastOpenedAt'] == null
-              ? null
-              : DateTime.parse(json['lastOpenedAt'] as String)
-      ..lastUsedAt = DateTime.parse(json['lastUsedAt'] as String)
-      ..name = json['name'] as String
-      ..studyShowDefinitionAskTerm = json['studyShowDefinitionAskTerm'] as bool
-      ..terms =
-          (json['terms'] as List<dynamic>)
-              .map((e) => Term.fromJson(e as Map<String, dynamic>))
-              .toList()
-      ..testStudyLength = (json['testStudyLength'] as num?)?.toInt();
+StudyList _$StudyListFromJson(Map<String, dynamic> json) => StudyList()
+  ..allowAnswerSubstring = json['allowAnswerSubstring'] as bool
+  ..createdAt = DateTime.parse(json['createdAt'] as String)
+  ..flashcardShowTermFirst = json['flashcardShowTermFirst'] as bool
+  ..id = json['id'] as String
+  ..lastOpenedAt = json['lastOpenedAt'] == null
+      ? null
+      : DateTime.parse(json['lastOpenedAt'] as String)
+  ..lastUsedAt = DateTime.parse(json['lastUsedAt'] as String)
+  ..name = json['name'] as String
+  ..studyShowDefinitionAskTerm = json['studyShowDefinitionAskTerm'] as bool
+  ..terms = (json['terms'] as List<dynamic>)
+      .map((e) => Term.fromJson(e as Map<String, dynamic>))
+      .toList()
+  ..testStudyLength = (json['testStudyLength'] as num?)?.toInt();
 
 Map<String, dynamic> _$StudyListToJson(StudyList instance) => <String, dynamic>{
   'allowAnswerSubstring': instance.allowAnswerSubstring,
