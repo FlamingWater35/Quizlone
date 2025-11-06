@@ -33,6 +33,7 @@ class FlashcardStartWith extends _$FlashcardStartWith {
       try {
         await _updateListOptionInHive(dbService, activeList);
       } catch (e, s) {
+        if (!ref.mounted) return;
         state = previousState;
         _log.severe(
           "[FlashcardStartWith] Error during save for ${activeList.name}",
@@ -90,6 +91,7 @@ class StudyAskWith extends _$StudyAskWith {
       try {
         await _updateListOptionInHive(dbService, activeList);
       } catch (e, s) {
+        if (!ref.mounted) return;
         state = previousState;
         _log.severe(
           "[StudyAskWith] Error during save for ${activeList.name}",
@@ -143,6 +145,7 @@ class TestQuestionFormat extends _$TestQuestionFormat {
       try {
         await _updateListOptionInHive(dbService, activeList);
       } catch (e, s) {
+        if (!ref.mounted) return;
         state = previousState;
         _log.severe(
           "[TestQuestionFormat] Error during save for ${activeList.name}",
@@ -210,6 +213,7 @@ class StudyLength extends _$StudyLength {
       try {
         await _updateListOptionInHive(dbService, activeList);
       } catch (e, s) {
+        if (!ref.mounted) return;
         state = previousState;
         _log.severe(
           "[StudyLength] Error during save for ${activeList.name}",
@@ -265,6 +269,7 @@ class AllowAnswerSubstring extends _$AllowAnswerSubstring {
       try {
         await _updateListOptionInHive(dbService, activeList);
       } catch (e, s) {
+        if (!ref.mounted) return;
         state = previousState;
         _log.severe(
           "[AllowAnswerSubstring] Error during save for ${activeList.name}",

@@ -36,13 +36,12 @@ class FlashcardScreenState {
 
   Term? get currentCard =>
       displayTerms.isNotEmpty && currentIndex < displayTerms.length
-          ? displayTerms[currentIndex]
-          : null;
+      ? displayTerms[currentIndex]
+      : null;
 
-  String get currentProgress =>
-      displayTerms.isEmpty
-          ? "0/0"
-          : "${currentIndex + 1}/${displayTerms.length}";
+  String get currentProgress => displayTerms.isEmpty
+      ? "0/0"
+      : "${currentIndex + 1}/${displayTerms.length}";
 
   FlashcardScreenState copyWith({
     List<Term>? originalTerms,
@@ -131,6 +130,7 @@ class FlashcardController extends _$FlashcardController {
   Future<void> refreshWithOptions() async {
     state = const AsyncLoading();
     final activeList = await ref.read(activeStudyListProvider.future);
+    if (!ref.mounted) return;
     final startSideOption = ref.read(flashcardStartWithProvider);
 
     if (activeList == null || activeList.terms.isEmpty) {
@@ -159,6 +159,7 @@ class FlashcardController extends _$FlashcardController {
   Future<FlashcardScreenState> build() async {
     _log.fine("[FlashcardController] build started");
     final activeList = await ref.watch(activeStudyListProvider.future);
+    if (!ref.mounted) throw Exception("Provider disposed");
     final startSideOption = ref.watch(flashcardStartWithProvider);
 
     if (activeList == null || activeList.terms.isEmpty) {

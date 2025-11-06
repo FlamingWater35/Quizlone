@@ -71,6 +71,7 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
     _log.info("User requested clearing of local data on sign out.");
     final dbService = ref.read(databaseServiceProvider);
     await dbService.clearAllUserData();
+    if (!ref.mounted) return;
     ref.invalidate(studyListsProvider);
     ref.read(activeStudyListIdProvider.notifier).set(null);
   }
@@ -124,10 +125,9 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
     final mergedLists = mergedListsMap.values.toList();
     _log.fine("Merged ${mergedLists.length} lists.");
 
-    final remoteRecordsSet =
-        remote.matchRecords
-            .map((r) => "${r.studyListName}-${r.createdAt.toIso8601String()}")
-            .toSet();
+    final remoteRecordsSet = remote.matchRecords
+        .map((r) => "${r.studyListName}-${r.createdAt.toIso8601String()}")
+        .toSet();
     final mergedRecords = List<MatchRecord>.from(remote.matchRecords);
 
     for (final localRecord in local.matchRecords) {
@@ -140,10 +140,9 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
     _log.fine("Merged ${mergedRecords.length} records.");
 
     final mergedListIds = mergedLists.map((e) => e.id).toSet();
-    final mergedOrder =
-        remote.studyListOrder
-            .where((id) => mergedListIds.contains(id))
-            .toList();
+    final mergedOrder = remote.studyListOrder
+        .where((id) => mergedListIds.contains(id))
+        .toList();
     final mergedOrderSet = mergedOrder.toSet();
 
     for (final list in mergedLists) {
@@ -165,7 +164,9 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
     final cloudSyncService = ref.read(cloudSyncServiceProvider);
 
     final lists = await dbService.getAllStudyLists();
+    if (!ref.mounted) return;
     final records = await dbService.getAllMatchRecords();
+    if (!ref.mounted) return;
     final order = dbService.getStudyListOrder();
 
     final appData = AppData(
@@ -174,11 +175,13 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
       studyListOrder: order,
     );
     await cloudSyncService.uploadData(appData);
+    if (!ref.mounted) return;
     await dbService.saveLastSyncTimestamp(DateTime.now().toUtc());
   }
 
   Future<void> _performSync({bool isInitialSync = false}) async {
     final connectivityStatus = await ref.read(connectivityProvider.future);
+    if (!ref.mounted) return;
 
     if (connectivityStatus == ConnectivityResult.none) {
       _log.info("Offline mode: Sync check skipped.");
@@ -195,11 +198,15 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
 
     try {
       final cloudResponse = await cloudSyncService.getCloudData();
+      if (!ref.mounted) return;
       final cloudData = cloudResponse.data;
       final cloudTimestamp = cloudResponse.timestamp;
 
       final localLists = await dbService.getAllStudyLists();
+      if (!ref.mounted) return;
       final localRecords = await dbService.getAllMatchRecords();
+      if (!ref.mounted) return;
+
       final localOrder = dbService.getStudyListOrder();
       final localTimestamp = dbService.getLastSyncTimestamp();
 
@@ -212,6 +219,7 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
             "Initial sync: Cloud data found. Applying to local storage.",
           );
           await dbService.applyCloudData(cloudData);
+          if (!ref.mounted) return;
           if (cloudTimestamp != null) {
             await dbService.saveLastSyncTimestamp(cloudTimestamp);
           }
@@ -228,6 +236,7 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
         } else if (hasCloudData && !hasLocalData) {
           _log.info("No local data found. Downloading cloud data.");
           await dbService.applyCloudData(cloudData);
+          if (!ref.mounted) return;
           if (cloudTimestamp != null) {
             await dbService.saveLastSyncTimestamp(cloudTimestamp);
           }
@@ -264,7 +273,9 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
             } else {
               _log.info("Applying merged data and re-uploading.");
               await dbService.applyCloudData(mergedData);
+              if (!ref.mounted) return;
               await dbService.saveLastSyncTimestamp(cloudTimestamp);
+              if (!ref.mounted) return;
               await _performUpload();
             }
           } else {
@@ -334,6 +345,7 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
           if (isSignInEvent && session != null && !_initialSyncDone) {
             _log.info("Initial sign-in detected. Performing first sync.");
             await requestCloudSync(isInitialSync: true);
+            if (!ref.mounted) return;
             _startPolling();
             _initialSyncDone = true;
           } else if (data.event == AuthChangeEvent.signedOut) {

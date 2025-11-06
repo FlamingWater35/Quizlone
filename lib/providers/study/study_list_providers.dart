@@ -107,6 +107,7 @@ class StudyListFormNotifier extends _$StudyListFormNotifier {
     try {
       _log.fine("Saving list (create/update): ${listToSave.name}");
       String savedKey = await dbService.saveStudyList(listToSave);
+      if (!ref.mounted) return false;
 
       ref.read(activeStudyListIdProvider.notifier).set(savedKey);
       _log.fine(
@@ -126,12 +127,11 @@ class StudyListFormNotifier extends _$StudyListFormNotifier {
 
   bool _parseAndValidateTerms() {
     final List<Term> parsedTerms = [];
-    final lines =
-        state.rawTermsInput
-            .split('\n')
-            .map((e) => e.trim())
-            .where((e) => e.isNotEmpty)
-            .toList();
+    final lines = state.rawTermsInput
+        .split('\n')
+        .map((e) => e.trim())
+        .where((e) => e.isNotEmpty)
+        .toList();
 
     if (state.listNameInput.trim().isEmpty) {
       state = state.copyWith(errorMessage: t.inputScreen.errors.listNameEmpty);
@@ -169,10 +169,9 @@ class StudyListFormNotifier extends _$StudyListFormNotifier {
     }
 
     state = state.copyWith(
-      studyList:
-          state.studyList
-            ..name = state.listNameInput.trim()
-            ..terms = parsedTerms,
+      studyList: state.studyList
+        ..name = state.listNameInput.trim()
+        ..terms = parsedTerms,
       clearError: true,
     );
     return true;

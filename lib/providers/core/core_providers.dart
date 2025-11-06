@@ -11,7 +11,7 @@ DatabaseService databaseService(Ref ref) {
   return DatabaseService(ref);
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 CloudSyncService cloudSyncService(Ref ref) {
   return CloudSyncService(ref);
 }

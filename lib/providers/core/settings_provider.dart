@@ -26,6 +26,7 @@ class AppTheme extends _$AppTheme {
         break;
     }
     await ref.read(databaseServiceProvider).saveTheme(themeName);
+    if (!ref.mounted) return;
     state = mode;
   }
 
@@ -119,6 +120,7 @@ class AppLanguageNotifier extends _$AppLanguageNotifier {
     _log.fine("[AppLanguageNotifier] Setting language to $lang");
     lang.applyLocale();
     await ref.read(databaseServiceProvider).saveLanguage(lang.code);
+    if (!ref.mounted) return;
     state = lang;
   }
 
@@ -135,6 +137,7 @@ class UiScaleNotifier extends _$UiScaleNotifier {
   Future<void> setScale(double newScale) async {
     _log.fine("[UiScaleNotifier] Setting scale to $newScale");
     await ref.read(databaseServiceProvider).saveUiScale(newScale);
+    if (!ref.mounted) return;
     state = newScale;
   }
 

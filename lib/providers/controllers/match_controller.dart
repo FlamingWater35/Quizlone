@@ -195,6 +195,8 @@ class MatchController extends _$MatchController {
     });
 
     final activeList = await ref.watch(activeStudyListProvider.future);
+    if (!ref.mounted) throw Exception("Provider disposed");
+
     if (activeList == null || activeList.terms.isEmpty) {
       return MatchScreenState(
         isLoading: false,

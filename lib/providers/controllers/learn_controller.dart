@@ -105,10 +105,9 @@ class LearnModeScreenState {
           termsIncorrectThisCycle ?? this.termsIncorrectThisCycle,
       currentTermIndexInCycle:
           currentTermIndexInCycle ?? this.currentTermIndexInCycle,
-      currentQuestion:
-          setNullCurrentQuestion
-              ? null
-              : (currentQuestion ?? this.currentQuestion),
+      currentQuestion: setNullCurrentQuestion
+          ? null
+          : (currentQuestion ?? this.currentQuestion),
       cycleCount: cycleCount ?? this.cycleCount,
       progressMessage: progressMessage ?? this.progressMessage,
       isLoading: isLoading ?? this.isLoading,
@@ -174,16 +173,14 @@ class LearnController extends _$LearnController {
     state = AsyncData(
       currentVal.copyWith(
         currentQuestion: questionState.copyWith(
-          feedbackType:
-              isCorrect
-                  ? LearnFeedbackType.correct
-                  : LearnFeedbackType.incorrect,
-          feedbackMessage:
-              isCorrect
-                  ? t.learnScreen.feedback.correct
-                  : t.learnScreen.feedback.incorrect(
-                    answer: questionState.expectedAnswer,
-                  ),
+          feedbackType: isCorrect
+              ? LearnFeedbackType.correct
+              : LearnFeedbackType.incorrect,
+          feedbackMessage: isCorrect
+              ? t.learnScreen.feedback.correct
+              : t.learnScreen.feedback.incorrect(
+                  answer: questionState.expectedAnswer,
+                ),
           answerSubmitted: true,
         ),
         termsIncorrectThisCycle: updatedIncorrect,
@@ -191,6 +188,7 @@ class LearnController extends _$LearnController {
     );
 
     await Future.delayed(const Duration(milliseconds: learnFeedbackDelayMS));
+    if (!ref.mounted) return;
     _moveToNextStep();
   }
 
@@ -247,6 +245,7 @@ class LearnController extends _$LearnController {
     await Future.delayed(
       const Duration(milliseconds: learnFeedbackDelayMS + 500),
     );
+    if (!ref.mounted) return;
     _moveToNextStep();
   }
 
@@ -262,10 +261,9 @@ class LearnController extends _$LearnController {
     return LearnQuestionState(
       term: term,
       questionText: askForTerm ? term.definitionText : term.termText,
-      questionLabel:
-          askForTerm
-              ? t.modeSelectionScreen.askForTerm
-              : t.modeSelectionScreen.askForDef,
+      questionLabel: askForTerm
+          ? t.modeSelectionScreen.askForTerm
+          : t.modeSelectionScreen.askForDef,
       expectedAnswer: askForTerm ? term.termText : term.definitionText,
     );
   }
@@ -371,6 +369,7 @@ class LearnController extends _$LearnController {
   Future<LearnModeScreenState> build() async {
     _log.fine("[LearnController] build started");
     final activeList = await ref.watch(activeStudyListProvider.future);
+    if (!ref.mounted) throw Exception("Provider disposed");
     final studyLengthOption = ref.watch(studyLengthProvider);
     final questionTypeOption = ref.watch(studyAskWithProvider);
 
