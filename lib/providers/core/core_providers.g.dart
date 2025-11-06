@@ -68,7 +68,7 @@ final class CloudSyncServiceProvider
         argument: null,
         retry: null,
         name: r'cloudSyncServiceProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -95,7 +95,7 @@ final class CloudSyncServiceProvider
   }
 }
 
-String _$cloudSyncServiceHash() => r'1cde2e1e82648e8cb502429393049e78896f571e';
+String _$cloudSyncServiceHash() => r'9370f6615a4550f0889e4ce33cc6da2a0a99f33f';
 
 @ProviderFor(instanceId)
 const instanceIdProvider = InstanceIdProvider._();

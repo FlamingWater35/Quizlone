@@ -85,7 +85,7 @@ final class MatchControllerProvider
   MatchController create() => MatchController();
 }
 
-String _$matchControllerHash() => r'c88617a8c609c32186dd6244de6c74e3866e779e';
+String _$matchControllerHash() => r'169507aaef1e4f12a4c319ae3bb6f1c896191f79';
 
 abstract class _$MatchController extends $AsyncNotifier<MatchScreenState> {
   FutureOr<MatchScreenState> build();

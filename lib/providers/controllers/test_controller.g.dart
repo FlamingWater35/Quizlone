@@ -33,7 +33,7 @@ final class TestControllerProvider
   TestController create() => TestController();
 }
 
-String _$testControllerHash() => r'accaaf02c4827e69e210f68cc167348d861a25d8';
+String _$testControllerHash() => r'0e31b4b4206090559edce4879fbb36e90f76a890';
 
 abstract class _$TestController extends $AsyncNotifier<TestScreenState> {
   FutureOr<TestScreenState> build();

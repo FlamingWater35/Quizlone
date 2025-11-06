@@ -178,7 +178,7 @@ final class StudyListFormNotifierProvider
 }
 
 String _$studyListFormNotifierHash() =>
-    r'a6785d0bafd028bc46f00061b5f4d24fa8858d73';
+    r'09856857470b4512834eeddf3d63d5783af09fbd';
 
 abstract class _$StudyListFormNotifier extends $Notifier<StudyListFormState> {
   StudyListFormState build();

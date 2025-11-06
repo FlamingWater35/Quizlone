@@ -33,7 +33,7 @@ final class LearnControllerProvider
   LearnController create() => LearnController();
 }
 
-String _$learnControllerHash() => r'2ad01c4a7cf36b3ce55ba67566ad55d518be6017';
+String _$learnControllerHash() => r'c54157646565d2ef5d8e0def1056843dd69ff146';
 
 abstract class _$LearnController extends $AsyncNotifier<LearnModeScreenState> {
   FutureOr<LearnModeScreenState> build();

@@ -42,7 +42,7 @@ final class FlashcardStartWithProvider
 }
 
 String _$flashcardStartWithHash() =>
-    r'f9df087aefccde633584e2674767acce89d8b123';
+    r'50a0d52750de5dad6d2cce5b7787fb737c5035f0';
 
 abstract class _$FlashcardStartWith extends $Notifier<FlashcardStartSide> {
   FlashcardStartSide build();
@@ -95,7 +95,7 @@ final class StudyAskWithProvider
   }
 }
 
-String _$studyAskWithHash() => r'e9f67c620c7980c7f0ca858e4a010839d3cc0a52';
+String _$studyAskWithHash() => r'099a7e3784256dd59034976a11cb8722abfe289e';
 
 abstract class _$StudyAskWith extends $Notifier<StudyQuestionType> {
   StudyQuestionType build();
@@ -149,7 +149,7 @@ final class TestQuestionFormatProvider
 }
 
 String _$testQuestionFormatHash() =>
-    r'7d0a82f5a6126acf80a73cf39c68ac9be63fc175';
+    r'4ac738f1e00f2645371e419517d4cda07c801434';
 
 abstract class _$TestQuestionFormat extends $Notifier<TestFormat> {
   TestFormat build();
@@ -201,7 +201,7 @@ final class StudyLengthProvider extends $NotifierProvider<StudyLength, int?> {
   }
 }
 
-String _$studyLengthHash() => r'10580f8b51ef871c60fd13327b0bb99569bd832f';
+String _$studyLengthHash() => r'634f6b47972ef048c1cfc44ae9c464f3aba393e1';
 
 abstract class _$StudyLength extends $Notifier<int?> {
   int? build();
@@ -255,7 +255,7 @@ final class AllowAnswerSubstringProvider
 }
 
 String _$allowAnswerSubstringHash() =>
-    r'400f1b9b20e4a92db1dd66a85375dbd8b11f1488';
+    r'a747b6b43c25fd23644223ec792064e2a1fe0162';
 
 abstract class _$AllowAnswerSubstring extends $Notifier<bool> {
   bool build();

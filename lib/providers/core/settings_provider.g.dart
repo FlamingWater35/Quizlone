@@ -40,7 +40,7 @@ final class AppThemeProvider extends $NotifierProvider<AppTheme, ThemeMode> {
   }
 }
 
-String _$appThemeHash() => r'a3d87842816f1bd03c31728f831b23d9e2426c55';
+String _$appThemeHash() => r'8477339d5733102319fdd1a021540b3c96044118';
 
 abstract class _$AppTheme extends $Notifier<ThemeMode> {
   ThemeMode build();
@@ -94,7 +94,7 @@ final class AppLanguageNotifierProvider
 }
 
 String _$appLanguageNotifierHash() =>
-    r'10882d80b2ebdce0def49907b75ac8bd946baec8';
+    r'6fe61c120db6dbc8e9973e12500b32cb7b5a7cbe';
 
 abstract class _$AppLanguageNotifier extends $Notifier<AppLanguage> {
   AppLanguage build();
@@ -147,7 +147,7 @@ final class UiScaleNotifierProvider
   }
 }
 
-String _$uiScaleNotifierHash() => r'c9be330a2643239bf400f3439c2a393ed3ab9f35';
+String _$uiScaleNotifierHash() => r'37d7af3ef112331d91aa669858e9634fb59edac4';
 
 abstract class _$UiScaleNotifier extends $Notifier<double> {
   double build();

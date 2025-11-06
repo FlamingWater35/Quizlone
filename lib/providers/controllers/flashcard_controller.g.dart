@@ -34,7 +34,7 @@ final class FlashcardControllerProvider
 }
 
 String _$flashcardControllerHash() =>
-    r'df2a6ac88d92309de3ce3914533dc60dc5229b78';
+    r'c6eece834cd30e474dce0d959aca8c507a365333';
 
 abstract class _$FlashcardController
     extends $AsyncNotifier<FlashcardScreenState> {
