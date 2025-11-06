@@ -6,22 +6,50 @@ part of 'test_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
+@ProviderFor(TestController)
+const testControllerProvider = TestControllerProvider._();
+
+final class TestControllerProvider
+    extends $AsyncNotifierProvider<TestController, TestScreenState> {
+  const TestControllerProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'testControllerProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$testControllerHash();
+
+  @$internal
+  @override
+  TestController create() => TestController();
+}
+
 String _$testControllerHash() => r'accaaf02c4827e69e210f68cc167348d861a25d8';
 
-/// See also [TestController].
-@ProviderFor(TestController)
-final testControllerProvider =
-    AutoDisposeAsyncNotifierProvider<TestController, TestScreenState>.internal(
-      TestController.new,
-      name: r'testControllerProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$testControllerHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-typedef _$TestController = AutoDisposeAsyncNotifier<TestScreenState>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+abstract class _$TestController extends $AsyncNotifier<TestScreenState> {
+  FutureOr<TestScreenState> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<AsyncValue<TestScreenState>, TestScreenState>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<TestScreenState>, TestScreenState>,
+              AsyncValue<TestScreenState>,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}

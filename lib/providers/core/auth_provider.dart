@@ -310,8 +310,8 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
       previous,
       next,
     ) {
-      final wasConnected = previous?.valueOrNull != ConnectivityResult.none;
-      final isConnected = next.valueOrNull != ConnectivityResult.none;
+      final wasConnected = previous?.value != ConnectivityResult.none;
+      final isConnected = next.value != ConnectivityResult.none;
 
       if (!wasConnected && isConnected) {
         _log.info("Connection restored. Triggering a cloud sync.");

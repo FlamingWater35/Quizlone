@@ -30,7 +30,7 @@ class _InputScreenState extends ConsumerState<InputScreen> {
   @override
   void initState() {
     super.initState();
-    final initialFormState = ref.read(studyListFormNotifierProvider);
+    final initialFormState = ref.read(studyListFormProvider);
     _listNameController = TextEditingController(
       text: initialFormState.listNameInput,
     );
@@ -49,8 +49,8 @@ class _InputScreenState extends ConsumerState<InputScreen> {
       });
     }
 
-    final formState = ref.watch(studyListFormNotifierProvider);
-    final formNotifier = ref.read(studyListFormNotifierProvider.notifier);
+    final formState = ref.watch(studyListFormProvider);
+    final formNotifier = ref.read(studyListFormProvider.notifier);
     final textTheme = Theme.of(context).textTheme;
     final t = Translations.of(context);
 

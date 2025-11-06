@@ -6,22 +6,58 @@ part of 'auth_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$authControllerHash() => r'171fca64109b99a65d9fc1125b4668af8b3d14cc';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [AuthController].
 @ProviderFor(AuthController)
-final authControllerProvider =
-    NotifierProvider<AuthController, AsyncValue<User?>>.internal(
-      AuthController.new,
-      name: r'authControllerProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$authControllerHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
+const authControllerProvider = AuthControllerProvider._();
 
-typedef _$AuthController = Notifier<AsyncValue<User?>>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class AuthControllerProvider
+    extends $NotifierProvider<AuthController, AsyncValue<User?>> {
+  const AuthControllerProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'authControllerProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$authControllerHash();
+
+  @$internal
+  @override
+  AuthController create() => AuthController();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(AsyncValue<User?> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<AsyncValue<User?>>(value),
+    );
+  }
+}
+
+String _$authControllerHash() => r'7be2f3051837a339ba7d24ede0f2654fb5a7a014';
+
+abstract class _$AuthController extends $Notifier<AsyncValue<User?>> {
+  AsyncValue<User?> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<AsyncValue<User?>, AsyncValue<User?>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<User?>, AsyncValue<User?>>,
+              AsyncValue<User?>,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}

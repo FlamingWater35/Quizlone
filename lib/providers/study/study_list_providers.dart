@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -19,7 +18,7 @@ class StudyLists extends _$StudyLists {
   StreamSubscription? _subscription;
 
   Future<void> reorder(int oldIndex, int newIndex) async {
-    final currentLists = state.valueOrNull;
+    final currentLists = state.value;
     if (currentLists == null) return;
 
     if (oldIndex < newIndex) {

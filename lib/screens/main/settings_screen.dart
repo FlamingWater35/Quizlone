@@ -27,8 +27,8 @@ class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
   void _showLanguageMenu(BuildContext context, WidgetRef ref) {
-    final languageNotifier = ref.read(appLanguageNotifierProvider.notifier);
-    final currentLanguage = ref.read(appLanguageNotifierProvider);
+    final languageNotifier = ref.read(appLanguageProvider.notifier);
+    final currentLanguage = ref.read(appLanguageProvider);
     final t = Translations.of(context);
     final theme = Theme.of(context);
 
@@ -320,9 +320,9 @@ class SettingsScreen extends ConsumerWidget {
 
     final currentTheme = ref.watch(appThemeProvider);
     final themeNotifier = ref.read(appThemeProvider.notifier);
-    final currentLanguage = ref.watch(appLanguageNotifierProvider);
-    final uiScale = ref.watch(uiScaleNotifierProvider);
-    final uiScaleNotifier = ref.read(uiScaleNotifierProvider.notifier);
+    final currentLanguage = ref.watch(appLanguageProvider);
+    final uiScale = ref.watch(uiScaleProvider);
+    final uiScaleNotifier = ref.read(uiScaleProvider.notifier);
     final colorScheme = Theme.of(context).colorScheme;
     final t = Translations.of(context);
 

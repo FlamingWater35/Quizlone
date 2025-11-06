@@ -6,21 +6,46 @@ part of 'connectivity_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$connectivityHash() => r'aaf927601c166e60a32d3bb3fefa88df723fb7a4';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [connectivity].
 @ProviderFor(connectivity)
-final connectivityProvider = StreamProvider<ConnectivityResult>.internal(
-  connectivity,
-  name: r'connectivityProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$connectivityHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+const connectivityProvider = ConnectivityProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef ConnectivityRef = StreamProviderRef<ConnectivityResult>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class ConnectivityProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<ConnectivityResult>,
+          ConnectivityResult,
+          Stream<ConnectivityResult>
+        >
+    with
+        $FutureModifier<ConnectivityResult>,
+        $StreamProvider<ConnectivityResult> {
+  const ConnectivityProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'connectivityProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$connectivityHash();
+
+  @$internal
+  @override
+  $StreamProviderElement<ConnectivityResult> $createElement(
+    $ProviderPointer pointer,
+  ) => $StreamProviderElement(pointer);
+
+  @override
+  Stream<ConnectivityResult> create(Ref ref) {
+    return connectivity(ref);
+  }
+}
+
+String _$connectivityHash() => r'aaf927601c166e60a32d3bb3fefa88df723fb7a4';

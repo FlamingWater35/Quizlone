@@ -149,7 +149,7 @@ class _StartScreenState extends ConsumerState<StartScreen> {
                 ElevatedButton.icon(
                   icon: const Icon(Icons.add_circle_outline),
                   onPressed: () {
-                    ref.invalidate(studyListFormNotifierProvider);
+                    ref.invalidate(studyListFormProvider);
                     context.router.push(const InputRoute());
                   },
                   label: Text(t.startScreen.createNewList),

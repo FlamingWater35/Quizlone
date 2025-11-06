@@ -6,55 +6,164 @@ part of 'settings_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
+@ProviderFor(AppTheme)
+const appThemeProvider = AppThemeProvider._();
+
+final class AppThemeProvider extends $NotifierProvider<AppTheme, ThemeMode> {
+  const AppThemeProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'appThemeProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$appThemeHash();
+
+  @$internal
+  @override
+  AppTheme create() => AppTheme();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(ThemeMode value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<ThemeMode>(value),
+    );
+  }
+}
+
 String _$appThemeHash() => r'a3d87842816f1bd03c31728f831b23d9e2426c55';
 
-/// See also [AppTheme].
-@ProviderFor(AppTheme)
-final appThemeProvider =
-    AutoDisposeNotifierProvider<AppTheme, ThemeMode>.internal(
-      AppTheme.new,
-      name: r'appThemeProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product') ? null : _$appThemeHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
+abstract class _$AppTheme extends $Notifier<ThemeMode> {
+  ThemeMode build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<ThemeMode, ThemeMode>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<ThemeMode, ThemeMode>,
+              ThemeMode,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
 
-typedef _$AppTheme = AutoDisposeNotifier<ThemeMode>;
+@ProviderFor(AppLanguageNotifier)
+const appLanguageProvider = AppLanguageNotifierProvider._();
+
+final class AppLanguageNotifierProvider
+    extends $NotifierProvider<AppLanguageNotifier, AppLanguage> {
+  const AppLanguageNotifierProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'appLanguageProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$appLanguageNotifierHash();
+
+  @$internal
+  @override
+  AppLanguageNotifier create() => AppLanguageNotifier();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(AppLanguage value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<AppLanguage>(value),
+    );
+  }
+}
+
 String _$appLanguageNotifierHash() =>
     r'10882d80b2ebdce0def49907b75ac8bd946baec8';
 
-/// See also [AppLanguageNotifier].
-@ProviderFor(AppLanguageNotifier)
-final appLanguageNotifierProvider =
-    AutoDisposeNotifierProvider<AppLanguageNotifier, AppLanguage>.internal(
-      AppLanguageNotifier.new,
-      name: r'appLanguageNotifierProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$appLanguageNotifierHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
+abstract class _$AppLanguageNotifier extends $Notifier<AppLanguage> {
+  AppLanguage build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<AppLanguage, AppLanguage>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AppLanguage, AppLanguage>,
+              AppLanguage,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
 
-typedef _$AppLanguageNotifier = AutoDisposeNotifier<AppLanguage>;
+@ProviderFor(UiScaleNotifier)
+const uiScaleProvider = UiScaleNotifierProvider._();
+
+final class UiScaleNotifierProvider
+    extends $NotifierProvider<UiScaleNotifier, double> {
+  const UiScaleNotifierProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'uiScaleProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$uiScaleNotifierHash();
+
+  @$internal
+  @override
+  UiScaleNotifier create() => UiScaleNotifier();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(double value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<double>(value),
+    );
+  }
+}
+
 String _$uiScaleNotifierHash() => r'c9be330a2643239bf400f3439c2a393ed3ab9f35';
 
-/// See also [UiScaleNotifier].
-@ProviderFor(UiScaleNotifier)
-final uiScaleNotifierProvider =
-    AutoDisposeNotifierProvider<UiScaleNotifier, double>.internal(
-      UiScaleNotifier.new,
-      name: r'uiScaleNotifierProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$uiScaleNotifierHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-typedef _$UiScaleNotifier = AutoDisposeNotifier<double>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+abstract class _$UiScaleNotifier extends $Notifier<double> {
+  double build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<double, double>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<double, double>,
+              double,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
