@@ -58,6 +58,7 @@
     "title": "Quizlone",
     "welcome": "Добро пожаловать!",
     "createNewList": "Создать новый список",
+    "openSavedList": "Открыть сохраненный список",
     "loadSavedList": "Загрузить сохраненный список",
     "noLists": "Сохраненных списков пока нет.",
     "termCount(param=count)": {
@@ -93,6 +94,11 @@
       "noValidPairs": "Не найдено действительных пар термин/определение.",
       "saveFailed": "Не удалось сохранить список: $error"
     }
+  },
+  "loadListScreen": {
+    "title": "Загрузить список",
+    "searchHint": "Поиск списка...",
+    "noMatches": "Списки, соответствующие вашему поиску, не найдены."
   },
   "modeSelectionScreen": {
     "title": "Опции и режим",

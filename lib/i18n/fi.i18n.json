@@ -58,6 +58,7 @@
     "title": "Quizlone",
     "welcome": "Tervetuloa!",
     "createNewList": "Luo uusi lista",
+    "openSavedList": "Avaa tallennettu lista",
     "loadSavedList": "Lataa tallennettu lista",
     "noLists": "Listoja ei ole vielä tallennettu.",
     "termCount(param=count)": {
@@ -91,6 +92,11 @@
       "noValidPairs": "Kelvollisia termi/määritelmä-pareja ei löytynyt.",
       "saveFailed": "Listan tallennus epäonnistui: $error"
     }
+  },
+  "loadListScreen": {
+    "title": "Lataa lista",
+    "searchHint": "Etsi listaa...",
+    "noMatches": "Hakuasi vastaavia listoja ei löytynyt."
   },
   "modeSelectionScreen": {
     "title": "Valinnat & Tila",

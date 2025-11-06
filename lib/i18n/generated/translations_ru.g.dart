@@ -44,6 +44,7 @@ class TranslationsRu extends Translations {
 	@override late final _TranslationsAboutScreenRu aboutScreen = _TranslationsAboutScreenRu._(_root);
 	@override late final _TranslationsStartScreenRu startScreen = _TranslationsStartScreenRu._(_root);
 	@override late final _TranslationsInputScreenRu inputScreen = _TranslationsInputScreenRu._(_root);
+	@override late final _TranslationsLoadListScreenRu loadListScreen = _TranslationsLoadListScreenRu._(_root);
 	@override late final _TranslationsModeSelectionScreenRu modeSelectionScreen = _TranslationsModeSelectionScreenRu._(_root);
 	@override late final _TranslationsFlashcardScreenRu flashcardScreen = _TranslationsFlashcardScreenRu._(_root);
 	@override late final _TranslationsLearnScreenRu learnScreen = _TranslationsLearnScreenRu._(_root);
@@ -121,6 +122,7 @@ class _TranslationsStartScreenRu extends TranslationsStartScreenEn {
 	@override String get title => 'Quizlone';
 	@override String get welcome => 'Добро пожаловать!';
 	@override String get createNewList => 'Создать новый список';
+	@override String get openSavedList => 'Открыть сохраненный список';
 	@override String get loadSavedList => 'Загрузить сохраненный список';
 	@override String get noLists => 'Сохраненных списков пока нет.';
 	@override String termCount({required num count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('ru'))(count,
@@ -148,6 +150,18 @@ class _TranslationsInputScreenRu extends TranslationsInputScreenEn {
 	@override String get termsHint => 'Справедливость\nПринцип моральной правоты\nСолнце\nЗвезда, являющаяся центром планетарной системы';
 	@override String get saveList => 'Сохранить список';
 	@override late final _TranslationsInputScreenErrorsRu errors = _TranslationsInputScreenErrorsRu._(_root);
+}
+
+// Path: loadListScreen
+class _TranslationsLoadListScreenRu extends TranslationsLoadListScreenEn {
+	_TranslationsLoadListScreenRu._(TranslationsRu root) : this._root = root, super.internal(root);
+
+	final TranslationsRu _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Загрузить список';
+	@override String get searchHint => 'Поиск списка...';
+	@override String get noMatches => 'Списки, соответствующие вашему поиску, не найдены.';
 }
 
 // Path: modeSelectionScreen
@@ -628,6 +642,7 @@ extension on TranslationsRu {
 			case 'startScreen.title': return 'Quizlone';
 			case 'startScreen.welcome': return 'Добро пожаловать!';
 			case 'startScreen.createNewList': return 'Создать новый список';
+			case 'startScreen.openSavedList': return 'Открыть сохраненный список';
 			case 'startScreen.loadSavedList': return 'Загрузить сохраненный список';
 			case 'startScreen.noLists': return 'Сохраненных списков пока нет.';
 			case 'startScreen.termCount': return ({required num count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('ru'))(count,
@@ -655,6 +670,9 @@ extension on TranslationsRu {
 			case 'inputScreen.errors.emptyTerm': return ({required Object line}) => 'Ошибка формата около строки ${line}. Найден пустой термин или определение.';
 			case 'inputScreen.errors.noValidPairs': return 'Не найдено действительных пар термин/определение.';
 			case 'inputScreen.errors.saveFailed': return ({required Object error}) => 'Не удалось сохранить список: ${error}';
+			case 'loadListScreen.title': return 'Загрузить список';
+			case 'loadListScreen.searchHint': return 'Поиск списка...';
+			case 'loadListScreen.noMatches': return 'Списки, соответствующие вашему поиску, не найдены.';
 			case 'modeSelectionScreen.title': return 'Опции и режим';
 			case 'modeSelectionScreen.noActiveList': return 'Активный учебный список не найден или не удалось загрузить.';
 			case 'modeSelectionScreen.debugActiveId': return ({required Object id}) => 'Отладка: Текущий активный ID: ${id}';

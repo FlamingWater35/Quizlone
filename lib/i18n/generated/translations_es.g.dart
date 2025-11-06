@@ -44,6 +44,7 @@ class TranslationsEs extends Translations {
 	@override late final _TranslationsAboutScreenEs aboutScreen = _TranslationsAboutScreenEs._(_root);
 	@override late final _TranslationsStartScreenEs startScreen = _TranslationsStartScreenEs._(_root);
 	@override late final _TranslationsInputScreenEs inputScreen = _TranslationsInputScreenEs._(_root);
+	@override late final _TranslationsLoadListScreenEs loadListScreen = _TranslationsLoadListScreenEs._(_root);
 	@override late final _TranslationsModeSelectionScreenEs modeSelectionScreen = _TranslationsModeSelectionScreenEs._(_root);
 	@override late final _TranslationsFlashcardScreenEs flashcardScreen = _TranslationsFlashcardScreenEs._(_root);
 	@override late final _TranslationsLearnScreenEs learnScreen = _TranslationsLearnScreenEs._(_root);
@@ -121,6 +122,7 @@ class _TranslationsStartScreenEs extends TranslationsStartScreenEn {
 	@override String get title => 'Quizlone';
 	@override String get welcome => '¡Bienvenido!';
 	@override String get createNewList => 'Crear nueva lista';
+	@override String get openSavedList => 'Abrir lista guardada';
 	@override String get loadSavedList => 'Cargar lista guardada';
 	@override String get noLists => 'Aún no hay listas guardadas.';
 	@override String termCount({required num count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('es'))(count,
@@ -146,6 +148,18 @@ class _TranslationsInputScreenEs extends TranslationsInputScreenEn {
 	@override String get termsHint => 'Justicia\nEl principio de rectitud moral\nSol\nUna estrella que es el centro de un sistema planetario';
 	@override String get saveList => 'Guardar lista';
 	@override late final _TranslationsInputScreenErrorsEs errors = _TranslationsInputScreenErrorsEs._(_root);
+}
+
+// Path: loadListScreen
+class _TranslationsLoadListScreenEs extends TranslationsLoadListScreenEn {
+	_TranslationsLoadListScreenEs._(TranslationsEs root) : this._root = root, super.internal(root);
+
+	final TranslationsEs _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Cargar lista';
+	@override String get searchHint => 'Buscar una lista...';
+	@override String get noMatches => 'Ninguna lista coincide con tu búsqueda.';
 }
 
 // Path: modeSelectionScreen
@@ -624,6 +638,7 @@ extension on TranslationsEs {
 			case 'startScreen.title': return 'Quizlone';
 			case 'startScreen.welcome': return '¡Bienvenido!';
 			case 'startScreen.createNewList': return 'Crear nueva lista';
+			case 'startScreen.openSavedList': return 'Abrir lista guardada';
 			case 'startScreen.loadSavedList': return 'Cargar lista guardada';
 			case 'startScreen.noLists': return 'Aún no hay listas guardadas.';
 			case 'startScreen.termCount': return ({required num count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('es'))(count,
@@ -649,6 +664,9 @@ extension on TranslationsEs {
 			case 'inputScreen.errors.emptyTerm': return ({required Object line}) => 'Error de formato cerca de la línea ${line}. Se encontró un término o definición vacíos.';
 			case 'inputScreen.errors.noValidPairs': return 'No se encontraron pares de término/definición válidos.';
 			case 'inputScreen.errors.saveFailed': return ({required Object error}) => 'No se pudo guardar la lista: ${error}';
+			case 'loadListScreen.title': return 'Cargar lista';
+			case 'loadListScreen.searchHint': return 'Buscar una lista...';
+			case 'loadListScreen.noMatches': return 'Ninguna lista coincide con tu búsqueda.';
 			case 'modeSelectionScreen.title': return 'Opciones y Modo';
 			case 'modeSelectionScreen.noActiveList': return 'No se encontró una lista de estudio activa o no se pudo cargar la lista.';
 			case 'modeSelectionScreen.debugActiveId': return ({required Object id}) => 'Depuración: El ID activo actual es ${id}';

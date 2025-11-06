@@ -48,6 +48,7 @@ class Translations implements BaseTranslations<AppLocale, Translations> {
 	late final TranslationsAboutScreenEn aboutScreen = TranslationsAboutScreenEn._(_root);
 	late final TranslationsStartScreenEn startScreen = TranslationsStartScreenEn._(_root);
 	late final TranslationsInputScreenEn inputScreen = TranslationsInputScreenEn._(_root);
+	late final TranslationsLoadListScreenEn loadListScreen = TranslationsLoadListScreenEn._(_root);
 	late final TranslationsModeSelectionScreenEn modeSelectionScreen = TranslationsModeSelectionScreenEn._(_root);
 	late final TranslationsFlashcardScreenEn flashcardScreen = TranslationsFlashcardScreenEn._(_root);
 	late final TranslationsLearnScreenEn learnScreen = TranslationsLearnScreenEn._(_root);
@@ -184,6 +185,9 @@ class TranslationsStartScreenEn {
 	/// en: 'Create New List'
 	String get createNewList => 'Create New List';
 
+	/// en: 'Open Saved List'
+	String get openSavedList => 'Open Saved List';
+
 	/// en: 'Load Saved List'
 	String get loadSavedList => 'Load Saved List';
 
@@ -230,6 +234,24 @@ class TranslationsInputScreenEn {
 	String get saveList => 'Save List';
 
 	late final TranslationsInputScreenErrorsEn errors = TranslationsInputScreenErrorsEn._(_root);
+}
+
+// Path: loadListScreen
+class TranslationsLoadListScreenEn {
+	TranslationsLoadListScreenEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Load List'
+	String get title => 'Load List';
+
+	/// en: 'Search for a list...'
+	String get searchHint => 'Search for a list...';
+
+	/// en: 'No lists match your search.'
+	String get noMatches => 'No lists match your search.';
 }
 
 // Path: modeSelectionScreen
@@ -1043,6 +1065,7 @@ extension on Translations {
 			case 'startScreen.title': return 'Quizlone';
 			case 'startScreen.welcome': return 'Welcome!';
 			case 'startScreen.createNewList': return 'Create New List';
+			case 'startScreen.openSavedList': return 'Open Saved List';
 			case 'startScreen.loadSavedList': return 'Load Saved List';
 			case 'startScreen.noLists': return 'No lists saved yet.';
 			case 'startScreen.termCount': return ({required num count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(count,
@@ -1068,6 +1091,9 @@ extension on Translations {
 			case 'inputScreen.errors.emptyTerm': return ({required Object line}) => 'Format error near line ${line}. Empty term or definition found.';
 			case 'inputScreen.errors.noValidPairs': return 'No valid term/definition pairs found.';
 			case 'inputScreen.errors.saveFailed': return ({required Object error}) => 'Failed to save list: ${error}';
+			case 'loadListScreen.title': return 'Load List';
+			case 'loadListScreen.searchHint': return 'Search for a list...';
+			case 'loadListScreen.noMatches': return 'No lists match your search.';
 			case 'modeSelectionScreen.title': return 'Options & Mode';
 			case 'modeSelectionScreen.noActiveList': return 'No active study list found or list could not be loaded.';
 			case 'modeSelectionScreen.debugActiveId': return ({required Object id}) => 'Debug: Current Active ID is ${id}';

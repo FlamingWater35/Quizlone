@@ -42,6 +42,7 @@ class TranslationsFi implements Translations {
 	@override late final _TranslationsAboutScreenFi aboutScreen = _TranslationsAboutScreenFi._(_root);
 	@override late final _TranslationsStartScreenFi startScreen = _TranslationsStartScreenFi._(_root);
 	@override late final _TranslationsInputScreenFi inputScreen = _TranslationsInputScreenFi._(_root);
+	@override late final _TranslationsLoadListScreenFi loadListScreen = _TranslationsLoadListScreenFi._(_root);
 	@override late final _TranslationsModeSelectionScreenFi modeSelectionScreen = _TranslationsModeSelectionScreenFi._(_root);
 	@override late final _TranslationsFlashcardScreenFi flashcardScreen = _TranslationsFlashcardScreenFi._(_root);
 	@override late final _TranslationsLearnScreenFi learnScreen = _TranslationsLearnScreenFi._(_root);
@@ -119,6 +120,7 @@ class _TranslationsStartScreenFi implements TranslationsStartScreenEn {
 	@override String get title => 'Quizlone';
 	@override String get welcome => 'Tervetuloa!';
 	@override String get createNewList => 'Luo uusi lista';
+	@override String get openSavedList => 'Avaa tallennettu lista';
 	@override String get loadSavedList => 'Lataa tallennettu lista';
 	@override String get noLists => 'Listoja ei ole vielä tallennettu.';
 	@override String termCount({required num count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('fi'))(count,
@@ -144,6 +146,18 @@ class _TranslationsInputScreenFi implements TranslationsInputScreenEn {
 	@override String get termsHint => 'Oikeus\nMoraalisen oikeudenmukaisuuden periaate\nAurinko\nTähti, joka on planeettajärjestelmän keskus';
 	@override String get saveList => 'Tallenna lista';
 	@override late final _TranslationsInputScreenErrorsFi errors = _TranslationsInputScreenErrorsFi._(_root);
+}
+
+// Path: loadListScreen
+class _TranslationsLoadListScreenFi implements TranslationsLoadListScreenEn {
+	_TranslationsLoadListScreenFi._(this._root);
+
+	final TranslationsFi _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Lataa lista';
+	@override String get searchHint => 'Etsi listaa...';
+	@override String get noMatches => 'Hakuasi vastaavia listoja ei löytynyt.';
 }
 
 // Path: modeSelectionScreen
@@ -622,6 +636,7 @@ extension on TranslationsFi {
 			case 'startScreen.title': return 'Quizlone';
 			case 'startScreen.welcome': return 'Tervetuloa!';
 			case 'startScreen.createNewList': return 'Luo uusi lista';
+			case 'startScreen.openSavedList': return 'Avaa tallennettu lista';
 			case 'startScreen.loadSavedList': return 'Lataa tallennettu lista';
 			case 'startScreen.noLists': return 'Listoja ei ole vielä tallennettu.';
 			case 'startScreen.termCount': return ({required num count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('fi'))(count,
@@ -647,6 +662,9 @@ extension on TranslationsFi {
 			case 'inputScreen.errors.emptyTerm': return ({required Object line}) => 'Muotovirhe rivin ${line} lähellä. Löydettiin tyhjä termi tai määritelmä.';
 			case 'inputScreen.errors.noValidPairs': return 'Kelvollisia termi/määritelmä-pareja ei löytynyt.';
 			case 'inputScreen.errors.saveFailed': return ({required Object error}) => 'Listan tallennus epäonnistui: ${error}';
+			case 'loadListScreen.title': return 'Lataa lista';
+			case 'loadListScreen.searchHint': return 'Etsi listaa...';
+			case 'loadListScreen.noMatches': return 'Hakuasi vastaavia listoja ei löytynyt.';
 			case 'modeSelectionScreen.title': return 'Valinnat & Tila';
 			case 'modeSelectionScreen.noActiveList': return 'Aktiivista opiskelulistaa ei löytynyt tai listaa ei voitu ladata.';
 			case 'modeSelectionScreen.debugActiveId': return ({required Object id}) => 'Debug: Nykyinen aktiivinen ID on ${id}';

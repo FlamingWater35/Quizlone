@@ -58,6 +58,7 @@
     "title": "Quizlone",
     "welcome": "¡Bienvenido!",
     "createNewList": "Crear nueva lista",
+    "openSavedList": "Abrir lista guardada",
     "loadSavedList": "Cargar lista guardada",
     "noLists": "Aún no hay listas guardadas.",
     "termCount(param=count)": {
@@ -91,6 +92,11 @@
       "noValidPairs": "No se encontraron pares de término/definición válidos.",
       "saveFailed": "No se pudo guardar la lista: $error"
     }
+  },
+  "loadListScreen": {
+    "title": "Cargar lista",
+    "searchHint": "Buscar una lista...",
+    "noMatches": "Ninguna lista coincide con tu búsqueda."
   },
   "modeSelectionScreen": {
     "title": "Opciones y Modo",

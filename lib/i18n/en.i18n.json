@@ -58,6 +58,7 @@
     "title": "Quizlone",
     "welcome": "Welcome!",
     "createNewList": "Create New List",
+    "openSavedList": "Open Saved List",
     "loadSavedList": "Load Saved List",
     "noLists": "No lists saved yet.",
     "termCount(param=count)": {
@@ -91,6 +92,11 @@
       "noValidPairs": "No valid term/definition pairs found.",
       "saveFailed": "Failed to save list: $error"
     }
+  },
+  "loadListScreen": {
+    "title": "Load List",
+    "searchHint": "Search for a list...",
+    "noMatches": "No lists match your search."
   },
   "modeSelectionScreen": {
     "title": "Options & Mode",
