@@ -1,8 +1,11 @@
 # Quizlone
 
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/FlamingWater35/Quizlone)](https://github.com/FlamingWater35/Quizlone/releases)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 A modern, cross-platform flashcard and study application built with Flutter. Quizlone allows you to create, manage, and study your own term lists using multiple learning modes. It's designed to be simple, fast, and available on any device, with intelligent cloud sync to merge your progress across devices.
 
-## Try it out easily at the website
+## Get started at the website
 
 <https://flamingwater35.github.io/Quizlone/>
 
@@ -57,7 +60,7 @@ A modern, cross-platform flashcard and study application built with Flutter. Qui
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Building from Source
 
 To get a local copy up and running, follow these simple steps.
 
