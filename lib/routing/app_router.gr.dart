@@ -91,6 +91,22 @@ class LearnRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [LoadListScreen]
+class LoadListRoute extends PageRouteInfo<void> {
+  const LoadListRoute({List<PageRouteInfo>? children})
+    : super(LoadListRoute.name, initialChildren: children);
+
+  static const String name = 'LoadListRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const LoadListScreen();
+    },
+  );
+}
+
+/// generated route for
 /// [MatchLeaderboardScreen]
 class MatchLeaderboardRoute extends PageRouteInfo<MatchLeaderboardRouteArgs> {
   MatchLeaderboardRoute({

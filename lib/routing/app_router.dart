@@ -12,6 +12,7 @@ import '../screens/modes/match_leaderboard_screen.dart';
 import '../screens/modes/match_screen.dart';
 import '../screens/modes/test_screen.dart';
 import '../screens/util/input_screen.dart';
+import '../screens/util/load_list_screen.dart';
 import '../screens/util/results_screen.dart';
 import '../screens/util/start_screen.dart';
 
@@ -22,6 +23,7 @@ class AppRouter extends RootStackRouter {
   @override
   List<AutoRoute> get routes => [
     AutoRoute(page: StartRoute.page, initial: true),
+    AutoRoute(page: LoadListRoute.page),
     CustomRoute(
       page: InputRoute.page,
       transitionsBuilder: buildSlideDownTransition,
