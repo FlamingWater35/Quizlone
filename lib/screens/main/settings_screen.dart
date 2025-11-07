@@ -11,6 +11,7 @@ import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
 import 'package:quizlone/routing/app_router.dart';
+import 'package:quizlone/services/migration_service.dart';
 import 'package:quizlone/widgets/error_snackbar.dart';
 
 import '../../models/settings_app_data.dart';
@@ -45,47 +46,44 @@ class SettingsScreen extends ConsumerWidget {
             child: SimpleDialog(
               title: Text(t.settingsScreen.languageDialogTitle),
               contentPadding: const EdgeInsets.all(8.0),
-              children:
-                  AppLanguage.values.map((lang) {
-                    final isSelected = lang == currentLanguage;
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 4.0,
-                        horizontal: 8.0,
+              children: AppLanguage.values.map((lang) {
+                final isSelected = lang == currentLanguage;
+                return Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 4.0,
+                    horizontal: 8.0,
+                  ),
+                  child: Card(
+                    margin: EdgeInsets.zero,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: ListTile(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Card(
-                        margin: EdgeInsets.zero,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: ListTile(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          title: Text(
-                            lang.getDisplayName(t),
-                            style: TextStyle(
-                              fontWeight:
-                                  isSelected
-                                      ? FontWeight.bold
-                                      : FontWeight.normal,
-                            ),
-                          ),
-                          trailing:
-                              isSelected
-                                  ? Icon(
-                                    Icons.check_circle,
-                                    color: theme.colorScheme.primary,
-                                  )
-                                  : null,
-                          onTap: () {
-                            languageNotifier.setLanguage(lang);
-                            Navigator.of(context).pop();
-                          },
+                      title: Text(
+                        lang.getDisplayName(t),
+                        style: TextStyle(
+                          fontWeight: isSelected
+                              ? FontWeight.bold
+                              : FontWeight.normal,
                         ),
                       ),
-                    );
-                  }).toList(),
+                      trailing: isSelected
+                          ? Icon(
+                              Icons.check_circle,
+                              color: theme.colorScheme.primary,
+                            )
+                          : null,
+                      onTap: () {
+                        languageNotifier.setLanguage(lang);
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ),
+                );
+              }).toList(),
             ),
           ),
         );
@@ -110,6 +108,7 @@ class SettingsScreen extends ConsumerWidget {
     final lists = await dbService.getAllStudyLists();
     final records = await dbService.getAllMatchRecords();
     final order = dbService.getStudyListOrder();
+    final groups = await dbService.getAllStudyGroups();
 
     if (lists.isEmpty && records.isEmpty) {
       scaffoldMessenger.showSnackBar(
@@ -122,6 +121,7 @@ class SettingsScreen extends ConsumerWidget {
       studyLists: lists,
       matchRecords: records,
       studyListOrder: order,
+      studyGroups: groups,
     );
     final jsonString = jsonEncode(appData.toJson());
     final bytes = utf8.encode(jsonString);
@@ -174,21 +174,20 @@ class SettingsScreen extends ConsumerWidget {
 
     final bool? confirm = await showDialog<bool>(
       context: context,
-      builder:
-          (context) => AlertDialog(
-            title: Text(t.settingsScreen.importDialog.title),
-            content: Text(t.settingsScreen.importDialog.content),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: Text(t.general.cancel),
-              ),
-              FilledButton(
-                onPressed: () => Navigator.of(context).pop(true),
-                child: Text(t.settingsScreen.importDialog.import),
-              ),
-            ],
+      builder: (context) => AlertDialog(
+        title: Text(t.settingsScreen.importDialog.title),
+        content: Text(t.settingsScreen.importDialog.content),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text(t.general.cancel),
           ),
+          FilledButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text(t.settingsScreen.importDialog.import),
+          ),
+        ],
+      ),
     );
 
     if (confirm != true) return;
@@ -223,8 +222,9 @@ class SettingsScreen extends ConsumerWidget {
         if (jsonData is Map<String, dynamic>) {
           appData = AppData.fromJson(jsonData);
         } else if (jsonData is List<dynamic>) {
-          final studyLists =
-              jsonData.map((json) => StudyList.fromJson(json)).toList();
+          final studyLists = jsonData
+              .map((json) => StudyList.fromJson(json))
+              .toList();
           appData = AppData(
             studyLists: studyLists,
             matchRecords: [],
@@ -235,6 +235,7 @@ class SettingsScreen extends ConsumerWidget {
         }
 
         await dbService.applyCloudData(appData);
+        await runMigrations();
         await dbService.triggerCloudUpload();
 
         ref.invalidate(studyListsProvider);
@@ -269,25 +270,24 @@ class SettingsScreen extends ConsumerWidget {
 
     final bool? confirm = await showDialog<bool>(
       context: context,
-      builder:
-          (context) => AlertDialog(
-            title: Text(t.settingsScreen.deleteDialog.title),
-            content: Text(t.settingsScreen.deleteDialog.content),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: Text(t.general.cancel),
-              ),
-              FilledButton(
-                onPressed: () => Navigator.of(context).pop(true),
-                style: FilledButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.error,
-                  foregroundColor: Theme.of(context).colorScheme.onError,
-                ),
-                child: Text(t.settingsScreen.deleteDialog.deleteAll),
-              ),
-            ],
+      builder: (context) => AlertDialog(
+        title: Text(t.settingsScreen.deleteDialog.title),
+        content: Text(t.settingsScreen.deleteDialog.content),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text(t.general.cancel),
           ),
+          FilledButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            style: FilledButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.error,
+              foregroundColor: Theme.of(context).colorScheme.onError,
+            ),
+            child: Text(t.settingsScreen.deleteDialog.deleteAll),
+          ),
+        ],
+      ),
     );
 
     if (confirm == true) {
@@ -406,10 +406,9 @@ class SettingsScreen extends ConsumerWidget {
                           ),
                           const SizedBox(width: 8),
                           OutlinedButton(
-                            onPressed:
-                                uiScale == 1.0
-                                    ? null
-                                    : () => uiScaleNotifier.setScale(1.0),
+                            onPressed: uiScale == 1.0
+                                ? null
+                                : () => uiScaleNotifier.setScale(1.0),
                             child: Text(t.general.reset),
                           ),
                         ],
