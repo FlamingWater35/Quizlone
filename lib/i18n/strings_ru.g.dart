@@ -175,6 +175,8 @@ class _TranslationsLoadListScreenRu implements TranslationsLoadListScreenEn {
 	@override late final _TranslationsLoadListScreenMoveToGroupDialogRu moveToGroupDialog = _TranslationsLoadListScreenMoveToGroupDialogRu._(_root);
 	@override late final _TranslationsLoadListScreenDeleteGroupDialogRu deleteGroupDialog = _TranslationsLoadListScreenDeleteGroupDialogRu._(_root);
 	@override late final _TranslationsLoadListScreenDeleteListsDialogRu deleteListsDialog = _TranslationsLoadListScreenDeleteListsDialogRu._(_root);
+	@override String get sortLabel => 'Сортировать:';
+	@override late final _TranslationsLoadListScreenSortOptionsRu sortOptions = _TranslationsLoadListScreenSortOptionsRu._(_root);
 }
 
 // Path: modeSelectionScreen
@@ -514,6 +516,20 @@ class _TranslationsLoadListScreenDeleteListsDialogRu implements TranslationsLoad
 	);
 }
 
+// Path: loadListScreen.sortOptions
+class _TranslationsLoadListScreenSortOptionsRu implements TranslationsLoadListScreenSortOptionsEn {
+	_TranslationsLoadListScreenSortOptionsRu._(this._root);
+
+	final TranslationsRu _root; // ignore: unused_field
+
+	// Translations
+	@override String get none => 'По умолчанию';
+	@override String get name => 'Название';
+	@override String get lastOpened => 'Дата открытия';
+	@override String get createdAt => 'Дата создания';
+	@override String get listLength => 'Размер';
+}
+
 // Path: modeSelectionScreen.errors
 class _TranslationsModeSelectionScreenErrorsRu implements TranslationsModeSelectionScreenErrorsEn {
 	_TranslationsModeSelectionScreenErrorsRu._(this._root);
@@ -779,6 +795,12 @@ extension on TranslationsRu {
 				one: 'Это действие необратимо.',
 				other: 'Это действие необратимо.',
 			);
+			case 'loadListScreen.sortLabel': return 'Сортировать:';
+			case 'loadListScreen.sortOptions.none': return 'По умолчанию';
+			case 'loadListScreen.sortOptions.name': return 'Название';
+			case 'loadListScreen.sortOptions.lastOpened': return 'Дата открытия';
+			case 'loadListScreen.sortOptions.createdAt': return 'Дата создания';
+			case 'loadListScreen.sortOptions.listLength': return 'Размер';
 			case 'modeSelectionScreen.title': return 'Опции и режим';
 			case 'modeSelectionScreen.noActiveList': return 'Активный учебный список не найден или не удалось загрузить.';
 			case 'modeSelectionScreen.debugActiveId': return ({required Object id}) => 'Отладка: Текущий активный ID: ${id}';

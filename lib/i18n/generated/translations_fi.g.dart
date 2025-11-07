@@ -173,6 +173,8 @@ class _TranslationsLoadListScreenFi extends TranslationsLoadListScreenEn {
 	@override late final _TranslationsLoadListScreenMoveToGroupDialogFi moveToGroupDialog = _TranslationsLoadListScreenMoveToGroupDialogFi._(_root);
 	@override late final _TranslationsLoadListScreenDeleteGroupDialogFi deleteGroupDialog = _TranslationsLoadListScreenDeleteGroupDialogFi._(_root);
 	@override late final _TranslationsLoadListScreenDeleteListsDialogFi deleteListsDialog = _TranslationsLoadListScreenDeleteListsDialogFi._(_root);
+	@override String get sortLabel => 'Lajittele:';
+	@override late final _TranslationsLoadListScreenSortOptionsFi sortOptions = _TranslationsLoadListScreenSortOptionsFi._(_root);
 }
 
 // Path: modeSelectionScreen
@@ -508,6 +510,20 @@ class _TranslationsLoadListScreenDeleteListsDialogFi extends TranslationsLoadLis
 	);
 }
 
+// Path: loadListScreen.sortOptions
+class _TranslationsLoadListScreenSortOptionsFi extends TranslationsLoadListScreenSortOptionsEn {
+	_TranslationsLoadListScreenSortOptionsFi._(TranslationsFi root) : this._root = root, super.internal(root);
+
+	final TranslationsFi _root; // ignore: unused_field
+
+	// Translations
+	@override String get none => 'Oletus';
+	@override String get name => 'Nimi';
+	@override String get lastOpened => 'Viimeksi avattu';
+	@override String get createdAt => 'Luontipäivä';
+	@override String get listLength => 'Pituus';
+}
+
 // Path: modeSelectionScreen.errors
 class _TranslationsModeSelectionScreenErrorsFi extends TranslationsModeSelectionScreenErrorsEn {
 	_TranslationsModeSelectionScreenErrorsFi._(TranslationsFi root) : this._root = root, super.internal(root);
@@ -763,6 +779,12 @@ extension on TranslationsFi {
 				one: 'Tämä toiminto on pysyvä, eikä sitä voi kumota.',
 				other: 'Tämä toiminto on pysyvä, eikä sitä voi kumota.',
 			);
+			case 'loadListScreen.sortLabel': return 'Lajittele:';
+			case 'loadListScreen.sortOptions.none': return 'Oletus';
+			case 'loadListScreen.sortOptions.name': return 'Nimi';
+			case 'loadListScreen.sortOptions.lastOpened': return 'Viimeksi avattu';
+			case 'loadListScreen.sortOptions.createdAt': return 'Luontipäivä';
+			case 'loadListScreen.sortOptions.listLength': return 'Pituus';
 			case 'modeSelectionScreen.title': return 'Valinnat & Tila';
 			case 'modeSelectionScreen.noActiveList': return 'Aktiivista opiskelulistaa ei löytynyt tai listaa ei voitu ladata.';
 			case 'modeSelectionScreen.debugActiveId': return ({required Object id}) => 'Debug: Nykyinen aktiivinen ID on ${id}';

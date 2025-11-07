@@ -140,6 +140,14 @@
         "one": "Это действие необратимо.",
         "other": "Это действие необратимо."
       }
+    },
+    "sortLabel": "Сортировать:",
+    "sortOptions": {
+      "none": "По умолчанию",
+      "name": "Название",
+      "lastOpened": "Дата открытия",
+      "createdAt": "Дата создания",
+      "listLength": "Размер"
     }
   },
   "modeSelectionScreen": {

@@ -132,6 +132,14 @@
         "one": "Esta acción es permanente y no se puede deshacer.",
         "other": "Esta acción es permanente y no se puede deshacer."
       }
+    },
+    "sortLabel": "Ordenar por:",
+    "sortOptions": {
+      "none": "Ninguno",
+      "name": "Nombre",
+      "lastOpened": "Recién abierto",
+      "createdAt": "Fecha de creación",
+      "listLength": "Longitud"
     }
   },
   "modeSelectionScreen": {

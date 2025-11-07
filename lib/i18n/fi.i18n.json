@@ -132,6 +132,14 @@
         "one": "Tämä toiminto on pysyvä, eikä sitä voi kumota.",
         "other": "Tämä toiminto on pysyvä, eikä sitä voi kumota."
       }
+    },
+    "sortLabel": "Lajittele:",
+    "sortOptions": {
+      "none": "Oletus",
+      "name": "Nimi",
+      "lastOpened": "Viimeksi avattu",
+      "createdAt": "Luontipäivä",
+      "listLength": "Pituus"
     }
   },
   "modeSelectionScreen": {

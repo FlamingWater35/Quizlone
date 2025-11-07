@@ -278,6 +278,11 @@ class TranslationsLoadListScreenEn {
 	late final TranslationsLoadListScreenMoveToGroupDialogEn moveToGroupDialog = TranslationsLoadListScreenMoveToGroupDialogEn._(_root);
 	late final TranslationsLoadListScreenDeleteGroupDialogEn deleteGroupDialog = TranslationsLoadListScreenDeleteGroupDialogEn._(_root);
 	late final TranslationsLoadListScreenDeleteListsDialogEn deleteListsDialog = TranslationsLoadListScreenDeleteListsDialogEn._(_root);
+
+	/// en: 'Sort:'
+	String get sortLabel => 'Sort:';
+
+	late final TranslationsLoadListScreenSortOptionsEn sortOptions = TranslationsLoadListScreenSortOptionsEn._(_root);
 }
 
 // Path: modeSelectionScreen
@@ -884,6 +889,30 @@ class TranslationsLoadListScreenDeleteListsDialogEn {
 	);
 }
 
+// Path: loadListScreen.sortOptions
+class TranslationsLoadListScreenSortOptionsEn {
+	TranslationsLoadListScreenSortOptionsEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'None'
+	String get none => 'None';
+
+	/// en: 'Name'
+	String get name => 'Name';
+
+	/// en: 'Last Opened'
+	String get lastOpened => 'Last Opened';
+
+	/// en: 'Created'
+	String get createdAt => 'Created';
+
+	/// en: 'Length'
+	String get listLength => 'Length';
+}
+
 // Path: modeSelectionScreen.errors
 class TranslationsModeSelectionScreenErrorsEn {
 	TranslationsModeSelectionScreenErrorsEn._(this._root);
@@ -1223,6 +1252,12 @@ extension on Translations {
 				one: 'This action is permanent and cannot be undone.',
 				other: 'This action is permanent and cannot be undone.',
 			);
+			case 'loadListScreen.sortLabel': return 'Sort:';
+			case 'loadListScreen.sortOptions.none': return 'None';
+			case 'loadListScreen.sortOptions.name': return 'Name';
+			case 'loadListScreen.sortOptions.lastOpened': return 'Last Opened';
+			case 'loadListScreen.sortOptions.createdAt': return 'Created';
+			case 'loadListScreen.sortOptions.listLength': return 'Length';
 			case 'modeSelectionScreen.title': return 'Options & Mode';
 			case 'modeSelectionScreen.noActiveList': return 'No active study list found or list could not be loaded.';
 			case 'modeSelectionScreen.debugActiveId': return ({required Object id}) => 'Debug: Current Active ID is ${id}';

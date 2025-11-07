@@ -171,6 +171,8 @@ class _TranslationsLoadListScreenEs implements TranslationsLoadListScreenEn {
 	@override late final _TranslationsLoadListScreenMoveToGroupDialogEs moveToGroupDialog = _TranslationsLoadListScreenMoveToGroupDialogEs._(_root);
 	@override late final _TranslationsLoadListScreenDeleteGroupDialogEs deleteGroupDialog = _TranslationsLoadListScreenDeleteGroupDialogEs._(_root);
 	@override late final _TranslationsLoadListScreenDeleteListsDialogEs deleteListsDialog = _TranslationsLoadListScreenDeleteListsDialogEs._(_root);
+	@override String get sortLabel => 'Ordenar por:';
+	@override late final _TranslationsLoadListScreenSortOptionsEs sortOptions = _TranslationsLoadListScreenSortOptionsEs._(_root);
 }
 
 // Path: modeSelectionScreen
@@ -506,6 +508,20 @@ class _TranslationsLoadListScreenDeleteListsDialogEs implements TranslationsLoad
 	);
 }
 
+// Path: loadListScreen.sortOptions
+class _TranslationsLoadListScreenSortOptionsEs implements TranslationsLoadListScreenSortOptionsEn {
+	_TranslationsLoadListScreenSortOptionsEs._(this._root);
+
+	final TranslationsEs _root; // ignore: unused_field
+
+	// Translations
+	@override String get none => 'Ninguno';
+	@override String get name => 'Nombre';
+	@override String get lastOpened => 'Recién abierto';
+	@override String get createdAt => 'Fecha de creación';
+	@override String get listLength => 'Longitud';
+}
+
 // Path: modeSelectionScreen.errors
 class _TranslationsModeSelectionScreenErrorsEs implements TranslationsModeSelectionScreenErrorsEn {
 	_TranslationsModeSelectionScreenErrorsEs._(this._root);
@@ -761,6 +777,12 @@ extension on TranslationsEs {
 				one: 'Esta acción es permanente y no se puede deshacer.',
 				other: 'Esta acción es permanente y no se puede deshacer.',
 			);
+			case 'loadListScreen.sortLabel': return 'Ordenar por:';
+			case 'loadListScreen.sortOptions.none': return 'Ninguno';
+			case 'loadListScreen.sortOptions.name': return 'Nombre';
+			case 'loadListScreen.sortOptions.lastOpened': return 'Recién abierto';
+			case 'loadListScreen.sortOptions.createdAt': return 'Fecha de creación';
+			case 'loadListScreen.sortOptions.listLength': return 'Longitud';
 			case 'modeSelectionScreen.title': return 'Opciones y Modo';
 			case 'modeSelectionScreen.noActiveList': return 'No se encontró una lista de estudio activa o no se pudo cargar la lista.';
 			case 'modeSelectionScreen.debugActiveId': return ({required Object id}) => 'Depuración: El ID activo actual es ${id}';

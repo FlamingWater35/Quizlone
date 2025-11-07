@@ -132,6 +132,14 @@
         "one": "This action is permanent and cannot be undone.",
         "other": "This action is permanent and cannot be undone."
       }
+    },
+    "sortLabel": "Sort:",
+    "sortOptions": {
+      "none": "None",
+      "name": "Name",
+      "lastOpened": "Last Opened",
+      "createdAt": "Created",
+      "listLength": "Length"
     }
   },
   "modeSelectionScreen": {
