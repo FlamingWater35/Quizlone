@@ -670,19 +670,23 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
                               t.loadListScreen.sortLabel,
                               style: Theme.of(context).textTheme.labelLarge,
                             ),
-                            const SizedBox(width: 8),
-                            DropdownButton<_SortOption>(
-                              underline: const SizedBox.shrink(),
-                              value: _currentSort,
-                              items: _SortOption.values
-                                  .map(
-                                    (option) => DropdownMenuItem(
-                                      value: option,
-                                      child: Text(option.getDisplayName(t)),
-                                    ),
-                                  )
-                                  .toList(),
-                              onChanged: _onSortChanged,
+                            DropdownButtonHideUnderline(
+                              child: DropdownButton<_SortOption>(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                ),
+                                focusColor: Colors.transparent,
+                                value: _currentSort,
+                                items: _SortOption.values
+                                    .map(
+                                      (option) => DropdownMenuItem(
+                                        value: option,
+                                        child: Text(option.getDisplayName(t)),
+                                      ),
+                                    )
+                                    .toList(),
+                                onChanged: _onSortChanged,
+                              ),
                             ),
                             if (_currentSort != _SortOption.custom)
                               IconButton(
