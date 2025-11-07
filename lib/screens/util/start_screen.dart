@@ -35,7 +35,7 @@ class StartScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: 60),
                 ElevatedButton.icon(
-                  icon: const Icon(Icons.add_circle_outline),
+                  icon: const Icon(Icons.add_circle_outline, size: 28),
                   onPressed: () {
                     ref.invalidate(studyListFormProvider);
                     context.router.push(const InputRoute());
@@ -48,7 +48,7 @@ class StartScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton.icon(
-                  icon: const Icon(Icons.folder_open_outlined),
+                  icon: const Icon(Icons.folder_open_outlined, size: 28),
                   onPressed: () {
                     context.router.push(const LoadListRoute());
                   },
