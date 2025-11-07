@@ -394,6 +394,7 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
       ..sort((a, b) => a.name.compareTo(b.name));
 
     return ListView(
+      padding: const EdgeInsets.symmetric(horizontal: 15),
       children: [
         _buildGroupExpansionTile(
           title: t.loadListScreen.ungrouped,
@@ -418,51 +419,56 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
     required List<StudyList> lists,
     required Translations t,
   }) {
-    return ExpansionTile(
-      key: ValueKey(groupId ?? 'ungrouped'),
-      initiallyExpanded: _expandedGroupIds.contains(groupId ?? 'ungrouped'),
-      onExpansionChanged: (isExpanded) {
-        setState(() {
-          if (isExpanded) {
-            _expandedGroupIds.add(groupId ?? 'ungrouped');
-          } else {
-            _expandedGroupIds.remove(groupId ?? 'ungrouped');
-          }
-        });
-      },
-      title: Row(
-        children: [
-          Expanded(
-            child: Text(
-              title,
-              style: Theme.of(
-                context,
-              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 6),
+      clipBehavior: Clip.antiAlias,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+      child: ExpansionTile(
+        key: ValueKey(groupId ?? 'ungrouped'),
+        initiallyExpanded: _expandedGroupIds.contains(groupId ?? 'ungrouped'),
+        onExpansionChanged: (isExpanded) {
+          setState(() {
+            if (isExpanded) {
+              _expandedGroupIds.add(groupId ?? 'ungrouped');
+            } else {
+              _expandedGroupIds.remove(groupId ?? 'ungrouped');
+            }
+          });
+        },
+        title: Row(
+          children: [
+            Expanded(
+              child: Text(
+                title,
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+              ),
             ),
-          ),
-          if (groupId != null)
-            PopupMenuButton<_GroupMenuAction>(
-              onSelected: (action) {
-                final group = ref
-                    .read(studyGroupsProvider)
-                    .value!
-                    .firstWhere((g) => g.id == groupId);
-                if (action == _GroupMenuAction.delete) {
-                  _handleGroupDelete(group);
-                }
-              },
-              itemBuilder: (context) => [
-                PopupMenuItem(
-                  value: _GroupMenuAction.delete,
-                  child: Text(t.general.delete),
-                ),
-              ],
-            ),
-        ],
+            if (groupId != null)
+              PopupMenuButton<_GroupMenuAction>(
+                onSelected: (action) {
+                  final group = ref
+                      .read(studyGroupsProvider)
+                      .value!
+                      .firstWhere((g) => g.id == groupId);
+                  if (action == _GroupMenuAction.delete) {
+                    _handleGroupDelete(group);
+                  }
+                },
+                itemBuilder: (context) => [
+                  PopupMenuItem(
+                    value: _GroupMenuAction.delete,
+                    child: Text(t.general.delete),
+                  ),
+                ],
+              ),
+          ],
+        ),
+        children: lists
+            .map((list) => _buildListCard(list, t, isDraggable: false))
+            .toList(),
       ),
-      children: lists
-          .map((list) => _buildListCard(list, t, isDraggable: false))
-          .toList(),
     );
   }
 
@@ -483,6 +489,9 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
         child: Material(
           type: MaterialType.transparency,
           child: ListTile(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12.0),
+            ),
             leading: isDraggable
                 ? ReorderableDragStartListener(
                     index: index,
@@ -563,7 +572,6 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
     }
 
     if (_currentSort == _SortOption.custom) {
-      // With search, we can't maintain original order, so we sort by name
       if (searchQuery.isNotEmpty) {
         processedLists.sort(
           (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
@@ -590,7 +598,7 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
         comparator = (a, b) => b.terms.length.compareTo(a.terms.length);
         break;
       case _SortOption.custom:
-        return processedLists; // Should not happen
+        return processedLists;
     }
 
     processedLists.sort(comparator);
@@ -608,6 +616,7 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
 
     if (isCustomSort) {
       return ReorderableListView.builder(
+        padding: const EdgeInsets.symmetric(horizontal: 15),
         buildDefaultDragHandles: false,
         itemCount: sortedLists.length,
         itemBuilder: (context, index) {
@@ -631,6 +640,7 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
       );
     } else {
       return ListView.builder(
+        padding: const EdgeInsets.symmetric(horizontal: 15),
         itemCount: sortedLists.length,
         itemBuilder: (context, index) {
           final list = sortedLists[index];
@@ -680,47 +690,55 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 8.0),
-                  child: Row(
-                    children: [
-                      Text(
-                        t.loadListScreen.sortLabel,
-                        style: Theme.of(context).textTheme.labelLarge,
-                      ),
-                      const SizedBox(width: 8),
-                      DropdownButton<_SortOption>(
-                        value: _currentSort,
-                        items: _SortOption.values
-                            .map(
-                              (option) => DropdownMenuItem(
-                                value: option,
-                                child: Text(option.getDisplayName(t)),
-                              ),
-                            )
-                            .toList(),
-                        onChanged: _onSortChanged,
-                      ),
-                      if (_currentSort != _SortOption.custom)
-                        IconButton(
-                          icon: Icon(
-                            _isSortAscending
-                                ? Icons.arrow_upward
-                                : Icons.arrow_downward,
+                Card(
+                  margin: const EdgeInsets.only(bottom: 8.0),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12.0,
+                      vertical: 4.0,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          t.loadListScreen.sortLabel,
+                          style: Theme.of(context).textTheme.labelLarge,
+                        ),
+                        const SizedBox(width: 8),
+                        DropdownButton<_SortOption>(
+                          underline: const SizedBox.shrink(),
+                          value: _currentSort,
+                          items: _SortOption.values
+                              .map(
+                                (option) => DropdownMenuItem(
+                                  value: option,
+                                  child: Text(option.getDisplayName(t)),
+                                ),
+                              )
+                              .toList(),
+                          onChanged: _onSortChanged,
+                        ),
+                        if (_currentSort != _SortOption.custom)
+                          IconButton(
+                            icon: Icon(
+                              _isSortAscending
+                                  ? Icons.arrow_upward
+                                  : Icons.arrow_downward,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _isSortAscending = !_isSortAscending;
+                              });
+                            },
                           ),
-                          onPressed: () {
-                            setState(() {
-                              _isSortAscending = !_isSortAscending;
-                            });
-                          },
-                        ),
-                      const Spacer(),
-                      if (!_isSelectMode)
-                        TextButton(
-                          onPressed: _toggleSelectMode,
-                          child: Text(t.loadListScreen.select),
-                        ),
-                    ],
+                        const Spacer(),
+                        if (!_isSelectMode)
+                          TextButton(
+                            onPressed: _toggleSelectMode,
+                            child: Text(t.loadListScreen.select),
+                          ),
+                      ],
+                    ),
                   ),
                 ),
                 Expanded(
