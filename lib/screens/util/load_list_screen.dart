@@ -400,6 +400,7 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
           title: t.loadListScreen.ungrouped,
           lists: groupedMap[null] ?? [],
           t: t,
+          isUngroupedOnlyGroup: sortedGroups.isEmpty,
         ),
         ...sortedGroups.map((group) {
           return _buildGroupExpansionTile(
@@ -418,6 +419,7 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
     String? groupId,
     required List<StudyList> lists,
     required Translations t,
+    bool isUngroupedOnlyGroup = false,
   }) {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 6),
@@ -425,7 +427,9 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
       child: ExpansionTile(
         key: ValueKey(groupId ?? 'ungrouped'),
-        initiallyExpanded: _expandedGroupIds.contains(groupId ?? 'ungrouped'),
+        initiallyExpanded:
+            isUngroupedOnlyGroup ||
+            _expandedGroupIds.contains(groupId ?? 'ungrouped'),
         onExpansionChanged: (isExpanded) {
           setState(() {
             if (isExpanded) {
