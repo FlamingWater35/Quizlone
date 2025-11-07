@@ -4,12 +4,14 @@
 
 import 'package:hive_ce/hive.dart';
 import 'package:quizlone/models/match_record.dart';
+import 'package:quizlone/models/study_group.dart';
 import 'package:quizlone/models/study_list.dart';
 import 'package:quizlone/models/term.dart';
 
 extension HiveRegistrar on HiveInterface {
   void registerAdapters() {
     registerAdapter(MatchRecordAdapter());
+    registerAdapter(StudyGroupAdapter());
     registerAdapter(StudyListAdapter());
     registerAdapter(TermAdapter());
   }
@@ -18,6 +20,7 @@ extension HiveRegistrar on HiveInterface {
 extension IsolatedHiveRegistrar on IsolatedHiveInterface {
   void registerAdapters() {
     registerAdapter(MatchRecordAdapter());
+    registerAdapter(StudyGroupAdapter());
     registerAdapter(StudyListAdapter());
     registerAdapter(TermAdapter());
   }

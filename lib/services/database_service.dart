@@ -8,6 +8,7 @@ import 'package:logging/logging.dart';
 
 import '../models/match_record.dart';
 import '../models/settings_app_data.dart';
+import '../models/study_group.dart';
 import '../models/study_list.dart';
 import '../models/term.dart';
 import '../providers/core/auth_provider.dart';
@@ -26,6 +27,8 @@ class DatabaseService {
   static const String _matchRecordsBoxName = 'matchRecordsBox';
   static late Box _settingsBox;
   static const String _settingsBoxName = 'settingsBox';
+  static late Box<StudyGroup> _studyGroupBox;
+  static const String _studyGroupBoxName = 'studyGroupsBox';
   static late Box<StudyList> _studyListBox;
   static const String _studyListBoxName = 'studyListsBox';
   static const String _studyListOrderKey = 'studyListOrder';
@@ -36,10 +39,12 @@ class DatabaseService {
     Hive.registerAdapter(TermAdapter());
     Hive.registerAdapter(StudyListAdapter());
     Hive.registerAdapter(MatchRecordAdapter());
+    Hive.registerAdapter(StudyGroupAdapter());
 
     _studyListBox = await Hive.openBox<StudyList>(_studyListBoxName);
     _settingsBox = await Hive.openBox(_settingsBoxName);
     _matchRecordsBox = await Hive.openBox<MatchRecord>(_matchRecordsBoxName);
+    _studyGroupBox = await Hive.openBox<StudyGroup>(_studyGroupBoxName);
   }
 
   Future<void> setApkPathForCleanup(String path) async {
@@ -68,7 +73,11 @@ class DatabaseService {
   Future<void> applyCloudData(AppData data) async {
     await _studyListBox.clear();
     await _matchRecordsBox.clear();
+    await _studyGroupBox.clear();
 
+    for (final group in data.studyGroups) {
+      await _studyGroupBox.put(group.id, group);
+    }
     for (final list in data.studyLists) {
       await _studyListBox.put(list.id, list);
     }
@@ -109,8 +118,10 @@ class DatabaseService {
       listRecords.sort(
         (a, b) => a.value.timeInTenths.compareTo(b.value.timeInTenths),
       );
-      final keysToDelete =
-          listRecords.sublist(100).map((entry) => entry.key).toList();
+      final keysToDelete = listRecords
+          .sublist(100)
+          .map((entry) => entry.key)
+          .toList();
       if (keysToDelete.isNotEmpty) {
         await _matchRecordsBox.deleteAll(keysToDelete);
       }
@@ -118,10 +129,9 @@ class DatabaseService {
   }
 
   Future<List<MatchRecord>> getRecordsForList(String studyListName) async {
-    final records =
-        _matchRecordsBox.values
-            .where((r) => r.studyListName == studyListName)
-            .toList();
+    final records = _matchRecordsBox.values
+        .where((r) => r.studyListName == studyListName)
+        .toList();
     records.sort((a, b) => a.timeInTenths.compareTo(b.timeInTenths));
     return records;
   }
@@ -139,6 +149,7 @@ class DatabaseService {
     _log.info("Clearing all user-specific local data.");
     await _studyListBox.clear();
     await _matchRecordsBox.clear();
+    await _studyGroupBox.clear();
     await _settingsBox.delete(_studyListOrderKey);
     await _settingsBox.delete(_activeListIdKey);
     await _settingsBox.delete(_lastSyncTimestampKey);
@@ -228,8 +239,9 @@ class DatabaseService {
     order.removeWhere((key) => !listMap.containsKey(key));
 
     final Set<String> orderKeys = order.toSet();
-    final List<String> newKeys =
-        listMap.keys.where((key) => !orderKeys.contains(key)).toList();
+    final List<String> newKeys = listMap.keys
+        .where((key) => !orderKeys.contains(key))
+        .toList();
 
     if (newKeys.isNotEmpty) {
       order.insertAll(0, newKeys);
@@ -288,6 +300,12 @@ class DatabaseService {
     return false;
   }
 
+  Future<void> deleteStudyLists(List<String> ids) async {
+    for (final id in ids) {
+      await deleteStudyList(id);
+    }
+  }
+
   Future<void> deleteAllStudyLists() async {
     await _studyListBox.clear();
     await triggerCloudUpload();
@@ -327,6 +345,57 @@ class DatabaseService {
 
   String? getActiveListId() {
     return _settingsBox.get(_activeListIdKey);
+  }
+
+  Future<void> saveStudyGroup(StudyGroup group) async {
+    await _studyGroupBox.put(group.id, group);
+    await triggerCloudUpload();
+  }
+
+  Future<List<StudyGroup>> getAllStudyGroups() async {
+    final groups = _studyGroupBox.values.toList();
+    groups.sort((a, b) => a.createdAt.compareTo(b.createdAt));
+    return groups;
+  }
+
+  Stream<List<StudyGroup>> listenToStudyGroups() {
+    return _studyGroupBox.watch().asyncMap((_) => getAllStudyGroups());
+  }
+
+  Future<void> deleteStudyGroup(String groupId) async {
+    final listsToMove = _studyListBox.values
+        .where((list) => list.groupId == groupId)
+        .toList();
+    for (final list in listsToMove) {
+      list.groupId = null;
+      await _studyListBox.put(list.id, list);
+    }
+
+    await _studyGroupBox.delete(groupId);
+    await triggerCloudUpload();
+  }
+
+  Future<void> renameStudyGroup(String groupId, String newName) async {
+    final group = _studyGroupBox.get(groupId);
+    if (group != null) {
+      group.name = newName;
+      await _studyGroupBox.put(groupId, group);
+      await triggerCloudUpload();
+    }
+  }
+
+  Future<void> moveStudyListsToGroup(
+    List<String> listIds,
+    String? groupId,
+  ) async {
+    for (final listId in listIds) {
+      final list = _studyListBox.get(listId);
+      if (list != null) {
+        list.groupId = groupId;
+        await _studyListBox.put(listId, list);
+      }
+    }
+    await triggerCloudUpload();
   }
 
   Future<void> _saveStudyListOrderSilently(List<String> order) async {

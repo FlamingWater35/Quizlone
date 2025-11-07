@@ -32,21 +32,18 @@ class CloudSyncService {
     }
 
     try {
-      final response =
-          await _client
-              .from(_tableName)
-              .select('data, last_updated_at')
-              .eq('user_id', user.id)
-              .single();
+      final response = await _client
+          .from(_tableName)
+          .select('data, last_updated_at')
+          .eq('user_id', user.id)
+          .single();
 
-      final data =
-          response['data'] != null
-              ? AppData.fromJson(response['data'] as Map<String, dynamic>)
-              : null;
-      final timestamp =
-          response['last_updated_at'] != null
-              ? DateTime.parse(response['last_updated_at'] as String)
-              : null;
+      final data = response['data'] != null
+          ? AppData.fromJson(response['data'] as Map<String, dynamic>)
+          : null;
+      final timestamp = response['last_updated_at'] != null
+          ? DateTime.parse(response['last_updated_at'] as String)
+          : null;
 
       _log.fine(
         'Successfully downloaded cloud data with timestamp: $timestamp',

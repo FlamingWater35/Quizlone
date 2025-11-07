@@ -23,6 +23,9 @@ class StudyList {
   @HiveField(4)
   bool flashcardShowTermFirst = true;
 
+  @HiveField(11)
+  String? groupId;
+
   @HiveField(9)
   late String id;
 
@@ -73,6 +76,7 @@ class StudyList {
     int? testStudyLength,
     TestFormat? testFormat,
     bool? allowAnswerSubstring,
+    String? groupId,
   }) {
     return StudyList()
       ..id = id ?? this.id
@@ -87,7 +91,7 @@ class StudyList {
           studyShowDefinitionAskTerm ?? this.studyShowDefinitionAskTerm
       ..testStudyLength = testStudyLength ?? this.testStudyLength
       ..testFormat = testFormat ?? this.testFormat
-      ..allowAnswerSubstring =
-          allowAnswerSubstring ?? this.allowAnswerSubstring;
+      ..allowAnswerSubstring = allowAnswerSubstring ?? this.allowAnswerSubstring
+      ..groupId = groupId ?? this.groupId;
   }
 }
