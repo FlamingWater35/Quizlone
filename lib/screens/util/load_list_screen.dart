@@ -656,24 +656,28 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
                     context,
                   ).colorScheme.secondaryContainer.withAlpha(76),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12.0,
+                      vertical: 4.0,
+                    ),
                     child: Wrap(
                       alignment: WrapAlignment.spaceBetween,
                       crossAxisAlignment: WrapCrossAlignment.center,
                       spacing: 8.0,
                       runSpacing: 4.0,
                       children: [
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
+                        Wrap(
+                          crossAxisAlignment: WrapCrossAlignment.center,
                           children: [
                             Text(
                               t.loadListScreen.sortLabel,
                               style: Theme.of(context).textTheme.labelLarge,
                             ),
+                            const SizedBox(width: 8),
                             DropdownButtonHideUnderline(
                               child: DropdownButton<_SortOption>(
                                 padding: const EdgeInsets.symmetric(
-                                  horizontal: 8,
+                                  horizontal: 10,
                                 ),
                                 focusColor: Colors.transparent,
                                 value: _currentSort,
@@ -704,9 +708,12 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
                           ],
                         ),
                         if (!_isSelectMode)
-                          TextButton(
-                            onPressed: _toggleSelectMode,
-                            child: Text(t.loadListScreen.select),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 4.0),
+                            child: TextButton(
+                              onPressed: _toggleSelectMode,
+                              child: Text(t.loadListScreen.select),
+                            ),
                           ),
                       ],
                     ),
