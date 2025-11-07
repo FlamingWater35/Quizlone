@@ -147,6 +147,7 @@ class _TranslationsInputScreenEs extends TranslationsInputScreenEn {
 	@override String get pasteTermsHint => '(Término en una línea, definición en la siguiente)';
 	@override String get termsHint => 'Justicia\nEl principio de rectitud moral\nSol\nUna estrella que es el centro de un sistema planetario';
 	@override String get saveList => 'Guardar lista';
+	@override String get assignToGroup => 'Asignar a grupo';
 	@override late final _TranslationsInputScreenErrorsEs errors = _TranslationsInputScreenErrorsEs._(_root);
 }
 
@@ -742,6 +743,7 @@ extension on TranslationsEs {
 			case 'inputScreen.pasteTermsHint': return '(Término en una línea, definición en la siguiente)';
 			case 'inputScreen.termsHint': return 'Justicia\nEl principio de rectitud moral\nSol\nUna estrella que es el centro de un sistema planetario';
 			case 'inputScreen.saveList': return 'Guardar lista';
+			case 'inputScreen.assignToGroup': return 'Asignar a grupo';
 			case 'inputScreen.errors.listNameEmpty': return 'El nombre de la lista no puede estar vacío.';
 			case 'inputScreen.errors.noTerms': return 'No se han introducido términos/definiciones.';
 			case 'inputScreen.errors.invalidFormat': return 'Formato inválido. Cada término necesita una definición en la siguiente línea.';

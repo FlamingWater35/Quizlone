@@ -84,6 +84,7 @@
     "pasteTermsHint": "(Termi yhdelle riville, määritelmä seuraavalle)",
     "termsHint": "Oikeus\nMoraalisen oikeudenmukaisuuden periaate\nAurinko\nTähti, joka on planeettajärjestelmän keskus",
     "saveList": "Tallenna lista",
+    "assignToGroup": "Määritä ryhmään",
     "errors": {
       "listNameEmpty": "Listan nimi ei voi olla tyhjä.",
       "noTerms": "Termejä/määritelmiä ei ole syötetty.",

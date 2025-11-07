@@ -84,6 +84,7 @@
     "pasteTermsHint": "(Término en una línea, definición en la siguiente)",
     "termsHint": "Justicia\nEl principio de rectitud moral\nSol\nUna estrella que es el centro de un sistema planetario",
     "saveList": "Guardar lista",
+    "assignToGroup": "Asignar a grupo",
     "errors": {
       "listNameEmpty": "El nombre de la lista no puede estar vacío.",
       "noTerms": "No se han introducido términos/definiciones.",

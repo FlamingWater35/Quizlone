@@ -233,6 +233,9 @@ class TranslationsInputScreenEn {
 	/// en: 'Save List'
 	String get saveList => 'Save List';
 
+	/// en: 'Assign to Group'
+	String get assignToGroup => 'Assign to Group';
+
 	late final TranslationsInputScreenErrorsEn errors = TranslationsInputScreenErrorsEn._(_root);
 }
 
@@ -1215,6 +1218,7 @@ extension on Translations {
 			case 'inputScreen.pasteTermsHint': return '(Term on one line, Definition on the next)';
 			case 'inputScreen.termsHint': return 'Justice\nThe principle of moral rightness\nSun\nA star that is the center of a planetary system';
 			case 'inputScreen.saveList': return 'Save List';
+			case 'inputScreen.assignToGroup': return 'Assign to Group';
 			case 'inputScreen.errors.listNameEmpty': return 'List name cannot be empty.';
 			case 'inputScreen.errors.noTerms': return 'No terms/definitions entered.';
 			case 'inputScreen.errors.invalidFormat': return 'Invalid format. Each term needs a definition on the next line.';

@@ -145,6 +145,7 @@ class _TranslationsInputScreenFi implements TranslationsInputScreenEn {
 	@override String get pasteTermsHint => '(Termi yhdelle riville, määritelmä seuraavalle)';
 	@override String get termsHint => 'Oikeus\nMoraalisen oikeudenmukaisuuden periaate\nAurinko\nTähti, joka on planeettajärjestelmän keskus';
 	@override String get saveList => 'Tallenna lista';
+	@override String get assignToGroup => 'Määritä ryhmään';
 	@override late final _TranslationsInputScreenErrorsFi errors = _TranslationsInputScreenErrorsFi._(_root);
 }
 
@@ -740,6 +741,7 @@ extension on TranslationsFi {
 			case 'inputScreen.pasteTermsHint': return '(Termi yhdelle riville, määritelmä seuraavalle)';
 			case 'inputScreen.termsHint': return 'Oikeus\nMoraalisen oikeudenmukaisuuden periaate\nAurinko\nTähti, joka on planeettajärjestelmän keskus';
 			case 'inputScreen.saveList': return 'Tallenna lista';
+			case 'inputScreen.assignToGroup': return 'Määritä ryhmään';
 			case 'inputScreen.errors.listNameEmpty': return 'Listan nimi ei voi olla tyhjä.';
 			case 'inputScreen.errors.noTerms': return 'Termejä/määritelmiä ei ole syötetty.';
 			case 'inputScreen.errors.invalidFormat': return 'Virheellinen muoto. Jokaisella termillä on oltava määritelmä seuraavalla rivillä.';

@@ -147,6 +147,7 @@ class _TranslationsInputScreenRu implements TranslationsInputScreenEn {
 	@override String get pasteTermsHint => '(Термин на одной строке, определение на следующей)';
 	@override String get termsHint => 'Справедливость\nПринцип моральной правоты\nСолнце\nЗвезда, являющаяся центром планетарной системы';
 	@override String get saveList => 'Сохранить список';
+	@override String get assignToGroup => 'Назначить в группу';
 	@override late final _TranslationsInputScreenErrorsRu errors = _TranslationsInputScreenErrorsRu._(_root);
 }
 
@@ -752,6 +753,7 @@ extension on TranslationsRu {
 			case 'inputScreen.pasteTermsHint': return '(Термин на одной строке, определение на следующей)';
 			case 'inputScreen.termsHint': return 'Справедливость\nПринцип моральной правоты\nСолнце\nЗвезда, являющаяся центром планетарной системы';
 			case 'inputScreen.saveList': return 'Сохранить список';
+			case 'inputScreen.assignToGroup': return 'Назначить в группу';
 			case 'inputScreen.errors.listNameEmpty': return 'Название списка не может быть пустым.';
 			case 'inputScreen.errors.noTerms': return 'Термины/определения не введены.';
 			case 'inputScreen.errors.invalidFormat': return 'Неверный формат. Каждый термин должен иметь определение на следующей строке.';

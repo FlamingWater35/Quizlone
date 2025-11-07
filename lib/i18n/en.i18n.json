@@ -84,6 +84,7 @@
     "pasteTermsHint": "(Term on one line, Definition on the next)",
     "termsHint": "Justice\nThe principle of moral rightness\nSun\nA star that is the center of a planetary system",
     "saveList": "Save List",
+    "assignToGroup": "Assign to Group",
     "errors": {
       "listNameEmpty": "List name cannot be empty.",
       "noTerms": "No terms/definitions entered.",
