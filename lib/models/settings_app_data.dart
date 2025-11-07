@@ -11,7 +11,6 @@ class AppData {
   AppData({
     required this.studyLists,
     required this.matchRecords,
-    required this.studyListOrder,
     this.studyGroups = const [],
     this.lastUpdatedBy,
   });
@@ -22,7 +21,6 @@ class AppData {
   final String? lastUpdatedBy;
   final List<MatchRecord> matchRecords;
   final List<StudyGroup> studyGroups;
-  final List<String> studyListOrder;
   final List<StudyList> studyLists;
 
   Map<String, dynamic> toJson() => _$AppDataToJson(this);
@@ -30,14 +28,12 @@ class AppData {
   AppData copyWith({
     List<StudyList>? studyLists,
     List<MatchRecord>? matchRecords,
-    List<String>? studyListOrder,
     List<StudyGroup>? studyGroups,
     String? lastUpdatedBy,
   }) {
     return AppData(
       studyLists: studyLists ?? this.studyLists,
       matchRecords: matchRecords ?? this.matchRecords,
-      studyListOrder: studyListOrder ?? this.studyListOrder,
       studyGroups: studyGroups ?? this.studyGroups,
       lastUpdatedBy: lastUpdatedBy ?? this.lastUpdatedBy,
     );

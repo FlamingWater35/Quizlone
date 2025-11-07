@@ -17,23 +17,6 @@ final _log = Logger("StudyListProviders");
 class StudyLists extends _$StudyLists {
   StreamSubscription? _subscription;
 
-  Future<void> reorder(int oldIndex, int newIndex) async {
-    final currentLists = state.value;
-    if (currentLists == null) return;
-
-    if (oldIndex < newIndex) {
-      newIndex -= 1;
-    }
-
-    final dbService = ref.read(databaseServiceProvider);
-    final currentOrder = dbService.getStudyListOrder();
-
-    final movedId = currentOrder.removeAt(oldIndex);
-    currentOrder.insert(newIndex, movedId);
-
-    await dbService.saveStudyListOrder(currentOrder);
-  }
-
   @override
   Future<List<StudyList>> build() async {
     final dbService = ref.watch(databaseServiceProvider);

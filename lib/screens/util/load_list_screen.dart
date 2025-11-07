@@ -465,19 +465,12 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
               ),
           ],
         ),
-        children: lists
-            .map((list) => _buildListCard(list, t, isDraggable: false))
-            .toList(),
+        children: lists.map((list) => _buildListCard(list, t)).toList(),
       ),
     );
   }
 
-  Widget _buildListCard(
-    StudyList list,
-    Translations t, {
-    bool isDraggable = true,
-    int index = 0,
-  }) {
+  Widget _buildListCard(StudyList list, Translations t) {
     final colorScheme = Theme.of(context).colorScheme;
     final isSelected = _selectedListIds.contains(list.id);
 
@@ -493,17 +486,12 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12.0),
             ),
-            leading: isDraggable
-                ? ReorderableDragStartListener(
-                    index: index,
-                    child: const Icon(Icons.drag_handle),
+            leading: _isSelectMode
+                ? Checkbox(
+                    value: isSelected,
+                    onChanged: (val) => _onListSelected(list.id, val),
                   )
-                : (_isSelectMode
-                      ? Checkbox(
-                          value: isSelected,
-                          onChanged: (val) => _onListSelected(list.id, val),
-                        )
-                      : const Icon(Icons.article_outlined)),
+                : const Icon(Icons.article_outlined),
             onTap: () {
               if (_isSelectMode) {
                 _onListSelected(list.id, !isSelected);
@@ -573,11 +561,6 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
     }
 
     if (_currentSort == _SortOption.custom) {
-      if (searchQuery.isNotEmpty) {
-        processedLists.sort(
-          (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
-        );
-      }
       return processedLists;
     }
 
@@ -613,42 +596,14 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
       return Center(child: Text(t.loadListScreen.noMatches));
     }
 
-    final isCustomSort = _currentSort == _SortOption.custom;
-
-    if (isCustomSort) {
-      return ReorderableListView.builder(
-        padding: const EdgeInsets.symmetric(horizontal: 6),
-        buildDefaultDragHandles: false,
-        itemCount: sortedLists.length,
-        itemBuilder: (context, index) {
-          final list = sortedLists[index];
-          return _buildListCard(
-            list,
-            t,
-            index: index,
-            isDraggable: !_isSelectMode,
-          );
-        },
-        onReorder: (int oldIndex, int newIndex) {
-          final originalOldIndex = lists.indexOf(sortedLists[oldIndex]);
-          final originalNewIndex = newIndex < sortedLists.length
-              ? lists.indexOf(sortedLists[newIndex])
-              : lists.length;
-          ref
-              .read(studyListsProvider.notifier)
-              .reorder(originalOldIndex, originalNewIndex);
-        },
-      );
-    } else {
-      return ListView.builder(
-        padding: const EdgeInsets.symmetric(horizontal: 6),
-        itemCount: sortedLists.length,
-        itemBuilder: (context, index) {
-          final list = sortedLists[index];
-          return _buildListCard(list, t, index: index, isDraggable: false);
-        },
-      );
-    }
+    return ListView.builder(
+      padding: const EdgeInsets.symmetric(horizontal: 6),
+      itemCount: sortedLists.length,
+      itemBuilder: (context, index) {
+        final list = sortedLists[index];
+        return _buildListCard(list, t);
+      },
+    );
   }
 
   @override

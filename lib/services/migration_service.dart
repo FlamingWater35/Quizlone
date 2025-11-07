@@ -39,7 +39,7 @@ Future<void> _migrateV112() async {
   }
 }
 
-const _migrationKeyV1117 = 'migration_v1.1.17_add_groups';
+const _migrationKeyV1117 = 'migration_v1.1.17_remove_study_list_order';
 
 Future<void> _migrateV1117() async {
   final settingsBox = Hive.box('settingsBox');
@@ -48,9 +48,13 @@ Future<void> _migrateV1117() async {
   }
   _log.info("Running migration: '$_migrationKeyV1117'...");
   try {
-    _log.info(
-      "Registering StudyGroupAdapter is handled at startup. Migration logic is passive.",
-    );
+    const studyListOrderKey = 'studyListOrder';
+    if (settingsBox.containsKey(studyListOrderKey)) {
+      await settingsBox.delete(studyListOrderKey);
+      _log.info("Successfully removed 'studyListOrder' key from settings.");
+    } else {
+      _log.info("'studyListOrder' key not found, skipping deletion.");
+    }
     await settingsBox.put(_migrationKeyV1117, true);
     _log.info("Migration '$_migrationKeyV1117' completed and flag set.");
   } catch (e, s) {

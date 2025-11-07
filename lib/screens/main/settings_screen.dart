@@ -107,7 +107,6 @@ class SettingsScreen extends ConsumerWidget {
 
     final lists = await dbService.getAllStudyLists();
     final records = await dbService.getAllMatchRecords();
-    final order = dbService.getStudyListOrder();
     final groups = await dbService.getAllStudyGroups();
 
     if (lists.isEmpty && records.isEmpty) {
@@ -120,7 +119,6 @@ class SettingsScreen extends ConsumerWidget {
     final appData = AppData(
       studyLists: lists,
       matchRecords: records,
-      studyListOrder: order,
       studyGroups: groups,
     );
     final jsonString = jsonEncode(appData.toJson());
@@ -225,11 +223,7 @@ class SettingsScreen extends ConsumerWidget {
           final studyLists = jsonData
               .map((json) => StudyList.fromJson(json))
               .toList();
-          appData = AppData(
-            studyLists: studyLists,
-            matchRecords: [],
-            studyListOrder: studyLists.map((list) => list.id).toList(),
-          );
+          appData = AppData(studyLists: studyLists, matchRecords: []);
         } else {
           throw Exception("Invalid backup file format.");
         }

@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:async/async.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
@@ -31,7 +30,6 @@ class DatabaseService {
   static const String _studyGroupBoxName = 'studyGroupsBox';
   static late Box<StudyList> _studyListBox;
   static const String _studyListBoxName = 'studyListsBox';
-  static const String _studyListOrderKey = 'studyListOrder';
 
   static Future<void> init() async {
     await Hive.initFlutter('Quizlone');
@@ -84,7 +82,6 @@ class DatabaseService {
     for (final record in data.matchRecords) {
       await _matchRecordsBox.add(record);
     }
-    await _saveStudyListOrderSilently(data.studyListOrder);
   }
 
   Future<void> saveLastSyncTimestamp(DateTime timestamp) async {
@@ -150,35 +147,13 @@ class DatabaseService {
     await _studyListBox.clear();
     await _matchRecordsBox.clear();
     await _studyGroupBox.clear();
-    await _settingsBox.delete(_studyListOrderKey);
     await _settingsBox.delete(_activeListIdKey);
     await _settingsBox.delete(_lastSyncTimestampKey);
   }
 
-  Future<void> saveStudyListOrder(List<String> order) async {
-    await _settingsBox.put(_studyListOrderKey, order);
-    await triggerCloudUpload();
-  }
-
-  List<String> getStudyListOrder() {
-    final order = _settingsBox.get(_studyListOrderKey);
-    if (order is List) {
-      return order.cast<String>();
-    }
-    return [];
-  }
-
   Future<String> saveStudyList(StudyList list) async {
-    final isNew = !_box.containsKey(list.id);
     await _box.put(list.id, list);
-
-    if (isNew) {
-      final currentOrder = getStudyListOrder();
-      currentOrder.insert(0, list.id);
-      await saveStudyListOrder(currentOrder);
-    } else {
-      await triggerCloudUpload();
-    }
+    await triggerCloudUpload();
     return list.id;
   }
 
@@ -228,37 +203,12 @@ class DatabaseService {
 
   Future<List<StudyList>> getAllStudyLists() async {
     final allListsFromBox = _box.values.toList();
-    if (allListsFromBox.isEmpty) {
-      return [];
-    }
-
-    var order = getStudyListOrder();
-    final listMap = {for (var list in allListsFromBox) list.id: list};
-
-    final originalOrderLength = order.length;
-    order.removeWhere((key) => !listMap.containsKey(key));
-
-    final Set<String> orderKeys = order.toSet();
-    final List<String> newKeys = listMap.keys
-        .where((key) => !orderKeys.contains(key))
-        .toList();
-
-    if (newKeys.isNotEmpty) {
-      order.insertAll(0, newKeys);
-    }
-
-    if (newKeys.isNotEmpty || order.length != originalOrderLength) {
-      await _saveStudyListOrderSilently(order);
-    }
-
-    return order.map((key) => listMap[key]!).whereType<StudyList>().toList();
+    allListsFromBox.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    return allListsFromBox;
   }
 
   Stream<List<StudyList>> listenToStudyLists() {
-    final listChanges = _studyListBox.watch();
-    final orderChanges = _settingsBox.watch(key: _studyListOrderKey);
-
-    return StreamGroup.merge([listChanges, orderChanges]).asyncMap((_) {
+    return _studyListBox.watch().asyncMap((_) {
       return getAllStudyLists();
     });
   }
@@ -277,8 +227,6 @@ class DatabaseService {
       final listName = listToDelete?.name;
 
       await _box.delete(id);
-      final order = getStudyListOrder();
-      order.remove(id);
 
       if (listName != null) {
         final List<dynamic> keysToDelete = [];
@@ -293,7 +241,7 @@ class DatabaseService {
         }
       }
 
-      await saveStudyListOrder(order);
+      await triggerCloudUpload();
 
       return true;
     }
@@ -399,10 +347,6 @@ class DatabaseService {
       }
     }
     await triggerCloudUpload();
-  }
-
-  Future<void> _saveStudyListOrderSilently(List<String> order) async {
-    await _settingsBox.put(_studyListOrderKey, order);
   }
 
   Box<StudyList> get _box => _studyListBox;

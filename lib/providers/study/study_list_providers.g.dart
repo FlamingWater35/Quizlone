@@ -33,7 +33,7 @@ final class StudyListsProvider
   StudyLists create() => StudyLists();
 }
 
-String _$studyListsHash() => r'958d2becb208c5cbe606a9f2e919ffb02958d559';
+String _$studyListsHash() => r'89b6fc61ec486f478f7962a691be06616be883a4';
 
 abstract class _$StudyLists extends $AsyncNotifier<List<StudyList>> {
   FutureOr<List<StudyList>> build();

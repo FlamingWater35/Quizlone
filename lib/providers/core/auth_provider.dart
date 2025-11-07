@@ -139,24 +139,7 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
     }
     _log.fine("Merged ${mergedRecords.length} records.");
 
-    final mergedListIds = mergedLists.map((e) => e.id).toSet();
-    final mergedOrder = remote.studyListOrder
-        .where((id) => mergedListIds.contains(id))
-        .toList();
-    final mergedOrderSet = mergedOrder.toSet();
-
-    for (final list in mergedLists) {
-      if (!mergedOrderSet.contains(list.id)) {
-        mergedOrder.add(list.id);
-      }
-    }
-    _log.fine("Merged list order with ${mergedOrder.length} items.");
-
-    return AppData(
-      studyLists: mergedLists,
-      matchRecords: mergedRecords,
-      studyListOrder: mergedOrder,
-    );
+    return AppData(studyLists: mergedLists, matchRecords: mergedRecords);
   }
 
   Future<void> _performUpload() async {
@@ -167,13 +150,8 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
     if (!ref.mounted) return;
     final records = await dbService.getAllMatchRecords();
     if (!ref.mounted) return;
-    final order = dbService.getStudyListOrder();
 
-    final appData = AppData(
-      studyLists: lists,
-      matchRecords: records,
-      studyListOrder: order,
-    );
+    final appData = AppData(studyLists: lists, matchRecords: records);
     await cloudSyncService.uploadData(appData);
     if (!ref.mounted) return;
     await dbService.saveLastSyncTimestamp(DateTime.now().toUtc());
@@ -207,7 +185,6 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
       final localRecords = await dbService.getAllMatchRecords();
       if (!ref.mounted) return;
 
-      final localOrder = dbService.getStudyListOrder();
       final localTimestamp = dbService.getLastSyncTimestamp();
 
       final hasLocalData = localLists.isNotEmpty || localRecords.isNotEmpty;
@@ -254,7 +231,6 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
             final localData = AppData(
               studyLists: localLists,
               matchRecords: localRecords,
-              studyListOrder: localOrder,
             );
             final mergedData = _mergeData(
               local: localData,
