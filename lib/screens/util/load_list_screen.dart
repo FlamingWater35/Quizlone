@@ -394,7 +394,7 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
       ..sort((a, b) => a.name.compareTo(b.name));
 
     return ListView(
-      padding: const EdgeInsets.symmetric(horizontal: 15),
+      padding: const EdgeInsets.symmetric(horizontal: 14),
       children: [
         _buildGroupExpansionTile(
           title: t.loadListScreen.ungrouped,
@@ -485,7 +485,8 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
       key: ValueKey(list.id),
       tag: list.id,
       child: Card(
-        margin: const EdgeInsets.symmetric(vertical: 6),
+        margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+        color: Theme.of(context).colorScheme.secondaryContainer.withAlpha(76),
         child: Material(
           type: MaterialType.transparency,
           child: ListTile(
@@ -616,7 +617,7 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
 
     if (isCustomSort) {
       return ReorderableListView.builder(
-        padding: const EdgeInsets.symmetric(horizontal: 15),
+        padding: const EdgeInsets.symmetric(horizontal: 6),
         buildDefaultDragHandles: false,
         itemCount: sortedLists.length,
         itemBuilder: (context, index) {
@@ -640,7 +641,7 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
       );
     } else {
       return ListView.builder(
-        padding: const EdgeInsets.symmetric(horizontal: 15),
+        padding: const EdgeInsets.symmetric(horizontal: 6),
         itemCount: sortedLists.length,
         itemBuilder: (context, index) {
           final list = sortedLists[index];
@@ -692,46 +693,53 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
                 ),
                 Card(
                   margin: const EdgeInsets.only(bottom: 8.0),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.secondaryContainer.withAlpha(76),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12.0,
-                      vertical: 4.0,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                    child: Wrap(
+                      alignment: WrapAlignment.spaceBetween,
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      spacing: 8.0,
+                      runSpacing: 4.0,
                       children: [
-                        Text(
-                          t.loadListScreen.sortLabel,
-                          style: Theme.of(context).textTheme.labelLarge,
-                        ),
-                        const SizedBox(width: 8),
-                        DropdownButton<_SortOption>(
-                          underline: const SizedBox.shrink(),
-                          value: _currentSort,
-                          items: _SortOption.values
-                              .map(
-                                (option) => DropdownMenuItem(
-                                  value: option,
-                                  child: Text(option.getDisplayName(t)),
-                                ),
-                              )
-                              .toList(),
-                          onChanged: _onSortChanged,
-                        ),
-                        if (_currentSort != _SortOption.custom)
-                          IconButton(
-                            icon: Icon(
-                              _isSortAscending
-                                  ? Icons.arrow_upward
-                                  : Icons.arrow_downward,
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              t.loadListScreen.sortLabel,
+                              style: Theme.of(context).textTheme.labelLarge,
                             ),
-                            onPressed: () {
-                              setState(() {
-                                _isSortAscending = !_isSortAscending;
-                              });
-                            },
-                          ),
-                        const Spacer(),
+                            const SizedBox(width: 8),
+                            DropdownButton<_SortOption>(
+                              underline: const SizedBox.shrink(),
+                              value: _currentSort,
+                              items: _SortOption.values
+                                  .map(
+                                    (option) => DropdownMenuItem(
+                                      value: option,
+                                      child: Text(option.getDisplayName(t)),
+                                    ),
+                                  )
+                                  .toList(),
+                              onChanged: _onSortChanged,
+                            ),
+                            if (_currentSort != _SortOption.custom)
+                              IconButton(
+                                icon: Icon(
+                                  _isSortAscending
+                                      ? Icons.arrow_upward
+                                      : Icons.arrow_downward,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    _isSortAscending = !_isSortAscending;
+                                  });
+                                },
+                              ),
+                          ],
+                        ),
                         if (!_isSelectMode)
                           TextButton(
                             onPressed: _toggleSelectMode,
