@@ -11,6 +11,7 @@ class StudyListFormState {
     required this.studyList,
     this.rawTermsInput = "",
     this.listNameInput = "",
+    this.selectedGroupId,
     this.errorMessage,
     this.isLoading = false,
   });
@@ -19,13 +20,13 @@ class StudyListFormState {
     String initialListName = "";
     String initialRawTerms = "";
     return StudyListFormState(
-      studyList:
-          StudyList()
-            ..id = _uuid.v4()
-            ..name = initialListName
-            ..terms = [],
+      studyList: StudyList()
+        ..id = _uuid.v4()
+        ..name = initialListName
+        ..terms = [],
       listNameInput: initialListName,
       rawTermsInput: initialRawTerms,
+      selectedGroupId: null,
     );
   }
 
@@ -33,12 +34,14 @@ class StudyListFormState {
   final bool isLoading;
   final String listNameInput;
   final String rawTermsInput;
+  final String? selectedGroupId;
   final StudyList studyList;
 
   StudyListFormState copyWith({
     StudyList? studyList,
     String? rawTermsInput,
     String? listNameInput,
+    String? selectedGroupId,
     String? errorMessage,
     bool? isLoading,
     bool clearError = false,
@@ -47,6 +50,7 @@ class StudyListFormState {
       studyList: studyList ?? this.studyList,
       rawTermsInput: rawTermsInput ?? this.rawTermsInput,
       listNameInput: listNameInput ?? this.listNameInput,
+      selectedGroupId: selectedGroupId ?? this.selectedGroupId,
       errorMessage: clearError ? null : errorMessage ?? this.errorMessage,
       isLoading: isLoading ?? this.isLoading,
     );

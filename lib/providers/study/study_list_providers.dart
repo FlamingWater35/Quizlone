@@ -68,6 +68,10 @@ Future<StudyList?> activeStudyList(Ref ref) async {
 
 @riverpod
 class StudyListFormNotifier extends _$StudyListFormNotifier {
+  void setGroupId(String? groupId) {
+    state = state.copyWith(selectedGroupId: groupId);
+  }
+
   void setListName(String name) {
     state = state.copyWith(listNameInput: name, clearError: true);
   }
@@ -85,7 +89,7 @@ class StudyListFormNotifier extends _$StudyListFormNotifier {
     }
 
     final dbService = ref.read(databaseServiceProvider);
-    final listToSave = state.studyList;
+    final listToSave = state.studyList..groupId = state.selectedGroupId;
 
     try {
       _log.fine("Saving list (create/update): ${listToSave.name}");

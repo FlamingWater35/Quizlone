@@ -5,8 +5,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
 import 'package:quizlone/routing/app_router.dart';
 
+import '../../models/study_group.dart';
 import '../../providers/study/study_list_providers.dart';
 import '../../widgets/centered_view.dart';
+import 'load_list_screen.dart';
 
 @RoutePage()
 class InputScreen extends ConsumerStatefulWidget {
@@ -53,6 +55,7 @@ class _InputScreenState extends ConsumerState<InputScreen> {
     final formNotifier = ref.read(studyListFormProvider.notifier);
     final textTheme = Theme.of(context).textTheme;
     final t = Translations.of(context);
+    final groupsAsync = ref.watch(studyGroupsProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -75,14 +78,48 @@ class _InputScreenState extends ConsumerState<InputScreen> {
                     border: const OutlineInputBorder(),
                     errorText:
                         (formState.errorMessage != null &&
-                                formState.errorMessage!.toLowerCase().contains(
-                                  "list name",
-                                ))
-                            ? formState.errorMessage
-                            : null,
+                            formState.errorMessage!.toLowerCase().contains(
+                              "list name",
+                            ))
+                        ? formState.errorMessage
+                        : null,
                   ),
                   onChanged: formNotifier.setListName,
                   enabled: !formState.isLoading,
+                ),
+                const SizedBox(height: 16),
+                groupsAsync.when(
+                  data: (groups) {
+                    if (groups.isEmpty) {
+                      return const SizedBox.shrink();
+                    }
+                    return DropdownButtonFormField<String?>(
+                      initialValue: formState.selectedGroupId,
+                      decoration: InputDecoration(
+                        labelText: t.inputScreen.assignToGroup,
+                        border: const OutlineInputBorder(),
+                      ),
+                      items: [
+                        DropdownMenuItem<String?>(
+                          value: null,
+                          child: Text(t.loadListScreen.ungrouped),
+                        ),
+                        ...groups.map((StudyGroup group) {
+                          return DropdownMenuItem<String?>(
+                            value: group.id,
+                            child: Text(group.name),
+                          );
+                        }),
+                      ],
+                      onChanged: formState.isLoading
+                          ? null
+                          : (String? newValue) {
+                              formNotifier.setGroupId(newValue);
+                            },
+                    );
+                  },
+                  loading: () => const SizedBox.shrink(),
+                  error: (err, stack) => const SizedBox.shrink(),
                 ),
                 const SizedBox(height: 24),
                 Text(t.inputScreen.pasteTerms, style: textTheme.titleMedium),
@@ -102,11 +139,11 @@ class _InputScreenState extends ConsumerState<InputScreen> {
                     alignLabelWithHint: true,
                     errorText:
                         (formState.errorMessage != null &&
-                                !formState.errorMessage!.toLowerCase().contains(
-                                  "list name",
-                                ))
-                            ? formState.errorMessage
-                            : null,
+                            !formState.errorMessage!.toLowerCase().contains(
+                              "list name",
+                            ))
+                        ? formState.errorMessage
+                        : null,
                   ),
                   maxLines: 10,
                   minLines: 5,
@@ -124,29 +161,27 @@ class _InputScreenState extends ConsumerState<InputScreen> {
                       OutlinedButton.icon(
                         icon: const Icon(Icons.arrow_back),
                         label: Text(t.general.back),
-                        onPressed:
-                            formState.isLoading
-                                ? null
-                                : () {
-                                  context.router.pop();
-                                },
+                        onPressed: formState.isLoading
+                            ? null
+                            : () {
+                                context.router.pop();
+                              },
                       ),
                       ElevatedButton.icon(
                         icon: const Icon(Icons.save_alt),
                         label: Text(t.inputScreen.saveList),
-                        onPressed:
-                            formState.isLoading
-                                ? null
-                                : () async {
-                                  FocusScope.of(context).unfocus();
-                                  final success =
-                                      await formNotifier.saveListAndContinue();
-                                  if (success && context.mounted) {
-                                    context.router.replace(
-                                      const ModeSelectionRoute(),
-                                    );
-                                  }
-                                },
+                        onPressed: formState.isLoading
+                            ? null
+                            : () async {
+                                FocusScope.of(context).unfocus();
+                                final success = await formNotifier
+                                    .saveListAndContinue();
+                                if (success && context.mounted) {
+                                  context.router.replace(
+                                    const ModeSelectionRoute(),
+                                  );
+                                }
+                              },
                       ),
                     ],
                   ),
