@@ -358,8 +358,11 @@ class DatabaseService {
     return groups;
   }
 
-  Stream<List<StudyGroup>> listenToStudyGroups() {
-    return _studyGroupBox.watch().asyncMap((_) => getAllStudyGroups());
+  Stream<List<StudyGroup>> listenToStudyGroups() async* {
+    yield await getAllStudyGroups();
+    await for (final _ in _studyGroupBox.watch()) {
+      yield await getAllStudyGroups();
+    }
   }
 
   Future<void> deleteStudyGroup(String groupId) async {
