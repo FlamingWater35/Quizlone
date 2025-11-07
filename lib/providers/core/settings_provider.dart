@@ -9,6 +9,25 @@ part 'settings_provider.g.dart';
 
 final _log = Logger("SettingsProvider");
 
+void initLocaleSettings() {
+  LocaleSettings.setPluralResolver(
+    locale: AppLocale.en,
+    cardinalResolver: PluralResolvers.cardinal(AppLocale.en.languageCode),
+  );
+  LocaleSettings.setPluralResolver(
+    locale: AppLocale.fi,
+    cardinalResolver: PluralResolvers.cardinal(AppLocale.fi.languageCode),
+  );
+  LocaleSettings.setPluralResolver(
+    locale: AppLocale.es,
+    cardinalResolver: PluralResolvers.cardinal(AppLocale.es.languageCode),
+  );
+  LocaleSettings.setPluralResolver(
+    locale: AppLocale.ru,
+    cardinalResolver: PluralResolvers.cardinal(AppLocale.ru.languageCode),
+  );
+}
+
 @riverpod
 class AppTheme extends _$AppTheme {
   Future<void> setTheme(ThemeMode mode) async {

@@ -22,6 +22,7 @@ final _log = Logger('main');
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  initLocaleSettings();
   _setupLogging();
 
   await dotenv.load(fileName: ".env");
