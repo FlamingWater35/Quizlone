@@ -158,6 +158,19 @@ class _TranslationsLoadListScreenFi implements TranslationsLoadListScreenEn {
 	@override String get title => 'Lataa lista';
 	@override String get searchHint => 'Etsi listaa...';
 	@override String get noMatches => 'Hakuasi vastaavia listoja ei löytynyt.';
+	@override String get createGroup => 'Luo ryhmä';
+	@override String get select => 'Valitse';
+	@override String get cancel => 'Peruuta';
+	@override String get ungrouped => 'Ryhmittämättömät';
+	@override String get move => 'Siirrä';
+	@override String itemsSelected({required num count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('fi'))(count,
+		one: '1 kohde valittu',
+		other: '${count} kohdetta valittu',
+	);
+	@override late final _TranslationsLoadListScreenCreateGroupDialogFi createGroupDialog = _TranslationsLoadListScreenCreateGroupDialogFi._(_root);
+	@override late final _TranslationsLoadListScreenMoveToGroupDialogFi moveToGroupDialog = _TranslationsLoadListScreenMoveToGroupDialogFi._(_root);
+	@override late final _TranslationsLoadListScreenDeleteGroupDialogFi deleteGroupDialog = _TranslationsLoadListScreenDeleteGroupDialogFi._(_root);
+	@override late final _TranslationsLoadListScreenDeleteListsDialogFi deleteListsDialog = _TranslationsLoadListScreenDeleteListsDialogFi._(_root);
 }
 
 // Path: modeSelectionScreen
@@ -328,8 +341,8 @@ class _TranslationsControlsScreenFi implements TranslationsControlsScreenEn {
 
 	// Translations
 	@override String get title => 'Ohjaimet';
-	@override String get gesturesTitle => 'Liikkeet (Muistikortit)';
-	@override String get keyboardTitle => 'Näppäimistö (Muistikortit)';
+	@override String get gesturesTitle => 'Eleet (muistikortit)';
+	@override String get keyboardTitle => 'Näppäimistö (muistikortit)';
 	@override String get nextCard => 'Seuraava kortti';
 	@override String get previousCard => 'Edellinen kortti';
 	@override String get flipCard => 'Käännä kortti';
@@ -436,6 +449,61 @@ class _TranslationsInputScreenErrorsFi implements TranslationsInputScreenErrorsE
 	@override String emptyTerm({required Object line}) => 'Muotovirhe rivin ${line} lähellä. Löydettiin tyhjä termi tai määritelmä.';
 	@override String get noValidPairs => 'Kelvollisia termi/määritelmä-pareja ei löytynyt.';
 	@override String saveFailed({required Object error}) => 'Listan tallennus epäonnistui: ${error}';
+}
+
+// Path: loadListScreen.createGroupDialog
+class _TranslationsLoadListScreenCreateGroupDialogFi implements TranslationsLoadListScreenCreateGroupDialogEn {
+	_TranslationsLoadListScreenCreateGroupDialogFi._(this._root);
+
+	final TranslationsFi _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Luo uusi ryhmä';
+	@override String get hint => 'Ryhmän nimi';
+	@override String get create => 'Luo';
+	@override String get errorEmpty => 'Ryhmän nimi ei voi olla tyhjä.';
+}
+
+// Path: loadListScreen.moveToGroupDialog
+class _TranslationsLoadListScreenMoveToGroupDialogFi implements TranslationsLoadListScreenMoveToGroupDialogEn {
+	_TranslationsLoadListScreenMoveToGroupDialogFi._(this._root);
+
+	final TranslationsFi _root; // ignore: unused_field
+
+	// Translations
+	@override String title({required num count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('fi'))(count,
+		one: 'Siirrä 1 kohde kohteeseen...',
+		other: 'Siirrä ${count} kohdetta kohteeseen...',
+	);
+}
+
+// Path: loadListScreen.deleteGroupDialog
+class _TranslationsLoadListScreenDeleteGroupDialogFi implements TranslationsLoadListScreenDeleteGroupDialogEn {
+	_TranslationsLoadListScreenDeleteGroupDialogFi._(this._root);
+
+	final TranslationsFi _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Poista ryhmä';
+	@override String content({required Object name}) => 'Haluatko varmasti poistaa ryhmän \'${name}\'?';
+	@override String get warning => 'Tämän ryhmän sisällä olevat listat siirretään ryhmittämättömiin.';
+}
+
+// Path: loadListScreen.deleteListsDialog
+class _TranslationsLoadListScreenDeleteListsDialogFi implements TranslationsLoadListScreenDeleteListsDialogEn {
+	_TranslationsLoadListScreenDeleteListsDialogFi._(this._root);
+
+	final TranslationsFi _root; // ignore: unused_field
+
+	// Translations
+	@override String title({required num count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('fi'))(count,
+		one: 'Poistetaanko 1 lista?',
+		other: 'Poistetaanko ${count} listaa?',
+	);
+	@override String content({required num count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('fi'))(count,
+		one: 'Tämä toiminto on pysyvä, eikä sitä voi kumota.',
+		other: 'Tämä toiminto on pysyvä, eikä sitä voi kumota.',
+	);
 }
 
 // Path: modeSelectionScreen.errors
@@ -665,6 +733,34 @@ extension on TranslationsFi {
 			case 'loadListScreen.title': return 'Lataa lista';
 			case 'loadListScreen.searchHint': return 'Etsi listaa...';
 			case 'loadListScreen.noMatches': return 'Hakuasi vastaavia listoja ei löytynyt.';
+			case 'loadListScreen.createGroup': return 'Luo ryhmä';
+			case 'loadListScreen.select': return 'Valitse';
+			case 'loadListScreen.cancel': return 'Peruuta';
+			case 'loadListScreen.ungrouped': return 'Ryhmittämättömät';
+			case 'loadListScreen.move': return 'Siirrä';
+			case 'loadListScreen.itemsSelected': return ({required num count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('fi'))(count,
+				one: '1 kohde valittu',
+				other: '${count} kohdetta valittu',
+			);
+			case 'loadListScreen.createGroupDialog.title': return 'Luo uusi ryhmä';
+			case 'loadListScreen.createGroupDialog.hint': return 'Ryhmän nimi';
+			case 'loadListScreen.createGroupDialog.create': return 'Luo';
+			case 'loadListScreen.createGroupDialog.errorEmpty': return 'Ryhmän nimi ei voi olla tyhjä.';
+			case 'loadListScreen.moveToGroupDialog.title': return ({required num count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('fi'))(count,
+				one: 'Siirrä 1 kohde kohteeseen...',
+				other: 'Siirrä ${count} kohdetta kohteeseen...',
+			);
+			case 'loadListScreen.deleteGroupDialog.title': return 'Poista ryhmä';
+			case 'loadListScreen.deleteGroupDialog.content': return ({required Object name}) => 'Haluatko varmasti poistaa ryhmän \'${name}\'?';
+			case 'loadListScreen.deleteGroupDialog.warning': return 'Tämän ryhmän sisällä olevat listat siirretään ryhmittämättömiin.';
+			case 'loadListScreen.deleteListsDialog.title': return ({required num count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('fi'))(count,
+				one: 'Poistetaanko 1 lista?',
+				other: 'Poistetaanko ${count} listaa?',
+			);
+			case 'loadListScreen.deleteListsDialog.content': return ({required num count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('fi'))(count,
+				one: 'Tämä toiminto on pysyvä, eikä sitä voi kumota.',
+				other: 'Tämä toiminto on pysyvä, eikä sitä voi kumota.',
+			);
 			case 'modeSelectionScreen.title': return 'Valinnat & Tila';
 			case 'modeSelectionScreen.noActiveList': return 'Aktiivista opiskelulistaa ei löytynyt tai listaa ei voitu ladata.';
 			case 'modeSelectionScreen.debugActiveId': return ({required Object id}) => 'Debug: Nykyinen aktiivinen ID on ${id}';
@@ -797,8 +893,8 @@ extension on TranslationsFi {
 			case 'settingsScreen.snackbars.importError': return ({required Object error}) => 'Virhe tietojen tuonnissa: ${error}';
 			case 'settingsScreen.snackbars.allDeleted': return 'Kaikki opiskelulistat on poistettu.';
 			case 'controlsScreen.title': return 'Ohjaimet';
-			case 'controlsScreen.gesturesTitle': return 'Liikkeet (Muistikortit)';
-			case 'controlsScreen.keyboardTitle': return 'Näppäimistö (Muistikortit)';
+			case 'controlsScreen.gesturesTitle': return 'Eleet (muistikortit)';
+			case 'controlsScreen.keyboardTitle': return 'Näppäimistö (muistikortit)';
 			case 'controlsScreen.nextCard': return 'Seuraava kortti';
 			case 'controlsScreen.previousCard': return 'Edellinen kortti';
 			case 'controlsScreen.flipCard': return 'Käännä kortti';

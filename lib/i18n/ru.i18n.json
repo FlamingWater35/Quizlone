@@ -43,7 +43,7 @@
       "content": "Нажимая кнопку «Подтвердить», вы соглашаетесь с тем, что $email — ваш правильный адрес электронной почты.",
       "confirm": "Подтвердить"
     },
-      "confirmLogoutDialog": {
+    "confirmLogoutDialog": {
       "title": "Подтвердите выход",
       "content": "При выходе ваши данные останутся в облаке. Вы также хотите удалить все учебные данные с этого устройства?",
       "logoutOnly": "Только выйти",
@@ -98,7 +98,49 @@
   "loadListScreen": {
     "title": "Загрузить список",
     "searchHint": "Поиск списка...",
-    "noMatches": "Списки, соответствующие вашему поиску, не найдены."
+    "noMatches": "Списки, соответствующие вашему поиску, не найдены.",
+    "createGroup": "Создать группу",
+    "select": "Выбрать",
+    "cancel": "Отмена",
+    "ungrouped": "Без группы",
+    "move": "Переместить",
+    "itemsSelected(param=count)": {
+      "one": "Выбран $count элемент",
+      "few": "Выбрано $count элемента",
+      "many": "Выбрано $count элементов",
+      "other": "Выбрано $count элемента"
+    },
+    "createGroupDialog": {
+      "title": "Создать новую группу",
+      "hint": "Название группы",
+      "create": "Создать",
+      "errorEmpty": "Название группы не может быть пустым."
+    },
+    "moveToGroupDialog": {
+      "title(param=count)": {
+        "one": "Переместить $count элемент в...",
+        "few": "Переместить $count элемента в...",
+        "many": "Переместить $count элементов в...",
+        "other": "Переместить $count элемента в..."
+      }
+    },
+    "deleteGroupDialog": {
+      "title": "Удалить группу",
+      "content": "Вы уверены, что хотите удалить группу '$name'?",
+      "warning": "Списки в этой группе останутся без группы."
+    },
+    "deleteListsDialog": {
+      "title(param=count)": {
+        "one": "Удалить $count список?",
+        "few": "Удалить $count списка?",
+        "many": "Удалить $count списков?",
+        "other": "Удалить $count списка?"
+      },
+      "content(param=count)": {
+        "one": "Это действие необратимо.",
+        "other": "Это действие необратимо."
+      }
+    }
   },
   "modeSelectionScreen": {
     "title": "Опции и режим",
@@ -123,7 +165,7 @@
     "match": "Сопоставление",
     "backToWelcome": "Вернуться на главный экран",
     "errors": {
-        "saveSettingFailed": "Не удалось сохранить настройку: $error"
+      "saveSettingFailed": "Не удалось сохранить настройку: $error"
     }
   },
   "flashcardScreen": {

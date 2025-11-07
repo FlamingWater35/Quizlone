@@ -252,6 +252,32 @@ class TranslationsLoadListScreenEn {
 
 	/// en: 'No lists match your search.'
 	String get noMatches => 'No lists match your search.';
+
+	/// en: 'Create Group'
+	String get createGroup => 'Create Group';
+
+	/// en: 'Select'
+	String get select => 'Select';
+
+	/// en: 'Cancel'
+	String get cancel => 'Cancel';
+
+	/// en: 'Ungrouped'
+	String get ungrouped => 'Ungrouped';
+
+	/// en: 'Move'
+	String get move => 'Move';
+
+	/// en: '(one) {1 item selected} (other) {$count items selected}'
+	String itemsSelected({required num count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(count,
+		one: '1 item selected',
+		other: '${count} items selected',
+	);
+
+	late final TranslationsLoadListScreenCreateGroupDialogEn createGroupDialog = TranslationsLoadListScreenCreateGroupDialogEn.internal(_root);
+	late final TranslationsLoadListScreenMoveToGroupDialogEn moveToGroupDialog = TranslationsLoadListScreenMoveToGroupDialogEn.internal(_root);
+	late final TranslationsLoadListScreenDeleteGroupDialogEn deleteGroupDialog = TranslationsLoadListScreenDeleteGroupDialogEn.internal(_root);
+	late final TranslationsLoadListScreenDeleteListsDialogEn deleteListsDialog = TranslationsLoadListScreenDeleteListsDialogEn.internal(_root);
 }
 
 // Path: modeSelectionScreen
@@ -783,6 +809,81 @@ class TranslationsInputScreenErrorsEn {
 	String saveFailed({required Object error}) => 'Failed to save list: ${error}';
 }
 
+// Path: loadListScreen.createGroupDialog
+class TranslationsLoadListScreenCreateGroupDialogEn {
+	TranslationsLoadListScreenCreateGroupDialogEn.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Create New Group'
+	String get title => 'Create New Group';
+
+	/// en: 'Group Name'
+	String get hint => 'Group Name';
+
+	/// en: 'Create'
+	String get create => 'Create';
+
+	/// en: 'Group name cannot be empty.'
+	String get errorEmpty => 'Group name cannot be empty.';
+}
+
+// Path: loadListScreen.moveToGroupDialog
+class TranslationsLoadListScreenMoveToGroupDialogEn {
+	TranslationsLoadListScreenMoveToGroupDialogEn.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: '(one) {Move 1 item to...} (other) {Move $count items to...}'
+	String title({required num count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(count,
+		one: 'Move 1 item to...',
+		other: 'Move ${count} items to...',
+	);
+}
+
+// Path: loadListScreen.deleteGroupDialog
+class TranslationsLoadListScreenDeleteGroupDialogEn {
+	TranslationsLoadListScreenDeleteGroupDialogEn.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Delete Group'
+	String get title => 'Delete Group';
+
+	/// en: 'Are you sure you want to delete the group '$name'?'
+	String content({required Object name}) => 'Are you sure you want to delete the group \'${name}\'?';
+
+	/// en: 'Lists within this group will become ungrouped.'
+	String get warning => 'Lists within this group will become ungrouped.';
+}
+
+// Path: loadListScreen.deleteListsDialog
+class TranslationsLoadListScreenDeleteListsDialogEn {
+	TranslationsLoadListScreenDeleteListsDialogEn.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: '(one) {Delete 1 list?} (other) {Delete $count lists?}'
+	String title({required num count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(count,
+		one: 'Delete 1 list?',
+		other: 'Delete ${count} lists?',
+	);
+
+	/// en: '(one) {This action is permanent and cannot be undone.} (other) {This action is permanent and cannot be undone.}'
+	String content({required num count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(count,
+		one: 'This action is permanent and cannot be undone.',
+		other: 'This action is permanent and cannot be undone.',
+	);
+}
+
 // Path: modeSelectionScreen.errors
 class TranslationsModeSelectionScreenErrorsEn {
 	TranslationsModeSelectionScreenErrorsEn.internal(this._root);
@@ -1094,6 +1195,34 @@ extension on Translations {
 			case 'loadListScreen.title': return 'Load List';
 			case 'loadListScreen.searchHint': return 'Search for a list...';
 			case 'loadListScreen.noMatches': return 'No lists match your search.';
+			case 'loadListScreen.createGroup': return 'Create Group';
+			case 'loadListScreen.select': return 'Select';
+			case 'loadListScreen.cancel': return 'Cancel';
+			case 'loadListScreen.ungrouped': return 'Ungrouped';
+			case 'loadListScreen.move': return 'Move';
+			case 'loadListScreen.itemsSelected': return ({required num count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(count,
+				one: '1 item selected',
+				other: '${count} items selected',
+			);
+			case 'loadListScreen.createGroupDialog.title': return 'Create New Group';
+			case 'loadListScreen.createGroupDialog.hint': return 'Group Name';
+			case 'loadListScreen.createGroupDialog.create': return 'Create';
+			case 'loadListScreen.createGroupDialog.errorEmpty': return 'Group name cannot be empty.';
+			case 'loadListScreen.moveToGroupDialog.title': return ({required num count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(count,
+				one: 'Move 1 item to...',
+				other: 'Move ${count} items to...',
+			);
+			case 'loadListScreen.deleteGroupDialog.title': return 'Delete Group';
+			case 'loadListScreen.deleteGroupDialog.content': return ({required Object name}) => 'Are you sure you want to delete the group \'${name}\'?';
+			case 'loadListScreen.deleteGroupDialog.warning': return 'Lists within this group will become ungrouped.';
+			case 'loadListScreen.deleteListsDialog.title': return ({required num count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(count,
+				one: 'Delete 1 list?',
+				other: 'Delete ${count} lists?',
+			);
+			case 'loadListScreen.deleteListsDialog.content': return ({required num count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(count,
+				one: 'This action is permanent and cannot be undone.',
+				other: 'This action is permanent and cannot be undone.',
+			);
 			case 'modeSelectionScreen.title': return 'Options & Mode';
 			case 'modeSelectionScreen.noActiveList': return 'No active study list found or list could not be loaded.';
 			case 'modeSelectionScreen.debugActiveId': return ({required Object id}) => 'Debug: Current Active ID is ${id}';

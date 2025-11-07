@@ -43,7 +43,7 @@
       "content": "Al hacer clic en confirmar, acepta que $email es su dirección de correo electrónico correcta.",
       "confirm": "Confirmar"
     },
-      "confirmLogoutDialog": {
+    "confirmLogoutDialog": {
       "title": "Confirmar cierre de sesión",
       "content": "Cerrar sesión mantendrá tus datos en la nube. ¿Deseas también eliminar todos los datos de estudio de este dispositivo?",
       "logoutOnly": "Solo cerrar sesión",
@@ -96,7 +96,43 @@
   "loadListScreen": {
     "title": "Cargar lista",
     "searchHint": "Buscar una lista...",
-    "noMatches": "Ninguna lista coincide con tu búsqueda."
+    "noMatches": "Ninguna lista coincide con tu búsqueda.",
+    "createGroup": "Crear grupo",
+    "select": "Seleccionar",
+    "cancel": "Cancelar",
+    "ungrouped": "Sin agrupar",
+    "move": "Mover",
+    "itemsSelected(param=count)": {
+      "one": "1 elemento seleccionado",
+      "other": "$count elementos seleccionados"
+    },
+    "createGroupDialog": {
+      "title": "Crear nuevo grupo",
+      "hint": "Nombre del grupo",
+      "create": "Crear",
+      "errorEmpty": "El nombre del grupo no puede estar vacío."
+    },
+    "moveToGroupDialog": {
+      "title(param=count)": {
+        "one": "Mover 1 elemento a...",
+        "other": "Mover $count elementos a..."
+      }
+    },
+    "deleteGroupDialog": {
+      "title": "Eliminar grupo",
+      "content": "¿Estás seguro de que quieres eliminar el grupo '$name'?",
+      "warning": "Las listas de este grupo quedarán sin agrupar."
+    },
+    "deleteListsDialog": {
+      "title(param=count)": {
+        "one": "¿Eliminar 1 lista?",
+        "other": "¿Eliminar $count listas?"
+      },
+      "content(param=count)": {
+        "one": "Esta acción es permanente y no se puede deshacer.",
+        "other": "Esta acción es permanente y no se puede deshacer."
+      }
+    }
   },
   "modeSelectionScreen": {
     "title": "Opciones y Modo",
@@ -121,7 +157,7 @@
     "match": "Combinar",
     "backToWelcome": "Volver a la pantalla de bienvenida",
     "errors": {
-        "saveSettingFailed": "Error al guardar el ajuste: $error"
+      "saveSettingFailed": "Error al guardar el ajuste: $error"
     }
   },
   "flashcardScreen": {

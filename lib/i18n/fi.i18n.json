@@ -43,7 +43,7 @@
       "content": "Vahvista-painiketta napsauttamalla hyväksyt, että $email on oikea sähköpostiosoitteesi.",
       "confirm": "Vahvista"
     },
-      "confirmLogoutDialog": {
+    "confirmLogoutDialog": {
       "title": "Vahvista uloskirjautuminen",
       "content": "Uloskirjautuminen säilyttää tietosi pilvessä. Haluatko myös poistaa kaikki opiskelutiedot tältä laitteelta?",
       "logoutOnly": "Vain uloskirjautuminen",
@@ -96,7 +96,43 @@
   "loadListScreen": {
     "title": "Lataa lista",
     "searchHint": "Etsi listaa...",
-    "noMatches": "Hakuasi vastaavia listoja ei löytynyt."
+    "noMatches": "Hakuasi vastaavia listoja ei löytynyt.",
+    "createGroup": "Luo ryhmä",
+    "select": "Valitse",
+    "cancel": "Peruuta",
+    "ungrouped": "Ryhmittämättömät",
+    "move": "Siirrä",
+    "itemsSelected(param=count)": {
+      "one": "1 kohde valittu",
+      "other": "$count kohdetta valittu"
+    },
+    "createGroupDialog": {
+      "title": "Luo uusi ryhmä",
+      "hint": "Ryhmän nimi",
+      "create": "Luo",
+      "errorEmpty": "Ryhmän nimi ei voi olla tyhjä."
+    },
+    "moveToGroupDialog": {
+      "title(param=count)": {
+        "one": "Siirrä 1 kohde kohteeseen...",
+        "other": "Siirrä $count kohdetta kohteeseen..."
+      }
+    },
+    "deleteGroupDialog": {
+      "title": "Poista ryhmä",
+      "content": "Haluatko varmasti poistaa ryhmän '$name'?",
+      "warning": "Tämän ryhmän sisällä olevat listat siirretään ryhmittämättömiin."
+    },
+    "deleteListsDialog": {
+      "title(param=count)": {
+        "one": "Poistetaanko 1 lista?",
+        "other": "Poistetaanko $count listaa?"
+      },
+      "content(param=count)": {
+        "one": "Tämä toiminto on pysyvä, eikä sitä voi kumota.",
+        "other": "Tämä toiminto on pysyvä, eikä sitä voi kumota."
+      }
+    }
   },
   "modeSelectionScreen": {
     "title": "Valinnat & Tila",
@@ -121,7 +157,7 @@
     "match": "Yhdistä",
     "backToWelcome": "Takaisin aloitusnäyttöön",
     "errors": {
-        "saveSettingFailed": "Asetuksen tallennus epäonnistui: $error"
+      "saveSettingFailed": "Asetuksen tallennus epäonnistui: $error"
     }
   },
   "flashcardScreen": {
@@ -267,8 +303,8 @@
   },
   "controlsScreen": {
     "title": "Ohjaimet",
-    "gesturesTitle": "Liikkeet (Muistikortit)",
-    "keyboardTitle": "Näppäimistö (Muistikortit)",
+    "gesturesTitle": "Eleet (muistikortit)",
+    "keyboardTitle": "Näppäimistö (muistikortit)",
     "nextCard": "Seuraava kortti",
     "previousCard": "Edellinen kortti",
     "flipCard": "Käännä kortti",

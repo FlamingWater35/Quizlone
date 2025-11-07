@@ -96,7 +96,43 @@
   "loadListScreen": {
     "title": "Load List",
     "searchHint": "Search for a list...",
-    "noMatches": "No lists match your search."
+    "noMatches": "No lists match your search.",
+    "createGroup": "Create Group",
+    "select": "Select",
+    "cancel": "Cancel",
+    "ungrouped": "Ungrouped",
+    "move": "Move",
+    "itemsSelected(param=count)": {
+      "one": "1 item selected",
+      "other": "$count items selected"
+    },
+    "createGroupDialog": {
+      "title": "Create New Group",
+      "hint": "Group Name",
+      "create": "Create",
+      "errorEmpty": "Group name cannot be empty."
+    },
+    "moveToGroupDialog": {
+      "title(param=count)": {
+        "one": "Move 1 item to...",
+        "other": "Move $count items to..."
+      }
+    },
+    "deleteGroupDialog": {
+      "title": "Delete Group",
+      "content": "Are you sure you want to delete the group '$name'?",
+      "warning": "Lists within this group will become ungrouped."
+    },
+    "deleteListsDialog": {
+      "title(param=count)": {
+        "one": "Delete 1 list?",
+        "other": "Delete $count lists?"
+      },
+      "content(param=count)": {
+        "one": "This action is permanent and cannot be undone.",
+        "other": "This action is permanent and cannot be undone."
+      }
+    }
   },
   "modeSelectionScreen": {
     "title": "Options & Mode",

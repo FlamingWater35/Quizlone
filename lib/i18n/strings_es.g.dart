@@ -158,6 +158,19 @@ class _TranslationsLoadListScreenEs implements TranslationsLoadListScreenEn {
 	@override String get title => 'Cargar lista';
 	@override String get searchHint => 'Buscar una lista...';
 	@override String get noMatches => 'Ninguna lista coincide con tu búsqueda.';
+	@override String get createGroup => 'Crear grupo';
+	@override String get select => 'Seleccionar';
+	@override String get cancel => 'Cancelar';
+	@override String get ungrouped => 'Sin agrupar';
+	@override String get move => 'Mover';
+	@override String itemsSelected({required num count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('es'))(count,
+		one: '1 elemento seleccionado',
+		other: '${count} elementos seleccionados',
+	);
+	@override late final _TranslationsLoadListScreenCreateGroupDialogEs createGroupDialog = _TranslationsLoadListScreenCreateGroupDialogEs._(_root);
+	@override late final _TranslationsLoadListScreenMoveToGroupDialogEs moveToGroupDialog = _TranslationsLoadListScreenMoveToGroupDialogEs._(_root);
+	@override late final _TranslationsLoadListScreenDeleteGroupDialogEs deleteGroupDialog = _TranslationsLoadListScreenDeleteGroupDialogEs._(_root);
+	@override late final _TranslationsLoadListScreenDeleteListsDialogEs deleteListsDialog = _TranslationsLoadListScreenDeleteListsDialogEs._(_root);
 }
 
 // Path: modeSelectionScreen
@@ -438,6 +451,61 @@ class _TranslationsInputScreenErrorsEs implements TranslationsInputScreenErrorsE
 	@override String saveFailed({required Object error}) => 'No se pudo guardar la lista: ${error}';
 }
 
+// Path: loadListScreen.createGroupDialog
+class _TranslationsLoadListScreenCreateGroupDialogEs implements TranslationsLoadListScreenCreateGroupDialogEn {
+	_TranslationsLoadListScreenCreateGroupDialogEs._(this._root);
+
+	final TranslationsEs _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Crear nuevo grupo';
+	@override String get hint => 'Nombre del grupo';
+	@override String get create => 'Crear';
+	@override String get errorEmpty => 'El nombre del grupo no puede estar vacío.';
+}
+
+// Path: loadListScreen.moveToGroupDialog
+class _TranslationsLoadListScreenMoveToGroupDialogEs implements TranslationsLoadListScreenMoveToGroupDialogEn {
+	_TranslationsLoadListScreenMoveToGroupDialogEs._(this._root);
+
+	final TranslationsEs _root; // ignore: unused_field
+
+	// Translations
+	@override String title({required num count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('es'))(count,
+		one: 'Mover 1 elemento a...',
+		other: 'Mover ${count} elementos a...',
+	);
+}
+
+// Path: loadListScreen.deleteGroupDialog
+class _TranslationsLoadListScreenDeleteGroupDialogEs implements TranslationsLoadListScreenDeleteGroupDialogEn {
+	_TranslationsLoadListScreenDeleteGroupDialogEs._(this._root);
+
+	final TranslationsEs _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Eliminar grupo';
+	@override String content({required Object name}) => '¿Estás seguro de que quieres eliminar el grupo \'${name}\'?';
+	@override String get warning => 'Las listas de este grupo quedarán sin agrupar.';
+}
+
+// Path: loadListScreen.deleteListsDialog
+class _TranslationsLoadListScreenDeleteListsDialogEs implements TranslationsLoadListScreenDeleteListsDialogEn {
+	_TranslationsLoadListScreenDeleteListsDialogEs._(this._root);
+
+	final TranslationsEs _root; // ignore: unused_field
+
+	// Translations
+	@override String title({required num count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('es'))(count,
+		one: '¿Eliminar 1 lista?',
+		other: '¿Eliminar ${count} listas?',
+	);
+	@override String content({required num count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('es'))(count,
+		one: 'Esta acción es permanente y no se puede deshacer.',
+		other: 'Esta acción es permanente y no se puede deshacer.',
+	);
+}
+
 // Path: modeSelectionScreen.errors
 class _TranslationsModeSelectionScreenErrorsEs implements TranslationsModeSelectionScreenErrorsEn {
 	_TranslationsModeSelectionScreenErrorsEs._(this._root);
@@ -665,6 +733,34 @@ extension on TranslationsEs {
 			case 'loadListScreen.title': return 'Cargar lista';
 			case 'loadListScreen.searchHint': return 'Buscar una lista...';
 			case 'loadListScreen.noMatches': return 'Ninguna lista coincide con tu búsqueda.';
+			case 'loadListScreen.createGroup': return 'Crear grupo';
+			case 'loadListScreen.select': return 'Seleccionar';
+			case 'loadListScreen.cancel': return 'Cancelar';
+			case 'loadListScreen.ungrouped': return 'Sin agrupar';
+			case 'loadListScreen.move': return 'Mover';
+			case 'loadListScreen.itemsSelected': return ({required num count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('es'))(count,
+				one: '1 elemento seleccionado',
+				other: '${count} elementos seleccionados',
+			);
+			case 'loadListScreen.createGroupDialog.title': return 'Crear nuevo grupo';
+			case 'loadListScreen.createGroupDialog.hint': return 'Nombre del grupo';
+			case 'loadListScreen.createGroupDialog.create': return 'Crear';
+			case 'loadListScreen.createGroupDialog.errorEmpty': return 'El nombre del grupo no puede estar vacío.';
+			case 'loadListScreen.moveToGroupDialog.title': return ({required num count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('es'))(count,
+				one: 'Mover 1 elemento a...',
+				other: 'Mover ${count} elementos a...',
+			);
+			case 'loadListScreen.deleteGroupDialog.title': return 'Eliminar grupo';
+			case 'loadListScreen.deleteGroupDialog.content': return ({required Object name}) => '¿Estás seguro de que quieres eliminar el grupo \'${name}\'?';
+			case 'loadListScreen.deleteGroupDialog.warning': return 'Las listas de este grupo quedarán sin agrupar.';
+			case 'loadListScreen.deleteListsDialog.title': return ({required num count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('es'))(count,
+				one: '¿Eliminar 1 lista?',
+				other: '¿Eliminar ${count} listas?',
+			);
+			case 'loadListScreen.deleteListsDialog.content': return ({required num count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('es'))(count,
+				one: 'Esta acción es permanente y no se puede deshacer.',
+				other: 'Esta acción es permanente y no se puede deshacer.',
+			);
 			case 'modeSelectionScreen.title': return 'Opciones y Modo';
 			case 'modeSelectionScreen.noActiveList': return 'No se encontró una lista de estudio activa o no se pudo cargar la lista.';
 			case 'modeSelectionScreen.debugActiveId': return ({required Object id}) => 'Depuración: El ID activo actual es ${id}';

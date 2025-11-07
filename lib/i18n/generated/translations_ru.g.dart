@@ -162,6 +162,21 @@ class _TranslationsLoadListScreenRu extends TranslationsLoadListScreenEn {
 	@override String get title => 'Загрузить список';
 	@override String get searchHint => 'Поиск списка...';
 	@override String get noMatches => 'Списки, соответствующие вашему поиску, не найдены.';
+	@override String get createGroup => 'Создать группу';
+	@override String get select => 'Выбрать';
+	@override String get cancel => 'Отмена';
+	@override String get ungrouped => 'Без группы';
+	@override String get move => 'Переместить';
+	@override String itemsSelected({required num count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('ru'))(count,
+		one: 'Выбран ${count} элемент',
+		few: 'Выбрано ${count} элемента',
+		many: 'Выбрано ${count} элементов',
+		other: 'Выбрано ${count} элемента',
+	);
+	@override late final _TranslationsLoadListScreenCreateGroupDialogRu createGroupDialog = _TranslationsLoadListScreenCreateGroupDialogRu._(_root);
+	@override late final _TranslationsLoadListScreenMoveToGroupDialogRu moveToGroupDialog = _TranslationsLoadListScreenMoveToGroupDialogRu._(_root);
+	@override late final _TranslationsLoadListScreenDeleteGroupDialogRu deleteGroupDialog = _TranslationsLoadListScreenDeleteGroupDialogRu._(_root);
+	@override late final _TranslationsLoadListScreenDeleteListsDialogRu deleteListsDialog = _TranslationsLoadListScreenDeleteListsDialogRu._(_root);
 }
 
 // Path: modeSelectionScreen
@@ -442,6 +457,65 @@ class _TranslationsInputScreenErrorsRu extends TranslationsInputScreenErrorsEn {
 	@override String saveFailed({required Object error}) => 'Не удалось сохранить список: ${error}';
 }
 
+// Path: loadListScreen.createGroupDialog
+class _TranslationsLoadListScreenCreateGroupDialogRu extends TranslationsLoadListScreenCreateGroupDialogEn {
+	_TranslationsLoadListScreenCreateGroupDialogRu._(TranslationsRu root) : this._root = root, super.internal(root);
+
+	final TranslationsRu _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Создать новую группу';
+	@override String get hint => 'Название группы';
+	@override String get create => 'Создать';
+	@override String get errorEmpty => 'Название группы не может быть пустым.';
+}
+
+// Path: loadListScreen.moveToGroupDialog
+class _TranslationsLoadListScreenMoveToGroupDialogRu extends TranslationsLoadListScreenMoveToGroupDialogEn {
+	_TranslationsLoadListScreenMoveToGroupDialogRu._(TranslationsRu root) : this._root = root, super.internal(root);
+
+	final TranslationsRu _root; // ignore: unused_field
+
+	// Translations
+	@override String title({required num count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('ru'))(count,
+		one: 'Переместить ${count} элемент в...',
+		few: 'Переместить ${count} элемента в...',
+		many: 'Переместить ${count} элементов в...',
+		other: 'Переместить ${count} элемента в...',
+	);
+}
+
+// Path: loadListScreen.deleteGroupDialog
+class _TranslationsLoadListScreenDeleteGroupDialogRu extends TranslationsLoadListScreenDeleteGroupDialogEn {
+	_TranslationsLoadListScreenDeleteGroupDialogRu._(TranslationsRu root) : this._root = root, super.internal(root);
+
+	final TranslationsRu _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Удалить группу';
+	@override String content({required Object name}) => 'Вы уверены, что хотите удалить группу \'${name}\'?';
+	@override String get warning => 'Списки в этой группе останутся без группы.';
+}
+
+// Path: loadListScreen.deleteListsDialog
+class _TranslationsLoadListScreenDeleteListsDialogRu extends TranslationsLoadListScreenDeleteListsDialogEn {
+	_TranslationsLoadListScreenDeleteListsDialogRu._(TranslationsRu root) : this._root = root, super.internal(root);
+
+	final TranslationsRu _root; // ignore: unused_field
+
+	// Translations
+	@override String title({required num count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('ru'))(count,
+		one: 'Удалить ${count} список?',
+		few: 'Удалить ${count} списка?',
+		many: 'Удалить ${count} списков?',
+		other: 'Удалить ${count} списка?',
+	);
+	@override String content({required num count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('ru'))(count,
+		one: 'Это действие необратимо.',
+		other: 'Это действие необратимо.',
+	);
+}
+
 // Path: modeSelectionScreen.errors
 class _TranslationsModeSelectionScreenErrorsRu extends TranslationsModeSelectionScreenErrorsEn {
 	_TranslationsModeSelectionScreenErrorsRu._(TranslationsRu root) : this._root = root, super.internal(root);
@@ -673,6 +747,40 @@ extension on TranslationsRu {
 			case 'loadListScreen.title': return 'Загрузить список';
 			case 'loadListScreen.searchHint': return 'Поиск списка...';
 			case 'loadListScreen.noMatches': return 'Списки, соответствующие вашему поиску, не найдены.';
+			case 'loadListScreen.createGroup': return 'Создать группу';
+			case 'loadListScreen.select': return 'Выбрать';
+			case 'loadListScreen.cancel': return 'Отмена';
+			case 'loadListScreen.ungrouped': return 'Без группы';
+			case 'loadListScreen.move': return 'Переместить';
+			case 'loadListScreen.itemsSelected': return ({required num count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('ru'))(count,
+				one: 'Выбран ${count} элемент',
+				few: 'Выбрано ${count} элемента',
+				many: 'Выбрано ${count} элементов',
+				other: 'Выбрано ${count} элемента',
+			);
+			case 'loadListScreen.createGroupDialog.title': return 'Создать новую группу';
+			case 'loadListScreen.createGroupDialog.hint': return 'Название группы';
+			case 'loadListScreen.createGroupDialog.create': return 'Создать';
+			case 'loadListScreen.createGroupDialog.errorEmpty': return 'Название группы не может быть пустым.';
+			case 'loadListScreen.moveToGroupDialog.title': return ({required num count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('ru'))(count,
+				one: 'Переместить ${count} элемент в...',
+				few: 'Переместить ${count} элемента в...',
+				many: 'Переместить ${count} элементов в...',
+				other: 'Переместить ${count} элемента в...',
+			);
+			case 'loadListScreen.deleteGroupDialog.title': return 'Удалить группу';
+			case 'loadListScreen.deleteGroupDialog.content': return ({required Object name}) => 'Вы уверены, что хотите удалить группу \'${name}\'?';
+			case 'loadListScreen.deleteGroupDialog.warning': return 'Списки в этой группе останутся без группы.';
+			case 'loadListScreen.deleteListsDialog.title': return ({required num count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('ru'))(count,
+				one: 'Удалить ${count} список?',
+				few: 'Удалить ${count} списка?',
+				many: 'Удалить ${count} списков?',
+				other: 'Удалить ${count} списка?',
+			);
+			case 'loadListScreen.deleteListsDialog.content': return ({required num count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('ru'))(count,
+				one: 'Это действие необратимо.',
+				other: 'Это действие необратимо.',
+			);
 			case 'modeSelectionScreen.title': return 'Опции и режим';
 			case 'modeSelectionScreen.noActiveList': return 'Активный учебный список не найден или не удалось загрузить.';
 			case 'modeSelectionScreen.debugActiveId': return ({required Object id}) => 'Отладка: Текущий активный ID: ${id}';
