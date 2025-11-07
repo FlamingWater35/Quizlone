@@ -25,6 +25,25 @@ enum _ListItemMenuAction { rename, move, delete }
 
 enum _GroupMenuAction { delete }
 
+enum _SortOption { custom, name, lastOpened, createdAt, listLength }
+
+extension _SortOptionExtension on _SortOption {
+  String getDisplayName(Translations t) {
+    switch (this) {
+      case _SortOption.custom:
+        return t.loadListScreen.sortOptions.none;
+      case _SortOption.name:
+        return t.loadListScreen.sortOptions.name;
+      case _SortOption.lastOpened:
+        return t.loadListScreen.sortOptions.lastOpened;
+      case _SortOption.createdAt:
+        return t.loadListScreen.sortOptions.createdAt;
+      case _SortOption.listLength:
+        return t.loadListScreen.sortOptions.listLength;
+    }
+  }
+}
+
 @RoutePage()
 class LoadListScreen extends ConsumerStatefulWidget {
   const LoadListScreen({super.key});
@@ -34,8 +53,10 @@ class LoadListScreen extends ConsumerStatefulWidget {
 }
 
 class _LoadListScreenState extends ConsumerState<LoadListScreen> {
+  _SortOption _currentSort = _SortOption.custom;
   final Set<String> _expandedGroupIds = {};
   bool _isSelectMode = false;
+  bool _isSortAscending = true;
   final _searchController = TextEditingController();
   final Set<String> _selectedListIds = {};
 
@@ -133,6 +154,29 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
         _selectedListIds.remove(listId);
       }
     });
+  }
+
+  void _onSortChanged(_SortOption? newSort) {
+    if (newSort != null) {
+      setState(() {
+        if (_currentSort == newSort && newSort != _SortOption.custom) {
+          _isSortAscending = !_isSortAscending;
+        } else {
+          _currentSort = newSort;
+          switch (newSort) {
+            case _SortOption.name:
+            case _SortOption.custom:
+              _isSortAscending = true;
+              break;
+            case _SortOption.lastOpened:
+            case _SortOption.createdAt:
+            case _SortOption.listLength:
+              _isSortAscending = false;
+              break;
+          }
+        }
+      });
+    }
   }
 
   Future<void> _showCreateGroupDialog() async {
@@ -295,13 +339,6 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
               onPressed: _toggleSelectMode,
             )
           : null,
-      actions: [
-        if (!_isSelectMode)
-          TextButton(
-            onPressed: _toggleSelectMode,
-            child: Text(t.loadListScreen.select),
-          ),
-      ],
     );
   }
 
@@ -515,38 +552,92 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
     );
   }
 
-  Widget _buildSearchResultsView(List<StudyList> lists, Translations t) {
-    final searchQuery = _searchController.text.toLowerCase();
-    final filteredLists = lists
-        .where((list) => list.name.toLowerCase().contains(searchQuery))
-        .toList();
+  List<StudyList> _getSortedLists(List<StudyList> lists) {
+    List<StudyList> processedLists = List.from(lists);
 
-    if (filteredLists.isEmpty) {
+    final searchQuery = _searchController.text.toLowerCase();
+    if (searchQuery.isNotEmpty) {
+      processedLists = processedLists
+          .where((list) => list.name.toLowerCase().contains(searchQuery))
+          .toList();
+    }
+
+    if (_currentSort == _SortOption.custom) {
+      // With search, we can't maintain original order, so we sort by name
+      if (searchQuery.isNotEmpty) {
+        processedLists.sort(
+          (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
+        );
+      }
+      return processedLists;
+    }
+
+    Comparator<StudyList> comparator;
+    switch (_currentSort) {
+      case _SortOption.name:
+        comparator = (a, b) =>
+            a.name.toLowerCase().compareTo(b.name.toLowerCase());
+        break;
+      case _SortOption.lastOpened:
+        comparator = (a, b) => (b.lastOpenedAt ?? DateTime(1970)).compareTo(
+          a.lastOpenedAt ?? DateTime(1970),
+        );
+        break;
+      case _SortOption.createdAt:
+        comparator = (a, b) => b.createdAt.compareTo(a.createdAt);
+        break;
+      case _SortOption.listLength:
+        comparator = (a, b) => b.terms.length.compareTo(a.terms.length);
+        break;
+      case _SortOption.custom:
+        return processedLists; // Should not happen
+    }
+
+    processedLists.sort(comparator);
+    return _isSortAscending ? processedLists : processedLists.reversed.toList();
+  }
+
+  Widget _buildSortedOrSearchedListView(List<StudyList> lists, Translations t) {
+    final sortedLists = _getSortedLists(lists);
+
+    if (sortedLists.isEmpty) {
       return Center(child: Text(t.loadListScreen.noMatches));
     }
 
-    return ReorderableListView.builder(
-      buildDefaultDragHandles: false,
-      itemCount: filteredLists.length,
-      itemBuilder: (context, index) {
-        final list = filteredLists[index];
-        return _buildListCard(
-          list,
-          t,
-          index: index,
-          isDraggable: !_isSelectMode,
-        );
-      },
-      onReorder: (int oldIndex, int newIndex) {
-        final originalOldIndex = lists.indexOf(filteredLists[oldIndex]);
-        final originalNewIndex = newIndex < filteredLists.length
-            ? lists.indexOf(filteredLists[newIndex])
-            : lists.length;
-        ref
-            .read(studyListsProvider.notifier)
-            .reorder(originalOldIndex, originalNewIndex);
-      },
-    );
+    final isCustomSort = _currentSort == _SortOption.custom;
+
+    if (isCustomSort) {
+      return ReorderableListView.builder(
+        buildDefaultDragHandles: false,
+        itemCount: sortedLists.length,
+        itemBuilder: (context, index) {
+          final list = sortedLists[index];
+          return _buildListCard(
+            list,
+            t,
+            index: index,
+            isDraggable: !_isSelectMode,
+          );
+        },
+        onReorder: (int oldIndex, int newIndex) {
+          final originalOldIndex = lists.indexOf(sortedLists[oldIndex]);
+          final originalNewIndex = newIndex < sortedLists.length
+              ? lists.indexOf(sortedLists[newIndex])
+              : lists.length;
+          ref
+              .read(studyListsProvider.notifier)
+              .reorder(originalOldIndex, originalNewIndex);
+        },
+      );
+    } else {
+      return ListView.builder(
+        itemCount: sortedLists.length,
+        itemBuilder: (context, index) {
+          final list = sortedLists[index];
+          return _buildListCard(list, t, index: index, isDraggable: false);
+        },
+      );
+    }
   }
 
   @override
@@ -564,6 +655,8 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
 
     final t = Translations.of(context);
     final isSearching = _searchController.text.isNotEmpty;
+    final isCustomSort = _currentSort == _SortOption.custom;
+    final showGroupedView = !isSearching && isCustomSort;
 
     return Scaffold(
       appBar: _buildAppBar(context, t),
@@ -574,7 +667,7 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
             child: Column(
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 16.0),
+                  padding: const EdgeInsets.only(bottom: 8.0),
                   child: TextField(
                     controller: _searchController,
                     decoration: InputDecoration(
@@ -585,6 +678,49 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
                         horizontal: 10,
                       ),
                     ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
+                  child: Row(
+                    children: [
+                      Text(
+                        t.loadListScreen.sortLabel,
+                        style: Theme.of(context).textTheme.labelLarge,
+                      ),
+                      const SizedBox(width: 8),
+                      DropdownButton<_SortOption>(
+                        value: _currentSort,
+                        items: _SortOption.values
+                            .map(
+                              (option) => DropdownMenuItem(
+                                value: option,
+                                child: Text(option.getDisplayName(t)),
+                              ),
+                            )
+                            .toList(),
+                        onChanged: _onSortChanged,
+                      ),
+                      if (_currentSort != _SortOption.custom)
+                        IconButton(
+                          icon: Icon(
+                            _isSortAscending
+                                ? Icons.arrow_upward
+                                : Icons.arrow_downward,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _isSortAscending = !_isSortAscending;
+                            });
+                          },
+                        ),
+                      const Spacer(),
+                      if (!_isSelectMode)
+                        TextButton(
+                          onPressed: _toggleSelectMode,
+                          child: Text(t.loadListScreen.select),
+                        ),
+                    ],
                   ),
                 ),
                 Expanded(
@@ -602,10 +738,10 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
                                   child: Text(t.startScreen.noLists),
                                 );
                               }
-                              if (isSearching) {
-                                return _buildSearchResultsView(lists, t);
-                              } else {
+                              if (showGroupedView) {
                                 return _buildGroupedListView(lists, groups, t);
+                              } else {
+                                return _buildSortedOrSearchedListView(lists, t);
                               }
                             },
                             loading: () => const Center(
@@ -643,7 +779,7 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
       bottomNavigationBar: _isSelectMode
           ? _buildBottomActionBar(context, t)
           : null,
-      floatingActionButton: !_isSelectMode && !isSearching
+      floatingActionButton: !_isSelectMode && showGroupedView
           ? _buildFab(context, t)
           : null,
     );
