@@ -424,15 +424,15 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
     required Translations t,
     bool isUngroupedOnlyGroup = false,
   }) {
+    final isExpanded = _expandedGroupIds.contains(groupId ?? 'ungrouped');
+
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 6),
       clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
       child: ExpansionTile(
         key: ValueKey(groupId ?? 'ungrouped'),
-        initiallyExpanded:
-            isUngroupedOnlyGroup ||
-            _expandedGroupIds.contains(groupId ?? 'ungrouped'),
+        initiallyExpanded: isUngroupedOnlyGroup || isExpanded,
         onExpansionChanged: (isExpanded) {
           setState(() {
             if (isExpanded) {
@@ -472,7 +472,18 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
               ),
           ],
         ),
-        children: lists.map((list) => _buildListCard(list, t)).toList(),
+        children: [
+          Column(
+            children: lists.asMap().entries.map((entry) {
+              final index = entry.key;
+              final list = entry.value;
+              return _buildListCard(
+                list,
+                t,
+              ).animate().fadeIn(duration: 300.ms, delay: (100 * index).ms);
+            }).toList(),
+          ),
+        ],
       ),
     );
   }
