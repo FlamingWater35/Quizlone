@@ -1,7 +1,10 @@
+import 'package:animated_list_plus/animated_list_plus.dart';
+import 'package:animated_list_plus/transitions.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
@@ -411,7 +414,7 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
           );
         }),
       ],
-    );
+    ).animate().fadeIn(duration: 500.ms);
   }
 
   Widget _buildGroupExpansionTile({
@@ -600,12 +603,15 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
       return Center(child: Text(t.loadListScreen.noMatches));
     }
 
-    return ListView.builder(
+    return ImplicitlyAnimatedList<StudyList>(
       padding: const EdgeInsets.symmetric(horizontal: 6),
-      itemCount: sortedLists.length,
-      itemBuilder: (context, index) {
-        final list = sortedLists[index];
-        return _buildListCard(list, t);
+      items: sortedLists,
+      areItemsTheSame: (a, b) => a.id == b.id,
+      itemBuilder: (context, animation, item, index) {
+        return SizeFadeTransition(
+          animation: animation,
+          child: _buildListCard(item, t),
+        );
       },
     );
   }
@@ -694,10 +700,20 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
                             ),
                             if (_currentSort != _SortOption.custom)
                               IconButton(
-                                icon: Icon(
-                                  _isSortAscending
-                                      ? Icons.arrow_upward
-                                      : Icons.arrow_downward,
+                                icon: AnimatedSwitcher(
+                                  duration: const Duration(milliseconds: 300),
+                                  transitionBuilder: (child, animation) {
+                                    return ScaleTransition(
+                                      scale: animation,
+                                      child: child,
+                                    );
+                                  },
+                                  child: Icon(
+                                    _isSortAscending
+                                        ? Icons.arrow_upward
+                                        : Icons.arrow_downward,
+                                    key: ValueKey<bool>(_isSortAscending),
+                                  ),
                                 ),
                                 onPressed: () {
                                   setState(() {
@@ -734,11 +750,12 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
                                   child: Text(t.startScreen.noLists),
                                 );
                               }
-                              if (showGroupedView) {
-                                return _buildGroupedListView(lists, groups, t);
-                              } else {
-                                return _buildSortedOrSearchedListView(lists, t);
-                              }
+                              return AnimatedSwitcher(
+                                duration: const Duration(milliseconds: 500),
+                                child: showGroupedView
+                                    ? _buildGroupedListView(lists, groups, t)
+                                    : _buildSortedOrSearchedListView(lists, t),
+                              );
                             },
                             loading: () => const Center(
                               child: CircularProgressIndicator(),
