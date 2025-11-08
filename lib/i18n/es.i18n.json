@@ -1,104 +1,104 @@
 {
   "appName": "Quizlone",
   "general": {
-    "back": "Volver",
+    "back": "Atrás",
     "cancel": "Cancelar",
     "delete": "Eliminar",
     "error": "Error",
     "next": "Siguiente",
     "previous": "Anterior",
-    "saveAndContinue": "Guardar y continuar",
+    "saveAndContinue": "Guardar y Continuar",
     "submit": "Enviar",
-    "all": "Todos",
+    "all": "Todo",
     "loading": "Cargando...",
     "genericError": "Error: $error",
     "reset": "Reiniciar"
   },
   "drawer": {
-    "settings": "Ajustes",
+    "settings": "Configuración",
     "controls": "Controles",
     "about": "Acerca de",
     "aboutDialog": {
       "legalese": "© 2025 Quizlone",
-      "description": "Una aplicación de estudio simple y moderna creada con Flutter."
+      "description": "Una aplicación de estudio simple y moderna construida con Flutter."
     },
-    "cloudSync": "Sincronización en la nube",
-    "loggedInAs": "Sesión iniciada como:",
+    "cloudSync": "Sincronización en la Nube",
+    "loggedInAs": "Conectado como:",
     "noEmail": "Sin correo electrónico",
-    "logout": "Cerrar sesión",
-    "email": "Correo electrónico",
+    "logout": "Cerrar Sesión",
+    "email": "Correo Electrónico",
     "password": "Contraseña",
-    "signIn": "Iniciar sesión",
+    "signIn": "Iniciar Sesión",
     "signUp": "Registrarse",
     "validation": {
-      "emailEmpty": "Por favor, introduce un correo electrónico",
-      "passwordEmpty": "Por favor, introduce una contraseña"
+      "emailEmpty": "Por favor ingresa un correo electrónico",
+      "passwordEmpty": "Por favor ingresa una contraseña"
     },
     "snackbars": {
-      "successfulAccountCreation": "Cuenta creada correctamente.",
+      "successfulAccountCreation": "Cuenta creada exitosamente.",
       "unexpectedError": "Ocurrió un error inesperado"
     },
     "confirmEmailDialog": {
-      "title": "Confirmar correo electrónico",
-      "content": "Al hacer clic en confirmar, acepta que $email es su dirección de correo electrónico correcta.",
+      "title": "Confirmar Correo Electrónico",
+      "content": "Al hacer clic en confirmar, aceptas que $email es tu dirección de correo electrónico correcta.",
       "confirm": "Confirmar"
     },
     "confirmLogoutDialog": {
-      "title": "Confirmar cierre de sesión",
-      "content": "Cerrar sesión mantendrá tus datos en la nube. ¿Deseas también eliminar todos los datos de estudio de este dispositivo?",
-      "logoutOnly": "Solo cerrar sesión",
-      "deleteAndLogout": "Eliminar y cerrar sesión"
+      "title": "Confirmar Cierre de Sesión",
+      "content": "Cerrar sesión mantendrá tus datos en la nube. ¿También deseas eliminar todos los datos de estudio de este dispositivo?",
+      "logoutOnly": "Solo Cerrar Sesión",
+      "deleteAndLogout": "Eliminar y Cerrar Sesión"
     }
   },
   "aboutScreen": {
     "version": "Versión $version",
-    "viewLicenses": "Ver licencias"
+    "viewLicenses": "Ver Licencias"
   },
   "startScreen": {
     "title": "Quizlone",
     "welcome": "¡Bienvenido!",
-    "createNewList": "Crear nueva lista",
-    "openSavedList": "Abrir lista guardada",
-    "loadSavedList": "Cargar lista guardada",
+    "createNewList": "Crear Nueva Lista",
+    "openSavedList": "Abrir Lista Guardada",
+    "loadSavedList": "Cargar Lista Guardada",
     "noLists": "Aún no hay listas guardadas.",
     "termCount(param=count)": {
       "one": "1 término",
       "other": "$count términos"
     },
     "confirmDeleteDialog": {
-      "title": "Confirmar eliminación",
+      "title": "Confirmar Eliminación",
       "content": "¿Estás seguro de que quieres eliminar '$listName'?"
     },
     "renameListDialog": {
-      "title": "Renombrar lista",
+      "title": "Renombrar Lista",
       "rename": "Renombrar",
       "errorNameExists": "Ya existe una lista con este nombre.",
       "errorNameEmpty": "El nombre de la lista no puede estar vacío."
     }
   },
   "inputScreen": {
-    "title": "Crear nueva lista",
-    "listName": "Nombre de la lista",
-    "listNameHint": "p. ej., Vocabulario del Capítulo 1",
+    "title": "Crear Nueva Lista",
+    "listName": "Nombre de la Lista",
+    "listNameHint": "ej., Vocabulario Capítulo 1",
     "pasteTerms": "Pega tus términos a continuación:",
-    "pasteTermsHint": "(Término en una línea, definición en la siguiente)",
+    "pasteTermsHint": "(Término en una línea, Definición en la siguiente)",
     "termsHint": "Justicia\nEl principio de rectitud moral\nSol\nUna estrella que es el centro de un sistema planetario",
-    "saveList": "Guardar lista",
-    "assignToGroup": "Asignar a grupo",
+    "saveList": "Guardar Lista",
+    "assignToGroup": "Asignar a Grupo",
     "errors": {
       "listNameEmpty": "El nombre de la lista no puede estar vacío.",
-      "noTerms": "No se han introducido términos/definiciones.",
+      "noTerms": "No se ingresaron términos/definiciones.",
       "invalidFormat": "Formato inválido. Cada término necesita una definición en la siguiente línea.",
-      "emptyTerm": "Error de formato cerca de la línea $line. Se encontró un término o definición vacíos.",
-      "noValidPairs": "No se encontraron pares de término/definición válidos.",
-      "saveFailed": "No se pudo guardar la lista: $error"
+      "emptyTerm": "Error de formato cerca de la línea $line. Se encontró un término o definición vacío.",
+      "noValidPairs": "No se encontraron pares término/definición válidos.",
+      "saveFailed": "Error al guardar la lista: $error"
     }
   },
   "loadListScreen": {
-    "title": "Cargar lista",
+    "title": "Cargar Lista",
     "searchHint": "Buscar una lista...",
-    "noMatches": "Ninguna lista coincide con tu búsqueda.",
-    "createGroup": "Crear grupo",
+    "noMatches": "No hay listas que coincidan con tu búsqueda.",
+    "createGroup": "Crear Grupo",
     "select": "Seleccionar",
     "cancel": "Cancelar",
     "ungrouped": "Sin agrupar",
@@ -108,8 +108,8 @@
       "other": "$count elementos seleccionados"
     },
     "createGroupDialog": {
-      "title": "Crear nuevo grupo",
-      "hint": "Nombre del grupo",
+      "title": "Crear Nuevo Grupo",
+      "hint": "Nombre del Grupo",
       "create": "Crear",
       "errorEmpty": "El nombre del grupo no puede estar vacío."
     },
@@ -120,9 +120,9 @@
       }
     },
     "deleteGroupDialog": {
-      "title": "Eliminar grupo",
+      "title": "Eliminar Grupo",
       "content": "¿Estás seguro de que quieres eliminar el grupo '$name'?",
-      "warning": "Las listas de este grupo quedarán sin agrupar."
+      "warning": "Las listas dentro de este grupo pasarán a estar sin agrupar."
     },
     "deleteListsDialog": {
       "title(param=count)": {
@@ -134,178 +134,184 @@
         "other": "Esta acción es permanente y no se puede deshacer."
       }
     },
-    "sortLabel": "Ordenar por:",
+    "sortLabel": "Ordenar:",
     "sortOptions": {
       "none": "Ninguno",
       "name": "Nombre",
-      "lastOpened": "Recién abierto",
-      "createdAt": "Fecha de creación",
+      "lastOpened": "Último Abierto",
+      "createdAt": "Creado",
       "listLength": "Longitud"
     }
   },
   "modeSelectionScreen": {
     "title": "Opciones y Modo",
-    "noActiveList": "No se encontró una lista de estudio activa o no se pudo cargar la lista.",
-    "debugActiveId": "Depuración: El ID activo actual es $id",
-    "returnToWelcome": "Volver a la pantalla de bienvenida",
-    "flashcardOptions": "Opciones de tarjetas",
-    "showTermFirst": "Mostrar término primero",
-    "showDefFirst": "Mostrar definición primero",
-    "studyOptions": "Opciones de aprendizaje y prueba",
-    "askForTerm": "Mostrar definición, preguntar término",
-    "askForDef": "Mostrar término, preguntar definición",
-    "studyLength": "Longitud de estudio:",
-    "testFormat": "Formato de prueba",
-    "writtenAnswer": "Respuesta escrita",
-    "multipleChoice": "Opción múltiple",
+    "noActiveList": "No se encontró la lista de estudio activa o no se pudo cargar.",
+    "debugActiveId": "Depuración: El ID Activo Actual es $id",
+    "returnToWelcome": "Volver a la Pantalla de Bienvenida",
+    "flashcardOptions": "Opciones de Tarjetas",
+    "showTermFirst": "Mostrar Término Primero",
+    "showDefFirst": "Mostrar Definición Primero",
+    "studyOptions": "Opciones de Aprender y Probar",
+    "askForTerm": "Mostrar Definición, Preguntar Término",
+    "askForDef": "Mostrar Término, Preguntar Definición",
+    "studyLength": "Duración del Estudio:",
+    "testFormat": "Formato de Prueba",
+    "writtenAnswer": "Respuesta Escrita",
+    "multipleChoice": "Opción Múltiple",
     "requireOnlyOneAnswer": "Aceptar una respuesta separada por comas",
     "requireOnlyOneAnswerSubtitle": "Si la respuesta correcta es 'a, b', se acepta 'a'",
     "flashcards": "Tarjetas",
     "learn": "Aprender",
-    "test": "Prueba",
-    "match": "Combinar",
-    "backToWelcome": "Volver a la pantalla de bienvenida",
+    "test": "Probar",
+    "match": "Emparejar",
+    "backToWelcome": "Volver a la Pantalla de Bienvenida",
     "errors": {
-      "saveSettingFailed": "Error al guardar el ajuste: $error"
+      "saveSettingFailed": "Error al guardar la configuración: $error"
     }
   },
   "flashcardScreen": {
     "title": "Tarjetas",
     "noCards": "No hay tarjetas para mostrar.",
     "noTerms": "No hay términos disponibles para estudiar.",
-    "shuffle": "Barajar",
+    "shuffle": "Mezclar",
     "restart": "Reiniciar"
   },
   "learnScreen": {
     "title": "Aprender",
-    "restartSession": "Reiniciar sesión de aprendizaje",
-    "backToOptions": "Volver a las opciones",
-    "preparing": "Preparando la siguiente pregunta...",
+    "restartSession": "Reiniciar Sesión de Aprendizaje",
+    "backToOptions": "Volver a Opciones",
+    "preparing": "Preparando siguiente pregunta...",
     "answerHint": "Escribe tu respuesta aquí...",
     "incorrect": "Incorrecto",
     "hint": "Pista",
     "skip": "Saltar",
-    "backToModeSelection": "Volver a la selección de modo",
+    "backToModeSelection": "Volver a Selección de Modo",
     "errors": {
-      "noTerms": "No hay términos disponibles para el modo de aprendizaje.",
-      "notEnoughTerms": "No hay suficientes términos para la longitud seleccionada."
+      "noTerms": "No hay términos disponibles para el modo Aprender.",
+      "notEnoughTerms": "No hay suficientes términos para la duración seleccionada."
     },
     "feedback": {
       "correct": "¡Correcto!",
-      "incorrect": "Incorrecto. La respuesta correcta es: $answer",
-      "hint": "Pista: Empieza con \"$char\"",
+      "incorrect": "Incorrecto. Respuesta correcta: $answer",
+      "hint": "Pista: Comienza con \"$char\"",
       "skipped": "Saltado. La respuesta era: $answer"
     },
     "progress": {
       "allLearned": "¡Todos los términos aprendidos!",
       "cycleStatus": "Ciclo $cycleNum | Elemento $itemNum de $total",
-      "sessionComplete": "¡Sesión de aprendizaje completa! ¡Bien hecho!",
+      "sessionComplete": "¡Sesión de aprendizaje completada! ¡Bien hecho!",
       "maxCyclesReached(param=count)": {
-        "one": "Se alcanzó el máximo de ciclos. Queda 1 elemento por repasar.",
-        "other": "Se alcanzó el máximo de ciclos. Quedan $count elementos por repasar."
+        "one": "Máximo de ciclos alcanzado. 1 elemento aún por repasar.",
+        "other": "Máximo de ciclos alcanzado. $count elementos aún por repasar."
       },
-      "startingCycle": "Iniciando ciclo $cycleNum con $count elemento(s)..."
+      "startingCycle": "Comenzando Ciclo $cycleNum con $count elemento(s)..."
     }
   },
   "matchScreen": {
-    "title": "Combinar",
+    "title": "Emparejar",
     "congratulations": "¡Felicidades!",
     "timeCompleted": "¡Terminaste en $time segundos!",
-    "playAgain": "Jugar de nuevo",
-    "backToOptions": "Volver a las opciones",
+    "playAgain": "Jugar de Nuevo",
+    "backToOptions": "Volver a Opciones",
     "leaderboard": {
-      "title": "Tabla de clasificación",
-      "noRecords": "Aún no hay récords. ¡Sé el primero!",
+      "title": "Tabla de Clasificación",
+      "noRecords": "Aún no hay registros. ¡Sé el primero!",
       "time": "$time Segundos",
-      "rank": "N.º $rank",
+      "rank": "#$rank",
       "rankOver100": ">100"
     },
     "errors": {
-      "noTerms": "No hay términos disponibles para el modo Combinar.",
-      "notEnoughTerms": "Se requiere al menos un par de término/definición para jugar."
+      "noTerms": "No hay términos disponibles para el modo Emparejar.",
+      "notEnoughTerms": "Se requiere al menos un par término/definición para jugar."
     }
   },
   "testScreen": {
-    "title": "Prueba",
+    "title": "Probar",
     "noQuestions": "No hay preguntas para esta prueba.",
-    "viewResults": "Ver resultados",
-    "submitTest": "Enviar prueba",
+    "viewResults": "Ver Resultados",
+    "submitTest": "Enviar Prueba",
     "errors": {
       "loadFailed": "Error al cargar la lista de estudio para la prueba.",
       "noTerms": "No hay términos disponibles para la prueba.",
-      "notEnoughTerms": "No hay suficientes términos para la longitud de estudio seleccionada."
+      "notEnoughTerms": "No hay suficientes términos para la duración de estudio seleccionada."
     }
   },
   "resultsScreen": {
-    "title": "Resultados de la prueba",
-    "notSubmitted": "La prueba aún no se ha enviado.",
+    "title": "Resultados de la Prueba",
+    "notSubmitted": "Prueba aún no enviada.",
     "noQuestions": "No había preguntas en esta prueba.",
-    "yourScore": "Tu puntuación",
-    "scoreFraction": "$score / $total correctas",
-    "reviewIncorrect": "Revisar respuestas incorrectas:",
-    "yourAnswerWas": "Tu respuesta: $answer",
+    "yourScore": "Tu Puntuación",
+    "scoreFraction": "$score / $total Correcto",
+    "reviewIncorrect": "Revisar Respuestas Incorrectas:",
+    "yourAnswerWas": "Tu Respuesta: $answer",
     "noAnswer": "(Sin respuesta)",
-    "congratulations": "¡Felicidades! ¡Acertaste todo!",
-    "retryTest": "Reintentar prueba",
-    "reviewFlashcards": "Revisar con tarjetas",
-    "backToWelcome": "Volver a la pantalla de bienvenida"
+    "congratulations": "¡Felicidades! ¡Obtuviste todo correcto!",
+    "retryTest": "Reintentar Prueba",
+    "reviewFlashcards": "Revisar con Tarjetas",
+    "backToWelcome": "Volver a la Pantalla de Bienvenida"
   },
   "settingsScreen": {
-    "title": "Ajustes",
+    "title": "Configuración",
     "appearance": "Apariencia",
     "language": "Idioma",
-    "languageDialogTitle": "Seleccionar idioma",
-    "uiScaling": "Escalado de la interfaz",
+    "languageDialogTitle": "Seleccionar Idioma",
+    "uiScaling": "Escalado de IU",
     "uiScalingSubtitle": "Ajusta el tamaño del texto y los elementos de la interfaz",
-    "systemDefault": "Predeterminado del sistema",
+    "systemDefault": "Predeterminado del Sistema",
     "light": "Claro",
     "dark": "Oscuro",
-    "english": "Inglés",
-    "finnish": "Finlandés",
-    "russian": "Ruso",
+    "english": "Inglés (English)",
+    "finnish": "Finés (Suomi)",
+    "russian": "Ruso (Русский)",
     "spanish": "Español",
-    "swedish": "Sueco",
-    "update": "Actualización",
-    "checkForUpdate": "Buscar actualizaciones",
+    "swedish": "Sueco (Svenska)",
+    "french": "Francés (Français)",
+    "german": "Alemán (Deutsch)",
+    "portuguese": "Portugués (Português)",
+    "italian": "Italiano (Italiano)",
+    "chinese": "Chino (简体中文)",
+    "japanese": "Japonés (日本語)",
+    "update": "Actualizar",
+    "checkForUpdate": "Buscar Actualizaciones",
     "checkingForUpdate": "Buscando actualizaciones...",
-    "upToDate": "Estás al día",
-    "noNewVersion": "No se encontró una nueva versión.",
-    "updateAvailable": "Actualización disponible: v$version",
+    "upToDate": "Estás actualizado",
+    "noNewVersion": "No se encontró nueva versión.",
+    "updateAvailable": "Actualización Disponible: v$version",
     "tapToInstall": "Toca para descargar e instalar",
     "viewReleaseNotes": "Ver notas de la versión",
     "downloadingUpdate": "Descargando actualización...",
-    "updateCheckFailed": "Error al buscar actualizaciones",
-    "dataManagement": "Gestión de datos",
-    "exportData": "Exportar datos",
+    "updateCheckFailed": "Error al Buscar Actualizaciones",
+    "dataManagement": "Gestión de Datos",
+    "exportData": "Exportar Datos",
     "exportDataSubtitle": "Guardar todas las listas en un archivo",
-    "importData": "Importar datos",
+    "importData": "Importar Datos",
     "importDataSubtitle": "Cargar listas desde un archivo",
-    "deleteAllData": "Eliminar todos los datos",
+    "deleteAllData": "Eliminar Todos los Datos",
     "exportDialog": {
-      "title": "Exportar datos",
+      "title": "Exportar Datos",
       "content": "¿Cómo te gustaría exportar tus datos?",
-      "share": "Compartir archivo",
-      "save": "Guardar en el dispositivo",
+      "share": "Compartir Archivo",
+      "save": "Guardar en Dispositivo",
       "shareText": "Aquí está tu copia de seguridad de Quizlone.",
-      "saveFileTitle": "Por favor, seleccione un archivo de salida:",
-      "backupFileName": "copia_de_seguridad_quizlone"
+      "saveFileTitle": "Por favor selecciona un archivo de salida:",
+      "backupFileName": "quizlone_backup"
     },
     "importDialog": {
-      "title": "Confirmar importación",
-      "content": "Esto importará listas de estudio desde un archivo. Cualquier lista existente con el mismo nombre será sobrescrita. ¿Continuar?",
+      "title": "Confirmar Importación",
+      "content": "Esto importará listas de estudio desde un archivo. Las listas existentes con el mismo nombre se sobrescribirán. ¿Continuar?",
       "import": "Importar"
     },
     "deleteDialog": {
-      "title": "Confirmar eliminación",
+      "title": "Confirmar Eliminación",
       "content": "¿Estás seguro de que quieres eliminar TODAS las listas de estudio? Esta acción no se puede deshacer.",
-      "deleteAll": "Eliminar todo"
+      "deleteAll": "Eliminar Todo"
     },
     "snackbars": {
       "noDataToExport": "No hay datos para exportar.",
-      "exportSuccess": "¡Datos exportados con éxito!",
+      "exportSuccess": "¡Datos exportados exitosamente!",
       "exportError": "Error al exportar datos: $error",
-      "fileSaved": "¡Archivo guardado con éxito!",
-      "importSuccess": "¡Se importaron $count listas con éxito!",
+      "fileSaved": "¡Archivo guardado exitosamente!",
+      "importSuccess": "¡$count listas importadas exitosamente!",
       "importError": "Error al importar datos: $error",
       "allDeleted": "Todas las listas de estudio han sido eliminadas."
     }
@@ -314,14 +320,14 @@
     "title": "Controles",
     "gesturesTitle": "Gestos (Tarjetas)",
     "keyboardTitle": "Teclado (Tarjetas)",
-    "nextCard": "Siguiente tarjeta",
-    "previousCard": "Tarjeta anterior",
-    "flipCard": "Voltear tarjeta",
-    "swipeLeft": "Deslizar a la izquierda",
-    "swipeRight": "Deslizar a la derecha",
-    "swipeVertical": "Deslizar hacia arriba o abajo",
-    "arrowRight": "Tecla de flecha derecha",
-    "arrowLeft": "Tecla de flecha izquierda",
-    "arrowVerticalOrSpace": "Teclas de flecha arriba/abajo o Barra espaciadora"
+    "nextCard": "Siguiente Tarjeta",
+    "previousCard": "Tarjeta Anterior",
+    "flipCard": "Voltear Tarjeta",
+    "swipeLeft": "Deslizar a la Izquierda",
+    "swipeRight": "Deslizar a la Derecha",
+    "swipeVertical": "Deslizar Arriba o Abajo",
+    "arrowRight": "Tecla Flecha Derecha",
+    "arrowLeft": "Tecla Flecha Izquierda",
+    "arrowVerticalOrSpace": "Flecha Arriba/Abajo o Barra Espaciadora"
   }
 }

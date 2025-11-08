@@ -7,7 +7,7 @@
     "error": "Virhe",
     "next": "Seuraava",
     "previous": "Edellinen",
-    "saveAndContinue": "Tallenna ja jatka",
+    "saveAndContinue": "Tallenna ja Jatka",
     "submit": "Lähetä",
     "all": "Kaikki",
     "loading": "Ladataan...",
@@ -16,38 +16,38 @@
   },
   "drawer": {
     "settings": "Asetukset",
-    "controls": "Ohjaimet",
+    "controls": "Ohjaus",
     "about": "Tietoja",
     "aboutDialog": {
       "legalese": "© 2025 Quizlone",
-      "description": "Yksinkertainen ja moderni opiskelusovellus, joka on rakennettu Flutterilla."
+      "description": "Yksinkertainen, moderni opiskelusovellus, joka on rakennettu Flutterilla."
     },
     "cloudSync": "Pilvisynkronointi",
-    "loggedInAs": "Kirjautuneena nimellä:",
+    "loggedInAs": "Kirjautuneena:",
     "noEmail": "Ei sähköpostia",
     "logout": "Kirjaudu ulos",
     "email": "Sähköposti",
     "password": "Salasana",
     "signIn": "Kirjaudu sisään",
-    "signUp": "Rekisteröidy",
+    "signUp": "Luo tili",
     "validation": {
       "emailEmpty": "Syötä sähköpostiosoite",
       "passwordEmpty": "Syötä salasana"
     },
     "snackbars": {
       "successfulAccountCreation": "Tili luotu onnistuneesti.",
-      "unexpectedError": "Tapahtui odottamaton virhe"
+      "unexpectedError": "Tuntematon virhe tapahtui"
     },
     "confirmEmailDialog": {
       "title": "Vahvista sähköposti",
-      "content": "Vahvista-painiketta napsauttamalla hyväksyt, että $email on oikea sähköpostiosoitteesi.",
+      "content": "Klikkaamalla vahvista hyväksyt, että $email on oikea sähköpostiosoitteesi.",
       "confirm": "Vahvista"
     },
     "confirmLogoutDialog": {
       "title": "Vahvista uloskirjautuminen",
-      "content": "Uloskirjautuminen säilyttää tietosi pilvessä. Haluatko myös poistaa kaikki opiskelutiedot tältä laitteelta?",
+      "content": "Uloskirjautumisen jälkeen tietosi säilyvät pilvessä. Haluatko poistaa kaikki opiskelutiedot myös tältä laitteelta?",
       "logoutOnly": "Vain uloskirjautuminen",
-      "deleteAndLogout": "Poista ja kirjaudu ulos"
+      "deleteAndLogout": "Poista & Kirjaudu ulos"
     }
   },
   "aboutScreen": {
@@ -60,48 +60,48 @@
     "createNewList": "Luo uusi lista",
     "openSavedList": "Avaa tallennettu lista",
     "loadSavedList": "Lataa tallennettu lista",
-    "noLists": "Listoja ei ole vielä tallennettu.",
+    "noLists": "Ei tallennettuja listoja vielä.",
     "termCount(param=count)": {
       "one": "1 termi",
       "other": "$count termiä"
     },
     "confirmDeleteDialog": {
       "title": "Vahvista poisto",
-      "content": "Haluatko varmasti poistaa listan '$listName'?"
+      "content": "Haluatko varmasti poistaa '$listName'?"
     },
     "renameListDialog": {
       "title": "Nimeä lista uudelleen",
       "rename": "Nimeä uudelleen",
-      "errorNameExists": "Tämänniminen lista on jo olemassa.",
+      "errorNameExists": "Lista tällä nimellä on jo olemassa.",
       "errorNameEmpty": "Listan nimi ei voi olla tyhjä."
     }
   },
   "inputScreen": {
     "title": "Luo uusi lista",
     "listName": "Listan nimi",
-    "listNameHint": "esim. Luvun 1 sanasto",
-    "pasteTerms": "Liitä termit alle:",
-    "pasteTermsHint": "(Termi yhdelle riville, määritelmä seuraavalle)",
-    "termsHint": "Oikeus\nMoraalisen oikeudenmukaisuuden periaate\nAurinko\nTähti, joka on planeettajärjestelmän keskus",
+    "listNameHint": "esim. Luku 1 sanasto",
+    "pasteTerms": "Liitä termisi alle:",
+    "pasteTermsHint": "(Termi yhdellä rivillä, Määritelmä seuraavalla rivillä)",
+    "termsHint": "Oikeudenmukaisuus\nMoraalisen oikeellisuuden periaate\nAurinko\nTähti, joka on planeettakunnan keskus",
     "saveList": "Tallenna lista",
-    "assignToGroup": "Lisää ryhmään",
+    "assignToGroup": "Määritä ryhmään",
     "errors": {
       "listNameEmpty": "Listan nimi ei voi olla tyhjä.",
-      "noTerms": "Termejä/määritelmiä ei ole syötetty.",
-      "invalidFormat": "Virheellinen muoto. Jokaisella termillä on oltava määritelmä seuraavalla rivillä.",
-      "emptyTerm": "Muotovirhe rivin $line lähellä. Löydettiin tyhjä termi tai määritelmä.",
-      "noValidPairs": "Kelvollisia termi/määritelmä-pareja ei löytynyt.",
+      "noTerms": "Termejä/määritelmiä ei syötetty.",
+      "invalidFormat": "Virheellinen muoto. Jokainen termi tarvitsee määritelmän seuraavalta riviltä.",
+      "emptyTerm": "Muotovirhe rivillä $line. Tyhjä termi tai määritelmä löytyi.",
+      "noValidPairs": "Yhtään kelvollista termi/määritelmä -paria ei löytynyt.",
       "saveFailed": "Listan tallennus epäonnistui: $error"
     }
   },
   "loadListScreen": {
     "title": "Lataa lista",
     "searchHint": "Etsi listaa...",
-    "noMatches": "Hakuasi vastaavia listoja ei löytynyt.",
+    "noMatches": "Yksikään lista ei vastaa hakua.",
     "createGroup": "Luo ryhmä",
     "select": "Valitse",
     "cancel": "Peruuta",
-    "ungrouped": "Ryhmittämättömät",
+    "ungrouped": "Ryhmittelemättömät",
     "move": "Siirrä",
     "itemsSelected(param=count)": {
       "one": "1 kohde valittu",
@@ -115,14 +115,14 @@
     },
     "moveToGroupDialog": {
       "title(param=count)": {
-        "one": "Siirrä 1 kohde kohteeseen...",
-        "other": "Siirrä $count kohdetta kohteeseen..."
+        "one": "Siirrä 1 kohde...",
+        "other": "Siirrä $count kohdetta..."
       }
     },
     "deleteGroupDialog": {
       "title": "Poista ryhmä",
       "content": "Haluatko varmasti poistaa ryhmän '$name'?",
-      "warning": "Tämän ryhmän sisällä olevat listat siirretään ryhmittämättömiin."
+      "warning": "Ryhmän listat siirretään ryhmittelemättömiin."
     },
     "deleteListsDialog": {
       "title(param=count)": {
@@ -130,16 +130,16 @@
         "other": "Poistetaanko $count listaa?"
       },
       "content(param=count)": {
-        "one": "Tämä toiminto on pysyvä, eikä sitä voi kumota.",
-        "other": "Tämä toiminto on pysyvä, eikä sitä voi kumota."
+        "one": "Tämä toiminto on pysyvä eikä sitä voi peruuttaa.",
+        "other": "Tämä toiminto on pysyvä eikä sitä voi peruuttaa."
       }
     },
-    "sortLabel": "Lajittele:",
+    "sortLabel": "Järjestä:",
     "sortOptions": {
-      "none": "Oletus",
+      "none": "Ei mitään",
       "name": "Nimi",
       "lastOpened": "Viimeksi avattu",
-      "createdAt": "Luontipäivä",
+      "createdAt": "Luotu",
       "listLength": "Pituus"
     }
   },
@@ -147,38 +147,38 @@
     "title": "Valinnat & Tila",
     "noActiveList": "Aktiivista opiskelulistaa ei löytynyt tai listaa ei voitu ladata.",
     "debugActiveId": "Debug: Nykyinen aktiivinen ID on $id",
-    "returnToWelcome": "Palaa aloitusnäyttöön",
-    "flashcardOptions": "Muistikorttien asetukset",
-    "showTermFirst": "Näytä ensin termi",
-    "showDefFirst": "Näytä ensin määritelmä",
-    "studyOptions": "Oppimisen & Testin asetukset",
+    "returnToWelcome": "Palaa alkunäkymään",
+    "flashcardOptions": "Flashcard-valinnat",
+    "showTermFirst": "Näytä termi ensin",
+    "showDefFirst": "Näytä määritelmä ensin",
+    "studyOptions": "Opi & Testaa -valinnat",
     "askForTerm": "Näytä määritelmä, kysy termi",
     "askForDef": "Näytä termi, kysy määritelmä",
     "studyLength": "Opiskelun pituus:",
     "testFormat": "Testin muoto",
     "writtenAnswer": "Kirjallinen vastaus",
     "multipleChoice": "Monivalinta",
-    "requireOnlyOneAnswer": "Hyväksy yksi pilkulla erotettu vastaus",
+    "requireOnlyOneAnswer": "Hyväksy yksi pilkuilla erotettu vastaus",
     "requireOnlyOneAnswerSubtitle": "Jos oikea vastaus on 'a, b', 'a' hyväksytään",
-    "flashcards": "Muistikortit",
+    "flashcards": "Flashcardit",
     "learn": "Opi",
-    "test": "Testi",
-    "match": "Yhdistä",
-    "backToWelcome": "Takaisin aloitusnäyttöön",
+    "test": "Testaa",
+    "match": "Pari",
+    "backToWelcome": "Takaisin alkunäkymään",
     "errors": {
       "saveSettingFailed": "Asetuksen tallennus epäonnistui: $error"
     }
   },
   "flashcardScreen": {
-    "title": "Muistikortit",
-    "noCards": "Ei näytettäviä muistikortteja.",
-    "noTerms": "Opiskeltavia termejä ei ole saatavilla.",
+    "title": "Flashcardit",
+    "noCards": "Ei flashcardeja näytettäväksi.",
+    "noTerms": "Ei termejä opiskeltavaksi.",
     "shuffle": "Sekoita",
-    "restart": "Aloita alusta"
+    "restart": "Käynnistä uudelleen"
   },
   "learnScreen": {
     "title": "Opi",
-    "restartSession": "Aloita oppimisistunto alusta",
+    "restartSession": "Käynnistä opetussessio uudelleen",
     "backToOptions": "Takaisin valintoihin",
     "preparing": "Valmistellaan seuraavaa kysymystä...",
     "answerHint": "Kirjoita vastauksesi tähän...",
@@ -187,52 +187,52 @@
     "skip": "Ohita",
     "backToModeSelection": "Takaisin tilan valintaan",
     "errors": {
-      "noTerms": "Oppimistilassa ei ole saatavilla termejä.",
+      "noTerms": "Ei termejä Opi-tilaan.",
       "notEnoughTerms": "Ei tarpeeksi termejä valitulle pituudelle."
     },
     "feedback": {
       "correct": "Oikein!",
       "incorrect": "Väärin. Oikea vastaus: $answer",
-      "hint": "Vihje: Alkaa kirjaimella \"$char\"",
+      "hint": "Vihje: Alkaa \"$char\"",
       "skipped": "Ohitettu. Vastaus oli: $answer"
     },
     "progress": {
       "allLearned": "Kaikki termit opittu!",
       "cycleStatus": "Kierros $cycleNum | Kohde $itemNum / $total",
-      "sessionComplete": "Oppimisistunto valmis! Hyvää työtä!",
+      "sessionComplete": "Opiskelusessio suoritettu! Hyvin tehty!",
       "maxCyclesReached(param=count)": {
-        "one": "Enimmäismäärä kierroksia saavutettu. 1 kohde vielä kertaamatta.",
-        "other": "Enimmäismäärä kierroksia saavutettu. $count kohdetta vielä kertaamatta."
+        "one": "Maksimikierrokset saavutettu. 1 kohde vielä kerrattavana.",
+        "other": "Maksimikierrokset saavutettu. $count kohdetta vielä kerrattavana."
       },
-      "startingCycle": "Aloitetaan kierros $cycleNum, jossa on $count kohdetta..."
+      "startingCycle": "Aloitetaan kierros $cycleNum, $count kohde(tta)..."
     }
   },
   "matchScreen": {
-    "title": "Yhdistä",
-    "congratulations": "Onneksi olkoon!",
-    "timeCompleted": "Suoritit pelin $time sekunnissa!",
+    "title": "Pari",
+    "congratulations": "Onnittelut!",
+    "timeCompleted": "Suoritit ajassa $time sekuntia!",
     "playAgain": "Pelaa uudelleen",
     "backToOptions": "Takaisin valintoihin",
     "leaderboard": {
-      "title": "Tulostaulu",
+      "title": "Tulostaulukko",
       "noRecords": "Ei vielä tuloksia. Ole ensimmäinen!",
-      "time": "$time sekuntia",
+      "time": "$time Sekuntia",
       "rank": "#$rank",
       "rankOver100": ">100"
     },
     "errors": {
-      "noTerms": "Yhdistä-pelissä ei ole saatavilla termejä.",
-      "notEnoughTerms": "Pelaamiseen tarvitaan vähintään yksi termi/määritelmä-pari."
+      "noTerms": "Ei termejä Pari-tilaan.",
+      "notEnoughTerms": "Tarvitaan vähintään yksi termi/määritelmä -pari pelataksesi."
     }
   },
   "testScreen": {
     "title": "Testi",
-    "noQuestions": "Tässä testissä ei ole kysymyksiä.",
+    "noQuestions": "Ei kysymyksiä tässä testissä.",
     "viewResults": "Näytä tulokset",
     "submitTest": "Lähetä testi",
     "errors": {
-      "loadFailed": "Virhe ladattaessa opiskelulistaa testiä varten.",
-      "noTerms": "Testissä ei ole saatavilla termejä.",
+      "loadFailed": "Virhe ladatessa opiskelulistaa testiä varten.",
+      "noTerms": "Ei termejä testiä varten.",
       "notEnoughTerms": "Ei tarpeeksi termejä valitulle opiskelun pituudelle."
     }
   },
@@ -241,37 +241,43 @@
     "notSubmitted": "Testiä ei ole vielä lähetetty.",
     "noQuestions": "Tässä testissä ei ollut kysymyksiä.",
     "yourScore": "Pisteesi",
-    "scoreFraction": "$score / $total oikein",
-    "reviewIncorrect": "Kertaa väärät vastaukset:",
+    "scoreFraction": "$score / $total Oikein",
+    "reviewIncorrect": "Tarkastele väärät vastaukset:",
     "yourAnswerWas": "Vastauksesi: $answer",
     "noAnswer": "(Ei vastausta)",
-    "congratulations": "Onneksi olkoon! Sait kaiken oikein!",
-    "retryTest": "Yritä testiä uudelleen",
-    "reviewFlashcards": "Kertaa muistikorteilla",
-    "backToWelcome": "Takaisin aloitusnäyttöön"
+    "congratulations": "Onnittelut! Sait kaiken oikein!",
+    "retryTest": "Yritä testi uudelleen",
+    "reviewFlashcards": "Kerrata flashcardeilla",
+    "backToWelcome": "Takaisin alkunäkymään"
   },
   "settingsScreen": {
     "title": "Asetukset",
     "appearance": "Ulkoasu",
     "language": "Kieli",
     "languageDialogTitle": "Valitse kieli",
-    "uiScaling": "Näytön skaalaus",
-    "uiScalingSubtitle": "Säädä tekstin ja elementtien kokoa",
+    "uiScaling": "Käyttöliittymän skaalaus",
+    "uiScalingSubtitle": "Säädä tekstin ja käyttöliittymäelementtien kokoa",
     "systemDefault": "Järjestelmän oletus",
     "light": "Vaalea",
     "dark": "Tumma",
-    "english": "Englanti",
+    "english": "Englanti (English)",
     "finnish": "Suomi",
-    "russian": "Venäjä",
-    "spanish": "Espanja",
-    "swedish": "Ruotsi",
+    "russian": "Venäjä (Русский)",
+    "spanish": "Espanja (Español)",
+    "swedish": "Ruotsi (Svenska)",
+    "french": "Ranska (Français)",
+    "german": "Saksa (Deutsch)",
+    "portuguese": "Portugali (Português)",
+    "italian": "Italia (Italiano)",
+    "chinese": "Kiina (简体中文)",
+    "japanese": "Japani (日本語)",
     "update": "Päivitys",
     "checkForUpdate": "Tarkista päivitykset",
     "checkingForUpdate": "Tarkistetaan päivityksiä...",
-    "upToDate": "Sovellus on ajan tasalla",
-    "noNewVersion": "Uutta versiota ei löytynyt.",
+    "upToDate": "Olet ajan tasalla",
+    "noNewVersion": "Ei uutta versiota löytynyt.",
     "updateAvailable": "Päivitys saatavilla: v$version",
-    "tapToInstall": "Lataa ja asenna napauttamalla",
+    "tapToInstall": "Napauta ladataksesi ja asentaaksesi",
     "viewReleaseNotes": "Näytä julkaisutiedot",
     "downloadingUpdate": "Ladataan päivitystä...",
     "updateCheckFailed": "Päivitysten tarkistus epäonnistui",
@@ -287,33 +293,33 @@
       "share": "Jaa tiedosto",
       "save": "Tallenna laitteelle",
       "shareText": "Tässä on Quizlone-varmuuskopiosi.",
-      "saveFileTitle": "Valitse tallennustiedosto:",
-      "backupFileName": "quizlone_varmuuskopio"
+      "saveFileTitle": "Valitse kohdetiedosto:",
+      "backupFileName": "quizlone_backup"
     },
     "importDialog": {
       "title": "Vahvista tuonti",
-      "content": "Tämä tuo opiskelulistat tiedostosta. Kaikki olemassa olevat listat, joilla on sama nimi, korvataan. Jatketaanko?",
+      "content": "Tämä tuo opiskelulistoja tiedostosta. Olemassa olevat listat samalla nimellä ylikirjoitetaan. Jatketaanko?",
       "import": "Tuo"
     },
     "deleteDialog": {
       "title": "Vahvista poisto",
-      "content": "Haluatko varmasti poistaa KAIKKI opiskelulistat? Tätä toimintoa ei voi kumota.",
+      "content": "Haluatko varmasti poistaa KAIKKI opiskelulistat? Tätä toimintoa ei voi peruuttaa.",
       "deleteAll": "Poista kaikki"
     },
     "snackbars": {
-      "noDataToExport": "Ei vietäviä tietoja.",
-      "exportSuccess": "Tiedot viety onnistuneesti!",
-      "exportError": "Virhe tietojen viennissä: $error",
+      "noDataToExport": "Ei vientiin kelpaavia tietoja.",
+      "exportSuccess": "Tiedot vietiin onnistuneesti!",
+      "exportError": "Virhe tietoja viedessä: $error",
       "fileSaved": "Tiedosto tallennettu onnistuneesti!",
       "importSuccess": "$count listaa tuotu onnistuneesti!",
-      "importError": "Virhe tietojen tuonnissa: $error",
+      "importError": "Virhe tietoja tuodessa: $error",
       "allDeleted": "Kaikki opiskelulistat on poistettu."
     }
   },
   "controlsScreen": {
-    "title": "Ohjaimet",
-    "gesturesTitle": "Eleet (muistikortit)",
-    "keyboardTitle": "Näppäimistö (muistikortit)",
+    "title": "Ohjaus",
+    "gesturesTitle": "Liikkeet (Flashcardit)",
+    "keyboardTitle": "Näppäimistö (Flashcardit)",
     "nextCard": "Seuraava kortti",
     "previousCard": "Edellinen kortti",
     "flipCard": "Käännä kortti",
@@ -322,6 +328,6 @@
     "swipeVertical": "Pyyhkäise ylös tai alas",
     "arrowRight": "Oikea nuolinäppäin",
     "arrowLeft": "Vasen nuolinäppäin",
-    "arrowVerticalOrSpace": "Ylä-/alanuoli tai välilyönti"
+    "arrowVerticalOrSpace": "Ylös/alas nuoli tai välilyönti"
   }
 }

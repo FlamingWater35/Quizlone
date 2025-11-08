@@ -1,0 +1,333 @@
+{
+  "appName": "Quizlone",
+  "general": {
+    "back": "Indietro",
+    "cancel": "Annulla",
+    "delete": "Elimina",
+    "error": "Errore",
+    "next": "Avanti",
+    "previous": "Precedente",
+    "saveAndContinue": "Salva e Continua",
+    "submit": "Invia",
+    "all": "Tutti",
+    "loading": "Caricamento...",
+    "genericError": "Errore: $error",
+    "reset": "Ripristina"
+  },
+  "drawer": {
+    "settings": "Impostazioni",
+    "controls": "Controlli",
+    "about": "Informazioni",
+    "aboutDialog": {
+      "legalese": "© 2025 Quizlone",
+      "description": "Una semplice e moderna applicazione di studio costruita con Flutter."
+    },
+    "cloudSync": "Sincronizzazione Cloud",
+    "loggedInAs": "Accesso effettuato come:",
+    "noEmail": "Nessuna email",
+    "logout": "Esci",
+    "email": "Email",
+    "password": "Password",
+    "signIn": "Accedi",
+    "signUp": "Registrati",
+    "validation": {
+      "emailEmpty": "Inserisci un'email",
+      "passwordEmpty": "Inserisci una password"
+    },
+    "snackbars": {
+      "successfulAccountCreation": "Account creato con successo.",
+      "unexpectedError": "Si è verificato un errore imprevisto"
+    },
+    "confirmEmailDialog": {
+      "title": "Conferma Email",
+      "content": "Cliccando su conferma, accetti che $email sia il tuo indirizzo email corretto.",
+      "confirm": "Conferma"
+    },
+    "confirmLogoutDialog": {
+      "title": "Conferma Uscita",
+      "content": "Uscendo, i tuoi dati rimarranno nel cloud. Vuoi anche rimuovere tutti i dati di studio da questo dispositivo?",
+      "logoutOnly": "Solo Esci",
+      "deleteAndLogout": "Elimina ed Esci"
+    }
+  },
+  "aboutScreen": {
+    "version": "Versione $version",
+    "viewLicenses": "Visualizza Licenze"
+  },
+  "startScreen": {
+    "title": "Quizlone",
+    "welcome": "Benvenuto!",
+    "createNewList": "Crea Nuova Lista",
+    "openSavedList": "Apri Lista Salvata",
+    "loadSavedList": "Carica Lista Salvata",
+    "noLists": "Nessuna lista salvata ancora.",
+    "termCount(param=count)": {
+      "one": "1 termine",
+      "other": "$count termini"
+    },
+    "confirmDeleteDialog": {
+      "title": "Conferma Eliminazione",
+      "content": "Sei sicuro di voler eliminare '$listName'?"
+    },
+    "renameListDialog": {
+      "title": "Rinomina Lista",
+      "rename": "Rinomina",
+      "errorNameExists": "Una lista con questo nome esiste già.",
+      "errorNameEmpty": "Il nome della lista non può essere vuoto."
+    }
+  },
+  "inputScreen": {
+    "title": "Crea Nuova Lista",
+    "listName": "Nome Lista",
+    "listNameHint": "es., Vocabolario Capitolo 1",
+    "pasteTerms": "Incolla i tuoi termini di seguito:",
+    "pasteTermsHint": "(Termine su una riga, Definizione sulla successiva)",
+    "termsHint": "Giustizia\nIl principio di correttezza morale\nSole\nUna stella che è il centro di un sistema planetario",
+    "saveList": "Salva Lista",
+    "assignToGroup": "Assegna al Gruppo",
+    "errors": {
+      "listNameEmpty": "Il nome della lista non può essere vuoto.",
+      "noTerms": "Nessun termine/definizione inserito.",
+      "invalidFormat": "Formato non valido. Ogni termine necessita di una definizione sulla riga successiva.",
+      "emptyTerm": "Errore di formato vicino alla riga $line. Trovato termine o definizione vuoto.",
+      "noValidPairs": "Nessuna coppia termine/definizione valida trovata.",
+      "saveFailed": "Salvataggio lista fallito: $error"
+    }
+  },
+  "loadListScreen": {
+    "title": "Carica Lista",
+    "searchHint": "Cerca una lista...",
+    "noMatches": "Nessuna lista corrisponde alla tua ricerca.",
+    "createGroup": "Crea Gruppo",
+    "select": "Seleziona",
+    "cancel": "Annulla",
+    "ungrouped": "Non raggruppati",
+    "move": "Sposta",
+    "itemsSelected(param=count)": {
+      "one": "1 elemento selezionato",
+      "other": "$count elementi selezionati"
+    },
+    "createGroupDialog": {
+      "title": "Crea Nuovo Gruppo",
+      "hint": "Nome Gruppo",
+      "create": "Crea",
+      "errorEmpty": "Il nome del gruppo non può essere vuoto."
+    },
+    "moveToGroupDialog": {
+      "title(param=count)": {
+        "one": "Sposta 1 elemento in...",
+        "other": "Sposta $count elementi in..."
+      }
+    },
+    "deleteGroupDialog": {
+      "title": "Elimina Gruppo",
+      "content": "Sei sicuro di voler eliminare il gruppo '$name'?",
+      "warning": "Le liste all'interno di questo gruppo diventeranno non raggruppate."
+    },
+    "deleteListsDialog": {
+      "title(param=count)": {
+        "one": "Elimina 1 lista?",
+        "other": "Elimina $count liste?"
+      },
+      "content(param=count)": {
+        "one": "Questa azione è permanente e non può essere annullata.",
+        "other": "Questa azione è permanente e non può essere annullata."
+      }
+    },
+    "sortLabel": "Ordina:",
+    "sortOptions": {
+      "none": "Nessuno",
+      "name": "Nome",
+      "lastOpened": "Ultimo Aperto",
+      "createdAt": "Creato",
+      "listLength": "Lunghezza"
+    }
+  },
+  "modeSelectionScreen": {
+    "title": "Opzioni e Modalità",
+    "noActiveList": "Nessuna lista di studio attiva trovata o lista non caricabile.",
+    "debugActiveId": "Debug: L'ID Attivo Corrente è $id",
+    "returnToWelcome": "Torna alla Schermata di Benvenuto",
+    "flashcardOptions": "Opzioni Flashcard",
+    "showTermFirst": "Mostra Termine Prima",
+    "showDefFirst": "Mostra Definizione Prima",
+    "studyOptions": "Opzioni Studia e Test",
+    "askForTerm": "Mostra Definizione, Chiedi Termine",
+    "askForDef": "Mostra Termine, Chiedi Definizione",
+    "studyLength": "Lunghezza Studio:",
+    "testFormat": "Formato Test",
+    "writtenAnswer": "Risposta Scritta",
+    "multipleChoice": "Scelta Multipla",
+    "requireOnlyOneAnswer": "Accetta una risposta separata da virgole",
+    "requireOnlyOneAnswerSubtitle": "Se la risposta corretta è 'a, b', 'a' è accettata",
+    "flashcards": "Flashcard",
+    "learn": "Studia",
+    "test": "Test",
+    "match": "Abbina",
+    "backToWelcome": "Torna alla Schermata di Benvenuto",
+    "errors": {
+      "saveSettingFailed": "Salvataggio impostazione fallito: $error"
+    }
+  },
+  "flashcardScreen": {
+    "title": "Flashcard",
+    "noCards": "Nessuna flashcard da visualizzare.",
+    "noTerms": "Nessun termine disponibile per lo studio.",
+    "shuffle": "Mescola",
+    "restart": "Riavvia"
+  },
+  "learnScreen": {
+    "title": "Studia",
+    "restartSession": "Riavvia Sessione di Studio",
+    "backToOptions": "Torna a Opzioni",
+    "preparing": "Preparando prossima domanda...",
+    "answerHint": "Scrivi la tua risposta qui...",
+    "incorrect": "Errato",
+    "hint": "Suggerimento",
+    "skip": "Salta",
+    "backToModeSelection": "Torna alla Selezione Modalità",
+    "errors": {
+      "noTerms": "Nessun termine disponibile per la modalità Studia.",
+      "notEnoughTerms": "Termini insufficienti per la lunghezza selezionata."
+    },
+    "feedback": {
+      "correct": "Corretto!",
+      "incorrect": "Errato. Risposta corretta: $answer",
+      "hint": "Suggerimento: Inizia con \"$char\"",
+      "skipped": "Saltato. La risposta era: $answer"
+    },
+    "progress": {
+      "allLearned": "Tutti i termini appresi!",
+      "cycleStatus": "Ciclo $cycleNum | Elemento $itemNum di $total",
+      "sessionComplete": "Sessione di studio completata! Ben fatto!",
+      "maxCyclesReached(param=count)": {
+        "one": "Cicli massimi raggiunti. 1 elemento ancora da rivedere.",
+        "other": "Cicli massimi raggiunti. $count elementi ancora da rivedere."
+      },
+      "startingCycle": "Iniziando Ciclo $cycleNum con $count elemento(i)..."
+    }
+  },
+  "matchScreen": {
+    "title": "Abbina",
+    "congratulations": "Congratulazioni!",
+    "timeCompleted": "Hai finito in $time secondi!",
+    "playAgain": "Gioca di Nuovo",
+    "backToOptions": "Torna a Opzioni",
+    "leaderboard": {
+      "title": "Classifica",
+      "noRecords": "Nessun record ancora. Sii il primo!",
+      "time": "$time Secondi",
+      "rank": "#$rank",
+      "rankOver100": ">100"
+    },
+    "errors": {
+      "noTerms": "Nessun termine disponibile per la modalità Abbina.",
+      "notEnoughTerms": "È richiesto almeno una coppia termine/definizione per giocare."
+    }
+  },
+  "testScreen": {
+    "title": "Test",
+    "noQuestions": "Nessuna domanda per questo test.",
+    "viewResults": "Visualizza Risultati",
+    "submitTest": "Invia Test",
+    "errors": {
+      "loadFailed": "Errore nel caricamento lista di studio per il test.",
+      "noTerms": "Nessun termine disponibile per il test.",
+      "notEnoughTerms": "Termini insufficienti per la lunghezza di studio selezionata."
+    }
+  },
+  "resultsScreen": {
+    "title": "Risultati Test",
+    "notSubmitted": "Test non ancora inviato.",
+    "noQuestions": "Non c'erano domande in questo test.",
+    "yourScore": "Il Tuo Punteggio",
+    "scoreFraction": "$score / $total Corretto",
+    "reviewIncorrect": "Rivedi Risposte Errate:",
+    "yourAnswerWas": "La Tua Risposta: $answer",
+    "noAnswer": "(Nessuna risposta)",
+    "congratulations": "Congratulazioni! Hai azzeccato tutto!",
+    "retryTest": "Riprova Test",
+    "reviewFlashcards": "Rivedi con Flashcard",
+    "backToWelcome": "Torna alla Schermata di Benvenuto"
+  },
+  "settingsScreen": {
+    "title": "Impostazioni",
+    "appearance": "Aspetto",
+    "language": "Lingua",
+    "languageDialogTitle": "Seleziona Lingua",
+    "uiScaling": "Scala UI",
+    "uiScalingSubtitle": "Regola la dimensione del testo e degli elementi dell'interfaccia",
+    "systemDefault": "Predefinito di Sistema",
+    "light": "Chiaro",
+    "dark": "Scuro",
+    "english": "Inglese (English)",
+    "finnish": "Finlandese (Suomi)",
+    "russian": "Russo (Русский)",
+    "spanish": "Spagnolo (Español)",
+    "swedish": "Svedese (Svenska)",
+    "french": "Francese (Français)",
+    "german": "Tedesco (Deutsch)",
+    "portuguese": "Portoghese (Português)",
+    "italian": "Italiano",
+    "chinese": "Cinese (简体中文)",
+    "japanese": "Giapponese (日本語)",
+    "update": "Aggiorna",
+    "checkForUpdate": "Controlla Aggiornamenti",
+    "checkingForUpdate": "Controllo aggiornamenti...",
+    "upToDate": "Sei aggiornato",
+    "noNewVersion": "Nessuna nuova versione trovata.",
+    "updateAvailable": "Aggiornamento Disponibile: v$version",
+    "tapToInstall": "Tocca per scaricare e installare",
+    "viewReleaseNotes": "Visualizza note di rilascio",
+    "downloadingUpdate": "Scaricamento aggiornamento...",
+    "updateCheckFailed": "Controllo Aggiornamento Fallito",
+    "dataManagement": "Gestione Dati",
+    "exportData": "Esporta Dati",
+    "exportDataSubtitle": "Salva tutte le liste in un file",
+    "importData": "Importa Dati",
+    "importDataSubtitle": "Carica liste da un file",
+    "deleteAllData": "Elimina Tutti i Dati",
+    "exportDialog": {
+      "title": "Esporta Dati",
+      "content": "Come vuoi esportare i tuoi dati?",
+      "share": "Condividi File",
+      "save": "Salva su Dispositivo",
+      "shareText": "Ecco il tuo backup di Quizlone.",
+      "saveFileTitle": "Seleziona un file di output:",
+      "backupFileName": "quizlone_backup"
+    },
+    "importDialog": {
+      "title": "Conferma Importazione",
+      "content": "Questo importerà liste di studio da un file. Liste esistenti con lo stesso nome verranno sovrascritte. Continuare?",
+      "import": "Importa"
+    },
+    "deleteDialog": {
+      "title": "Conferma Eliminazione",
+      "content": "Sei sicuro di voler eliminare TUTTE le liste di studio? Questa azione non può essere annullata.",
+      "deleteAll": "Elimina Tutto"
+    },
+    "snackbars": {
+      "noDataToExport": "Non ci sono dati da esportare.",
+      "exportSuccess": "Dati esportati con successo!",
+      "exportError": "Errore nell'esportazione dei dati: $error",
+      "fileSaved": "File salvato con successo!",
+      "importSuccess": "$count liste importate con successo!",
+      "importError": "Errore nell'importazione dei dati: $error",
+      "allDeleted": "Tutte le liste di studio sono state eliminate."
+    }
+  },
+  "controlsScreen": {
+    "title": "Controlli",
+    "gesturesTitle": "Gestualità (Flashcard)",
+    "keyboardTitle": "Tastiera (Flashcard)",
+    "nextCard": "Prossima Carta",
+    "previousCard": "Carta Precedente",
+    "flipCard": "Gira Carta",
+    "swipeLeft": "Scorri a Sinistra",
+    "swipeRight": "Scorri a Destra",
+    "swipeVertical": "Scorri in Alto o Basso",
+    "arrowRight": "Tasto Freccia Destra",
+    "arrowLeft": "Tasto Freccia Sinistra",
+    "arrowVerticalOrSpace": "Freccia Su/Giù o Barra Spaziatrice"
+  }
+}
