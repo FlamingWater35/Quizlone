@@ -50,3 +50,7 @@ android/key.properties
 
 # Supabase credentials
 .env
+
+# Generated code
+*.g.dart
+*.gr.dart
