@@ -386,7 +386,7 @@ class _TranslationsDrawerSnackbarsEs implements TranslationsDrawerSnackbarsEn {
 	final TranslationsEs _root; // ignore: unused_field
 
 	// Translations
-	@override String get confirmationSent => '¡Correo de confirmación enviado! Revisa tu bandeja de entrada.';
+	@override String get successfulAccountCreation => 'Cuenta creada correctamente.';
 	@override String get unexpectedError => 'Ocurrió un error inesperado';
 }
 
@@ -707,7 +707,7 @@ extension on TranslationsEs {
 			case 'drawer.signUp': return 'Registrarse';
 			case 'drawer.validation.emailEmpty': return 'Por favor, introduce un correo electrónico';
 			case 'drawer.validation.passwordEmpty': return 'Por favor, introduce una contraseña';
-			case 'drawer.snackbars.confirmationSent': return '¡Correo de confirmación enviado! Revisa tu bandeja de entrada.';
+			case 'drawer.snackbars.successfulAccountCreation': return 'Cuenta creada correctamente.';
 			case 'drawer.snackbars.unexpectedError': return 'Ocurrió un error inesperado';
 			case 'drawer.confirmEmailDialog.title': return 'Confirmar correo electrónico';
 			case 'drawer.confirmEmailDialog.content': return ({required Object email}) => 'Al hacer clic en confirmar, acepta que ${email} es su dirección de correo electrónico correcta.';

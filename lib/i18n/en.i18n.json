@@ -35,7 +35,7 @@
       "passwordEmpty": "Please enter a password"
     },
     "snackbars": {
-      "confirmationSent": "Confirmation email sent! Please check your inbox.",
+      "successfulAccountCreation": "Account created successfully.",
       "unexpectedError": "An unexpected error occurred"
     },
     "confirmEmailDialog": {

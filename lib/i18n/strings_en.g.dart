@@ -708,8 +708,8 @@ class TranslationsDrawerSnackbarsEn {
 
 	// Translations
 
-	/// en: 'Confirmation email sent! Please check your inbox.'
-	String get confirmationSent => 'Confirmation email sent! Please check your inbox.';
+	/// en: 'Account created successfully.'
+	String get successfulAccountCreation => 'Account created successfully.';
 
 	/// en: 'An unexpected error occurred'
 	String get unexpectedError => 'An unexpected error occurred';
@@ -1184,7 +1184,7 @@ extension on Translations {
 			case 'drawer.signUp': return 'Sign Up';
 			case 'drawer.validation.emailEmpty': return 'Please enter an email';
 			case 'drawer.validation.passwordEmpty': return 'Please enter a password';
-			case 'drawer.snackbars.confirmationSent': return 'Confirmation email sent! Please check your inbox.';
+			case 'drawer.snackbars.successfulAccountCreation': return 'Account created successfully.';
 			case 'drawer.snackbars.unexpectedError': return 'An unexpected error occurred';
 			case 'drawer.confirmEmailDialog.title': return 'Confirm Email';
 			case 'drawer.confirmEmailDialog.content': return ({required Object email}) => 'By clicking confirm, you agree that ${email} is your correct email address.';

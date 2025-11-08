@@ -35,7 +35,7 @@
       "passwordEmpty": "Syötä salasana"
     },
     "snackbars": {
-      "confirmationSent": "Vahvistusviesti lähetetty! Tarkista sähköpostisi.",
+      "successfulAccountCreation": "Tili luotu onnistuneesti.",
       "unexpectedError": "Tapahtui odottamaton virhe"
     },
     "confirmEmailDialog": {

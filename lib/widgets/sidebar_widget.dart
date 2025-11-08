@@ -35,33 +35,30 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
 
     final result = await showDialog<bool?>(
       context: context,
-      builder:
-          (context) => AlertDialog(
-            title: Text(t.drawer.confirmLogoutDialog.title),
-            content: Text(t.drawer.confirmLogoutDialog.content),
-            actions: [
-              TextButton(
-                onPressed: () => navigator.pop(null),
-                child: Text(t.general.cancel),
-              ),
-              OutlinedButton(
-                onPressed: () => navigator.pop(false),
-                child: Text(t.drawer.confirmLogoutDialog.logoutOnly),
-              ),
-              FilledButton(
-                onPressed: () => navigator.pop(true),
-                style: FilledButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.error,
-                ),
-                child: Text(
-                  t.drawer.confirmLogoutDialog.deleteAndLogout,
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.onError,
-                  ),
-                ),
-              ),
-            ],
+      builder: (context) => AlertDialog(
+        title: Text(t.drawer.confirmLogoutDialog.title),
+        content: Text(t.drawer.confirmLogoutDialog.content),
+        actions: [
+          TextButton(
+            onPressed: () => navigator.pop(null),
+            child: Text(t.general.cancel),
           ),
+          OutlinedButton(
+            onPressed: () => navigator.pop(false),
+            child: Text(t.drawer.confirmLogoutDialog.logoutOnly),
+          ),
+          FilledButton(
+            onPressed: () => navigator.pop(true),
+            style: FilledButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.error,
+            ),
+            child: Text(
+              t.drawer.confirmLogoutDialog.deleteAndLogout,
+              style: TextStyle(color: Theme.of(context).colorScheme.onError),
+            ),
+          ),
+        ],
+      ),
     );
 
     if (result == null) return;
@@ -106,21 +103,20 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
 
     final bool? didConfirm = await showDialog<bool>(
       context: context,
-      builder:
-          (dialogContext) => AlertDialog(
-            title: Text(t.drawer.confirmEmailDialog.title),
-            content: Text(t.drawer.confirmEmailDialog.content(email: email)),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(dialogContext, false),
-                child: Text(t.general.cancel),
-              ),
-              FilledButton(
-                onPressed: () => Navigator.pop(dialogContext, true),
-                child: Text(t.drawer.confirmEmailDialog.confirm),
-              ),
-            ],
+      builder: (dialogContext) => AlertDialog(
+        title: Text(t.drawer.confirmEmailDialog.title),
+        content: Text(t.drawer.confirmEmailDialog.content(email: email)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: Text(t.general.cancel),
           ),
+          FilledButton(
+            onPressed: () => Navigator.pop(dialogContext, true),
+            child: Text(t.drawer.confirmEmailDialog.confirm),
+          ),
+        ],
+      ),
     );
 
     if (didConfirm != true) {
@@ -136,7 +132,7 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
       if (mounted) {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(t.drawer.snackbars.confirmationSent)),
+          SnackBar(content: Text(t.drawer.snackbars.successfulAccountCreation)),
         );
       }
     } on AuthException catch (error) {
@@ -221,11 +217,9 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
                   border: const OutlineInputBorder(),
                   isDense: true,
                 ),
-                validator:
-                    (value) =>
-                        value == null || value.isEmpty
-                            ? t.drawer.validation.emailEmpty
-                            : null,
+                validator: (value) => value == null || value.isEmpty
+                    ? t.drawer.validation.emailEmpty
+                    : null,
                 keyboardType: TextInputType.emailAddress,
               ),
               const SizedBox(height: 12),
@@ -238,11 +232,9 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
                   isDense: true,
                 ),
                 obscureText: true,
-                validator:
-                    (value) =>
-                        value == null || value.isEmpty
-                            ? t.drawer.validation.passwordEmpty
-                            : null,
+                validator: (value) => value == null || value.isEmpty
+                    ? t.drawer.validation.passwordEmpty
+                    : null,
               ),
               const SizedBox(height: 16),
               if (_isLoading)
@@ -337,11 +329,10 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
                 return _buildUserInfo(user, t);
               },
               loading: () => const Center(child: CircularProgressIndicator()),
-              error:
-                  (err, stack) => Text(
-                    'Error: ${err.toString()}',
-                    style: TextStyle(color: colorScheme.error),
-                  ),
+              error: (err, stack) => Text(
+                'Error: ${err.toString()}',
+                style: TextStyle(color: colorScheme.error),
+              ),
             ),
           ),
         ],

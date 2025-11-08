@@ -388,7 +388,7 @@ class _TranslationsDrawerSnackbarsFi extends TranslationsDrawerSnackbarsEn {
 	final TranslationsFi _root; // ignore: unused_field
 
 	// Translations
-	@override String get confirmationSent => 'Vahvistusviesti lähetetty! Tarkista sähköpostisi.';
+	@override String get successfulAccountCreation => 'Tili luotu onnistuneesti.';
 	@override String get unexpectedError => 'Tapahtui odottamaton virhe';
 }
 
@@ -709,7 +709,7 @@ extension on TranslationsFi {
 			case 'drawer.signUp': return 'Rekisteröidy';
 			case 'drawer.validation.emailEmpty': return 'Syötä sähköpostiosoite';
 			case 'drawer.validation.passwordEmpty': return 'Syötä salasana';
-			case 'drawer.snackbars.confirmationSent': return 'Vahvistusviesti lähetetty! Tarkista sähköpostisi.';
+			case 'drawer.snackbars.successfulAccountCreation': return 'Tili luotu onnistuneesti.';
 			case 'drawer.snackbars.unexpectedError': return 'Tapahtui odottamaton virhe';
 			case 'drawer.confirmEmailDialog.title': return 'Vahvista sähköposti';
 			case 'drawer.confirmEmailDialog.content': return ({required Object email}) => 'Vahvista-painiketta napsauttamalla hyväksyt, että ${email} on oikea sähköpostiosoitteesi.';

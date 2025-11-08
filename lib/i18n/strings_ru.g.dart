@@ -390,7 +390,7 @@ class _TranslationsDrawerSnackbarsRu implements TranslationsDrawerSnackbarsEn {
 	final TranslationsRu _root; // ignore: unused_field
 
 	// Translations
-	@override String get confirmationSent => 'Письмо с подтверждением отправлено! Проверьте свой почтовый ящик.';
+	@override String get successfulAccountCreation => 'Учетная запись успешно создана.';
 	@override String get unexpectedError => 'Произошла непредвиденная ошибка';
 }
 
@@ -717,7 +717,7 @@ extension on TranslationsRu {
 			case 'drawer.signUp': return 'Регистрация';
 			case 'drawer.validation.emailEmpty': return 'Пожалуйста, введите email';
 			case 'drawer.validation.passwordEmpty': return 'Пожалуйста, введите пароль';
-			case 'drawer.snackbars.confirmationSent': return 'Письмо с подтверждением отправлено! Проверьте свой почтовый ящик.';
+			case 'drawer.snackbars.successfulAccountCreation': return 'Учетная запись успешно создана.';
 			case 'drawer.snackbars.unexpectedError': return 'Произошла непредвиденная ошибка';
 			case 'drawer.confirmEmailDialog.title': return 'Подтвердите Email';
 			case 'drawer.confirmEmailDialog.content': return ({required Object email}) => 'Нажимая кнопку «Подтвердить», вы соглашаетесь с тем, что ${email} — ваш правильный адрес электронной почты.';
