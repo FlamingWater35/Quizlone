@@ -139,7 +139,22 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
     }
     _log.fine("Merged ${mergedRecords.length} records.");
 
-    return AppData(studyLists: mergedLists, matchRecords: mergedRecords);
+    final mergedGroupsMap = {
+      for (var group in remote.studyGroups) group.id: group,
+    };
+    for (final localGroup in local.studyGroups) {
+      if (!mergedGroupsMap.containsKey(localGroup.id)) {
+        mergedGroupsMap[localGroup.id] = localGroup;
+      }
+    }
+    final mergedGroups = mergedGroupsMap.values.toList();
+    _log.fine("Merged ${mergedGroups.length} groups.");
+
+    return AppData(
+      studyLists: mergedLists,
+      matchRecords: mergedRecords,
+      studyGroups: mergedGroups,
+    );
   }
 
   Future<void> _performUpload() async {
@@ -150,8 +165,14 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
     if (!ref.mounted) return;
     final records = await dbService.getAllMatchRecords();
     if (!ref.mounted) return;
+    final groups = await dbService.getAllStudyGroups();
+    if (!ref.mounted) return;
 
-    final appData = AppData(studyLists: lists, matchRecords: records);
+    final appData = AppData(
+      studyLists: lists,
+      matchRecords: records,
+      studyGroups: groups,
+    );
     await cloudSyncService.uploadData(appData);
     if (!ref.mounted) return;
     await dbService.saveLastSyncTimestamp(DateTime.now().toUtc());
@@ -184,10 +205,15 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
       if (!ref.mounted) return;
       final localRecords = await dbService.getAllMatchRecords();
       if (!ref.mounted) return;
+      final localGroups = await dbService.getAllStudyGroups();
+      if (!ref.mounted) return;
 
       final localTimestamp = dbService.getLastSyncTimestamp();
 
-      final hasLocalData = localLists.isNotEmpty || localRecords.isNotEmpty;
+      final hasLocalData =
+          localLists.isNotEmpty ||
+          localRecords.isNotEmpty ||
+          localGroups.isNotEmpty;
       final hasCloudData = cloudData != null;
 
       if (isInitialSync) {
@@ -231,6 +257,7 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
             final localData = AppData(
               studyLists: localLists,
               matchRecords: localRecords,
+              studyGroups: localGroups,
             );
             final mergedData = _mergeData(
               local: localData,
