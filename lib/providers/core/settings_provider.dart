@@ -26,6 +26,34 @@ void initLocaleSettings() {
     locale: AppLocale.ru,
     cardinalResolver: PluralResolvers.cardinal(AppLocale.ru.languageCode),
   );
+  LocaleSettings.setPluralResolver(
+    locale: AppLocale.fr,
+    cardinalResolver: PluralResolvers.cardinal(AppLocale.fr.languageCode),
+  );
+  LocaleSettings.setPluralResolver(
+    locale: AppLocale.de,
+    cardinalResolver: PluralResolvers.cardinal(AppLocale.de.languageCode),
+  );
+  LocaleSettings.setPluralResolver(
+    locale: AppLocale.pt,
+    cardinalResolver: PluralResolvers.cardinal(AppLocale.pt.languageCode),
+  );
+  LocaleSettings.setPluralResolver(
+    locale: AppLocale.it,
+    cardinalResolver: PluralResolvers.cardinal(AppLocale.it.languageCode),
+  );
+  LocaleSettings.setPluralResolver(
+    locale: AppLocale.zh,
+    cardinalResolver: PluralResolvers.cardinal(AppLocale.zh.languageCode),
+  );
+  LocaleSettings.setPluralResolver(
+    locale: AppLocale.ja,
+    cardinalResolver: PluralResolvers.cardinal(AppLocale.ja.languageCode),
+  );
+  LocaleSettings.setPluralResolver(
+    locale: AppLocale.sv,
+    cardinalResolver: PluralResolvers.cardinal(AppLocale.sv.languageCode),
+  );
 }
 
 @riverpod
@@ -64,7 +92,7 @@ class AppTheme extends _$AppTheme {
   }
 }
 
-enum AppLanguage { system, en, fi, ru, es }
+enum AppLanguage { system, en, fi, ru, es, fr, de, pt, it, zh, ja, sv }
 
 extension AppLanguageExtension on AppLanguage {
   String get code {
@@ -77,6 +105,20 @@ extension AppLanguageExtension on AppLanguage {
         return 'ru';
       case AppLanguage.es:
         return 'es';
+      case AppLanguage.fr:
+        return 'fr';
+      case AppLanguage.de:
+        return 'de';
+      case AppLanguage.pt:
+        return 'pt';
+      case AppLanguage.it:
+        return 'it';
+      case AppLanguage.zh:
+        return 'zh';
+      case AppLanguage.ja:
+        return 'ja';
+      case AppLanguage.sv:
+        return 'sv';
       case AppLanguage.system:
         return 'system';
     }
@@ -92,6 +134,20 @@ extension AppLanguageExtension on AppLanguage {
         return AppLanguage.ru;
       case 'es':
         return AppLanguage.es;
+      case 'fr':
+        return AppLanguage.fr;
+      case 'de':
+        return AppLanguage.de;
+      case 'pt':
+        return AppLanguage.pt;
+      case 'it':
+        return AppLanguage.it;
+      case 'zh':
+        return AppLanguage.zh;
+      case 'ja':
+        return AppLanguage.ja;
+      case 'sv':
+        return AppLanguage.sv;
       default:
         return AppLanguage.system;
     }
@@ -107,6 +163,20 @@ extension AppLanguageExtension on AppLanguage {
         return t.settingsScreen.russian;
       case AppLanguage.es:
         return t.settingsScreen.spanish;
+      case AppLanguage.fr:
+        return t.settingsScreen.french;
+      case AppLanguage.de:
+        return t.settingsScreen.german;
+      case AppLanguage.pt:
+        return t.settingsScreen.portuguese;
+      case AppLanguage.it:
+        return t.settingsScreen.italian;
+      case AppLanguage.zh:
+        return t.settingsScreen.chinese;
+      case AppLanguage.ja:
+        return t.settingsScreen.japanese;
+      case AppLanguage.sv:
+        return t.settingsScreen.swedish;
       case AppLanguage.system:
         return t.settingsScreen.systemDefault;
     }
@@ -125,6 +195,27 @@ extension AppLanguageExtension on AppLanguage {
         break;
       case AppLanguage.es:
         LocaleSettings.setLocale(AppLocale.es);
+        break;
+      case AppLanguage.fr:
+        LocaleSettings.setLocale(AppLocale.fr);
+        break;
+      case AppLanguage.de:
+        LocaleSettings.setLocale(AppLocale.de);
+        break;
+      case AppLanguage.pt:
+        LocaleSettings.setLocale(AppLocale.pt);
+        break;
+      case AppLanguage.it:
+        LocaleSettings.setLocale(AppLocale.it);
+        break;
+      case AppLanguage.zh:
+        LocaleSettings.setLocale(AppLocale.zh);
+        break;
+      case AppLanguage.ja:
+        LocaleSettings.setLocale(AppLocale.ja);
+        break;
+      case AppLanguage.sv:
+        LocaleSettings.setLocale(AppLocale.sv);
         break;
       case AppLanguage.system:
         LocaleSettings.useDeviceLocale();

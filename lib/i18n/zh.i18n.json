@@ -1,0 +1,333 @@
+{
+  "appName": "Quizlone",
+  "general": {
+    "back": "返回",
+    "cancel": "取消",
+    "delete": "删除",
+    "error": "错误",
+    "next": "下一步",
+    "previous": "上一步",
+    "saveAndContinue": "保存并继续",
+    "submit": "提交",
+    "all": "全部",
+    "loading": "加载中...",
+    "genericError": "错误：$error",
+    "reset": "重置"
+  },
+  "drawer": {
+    "settings": "设置",
+    "controls": "控制",
+    "about": "关于",
+    "aboutDialog": {
+      "legalese": "© 2025 Quizlone",
+      "description": "一个使用 Flutter 构建的简单、现代的学习应用。"
+    },
+    "cloudSync": "云同步",
+    "loggedInAs": "登录为：",
+    "noEmail": "无邮箱",
+    "logout": "退出登录",
+    "email": "邮箱",
+    "password": "密码",
+    "signIn": "登录",
+    "signUp": "注册",
+    "validation": {
+      "emailEmpty": "请输入邮箱",
+      "passwordEmpty": "请输入密码"
+    },
+    "snackbars": {
+      "successfulAccountCreation": "账户创建成功。",
+      "unexpectedError": "发生意外错误"
+    },
+    "confirmEmailDialog": {
+      "title": "确认邮箱",
+      "content": "点击确认即表示您同意 $email 是您的正确邮箱地址。",
+      "confirm": "确认"
+    },
+    "confirmLogoutDialog": {
+      "title": "确认退出登录",
+      "content": "退出登录后，您的数据将保留在云端。您是否还要从本设备删除所有学习数据？",
+      "logoutOnly": "仅退出登录",
+      "deleteAndLogout": "删除并退出登录"
+    }
+  },
+  "aboutScreen": {
+    "version": "版本 $version",
+    "viewLicenses": "查看许可证"
+  },
+  "startScreen": {
+    "title": "Quizlone",
+    "welcome": "欢迎！",
+    "createNewList": "创建新列表",
+    "openSavedList": "打开已保存列表",
+    "loadSavedList": "加载已保存列表",
+    "noLists": "尚无保存的列表。",
+    "termCount(param=count)": {
+      "one": "1 个术语",
+      "other": "$count 个术语"
+    },
+    "confirmDeleteDialog": {
+      "title": "确认删除",
+      "content": "您确定要删除 '$listName' 吗？"
+    },
+    "renameListDialog": {
+      "title": "重命名列表",
+      "rename": "重命名",
+      "errorNameExists": "已存在同名列表。",
+      "errorNameEmpty": "列表名称不能为空。"
+    }
+  },
+  "inputScreen": {
+    "title": "创建新列表",
+    "listName": "列表名称",
+    "listNameHint": "例如，第 1 章词汇",
+    "pasteTerms": "在下方粘贴您的术语：",
+    "pasteTermsHint": "（术语在一行，定义在下一行）",
+    "termsHint": "正义\n道德正当性原则\n太阳\n一个作为行星系统中心的恒星",
+    "saveList": "保存列表",
+    "assignToGroup": "分配到组",
+    "errors": {
+      "listNameEmpty": "列表名称不能为空。",
+      "noTerms": "未输入术语/定义。",
+      "invalidFormat": "格式无效。每个术语都需要在下一行有定义。",
+      "emptyTerm": "第 $line 行附近格式错误。发现空的术语或定义。",
+      "noValidPairs": "未找到有效的术语/定义对。",
+      "saveFailed": "保存列表失败：$error"
+    }
+  },
+  "loadListScreen": {
+    "title": "加载列表",
+    "searchHint": "搜索列表...",
+    "noMatches": "没有列表匹配您的搜索。",
+    "createGroup": "创建组",
+    "select": "选择",
+    "cancel": "取消",
+    "ungrouped": "未分组",
+    "move": "移动",
+    "itemsSelected(param=count)": {
+      "one": "1 个项目已选择",
+      "other": "$count 个项目已选择"
+    },
+    "createGroupDialog": {
+      "title": "创建新组",
+      "hint": "组名",
+      "create": "创建",
+      "errorEmpty": "组名不能为空。"
+    },
+    "moveToGroupDialog": {
+      "title(param=count)": {
+        "one": "移动 1 个项目到...",
+        "other": "移动 $count 个项目到..."
+      }
+    },
+    "deleteGroupDialog": {
+      "title": "删除组",
+      "content": "您确定要删除组 '$name' 吗？",
+      "warning": "此组内的列表将变为未分组。"
+    },
+    "deleteListsDialog": {
+      "title(param=count)": {
+        "one": "删除 1 个列表？",
+        "other": "删除 $count 个列表？"
+      },
+      "content(param=count)": {
+        "one": "此操作是永久性的，无法撤消。",
+        "other": "此操作是永久性的，无法撤消。"
+      }
+    },
+    "sortLabel": "排序：",
+    "sortOptions": {
+      "none": "无",
+      "name": "名称",
+      "lastOpened": "最后打开",
+      "createdAt": "创建时间",
+      "listLength": "长度"
+    }
+  },
+  "modeSelectionScreen": {
+    "title": "选项和模式",
+    "noActiveList": "未找到活动学习列表或列表无法加载。",
+    "debugActiveId": "调试：当前活动 ID 为 $id",
+    "returnToWelcome": "返回欢迎屏幕",
+    "flashcardOptions": "闪卡选项",
+    "showTermFirst": "先显示术语",
+    "showDefFirst": "先显示定义",
+    "studyOptions": "学习和测试选项",
+    "askForTerm": "显示定义，询问术语",
+    "askForDef": "显示术语，询问定义",
+    "studyLength": "学习长度：",
+    "testFormat": "测试格式",
+    "writtenAnswer": "书面回答",
+    "multipleChoice": "多项选择",
+    "requireOnlyOneAnswer": "接受一个逗号分隔的答案",
+    "requireOnlyOneAnswerSubtitle": "如果正确答案是 'a, b'，则 'a' 被接受",
+    "flashcards": "闪卡",
+    "learn": "学习",
+    "test": "测试",
+    "match": "配对",
+    "backToWelcome": "返回欢迎屏幕",
+    "errors": {
+      "saveSettingFailed": "保存设置失败：$error"
+    }
+  },
+  "flashcardScreen": {
+    "title": "闪卡",
+    "noCards": "没有闪卡可显示。",
+    "noTerms": "没有可学习的术语。",
+    "shuffle": "打乱顺序",
+    "restart": "重新开始"
+  },
+  "learnScreen": {
+    "title": "学习",
+    "restartSession": "重新开始学习会话",
+    "backToOptions": "返回选项",
+    "preparing": "准备下一个问题...",
+    "answerHint": "在此输入您的答案...",
+    "incorrect": "错误",
+    "hint": "提示",
+    "skip": "跳过",
+    "backToModeSelection": "返回模式选择",
+    "errors": {
+      "noTerms": "没有可用于学习模式的术语。",
+      "notEnoughTerms": "所选长度的术语数量不足。"
+    },
+    "feedback": {
+      "correct": "正确！",
+      "incorrect": "错误。正确答案：$answer",
+      "hint": "提示：以 \"$char\" 开头",
+      "skipped": "已跳过。答案是：$answer"
+    },
+    "progress": {
+      "allLearned": "所有术语已学习完毕！",
+      "cycleStatus": "周期 $cycleNum | 项目 $itemNum / $total",
+      "sessionComplete": "学习会话完成！做得好！",
+      "maxCyclesReached(param=count)": {
+        "one": "达到最大周期数。仍有 1 个项目需要复习。",
+        "other": "达到最大周期数。仍有 $count 个项目需要复习。"
+      },
+      "startingCycle": "开始周期 $cycleNum，共 $count 个项目..."
+    }
+  },
+  "matchScreen": {
+    "title": "配对",
+    "congratulations": "恭喜！",
+    "timeCompleted": "您在 $time 秒内完成！",
+    "playAgain": "再玩一次",
+    "backToOptions": "返回选项",
+    "leaderboard": {
+      "title": "排行榜",
+      "noRecords": "尚无记录。成为第一个！",
+      "time": "$time 秒",
+      "rank": "#$rank",
+      "rankOver100": ">100"
+    },
+    "errors": {
+      "noTerms": "没有可用于配对模式的术语。",
+      "notEnoughTerms": "至少需要一对术语/定义才能玩。"
+    }
+  },
+  "testScreen": {
+    "title": "测试",
+    "noQuestions": "此测试没有问题。",
+    "viewResults": "查看结果",
+    "submitTest": "提交测试",
+    "errors": {
+      "loadFailed": "加载测试用学习列表时出错。",
+      "noTerms": "没有可用于测试的术语。",
+      "notEnoughTerms": "所选学习长度的术语数量不足。"
+    }
+  },
+  "resultsScreen": {
+    "title": "测试结果",
+    "notSubmitted": "测试尚未提交。",
+    "noQuestions": "此测试中没有问题。",
+    "yourScore": "您的分数",
+    "scoreFraction": "$score / $total 正确",
+    "reviewIncorrect": "复习错误答案：",
+    "yourAnswerWas": "您的答案：$answer",
+    "noAnswer": "（无答案）",
+    "congratulations": "恭喜！您全部答对了！",
+    "retryTest": "重试测试",
+    "reviewFlashcards": "使用闪卡复习",
+    "backToWelcome": "返回欢迎屏幕"
+  },
+  "settingsScreen": {
+    "title": "设置",
+    "appearance": "外观",
+    "language": "语言",
+    "languageDialogTitle": "选择语言",
+    "uiScaling": "界面缩放",
+    "uiScalingSubtitle": "调整文本和界面元素的大小",
+    "systemDefault": "系统默认",
+    "light": "浅色",
+    "dark": "深色",
+    "english": "英语 (English)",
+    "finnish": "芬兰语 (Suomi)",
+    "russian": "俄语 (Русский)",
+    "spanish": "西班牙语 (Español)",
+    "swedish": "瑞典语 (Svenska)",
+    "french": "法语 (Français)",
+    "german": "德语 (Deutsch)",
+    "portuguese": "葡萄牙语 (Português)",
+    "italian": "意大利语 (Italiano)",
+    "chinese": "中文",
+    "japanese": "日语 (日本語)",
+    "update": "更新",
+    "checkForUpdate": "检查更新",
+    "checkingForUpdate": "正在检查更新...",
+    "upToDate": "您已是最新版本",
+    "noNewVersion": "未找到新版本。",
+    "updateAvailable": "有可用更新：v$version",
+    "tapToInstall": "点击下载并安装",
+    "viewReleaseNotes": "查看发行说明",
+    "downloadingUpdate": "正在下载更新...",
+    "updateCheckFailed": "更新检查失败",
+    "dataManagement": "数据管理",
+    "exportData": "导出数据",
+    "exportDataSubtitle": "将所有列表保存到文件",
+    "importData": "导入数据",
+    "importDataSubtitle": "从文件加载列表",
+    "deleteAllData": "删除所有数据",
+    "exportDialog": {
+      "title": "导出数据",
+      "content": "您想如何导出数据？",
+      "share": "分享文件",
+      "save": "保存到设备",
+      "shareText": "这是您的 Quizlone 备份。",
+      "saveFileTitle": "请选择一个输出文件：",
+      "backupFileName": "quizlone_backup"
+    },
+    "importDialog": {
+      "title": "确认导入",
+      "content": "这将从文件导入学习列表。同名的现有列表将被覆盖。继续？",
+      "import": "导入"
+    },
+    "deleteDialog": {
+      "title": "确认删除",
+      "content": "您确定要删除所有学习列表吗？此操作无法撤消。",
+      "deleteAll": "删除全部"
+    },
+    "snackbars": {
+      "noDataToExport": "没有数据可供导出。",
+      "exportSuccess": "数据导出成功！",
+      "exportError": "导出数据时出错：$error",
+      "fileSaved": "文件保存成功！",
+      "importSuccess": "成功导入 $count 个列表！",
+      "importError": "导入数据时出错：$error",
+      "allDeleted": "所有学习列表已被删除。"
+    }
+  },
+  "controlsScreen": {
+    "title": "控制",
+    "gesturesTitle": "手势（闪卡）",
+    "keyboardTitle": "键盘（闪卡）",
+    "nextCard": "下一张卡片",
+    "previousCard": "上一张卡片",
+    "flipCard": "翻转卡片",
+    "swipeLeft": "向左滑动",
+    "swipeRight": "向右滑动",
+    "swipeVertical": "向上或向下滑动",
+    "arrowRight": "向右箭头键",
+    "arrowLeft": "向左箭头键",
+    "arrowVerticalOrSpace": "向上/向下箭头键或空格键"
+  }
+}

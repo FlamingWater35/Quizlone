@@ -1,0 +1,333 @@
+{
+  "appName": "Quizlone",
+  "general": {
+    "back": "戻る",
+    "cancel": "キャンセル",
+    "delete": "削除",
+    "error": "エラー",
+    "next": "次へ",
+    "previous": "前へ",
+    "saveAndContinue": "保存して続行",
+    "submit": "送信",
+    "all": "すべて",
+    "loading": "読み込み中...",
+    "genericError": "エラー: $error",
+    "reset": "リセット"
+  },
+  "drawer": {
+    "settings": "設定",
+    "controls": "操作",
+    "about": "について",
+    "aboutDialog": {
+      "legalese": "© 2025 Quizlone",
+      "description": "Flutterで構築されたシンプルでモダンな学習アプリです。"
+    },
+    "cloudSync": "クラウド同期",
+    "loggedInAs": "ログイン中：",
+    "noEmail": "メールなし",
+    "logout": "ログアウト",
+    "email": "メール",
+    "password": "パスワード",
+    "signIn": "サインイン",
+    "signUp": "サインアップ",
+    "validation": {
+      "emailEmpty": "メールアドレスを入力してください",
+      "passwordEmpty": "パスワードを入力してください"
+    },
+    "snackbars": {
+      "successfulAccountCreation": "アカウントが正常に作成されました。",
+      "unexpectedError": "予期しないエラーが発生しました"
+    },
+    "confirmEmailDialog": {
+      "title": "メールを確認",
+      "content": "確認をクリックすると、$email が正しいメールアドレスであることに同意したことになります。",
+      "confirm": "確認"
+    },
+    "confirmLogoutDialog": {
+      "title": "ログアウトの確認",
+      "content": "ログアウトすると、データはクラウドに保持されます。このデバイスからすべての学習データも削除しますか？",
+      "logoutOnly": "ログアウトのみ",
+      "deleteAndLogout": "削除してログアウト"
+    }
+  },
+  "aboutScreen": {
+    "version": "バージョン $version",
+    "viewLicenses": "ライセンスを表示"
+  },
+  "startScreen": {
+    "title": "Quizlone",
+    "welcome": "ようこそ！",
+    "createNewList": "新しいリストを作成",
+    "openSavedList": "保存済みリストを開く",
+    "loadSavedList": "保存済みリストを読み込む",
+    "noLists": "まだ保存されたリストはありません。",
+    "termCount(param=count)": {
+      "one": "1 用語",
+      "other": "$count 用語"
+    },
+    "confirmDeleteDialog": {
+      "title": "削除の確認",
+      "content": "'$listName' を削除してもよろしいですか？"
+    },
+    "renameListDialog": {
+      "title": "リスト名を変更",
+      "rename": "名前を変更",
+      "errorNameExists": "この名前のリストは既に存在します。",
+      "errorNameEmpty": "リスト名を空にすることはできません。"
+    }
+  },
+  "inputScreen": {
+    "title": "新しいリストを作成",
+    "listName": "リスト名",
+    "listNameHint": "例：第1章 語彙",
+    "pasteTerms": "以下に用語を貼り付けてください：",
+    "pasteTermsHint": "（用語を1行に、定義を次の行に）",
+    "termsHint": "正義\n道徳的正しさの原則\n太陽\n惑星系の中心である星",
+    "saveList": "リストを保存",
+    "assignToGroup": "グループに割り当て",
+    "errors": {
+      "listNameEmpty": "リスト名を空にすることはできません。",
+      "noTerms": "用語/定義が入力されていません。",
+      "invalidFormat": "無効な形式です。各用語には次の行に定義が必要です。",
+      "emptyTerm": "$line 行付近で形式エラー。空の用語または定義が見つかりました。",
+      "noValidPairs": "有効な用語/定義のペアが見つかりませんでした。",
+      "saveFailed": "リストの保存に失敗しました: $error"
+    }
+  },
+  "loadListScreen": {
+    "title": "リストを読み込み",
+    "searchHint": "リストを検索...",
+    "noMatches": "検索に一致するリストはありません。",
+    "createGroup": "グループを作成",
+    "select": "選択",
+    "cancel": "キャンセル",
+    "ungrouped": "グループ化されていない",
+    "move": "移動",
+    "itemsSelected(param=count)": {
+      "one": "1 項目を選択中",
+      "other": "$count 項目を選択中"
+    },
+    "createGroupDialog": {
+      "title": "新しいグループを作成",
+      "hint": "グループ名",
+      "create": "作成",
+      "errorEmpty": "グループ名を空にすることはできません。"
+    },
+    "moveToGroupDialog": {
+      "title(param=count)": {
+        "one": "1 項目を移動...",
+        "other": "$count 項目を移動..."
+      }
+    },
+    "deleteGroupDialog": {
+      "title": "グループを削除",
+      "content": "グループ '$name' を削除してもよろしいですか？",
+      "warning": "このグループ内のリストはグループ化されていない状態になります。"
+    },
+    "deleteListsDialog": {
+      "title(param=count)": {
+        "one": "1 リストを削除しますか？",
+        "other": "$count リストを削除しますか？"
+      },
+      "content(param=count)": {
+        "one": "この操作は永続的であり、元に戻すことはできません。",
+        "other": "この操作は永続的であり、元に戻すことはできません。"
+      }
+    },
+    "sortLabel": "並べ替え：",
+    "sortOptions": {
+      "none": "なし",
+      "name": "名前",
+      "lastOpened": "最終開封日",
+      "createdAt": "作成日",
+      "listLength": "長さ"
+    }
+  },
+  "modeSelectionScreen": {
+    "title": "オプションとモード",
+    "noActiveList": "アクティブな学習リストが見つからないか、リストを読み込めませんでした。",
+    "debugActiveId": "デバッグ：現在のアクティブIDは $id です",
+    "returnToWelcome": "ウェルカム画面に戻る",
+    "flashcardOptions": "フラッシュカード オプション",
+    "showTermFirst": "用語を先に表示",
+    "showDefFirst": "定義を先に表示",
+    "studyOptions": "学習とテスト オプション",
+    "askForTerm": "定義を表示し、用語を質問",
+    "askForDef": "用語を表示し、定義を質問",
+    "studyLength": "学習の長さ：",
+    "testFormat": "テスト形式",
+    "writtenAnswer": "記述回答",
+    "multipleChoice": "多肢選択",
+    "requireOnlyOneAnswer": "カンマ区切りの1つの回答を受け入れる",
+    "requireOnlyOneAnswerSubtitle": "正しい答えが 'a, b' の場合、'a' が受け入れられます",
+    "flashcards": "フラッシュカード",
+    "learn": "学習",
+    "test": "テスト",
+    "match": "マッチ",
+    "backToWelcome": "ウェルカム画面に戻る",
+    "errors": {
+      "saveSettingFailed": "設定の保存に失敗しました: $error"
+    }
+  },
+  "flashcardScreen": {
+    "title": "フラッシュカード",
+    "noCards": "表示するフラッシュカードがありません。",
+    "noTerms": "学習可能な用語がありません。",
+    "shuffle": "シャッフル",
+    "restart": "再開"
+  },
+  "learnScreen": {
+    "title": "学習",
+    "restartSession": "学習セッションを再開",
+    "backToOptions": "オプションに戻る",
+    "preparing": "次の質問を準備中...",
+    "answerHint": "ここに回答を入力...",
+    "incorrect": "不正解",
+    "hint": "ヒント",
+    "skip": "スキップ",
+    "backToModeSelection": "モード選択に戻る",
+    "errors": {
+      "noTerms": "学習モードで利用可能な用語がありません。",
+      "notEnoughTerms": "選択した長さに対して十分な用語がありません。"
+    },
+    "feedback": {
+      "correct": "正解！",
+      "incorrect": "不正解。正しい答え: $answer",
+      "hint": "ヒント: \"$char\" で始まります",
+      "skipped": "スキップしました。答えは: $answer"
+    },
+    "progress": {
+      "allLearned": "すべての用語を学習しました！",
+      "cycleStatus": "サイクル $cycleNum | 項目 $itemNum / $total",
+      "sessionComplete": "学習セッション完了！よくできました！",
+      "maxCyclesReached(param=count)": {
+        "one": "最大サイクル数に達しました。1 項目がまだ復習待ちです。",
+        "other": "最大サイクル数に達しました。$count 項目がまだ復習待ちです。"
+      },
+      "startingCycle": "サイクル $cycleNum を開始、$count 項目..."
+    }
+  },
+  "matchScreen": {
+    "title": "マッチ",
+    "congratulations": "おめでとうございます！",
+    "timeCompleted": "$time 秒で完了しました！",
+    "playAgain": "もう一度プレイ",
+    "backToOptions": "オプションに戻る",
+    "leaderboard": {
+      "title": "リーダーボード",
+      "noRecords": "まだ記録はありません。最初になりましょう！",
+      "time": "$time 秒",
+      "rank": "#$rank",
+      "rankOver100": ">100"
+    },
+    "errors": {
+      "noTerms": "マッチモードで利用可能な用語がありません。",
+      "notEnoughTerms": "プレイするには少なくとも1組の用語/定義のペアが必要です。"
+    }
+  },
+  "testScreen": {
+    "title": "テスト",
+    "noQuestions": "このテストには問題がありません。",
+    "viewResults": "結果を表示",
+    "submitTest": "テストを送信",
+    "errors": {
+      "loadFailed": "テスト用の学習リストの読み込み中にエラーが発生しました。",
+      "noTerms": "テストで利用可能な用語がありません。",
+      "notEnoughTerms": "選択した学習の長さに対して十分な用語がありません。"
+    }
+  },
+  "resultsScreen": {
+    "title": "テスト結果",
+    "notSubmitted": "テストはまだ送信されていません。",
+    "noQuestions": "このテストには問題がありませんでした。",
+    "yourScore": "あなたのスコア",
+    "scoreFraction": "$score / $total 正解",
+    "reviewIncorrect": "不正解を確認：",
+    "yourAnswerWas": "あなたの回答: $answer",
+    "noAnswer": "（回答なし）",
+    "congratulations": "おめでとうございます！すべて正解です！",
+    "retryTest": "テストを再試行",
+    "reviewFlashcards": "フラッシュカードで復習",
+    "backToWelcome": "ウェルカム画面に戻る"
+  },
+  "settingsScreen": {
+    "title": "設定",
+    "appearance": "外観",
+    "language": "言語",
+    "languageDialogTitle": "言語を選択",
+    "uiScaling": "UI スケーリング",
+    "uiScalingSubtitle": "テキストとインターフェース要素のサイズを調整",
+    "systemDefault": "システムデフォルト",
+    "light": "ライト",
+    "dark": "ダーク",
+    "english": "英語 (English)",
+    "finnish": "フィンランド語 (Suomi)",
+    "russian": "ロシア語 (Русский)",
+    "spanish": "スペイン語 (Español)",
+    "swedish": "スウェーデン語 (Svenska)",
+    "french": "フランス語 (Français)",
+    "german": "ドイツ語 (Deutsch)",
+    "portuguese": "ポルトガル語 (Português)",
+    "italian": "イタリア語 (Italiano)",
+    "chinese": "中国語 (简体中文)",
+    "japanese": "日本語",
+    "update": "更新",
+    "checkForUpdate": "更新を確認",
+    "checkingForUpdate": "更新を確認中...",
+    "upToDate": "最新の状態です",
+    "noNewVersion": "新しいバージョンは見つかりませんでした。",
+    "updateAvailable": "利用可能な更新: v$version",
+    "tapToInstall": "タップしてダウンロードとインストール",
+    "viewReleaseNotes": "リリースノートを表示",
+    "downloadingUpdate": "更新をダウンロード中...",
+    "updateCheckFailed": "更新チェックに失敗しました",
+    "dataManagement": "データ管理",
+    "exportData": "データをエクスポート",
+    "exportDataSubtitle": "すべてのリストをファイルに保存",
+    "importData": "データをインポート",
+    "importDataSubtitle": "ファイルからリストを読み込み",
+    "deleteAllData": "すべてのデータを削除",
+    "exportDialog": {
+      "title": "データをエクスポート",
+      "content": "データをどのようにエクスポートしますか？",
+      "share": "ファイルを共有",
+      "save": "デバイスに保存",
+      "shareText": "こちらがあなたのQuizloneバックアップです。",
+      "saveFileTitle": "出力ファイルを選択してください：",
+      "backupFileName": "quizlone_backup"
+    },
+    "importDialog": {
+      "title": "インポートを確認",
+      "content": "ファイルから学習リストをインポートします。同じ名前の既存のリストは上書きされます。続行しますか？",
+      "import": "インポート"
+    },
+    "deleteDialog": {
+      "title": "削除を確認",
+      "content": "すべての学習リストを削除してもよろしいですか？この操作は元に戻せません。",
+      "deleteAll": "すべて削除"
+    },
+    "snackbars": {
+      "noDataToExport": "エクスポートするデータがありません。",
+      "exportSuccess": "データのエクスポートに成功しました！",
+      "exportError": "データのエクスポート中にエラーが発生しました: $error",
+      "fileSaved": "ファイルの保存に成功しました！",
+      "importSuccess": "$count リストを正常にインポートしました！",
+      "importError": "データのインポート中にエラーが発生しました: $error",
+      "allDeleted": "すべての学習リストが削除されました。"
+    }
+  },
+  "controlsScreen": {
+    "title": "操作",
+    "gesturesTitle": "ジェスチャー（フラッシュカード）",
+    "keyboardTitle": "キーボード（フラッシュカード）",
+    "nextCard": "次のカード",
+    "previousCard": "前のカード",
+    "flipCard": "カードをめくる",
+    "swipeLeft": "左にスワイプ",
+    "swipeRight": "右にスワイプ",
+    "swipeVertical": "上または下にスワイプ",
+    "arrowRight": "右矢印キー",
+    "arrowLeft": "左矢印キー",
+    "arrowVerticalOrSpace": "上下矢印キーまたはスペースキー"
+  }
+}

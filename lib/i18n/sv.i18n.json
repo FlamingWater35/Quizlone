@@ -1,0 +1,333 @@
+{
+  "appName": "Quizlone",
+  "general": {
+    "back": "Tillbaka",
+    "cancel": "Avbryt",
+    "delete": "Radera",
+    "error": "Fel",
+    "next": "Nästa",
+    "previous": "Föregående",
+    "saveAndContinue": "Spara och Fortsätt",
+    "submit": "Skicka",
+    "all": "Alla",
+    "loading": "Laddar...",
+    "genericError": "Fel: $error",
+    "reset": "Återställ"
+  },
+  "drawer": {
+    "settings": "Inställningar",
+    "controls": "Kontroller",
+    "about": "Om",
+    "aboutDialog": {
+      "legalese": "© 2025 Quizlone",
+      "description": "En enkel, modern studieapp byggd med Flutter."
+    },
+    "cloudSync": "MolnSynkronisering",
+    "loggedInAs": "Inloggad som:",
+    "noEmail": "Ingen e-post",
+    "logout": "Logga Ut",
+    "email": "E-post",
+    "password": "Lösenord",
+    "signIn": "Logga In",
+    "signUp": "Registrera Dig",
+    "validation": {
+      "emailEmpty": "Vänligen ange en e-postadress",
+      "passwordEmpty": "Vänligen ange ett lösenord"
+    },
+    "snackbars": {
+      "successfulAccountCreation": "Konto skapat framgångsrikt.",
+      "unexpectedError": "Ett oväntat fel uppstod"
+    },
+    "confirmEmailDialog": {
+      "title": "Bekräfta E-post",
+      "content": "Genom att klicka bekräfta godkänner du att $email är din korrekta e-postadress.",
+      "confirm": "Bekräfta"
+    },
+    "confirmLogoutDialog": {
+      "title": "Bekräfta Utloggning",
+      "content": "Utloggning kommer att behålla dina data i molnet. Vill du också ta bort all studiedata från den här enheten?",
+      "logoutOnly": "Endast Utloggning",
+      "deleteAndLogout": "Radera & Logga Ut"
+    }
+  },
+  "aboutScreen": {
+    "version": "Version $version",
+    "viewLicenses": "Visa Licenser"
+  },
+  "startScreen": {
+    "title": "Quizlone",
+    "welcome": "Välkommen!",
+    "createNewList": "Skapa Ny Lista",
+    "openSavedList": "Öppna Sparad Lista",
+    "loadSavedList": "Ladda Sparad Lista",
+    "noLists": "Inga listor sparade än.",
+    "termCount(param=count)": {
+      "one": "1 term",
+      "other": "$count termer"
+    },
+    "confirmDeleteDialog": {
+      "title": "Bekräfta Radering",
+      "content": "Är du säker på att du vill radera '$listName'?"
+    },
+    "renameListDialog": {
+      "title": "Byt Namn på Lista",
+      "rename": "Byt Namn",
+      "errorNameExists": "En lista med detta namn finns redan.",
+      "errorNameEmpty": "Listnamnet kan inte vara tomt."
+    }
+  },
+  "inputScreen": {
+    "title": "Skapa Ny Lista",
+    "listName": "Listnamn",
+    "listNameHint": "t.ex., Kapitel 1 Ordförråd",
+    "pasteTerms": "Klistra in dina termer nedan:",
+    "pasteTermsHint": "(Term på en rad, Definition på nästa)",
+    "termsHint": "Rättvisa\nPrincipen för moralisk riktighet\nSol\nEn stjärna som är centrum för ett planetsystem",
+    "saveList": "Spara Lista",
+    "assignToGroup": "Tilldela till Grupp",
+    "errors": {
+      "listNameEmpty": "Listnamnet kan inte vara tomt.",
+      "noTerms": "Inga termer/definitioner inmatade.",
+      "invalidFormat": "Ogiltigt format. Varje term behöver en definition på nästa rad.",
+      "emptyTerm": "Formatfel nära rad $line. Tom term eller definition hittades.",
+      "noValidPairs": "Inga giltiga term/definition-par hittades.",
+      "saveFailed": "Misslyckades med att spara lista: $error"
+    }
+  },
+  "loadListScreen": {
+    "title": "Ladda Lista",
+    "searchHint": "Sök efter en lista...",
+    "noMatches": "Inga listor matchar din sökning.",
+    "createGroup": "Skapa Grupp",
+    "select": "Välj",
+    "cancel": "Avbryt",
+    "ungrouped": "Ogrupperade",
+    "move": "Flytta",
+    "itemsSelected(param=count)": {
+      "one": "1 objekt valt",
+      "other": "$count objekt valda"
+    },
+    "createGroupDialog": {
+      "title": "Skapa Ny Grupp",
+      "hint": "Gruppnamn",
+      "create": "Skapa",
+      "errorEmpty": "Gruppnamnet kan inte vara tomt."
+    },
+    "moveToGroupDialog": {
+      "title(param=count)": {
+        "one": "Flytta 1 objekt till...",
+        "other": "Flytta $count objekt till..."
+      }
+    },
+    "deleteGroupDialog": {
+      "title": "Radera Grupp",
+      "content": "Är du säker på att du vill radera gruppen '$name'?",
+      "warning": "Listor inom denna grupp kommer att bli ogrupperade."
+    },
+    "deleteListsDialog": {
+      "title(param=count)": {
+        "one": "Radera 1 lista?",
+        "other": "Radera $count listor?"
+      },
+      "content(param=count)": {
+        "one": "Denna åtgärd är permanent och kan inte ångras.",
+        "other": "Denna åtgärd är permanent och kan inte ångras."
+      }
+    },
+    "sortLabel": "Sortera:",
+    "sortOptions": {
+      "none": "Ingen",
+      "name": "Namn",
+      "lastOpened": "Senast Öppnad",
+      "createdAt": "Skapad",
+      "listLength": "Längd"
+    }
+  },
+  "modeSelectionScreen": {
+    "title": "Alternativ & Läge",
+    "noActiveList": "Ingen aktiv studielista hittades eller listan kunde inte laddas.",
+    "debugActiveId": "Felsök: Aktuellt Aktivt ID är $id",
+    "returnToWelcome": "Återgå till Välkomstskärmen",
+    "flashcardOptions": "Flashcard-alternativ",
+    "showTermFirst": "Visa Term Först",
+    "showDefFirst": "Visa Definition Först",
+    "studyOptions": "Lär & Testa Alternativ",
+    "askForTerm": "Visa Definition, Fråga efter Term",
+    "askForDef": "Visa Term, Fråga efter Definition",
+    "studyLength": "Studielängd:",
+    "testFormat": "Testformat",
+    "writtenAnswer": "Skriftligt Svar",
+    "multipleChoice": "Flerval",
+    "requireOnlyOneAnswer": "Acceptera ett kommaavseparat svar",
+    "requireOnlyOneAnswerSubtitle": "Om rätt svar är 'a, b', accepteras 'a'",
+    "flashcards": "Flashcards",
+    "learn": "Lära",
+    "test": "Testa",
+    "match": "Matcha",
+    "backToWelcome": "Tillbaka till Välkomstskärmen",
+    "errors": {
+      "saveSettingFailed": "Misslyckades med att spara inställning: $error"
+    }
+  },
+  "flashcardScreen": {
+    "title": "Flashcards",
+    "noCards": "Inga flashcards att visa.",
+    "noTerms": "Inga termer tillgängliga att studera.",
+    "shuffle": "Blanda",
+    "restart": "Starta Om"
+  },
+  "learnScreen": {
+    "title": "Lära",
+    "restartSession": "Starta Om Inlärningssession",
+    "backToOptions": "Tillbaka till Alternativ",
+    "preparing": "Förbereder nästa fråga...",
+    "answerHint": "Skriv ditt svar här...",
+    "incorrect": "Felaktigt",
+    "hint": "Ledtråd",
+    "skip": "Hoppa Över",
+    "backToModeSelection": "Tillbaka till Lägesval",
+    "errors": {
+      "noTerms": "Inga termer tillgängliga för Lära-läget.",
+      "notEnoughTerms": "Inte tillräckligt med termer för vald längd."
+    },
+    "feedback": {
+      "correct": "Korrekt!",
+      "incorrect": "Felaktigt. Rätt svar: $answer",
+      "hint": "Ledtråd: Börjar med \"$char\"",
+      "skipped": "Hoppades över. Svaret var: $answer"
+    },
+    "progress": {
+      "allLearned": "Alla termer inlärda!",
+      "cycleStatus": "Cykel $cycleNum | Objekt $itemNum av $total",
+      "sessionComplete": "Inlärningssession slutförd! Bra gjort!",
+      "maxCyclesReached(param=count)": {
+        "one": "Maxcykler uppnådda. 1 objekt kvar att repetera.",
+        "other": "Maxcykler uppnådda. $count objekt kvar att repetera."
+      },
+      "startingCycle": "Startar Cykel $cycleNum med $count objekt..."
+    }
+  },
+  "matchScreen": {
+    "title": "Matcha",
+    "congratulations": "Grattis!",
+    "timeCompleted": "Du slutförde på $time sekunder!",
+    "playAgain": "Spela Igen",
+    "backToOptions": "Tillbaka till Alternativ",
+    "leaderboard": {
+      "title": "Resultattavla",
+      "noRecords": "Inga rekord än. Var den första!",
+      "time": "$time Sekunder",
+      "rank": "#$rank",
+      "rankOver100": ">100"
+    },
+    "errors": {
+      "noTerms": "Inga termer tillgängliga för Matcha-läget.",
+      "notEnoughTerms": "Minst ett term/definition-par krävs för att spela."
+    }
+  },
+  "testScreen": {
+    "title": "Testa",
+    "noQuestions": "Inga frågor för detta test.",
+    "viewResults": "Visa Resultat",
+    "submitTest": "Skicka Test",
+    "errors": {
+      "loadFailed": "Fel vid laddning av studielista för test.",
+      "noTerms": "Inga termer tillgängliga för testet.",
+      "notEnoughTerms": "Inte tillräckligt med termer för vald studielängd."
+    }
+  },
+  "resultsScreen": {
+    "title": "Testresultat",
+    "notSubmitted": "Testet är inte inskickat än.",
+    "noQuestions": "Det fanns inga frågor i detta test.",
+    "yourScore": "Ditt Resultat",
+    "scoreFraction": "$score / $total Rätt",
+    "reviewIncorrect": "Granska Felaktiga Svar:",
+    "yourAnswerWas": "Ditt Svar: $answer",
+    "noAnswer": "(Inget svar)",
+    "congratulations": "Grattis! Du fick allt rätt!",
+    "retryTest": "Försök Testa Igen",
+    "reviewFlashcards": "Granska med Flashcards",
+    "backToWelcome": "Tillbaka till Välkomstskärmen"
+  },
+  "settingsScreen": {
+    "title": "Inställningar",
+    "appearance": "Utseende",
+    "language": "Språk",
+    "languageDialogTitle": "Välj Språk",
+    "uiScaling": "UI-skalning",
+    "uiScalingSubtitle": "Justera storleken på text och gränssnittselement",
+    "systemDefault": "Systemstandard",
+    "light": "Ljus",
+    "dark": "Mörk",
+    "english": "Engelska (English)",
+    "finnish": "Finska (Suomi)",
+    "russian": "Ryska (Русский)",
+    "spanish": "Spanska (Español)",
+    "swedish": "Svenska",
+    "french": "Franska (Français)",
+    "german": "Tyska (Deutsch)",
+    "portuguese": "Portugisiska (Português)",
+    "italian": "Italienska (Italiano)",
+    "chinese": "Kinesiska (简体中文)",
+    "japanese": "Japanska (日本語)",
+    "update": "Uppdatera",
+    "checkForUpdate": "Sök efter Uppdateringar",
+    "checkingForUpdate": "Söker efter uppdateringar...",
+    "upToDate": "Du är uppdaterad",
+    "noNewVersion": "Ingen ny version hittades.",
+    "updateAvailable": "Uppdatering Tillgänglig: v$version",
+    "tapToInstall": "Tryck för att ladda ner och installera",
+    "viewReleaseNotes": "Visa versionsfakta",
+    "downloadingUpdate": "Laddar ner uppdatering...",
+    "updateCheckFailed": "Uppdateringskontroll Misslyckades",
+    "dataManagement": "Datahantering",
+    "exportData": "Exportera Data",
+    "exportDataSubtitle": "Spara alla listor till en fil",
+    "importData": "Importera Data",
+    "importDataSubtitle": "Ladda listor från en fil",
+    "deleteAllData": "Radera All Data",
+    "exportDialog": {
+      "title": "Exportera Data",
+      "content": "Hur vill du exportera dina data?",
+      "share": "Dela Fil",
+      "save": "Spara till Enhet",
+      "shareText": "Här är din Quizlone-säkerhetskopia.",
+      "saveFileTitle": "Vänligen välj en utdatafil:",
+      "backupFileName": "quizlone_backup"
+    },
+    "importDialog": {
+      "title": "Bekräfta Import",
+      "content": "Detta kommer att importera studielistor från en fil. Befintliga listor med samma namn kommer att skrivas över. Fortsätta?",
+      "import": "Importera"
+    },
+    "deleteDialog": {
+      "title": "Bekräfta Radering",
+      "content": "Är du säker på att du vill radera ALLA studielistor? Denna åtgärd kan inte ångras.",
+      "deleteAll": "Radera Alla"
+    },
+    "snackbars": {
+      "noDataToExport": "Det finns ingen data att exportera.",
+      "exportSuccess": "Data exporterades framgångsrikt!",
+      "exportError": "Fel vid export av data: $error",
+      "fileSaved": "Fil sparades framgångsrikt!",
+      "importSuccess": "$count listor importerades framgångsrikt!",
+      "importError": "Fel vid import av data: $error",
+      "allDeleted": "Alla studielistor har raderats."
+    }
+  },
+  "controlsScreen": {
+    "title": "Kontroller",
+    "gesturesTitle": "Gester (Flashcards)",
+    "keyboardTitle": "Tangentbord (Flashcards)",
+    "nextCard": "Nästa Kort",
+    "previousCard": "Föregående Kort",
+    "flipCard": "Vänd Kort",
+    "swipeLeft": "Svep Vänster",
+    "swipeRight": "Svep Höger",
+    "swipeVertical": "Svep Upp eller Ner",
+    "arrowRight": "Höger Piltangent",
+    "arrowLeft": "Vänster Piltangent",
+    "arrowVerticalOrSpace": "Upp/Ner Pil eller Mellanslag"
+  }
+}

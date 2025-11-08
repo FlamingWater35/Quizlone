@@ -1,0 +1,333 @@
+{
+  "appName": "Quizlone",
+  "general": {
+    "back": "Zurück",
+    "cancel": "Abbrechen",
+    "delete": "Löschen",
+    "error": "Fehler",
+    "next": "Weiter",
+    "previous": "Zurück",
+    "saveAndContinue": "Speichern und Fortfahren",
+    "submit": "Absenden",
+    "all": "Alle",
+    "loading": "Lädt...",
+    "genericError": "Fehler: $error",
+    "reset": "Zurücksetzen"
+  },
+  "drawer": {
+    "settings": "Einstellungen",
+    "controls": "Steuerung",
+    "about": "Über",
+    "aboutDialog": {
+      "legalese": "© 2025 Quizlone",
+      "description": "Eine einfache, moderne Lern-App, die mit Flutter erstellt wurde."
+    },
+    "cloudSync": "Cloud-Sync",
+    "loggedInAs": "Eingeloggt als:",
+    "noEmail": "Keine E-Mail",
+    "logout": "Abmelden",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "signIn": "Anmelden",
+    "signUp": "Registrieren",
+    "validation": {
+      "emailEmpty": "Bitte geben Sie eine E-Mail-Adresse ein",
+      "passwordEmpty": "Bitte geben Sie ein Passwort ein"
+    },
+    "snackbars": {
+      "successfulAccountCreation": "Konto erfolgreich erstellt.",
+      "unexpectedError": "Ein unerwarteter Fehler ist aufgetreten"
+    },
+    "confirmEmailDialog": {
+      "title": "E-Mail bestätigen",
+      "content": "Durch Klicken auf Bestätigen stimmen Sie zu, dass $email Ihre korrekte E-Mail-Adresse ist.",
+      "confirm": "Bestätigen"
+    },
+    "confirmLogoutDialog": {
+      "title": "Abmeldung bestätigen",
+      "content": "Durch Abmelden bleiben Ihre Daten in der Cloud gespeichert. Möchten Sie auch alle Lern-Daten von diesem Gerät entfernen?",
+      "logoutOnly": "Nur Abmelden",
+      "deleteAndLogout": "Löschen & Abmelden"
+    }
+  },
+  "aboutScreen": {
+    "version": "Version $version",
+    "viewLicenses": "Lizenzen anzeigen"
+  },
+  "startScreen": {
+    "title": "Quizlone",
+    "welcome": "Willkommen!",
+    "createNewList": "Neue Liste erstellen",
+    "openSavedList": "Gespeicherte Liste öffnen",
+    "loadSavedList": "Gespeicherte Liste laden",
+    "noLists": "Noch keine Listen gespeichert.",
+    "termCount(param=count)": {
+      "one": "1 Begriff",
+      "other": "$count Begriffe"
+    },
+    "confirmDeleteDialog": {
+      "title": "Löschen bestätigen",
+      "content": "Sind Sie sicher, dass Sie '$listName' löschen möchten?"
+    },
+    "renameListDialog": {
+      "title": "Liste umbenennen",
+      "rename": "Umbenennen",
+      "errorNameExists": "Eine Liste mit diesem Namen existiert bereits.",
+      "errorNameEmpty": "Listenname darf nicht leer sein."
+    }
+  },
+  "inputScreen": {
+    "title": "Neue Liste erstellen",
+    "listName": "Listenname",
+    "listNameHint": "z.B., Kapitel 1 Vokabeln",
+    "pasteTerms": "Fügen Sie Ihre Begriffe unten ein:",
+    "pasteTermsHint": "(Begriff in einer Zeile, Definition in der nächsten)",
+    "termsHint": "Gerechtigkeit\nDas Prinzip moralischer Richtigkeit\nSonne\nEin Stern, der das Zentrum eines Planetensystems ist",
+    "saveList": "Liste speichern",
+    "assignToGroup": "Gruppe zuweisen",
+    "errors": {
+      "listNameEmpty": "Listenname darf nicht leer sein.",
+      "noTerms": "Keine Begriffe/Definitionen eingegeben.",
+      "invalidFormat": "Ungültiges Format. Jeder Begriff benötigt eine Definition in der nächsten Zeile.",
+      "emptyTerm": "Formatfehler near line $line. Leerer Begriff oder Definition gefunden.",
+      "noValidPairs": "Keine gültigen Begriff/Definition-Paare gefunden.",
+      "saveFailed": "Fehler beim Speichern der Liste: $error"
+    }
+  },
+  "loadListScreen": {
+    "title": "Liste laden",
+    "searchHint": "Nach einer Liste suchen...",
+    "noMatches": "Keine Listen entsprechen Ihrer Suche.",
+    "createGroup": "Gruppe erstellen",
+    "select": "Auswählen",
+    "cancel": "Abbrechen",
+    "ungrouped": "Nicht gruppiert",
+    "move": "Verschieben",
+    "itemsSelected(param=count)": {
+      "one": "1 Element ausgewählt",
+      "other": "$count Elemente ausgewählt"
+    },
+    "createGroupDialog": {
+      "title": "Neue Gruppe erstellen",
+      "hint": "Gruppenname",
+      "create": "Erstellen",
+      "errorEmpty": "Gruppenname darf nicht leer sein."
+    },
+    "moveToGroupDialog": {
+      "title(param=count)": {
+        "one": "1 Element verschieben nach...",
+        "other": "$count Elemente verschieben nach..."
+      }
+    },
+    "deleteGroupDialog": {
+      "title": "Gruppe löschen",
+      "content": "Sind Sie sicher, dass Sie die Gruppe '$name' löschen möchten?",
+      "warning": "Listen innerhalb dieser Gruppe werden nicht gruppiert."
+    },
+    "deleteListsDialog": {
+      "title(param=count)": {
+        "one": "1 Liste löschen?",
+        "other": "$count Listen löschen?"
+      },
+      "content(param=count)": {
+        "one": "Diese Aktion ist dauerhaft und kann nicht rückgängig gemacht werden.",
+        "other": "Diese Aktion ist dauerhaft und kann nicht rückgängig gemacht werden."
+      }
+    },
+    "sortLabel": "Sortieren:",
+    "sortOptions": {
+      "none": "Keine",
+      "name": "Name",
+      "lastOpened": "Zuletzt geöffnet",
+      "createdAt": "Erstellt",
+      "listLength": "Länge"
+    }
+  },
+  "modeSelectionScreen": {
+    "title": "Optionen & Modus",
+    "noActiveList": "Keine aktive Lernliste gefunden oder Liste konnte nicht geladen werden.",
+    "debugActiveId": "Debug: Aktuelle Aktive ID ist $id",
+    "returnToWelcome": "Zurück zum Begrüßungsbildschirm",
+    "flashcardOptions": "Karteikarten-Optionen",
+    "showTermFirst": "Begriff zuerst anzeigen",
+    "showDefFirst": "Definition zuerst anzeigen",
+    "studyOptions": "Lern- & Test-Optionen",
+    "askForTerm": "Definition anzeigen, nach Begriff fragen",
+    "askForDef": "Begriff anzeigen, nach Definition fragen",
+    "studyLength": "Lernlänge:",
+    "testFormat": "Testformat",
+    "writtenAnswer": "Schriftliche Antwort",
+    "multipleChoice": "Multiple Choice",
+    "requireOnlyOneAnswer": "Akzeptiere eine kommagetrennte Antwort",
+    "requireOnlyOneAnswerSubtitle": "Wenn richtige Antwort 'a, b' ist, wird 'a' akzeptiert",
+    "flashcards": "Karteikarten",
+    "learn": "Lernen",
+    "test": "Testen",
+    "match": "Zuordnen",
+    "backToWelcome": "Zurück zum Begrüßungsbildschirm",
+    "errors": {
+      "saveSettingFailed": "Fehler beim Speichern der Einstellung: $error"
+    }
+  },
+  "flashcardScreen": {
+    "title": "Karteikarten",
+    "noCards": "Keine Karteikarten zum Anzeigen.",
+    "noTerms": "Keine Begriffe zum Lernen verfügbar.",
+    "shuffle": "Mischen",
+    "restart": "Neustart"
+  },
+  "learnScreen": {
+    "title": "Lernen",
+    "restartSession": "Lernsitzung neu starten",
+    "backToOptions": "Zurück zu Optionen",
+    "preparing": "Nächste Frage wird vorbereitet...",
+    "answerHint": "Geben Sie hier Ihre Antwort ein...",
+    "incorrect": "Falsch",
+    "hint": "Hinweis",
+    "skip": "Überspringen",
+    "backToModeSelection": "Zurück zur Modusauswahl",
+    "errors": {
+      "noTerms": "Keine Begriffe für den Lernmodus verfügbar.",
+      "notEnoughTerms": "Nicht genug Begriffe für die gewählte Länge."
+    },
+    "feedback": {
+      "correct": "Richtig!",
+      "incorrect": "Falsch. Richtige Antwort: $answer",
+      "hint": "Hinweis: Beginnt mit \"$char\"",
+      "skipped": "Übersprungen. Die Antwort war: $answer"
+    },
+    "progress": {
+      "allLearned": "Alle Begriffe gelernt!",
+      "cycleStatus": "Zyklus $cycleNum | Element $itemNum von $total",
+      "sessionComplete": "Lernsitzung abgeschlossen! Gut gemacht!",
+      "maxCyclesReached(param=count)": {
+        "one": "Maximale Zyklen erreicht. 1 Element bleibt zu wiederholen.",
+        "other": "Maximale Zyklen erreicht. $count Elemente bleiben zu wiederholen."
+      },
+      "startingCycle": "Starte Zyklus $cycleNum mit $count Element(en)..."
+    }
+  },
+  "matchScreen": {
+    "title": "Zuordnen",
+    "congratulations": "Herzlichen Glückwunsch!",
+    "timeCompleted": "Sie haben in $time Sekunden abgeschlossen!",
+    "playAgain": "Nochmal spielen",
+    "backToOptions": "Zurück zu Optionen",
+    "leaderboard": {
+      "title": "Bestenliste",
+      "noRecords": "Noch keine Einträge. Seien Sie der Erste!",
+      "time": "$time Sekunden",
+      "rank": "#$rank",
+      "rankOver100": ">100"
+    },
+    "errors": {
+      "noTerms": "Keine Begriffe für den Zuordnungsmodus verfügbar.",
+      "notEnoughTerms": "Mindestens ein Begriff/Definition-Paar wird zum Spielen benötigt."
+    }
+  },
+  "testScreen": {
+    "title": "Testen",
+    "noQuestions": "Keine Fragen für diesen Test.",
+    "viewResults": "Ergebnisse anzeigen",
+    "submitTest": "Test abschicken",
+    "errors": {
+      "loadFailed": "Fehler beim Laden der Lernliste für den Test.",
+      "noTerms": "Keine Begriffe für den Test verfügbar.",
+      "notEnoughTerms": "Nicht genug Begriffe für die gewählte Lernlänge."
+    }
+  },
+  "resultsScreen": {
+    "title": "Testergebnisse",
+    "notSubmitted": "Test noch nicht abgeschickt.",
+    "noQuestions": "In diesem Test gab es keine Fragen.",
+    "yourScore": "Ihre Punktzahl",
+    "scoreFraction": "$score / $total Richtig",
+    "reviewIncorrect": "Falsche Antworten überprüfen:",
+    "yourAnswerWas": "Ihre Antwort: $answer",
+    "noAnswer": "(Keine Antwort)",
+    "congratulations": "Herzlichen Glückwunsch! Sie haben alles richtig!",
+    "retryTest": "Test wiederholen",
+    "reviewFlashcards": "Mit Karteikarten überprüfen",
+    "backToWelcome": "Zurück zum Begrüßungsbildschirm"
+  },
+  "settingsScreen": {
+    "title": "Einstellungen",
+    "appearance": "Erscheinungsbild",
+    "language": "Sprache",
+    "languageDialogTitle": "Sprache auswählen",
+    "uiScaling": "UI-Skalierung",
+    "uiScalingSubtitle": "Größe von Text und Benutzeroberflächenelementen anpassen",
+    "systemDefault": "Systemstandard",
+    "light": "Hell",
+    "dark": "Dunkel",
+    "english": "Englisch (English)",
+    "finnish": "Finnisch (Suomi)",
+    "russian": "Russisch (Русский)",
+    "spanish": "Spanisch (Español)",
+    "swedish": "Schwedisch (Svenska)",
+    "french": "Französisch (Français)",
+    "german": "Deutsch",
+    "portuguese": "Portugiesisch (Português)",
+    "italian": "Italienisch (Italiano)",
+    "chinese": "Chinesisch (简体中文)",
+    "japanese": "Japanisch (日本語)",
+    "update": "Aktualisieren",
+    "checkForUpdate": "Nach Updates suchen",
+    "checkingForUpdate": "Suche nach Updates...",
+    "upToDate": "Sie sind auf dem neuesten Stand",
+    "noNewVersion": "Keine neue Version gefunden.",
+    "updateAvailable": "Update verfügbar: v$version",
+    "tapToInstall": "Zum Herunterladen und Installieren antippen",
+    "viewReleaseNotes": "Versionshinweise anzeigen",
+    "downloadingUpdate": "Update wird heruntergeladen...",
+    "updateCheckFailed": "Update-Prüfung fehlgeschlagen",
+    "dataManagement": "Datenverwaltung",
+    "exportData": "Daten exportieren",
+    "exportDataSubtitle": "Alle Listen in einer Datei speichern",
+    "importData": "Daten importieren",
+    "importDataSubtitle": "Listen aus einer Datei laden",
+    "deleteAllData": "Alle Daten löschen",
+    "exportDialog": {
+      "title": "Daten exportieren",
+      "content": "Wie möchten Sie Ihre Daten exportieren?",
+      "share": "Datei teilen",
+      "save": "Auf Gerät speichern",
+      "shareText": "Hier ist Ihr Quizlone-Backup.",
+      "saveFileTitle": "Bitte wählen Sie eine Ausgabedatei:",
+      "backupFileName": "quizlone_backup"
+    },
+    "importDialog": {
+      "title": "Import bestätigen",
+      "content": "Dies importiert Lernlisten aus einer Datei. Vorhandene Listen mit demselben Namen werden überschrieben. Fortfahren?",
+      "import": "Importieren"
+    },
+    "deleteDialog": {
+      "title": "Löschen bestätigen",
+      "content": "Sind Sie sicher, dass Sie ALLE Lernlisten löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.",
+      "deleteAll": "Alle löschen"
+    },
+    "snackbars": {
+      "noDataToExport": "Es sind keine Daten zum Exportieren vorhanden.",
+      "exportSuccess": "Daten erfolgreich exportiert!",
+      "exportError": "Fehler beim Exportieren der Daten: $error",
+      "fileSaved": "Datei erfolgreich gespeichert!",
+      "importSuccess": "$count Listen erfolgreich importiert!",
+      "importError": "Fehler beim Importieren der Daten: $error",
+      "allDeleted": "Alle Lernlisten wurden gelöscht."
+    }
+  },
+  "controlsScreen": {
+    "title": "Steuerung",
+    "gesturesTitle": "Gestenssteuerung (Karteikarten)",
+    "keyboardTitle": "Tastatur (Karteikarten)",
+    "nextCard": "Nächste Karte",
+    "previousCard": "Vorherige Karte",
+    "flipCard": "Karte umdrehen",
+    "swipeLeft": "Nach links wischen",
+    "swipeRight": "Nach rechts wischen",
+    "swipeVertical": "Nach oben oder unten wischen",
+    "arrowRight": "Pfeil-rechts-Taste",
+    "arrowLeft": "Pfeil-links-Taste",
+    "arrowVerticalOrSpace": "Pfeil-oben/unten oder Leertaste"
+  }
+}
