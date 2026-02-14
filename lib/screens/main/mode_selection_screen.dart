@@ -17,22 +17,34 @@ import '../../widgets/centered_view.dart';
 final _log = Logger("ModeSelectionScreen");
 
 @RoutePage()
-class ModeSelectionScreen extends ConsumerWidget {
+class ModeSelectionScreen extends ConsumerStatefulWidget {
   const ModeSelectionScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    if (kIsWeb && !context.router.canPop()) {
+  ConsumerState<ModeSelectionScreen> createState() =>
+      _ModeSelectionScreenState();
+}
+
+class _ModeSelectionScreenState extends ConsumerState<ModeSelectionScreen> {
+  @override
+  void initState() {
+    super.initState();
+    if (kIsWeb) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (ref.read(activeStudyListIdProvider) != null && context.mounted) {
-          context.router.replaceAll([
-            const StartRoute(),
-            const ModeSelectionRoute(),
-          ]);
+        if (mounted && !context.router.canPop()) {
+          if (ref.read(activeStudyListIdProvider) != null) {
+            context.router.replaceAll([
+              const StartRoute(),
+              const ModeSelectionRoute(),
+            ]);
+          }
         }
       });
     }
+  }
 
+  @override
+  Widget build(BuildContext context) {
     final t = Translations.of(context);
     final activeStudyListAsync = ref.watch(activeStudyListProvider);
 
@@ -320,12 +332,11 @@ class _OptionsPanelState extends ConsumerState<_OptionsPanel> {
                     icon: Icons.rectangle_outlined,
                     value: FlashcardStartSide.term,
                     groupValue: fcStartWith,
-                    onChanged:
-                        (value) => _handleSettingChange(
-                          () => ref
-                              .read(flashcardStartWithProvider.notifier)
-                              .set(value),
-                        ),
+                    onChanged: (value) => _handleSettingChange(
+                      () => ref
+                          .read(flashcardStartWithProvider.notifier)
+                          .set(value),
+                    ),
                   ),
                   const SizedBox(width: 8),
                   _CustomToggleButton<FlashcardStartSide>(
@@ -333,12 +344,11 @@ class _OptionsPanelState extends ConsumerState<_OptionsPanel> {
                     icon: Icons.notes_outlined,
                     value: FlashcardStartSide.definition,
                     groupValue: fcStartWith,
-                    onChanged:
-                        (value) => _handleSettingChange(
-                          () => ref
-                              .read(flashcardStartWithProvider.notifier)
-                              .set(value),
-                        ),
+                    onChanged: (value) => _handleSettingChange(
+                      () => ref
+                          .read(flashcardStartWithProvider.notifier)
+                          .set(value),
+                    ),
                   ),
                 ],
               ),
@@ -358,12 +368,9 @@ class _OptionsPanelState extends ConsumerState<_OptionsPanel> {
                     icon: Icons.notes_outlined,
                     value: StudyQuestionType.definition,
                     groupValue: studyAskWith,
-                    onChanged:
-                        (value) => _handleSettingChange(
-                          () => ref
-                              .read(studyAskWithProvider.notifier)
-                              .set(value),
-                        ),
+                    onChanged: (value) => _handleSettingChange(
+                      () => ref.read(studyAskWithProvider.notifier).set(value),
+                    ),
                   ),
                   const SizedBox(width: 8),
                   _CustomToggleButton<StudyQuestionType>(
@@ -371,12 +378,9 @@ class _OptionsPanelState extends ConsumerState<_OptionsPanel> {
                     icon: Icons.rectangle_outlined,
                     value: StudyQuestionType.term,
                     groupValue: studyAskWith,
-                    onChanged:
-                        (value) => _handleSettingChange(
-                          () => ref
-                              .read(studyAskWithProvider.notifier)
-                              .set(value),
-                        ),
+                    onChanged: (value) => _handleSettingChange(
+                      () => ref.read(studyAskWithProvider.notifier).set(value),
+                    ),
                   ),
                 ],
               ),
@@ -452,12 +456,11 @@ class _OptionsPanelState extends ConsumerState<_OptionsPanel> {
                     icon: Icons.edit_note_outlined,
                     value: TestFormat.written,
                     groupValue: testFormat,
-                    onChanged:
-                        (value) => _handleSettingChange(
-                          () => ref
-                              .read(testQuestionFormatProvider.notifier)
-                              .set(value),
-                        ),
+                    onChanged: (value) => _handleSettingChange(
+                      () => ref
+                          .read(testQuestionFormatProvider.notifier)
+                          .set(value),
+                    ),
                   ),
                   const SizedBox(width: 8),
                   _CustomToggleButton<TestFormat>(
@@ -465,12 +468,11 @@ class _OptionsPanelState extends ConsumerState<_OptionsPanel> {
                     icon: Icons.check_box_outlined,
                     value: TestFormat.mc,
                     groupValue: testFormat,
-                    onChanged:
-                        (value) => _handleSettingChange(
-                          () => ref
-                              .read(testQuestionFormatProvider.notifier)
-                              .set(value),
-                        ),
+                    onChanged: (value) => _handleSettingChange(
+                      () => ref
+                          .read(testQuestionFormatProvider.notifier)
+                          .set(value),
+                    ),
                     isDisabled: isMCDisabled,
                   ),
                 ],
@@ -515,21 +517,20 @@ class _ActionButtons extends StatelessWidget {
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      children:
-          modes.map((mode) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 6.0),
-              child: FilledButton.icon(
-                icon: Icon(mode.icon),
-                label: Text(mode.label),
-                style: FilledButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  textStyle: textTheme.titleLarge,
-                ),
-                onPressed: () => context.router.push(mode.route),
-              ),
-            );
-          }).toList(),
+      children: modes.map((mode) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 6.0),
+          child: FilledButton.icon(
+            icon: Icon(mode.icon),
+            label: Text(mode.label),
+            style: FilledButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              textStyle: textTheme.titleLarge,
+            ),
+            onPressed: () => context.router.push(mode.route),
+          ),
+        );
+      }).toList(),
     );
   }
 }
@@ -587,25 +588,20 @@ class _CustomToggleButton<T> extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    final Color cardColor =
-        isDisabled
-            ? theme.disabledColor.withAlpha(6)
-            : (isSelected
-                ? colorScheme.secondaryContainer
-                : colorScheme.surface);
+    final Color cardColor = isDisabled
+        ? theme.disabledColor.withAlpha(6)
+        : (isSelected ? colorScheme.secondaryContainer : colorScheme.surface);
 
-    final Color contentColor =
-        isDisabled
-            ? theme.disabledColor
-            : (isSelected
-                ? colorScheme.onSecondaryContainer
-                : colorScheme.onSurfaceVariant);
+    final Color contentColor = isDisabled
+        ? theme.disabledColor
+        : (isSelected
+              ? colorScheme.onSecondaryContainer
+              : colorScheme.onSurfaceVariant);
 
     final BorderSide borderSide = BorderSide(
-      color:
-          isDisabled
-              ? Colors.transparent
-              : (isSelected ? Colors.transparent : colorScheme.outlineVariant),
+      color: isDisabled
+          ? Colors.transparent
+          : (isSelected ? Colors.transparent : colorScheme.outlineVariant),
     );
 
     return Expanded(

@@ -6,14 +6,20 @@ import 'package:quizlone/routing/app_router.dart';
 import 'package:quizlone/widgets/centered_view.dart';
 
 @RoutePage()
-class ControlsScreen extends StatelessWidget {
+class ControlsScreen extends StatefulWidget {
   const ControlsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    if (kIsWeb && !context.router.canPop()) {
+  State<ControlsScreen> createState() => _ControlsScreenState();
+}
+
+class _ControlsScreenState extends State<ControlsScreen> {
+  @override
+  void initState() {
+    super.initState();
+    if (kIsWeb) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (context.mounted) {
+        if (mounted && !context.router.canPop()) {
           context.router.replaceAll([
             const StartRoute(),
             const ControlsRoute(),
@@ -21,7 +27,10 @@ class ControlsScreen extends StatelessWidget {
         }
       });
     }
+  }
 
+  @override
+  Widget build(BuildContext context) {
     final t = Translations.of(context);
     return Scaffold(
       appBar: AppBar(title: Text(t.controlsScreen.title), centerTitle: true),

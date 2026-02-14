@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
@@ -50,6 +51,20 @@ class _MatchLeaderboardScreenState extends ConsumerState<MatchLeaderboardScreen>
       vsync: this,
       duration: const Duration(milliseconds: 1000),
     );
+
+    if (kIsWeb) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted && !context.router.canPop()) {
+          if (ref.read(activeStudyListIdProvider) != null) {
+            context.router.replaceAll([
+              const StartRoute(),
+              const ModeSelectionRoute(),
+              MatchLeaderboardRoute(),
+            ]);
+          }
+        }
+      });
+    }
   }
 
   void _scrollToNewRecord(int newRecordDisplayIndex) {
@@ -169,12 +184,11 @@ class _MatchLeaderboardScreenState extends ConsumerState<MatchLeaderboardScreen>
                             displayRecords.add(newRecord);
                           }
 
-                          final newRecordDisplayIndex =
-                              newRecord == null
-                                  ? -1
-                                  : displayRecords.indexWhere(
-                                    (r) => r.createdAt == newRecord.createdAt,
-                                  );
+                          final newRecordDisplayIndex = newRecord == null
+                              ? -1
+                              : displayRecords.indexWhere(
+                                  (r) => r.createdAt == newRecord.createdAt,
+                                );
 
                           WidgetsBinding.instance.addPostFrameCallback(
                             (_) => _scrollToNewRecord(newRecordDisplayIndex),
@@ -203,12 +217,11 @@ class _MatchLeaderboardScreenState extends ConsumerState<MatchLeaderboardScreen>
                               final trueRankIndex = topRecordsFromDb.indexOf(
                                 record,
                               );
-                              final String rankText =
-                                  trueRankIndex != -1
-                                      ? t.matchScreen.leaderboard.rank(
-                                        rank: trueRankIndex + 1,
-                                      )
-                                      : t.matchScreen.leaderboard.rankOver100;
+                              final String rankText = trueRankIndex != -1
+                                  ? t.matchScreen.leaderboard.rank(
+                                      rank: trueRankIndex + 1,
+                                    )
+                                  : t.matchScreen.leaderboard.rankOver100;
 
                               final animation = CurvedAnimation(
                                 parent: _animationController,
@@ -228,12 +241,9 @@ class _MatchLeaderboardScreenState extends ConsumerState<MatchLeaderboardScreen>
                                   ).animate(animation),
                                   child: Card(
                                     key: isNewRecord ? _newRecordKey : null,
-                                    color:
-                                        isNewRecord
-                                            ? theme
-                                                .colorScheme
-                                                .tertiaryContainer
-                                            : null,
+                                    color: isNewRecord
+                                        ? theme.colorScheme.tertiaryContainer
+                                        : null,
                                     child: ListTile(
                                       leading: Text(
                                         rankText,
@@ -249,14 +259,12 @@ class _MatchLeaderboardScreenState extends ConsumerState<MatchLeaderboardScreen>
                                         ),
                                         style: theme.textTheme.titleMedium,
                                       ),
-                                      trailing:
-                                          isNewRecord
-                                              ? Icon(
-                                                Icons.star,
-                                                color:
-                                                    theme.colorScheme.tertiary,
-                                              )
-                                              : null,
+                                      trailing: isNewRecord
+                                          ? Icon(
+                                              Icons.star,
+                                              color: theme.colorScheme.tertiary,
+                                            )
+                                          : null,
                                     ),
                                   ),
                                 ),
@@ -264,16 +272,13 @@ class _MatchLeaderboardScreenState extends ConsumerState<MatchLeaderboardScreen>
                             },
                           );
                         },
-                        loading:
-                            () => const Center(
-                              child: CircularProgressIndicator(),
-                            ),
-                        error:
-                            (e, s) => Center(
-                              child: Text(
-                                t.general.genericError(error: e.toString()),
-                              ),
-                            ),
+                        loading: () =>
+                            const Center(child: CircularProgressIndicator()),
+                        error: (e, s) => Center(
+                          child: Text(
+                            t.general.genericError(error: e.toString()),
+                          ),
+                        ),
                       ),
                     ),
                     const SizedBox(height: 24),
@@ -306,10 +311,9 @@ class _MatchLeaderboardScreenState extends ConsumerState<MatchLeaderboardScreen>
               );
             },
             loading: () => const Center(child: CircularProgressIndicator()),
-            error:
-                (err, stack) => Center(
-                  child: Text(t.general.genericError(error: err.toString())),
-                ),
+            error: (err, stack) => Center(
+              child: Text(t.general.genericError(error: err.toString())),
+            ),
           ),
         ),
       ),

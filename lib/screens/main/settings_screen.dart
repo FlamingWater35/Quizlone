@@ -24,8 +24,28 @@ import '../../widgets/centered_view.dart';
 import '../modes/match_leaderboard_screen.dart';
 
 @RoutePage()
-class SettingsScreen extends ConsumerWidget {
+class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
+
+  @override
+  ConsumerState<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends ConsumerState<SettingsScreen> {
+  @override
+  void initState() {
+    super.initState();
+    if (kIsWeb) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted && !context.router.canPop()) {
+          context.router.replaceAll([
+            const StartRoute(),
+            const SettingsRoute(),
+          ]);
+        }
+      });
+    }
+  }
 
   void _showLanguageMenu(BuildContext context, WidgetRef ref) {
     final languageNotifier = ref.read(appLanguageProvider.notifier);
@@ -302,18 +322,7 @@ class SettingsScreen extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    if (kIsWeb && !context.router.canPop()) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (context.mounted) {
-          context.router.replaceAll([
-            const StartRoute(),
-            const SettingsRoute(),
-          ]);
-        }
-      });
-    }
-
+  Widget build(BuildContext context) {
     final currentTheme = ref.watch(appThemeProvider);
     final themeNotifier = ref.read(appThemeProvider.notifier);
     final currentLanguage = ref.watch(appLanguageProvider);

@@ -50,6 +50,14 @@ class _AboutScreenState extends State<AboutScreen>
     );
 
     _controller.forward();
+
+    if (kIsWeb) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted && !context.router.canPop()) {
+          context.router.replaceAll([const StartRoute(), const AboutRoute()]);
+        }
+      });
+    }
   }
 
   Future<void> _initPackageInfo() async {
@@ -63,14 +71,6 @@ class _AboutScreenState extends State<AboutScreen>
 
   @override
   Widget build(BuildContext context) {
-    if (kIsWeb && !context.router.canPop()) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (context.mounted) {
-          context.router.replaceAll([const StartRoute(), const AboutRoute()]);
-        }
-      });
-    }
-
     final t = Translations.of(context);
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
