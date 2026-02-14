@@ -39,18 +39,18 @@ class _InputScreenState extends ConsumerState<InputScreen> {
     _termsInputController = TextEditingController(
       text: initialFormState.rawTermsInput,
     );
-  }
 
-  @override
-  Widget build(BuildContext context) {
-    if (kIsWeb && !context.router.canPop()) {
+    if (kIsWeb) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (context.mounted) {
+        if (mounted && !context.router.canPop()) {
           context.router.replaceAll([const StartRoute(), const InputRoute()]);
         }
       });
     }
+  }
 
+  @override
+  Widget build(BuildContext context) {
     final formState = ref.watch(studyListFormProvider);
     final formNotifier = ref.read(studyListFormProvider.notifier);
     final textTheme = Theme.of(context).textTheme;
