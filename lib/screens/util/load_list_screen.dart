@@ -75,6 +75,17 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
     _searchController.addListener(() {
       setState(() {});
     });
+
+    if (kIsWeb) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted && !context.router.canPop()) {
+          context.router.replaceAll([
+            const StartRoute(),
+            const LoadListRoute(),
+          ]);
+        }
+      });
+    }
   }
 
   Future<void> _handleBulkDelete() async {
@@ -629,17 +640,6 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (kIsWeb && !context.router.canPop()) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (context.mounted) {
-          context.router.replaceAll([
-            const StartRoute(),
-            const LoadListRoute(),
-          ]);
-        }
-      });
-    }
-
     final t = Translations.of(context);
     final isSearching = _searchController.text.isNotEmpty;
     final isCustomSort = _currentSort == _SortOption.custom;

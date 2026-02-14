@@ -17,12 +17,12 @@ final _log = Logger("MatchController");
 
 @Riverpod(keepAlive: true)
 class MatchTimer extends _$MatchTimer {
-  @override
-  String build() => "0.0";
-
   void set(String value) {
     state = value;
   }
+
+  @override
+  String build() => "0.0";
 }
 
 @immutable
@@ -88,28 +88,9 @@ const int maxMatchPairs = 10;
 
 @riverpod
 class MatchController extends _$MatchController {
+  bool _isDisposed = false;
   final Stopwatch _stopwatch = Stopwatch();
   Timer? _timer;
-
-  void _initializeAndStartTimer() {
-    final timerNotifier = ref.read(matchTimerProvider.notifier);
-    timerNotifier.set("0.0");
-
-    _stopwatch
-      ..reset()
-      ..start();
-
-    _timer?.cancel();
-    _timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
-      if (state.value?.isComplete == false) {
-        final timeString = (_stopwatch.elapsedMilliseconds / 1000)
-            .toStringAsFixed(1);
-        ref.read(matchTimerProvider.notifier).set(timeString);
-      } else {
-        timer.cancel();
-      }
-    });
-  }
 
   void selectItem(MatchItem item) {
     final currentState = state.value;
@@ -138,7 +119,9 @@ class MatchController extends _$MatchController {
           _stopwatch.stop();
           _timer?.cancel();
           final db = ref.read(databaseServiceProvider);
-          final listName = ref.read(activeStudyListProvider).value!.name;
+          final listName =
+              ref.read(activeStudyListProvider).value?.name ?? "Unknown";
+
           newRecord = MatchRecord(
             studyListName: listName,
             timeInTenths: _stopwatch.elapsedMilliseconds ~/ 100,
@@ -169,8 +152,9 @@ class MatchController extends _$MatchController {
             incorrectPair: {currentSelection.uniqueId, item.uniqueId},
           ),
         );
+
         Future.delayed(const Duration(milliseconds: 500), () {
-          if (state.hasValue) {
+          if (!_isDisposed && state.hasValue) {
             state = AsyncData(state.value!.copyWith(incorrectPair: {}));
           }
         });
@@ -184,11 +168,32 @@ class MatchController extends _$MatchController {
     ref.invalidateSelf();
   }
 
+  void _initializeAndStartTimer() {
+    final timerNotifier = ref.read(matchTimerProvider.notifier);
+    timerNotifier.set("0.0");
+
+    _stopwatch
+      ..reset()
+      ..start();
+
+    _timer?.cancel();
+    _timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
+      if (state.value?.isComplete == false) {
+        final timeString = (_stopwatch.elapsedMilliseconds / 1000)
+            .toStringAsFixed(1);
+        ref.read(matchTimerProvider.notifier).set(timeString);
+      } else {
+        timer.cancel();
+      }
+    });
+  }
+
   @override
   Future<MatchScreenState> build() async {
     _log.fine("[MatchController] build started");
 
     ref.onDispose(() {
+      _isDisposed = true;
       _log.fine("[MatchController] disposed, cancelling timer.");
       _timer?.cancel();
       _stopwatch.stop();

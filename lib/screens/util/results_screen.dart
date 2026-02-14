@@ -12,13 +12,37 @@ import '../../providers/study/study_list_providers.dart';
 import '../../widgets/centered_view.dart';
 
 @RoutePage()
-class ResultsScreen extends ConsumerWidget {
+class ResultsScreen extends ConsumerStatefulWidget {
   const ResultsScreen({super.key});
 
   static final _log = Logger("ResultScreen");
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ResultsScreen> createState() => _ResultsScreenState();
+}
+
+class _ResultsScreenState extends ConsumerState<ResultsScreen> {
+  @override
+  void initState() {
+    super.initState();
+    if (kIsWeb) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted && !context.router.canPop()) {
+          if (ref.read(activeStudyListIdProvider) != null) {
+            context.router.replaceAll([
+              const StartRoute(),
+              const ModeSelectionRoute(),
+            ]);
+          } else {
+            context.router.replaceAll([const StartRoute()]);
+          }
+        }
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final testStateAsync = ref.watch(testControllerProvider);
     final testNotifier = ref.read(testControllerProvider.notifier);
     final textTheme = Theme.of(context).textTheme;
@@ -35,22 +59,13 @@ class ResultsScreen extends ConsumerWidget {
         child: testStateAsync.when(
           data: (state) {
             if (!state.isSubmitted) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                if (context.mounted) {
-                  if (kIsWeb && !context.router.canPop()) {
-                    if (ref.read(activeStudyListIdProvider) != null) {
-                      context.router.replaceAll([
-                        const StartRoute(),
-                        const ModeSelectionRoute(),
-                      ]);
-                    } else {
-                      context.router.replaceAll([const StartRoute()]);
-                    }
-                  } else {
+              if (!kIsWeb) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (mounted) {
                     context.router.pop();
                   }
-                }
-              });
+                });
+              }
               return const Center(child: CircularProgressIndicator());
             }
 
@@ -78,10 +93,9 @@ class ResultsScreen extends ConsumerWidget {
                     Text(
                       "$percentage%",
                       style: textTheme.displayLarge?.copyWith(
-                        color:
-                            isPerfectScore
-                                ? colorScheme.primary
-                                : colorScheme.onSurface,
+                        color: isPerfectScore
+                            ? colorScheme.primary
+                            : colorScheme.onSurface,
                         fontWeight: FontWeight.bold,
                       ),
                       textAlign: TextAlign.center,
@@ -226,7 +240,7 @@ class ResultsScreen extends ConsumerWidget {
           },
           loading: () => Center(child: Text(t.general.loading)),
           error: (err, stack) {
-            _log.severe(
+            ResultsScreen._log.severe(
               "Error in testControllerProvider for ResultsScreen",
               err,
               stack,

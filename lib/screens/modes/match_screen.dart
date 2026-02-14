@@ -13,14 +13,37 @@ import '../../providers/study/study_list_providers.dart';
 import '../../widgets/centered_view.dart';
 import 'match_leaderboard_screen.dart';
 
+final _log = Logger("MatchScreen");
+
 @RoutePage()
-class MatchScreen extends ConsumerWidget {
+class MatchScreen extends ConsumerStatefulWidget {
   const MatchScreen({super.key});
 
-  static final _log = Logger("MatchScreen");
+  @override
+  ConsumerState<MatchScreen> createState() => _MatchScreenState();
+}
+
+class _MatchScreenState extends ConsumerState<MatchScreen> {
+  @override
+  void initState() {
+    super.initState();
+    if (kIsWeb) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted && !context.router.canPop()) {
+          if (ref.read(activeStudyListIdProvider) != null) {
+            context.router.replaceAll([
+              const StartRoute(),
+              const ModeSelectionRoute(),
+              const MatchRoute(),
+            ]);
+          }
+        }
+      });
+    }
+  }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     ref.listen<AsyncValue<MatchScreenState>>(matchControllerProvider, (
       prev,
       next,
@@ -167,8 +190,9 @@ class _MatchView extends ConsumerWidget {
                           (constraints.maxWidth - (cols - 1) * spacing) / cols;
                       final cardHeight =
                           (constraints.maxHeight - (rows - 1) * spacing) / rows;
-                      final aspectRatio =
-                          cardHeight > 0 ? cardWidth / cardHeight : 1.0;
+                      final aspectRatio = cardHeight > 0
+                          ? cardWidth / cardHeight
+                          : 1.0;
 
                       return GridView.builder(
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -194,10 +218,9 @@ class _MatchView extends ConsumerWidget {
                             isSelected: isSelected,
                             isMatched: isMatched,
                             isIncorrect: isIncorrect,
-                            onTap:
-                                () => ref
-                                    .read(matchControllerProvider.notifier)
-                                    .selectItem(item),
+                            onTap: () => ref
+                                .read(matchControllerProvider.notifier)
+                                .selectItem(item),
                           );
                         },
                       );
@@ -210,10 +233,8 @@ class _MatchView extends ConsumerWidget {
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
-      error:
-          (err, stack) => Center(
-            child: Text(t.general.genericError(error: err.toString())),
-          ),
+      error: (err, stack) =>
+          Center(child: Text(t.general.genericError(error: err.toString()))),
     );
   }
 }
@@ -261,10 +282,9 @@ class _MatchCard extends StatelessWidget {
           color: cardColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12.0),
-            side:
-                border != null
-                    ? border.top
-                    : BorderSide(color: colorScheme.outlineVariant),
+            side: border != null
+                ? border.top
+                : BorderSide(color: colorScheme.outlineVariant),
           ),
           clipBehavior: Clip.antiAlias,
           child: InkWell(

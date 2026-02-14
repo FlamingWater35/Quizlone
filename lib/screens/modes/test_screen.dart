@@ -11,25 +11,37 @@ import '../../providers/controllers/test_controller.dart';
 import '../../providers/study/study_list_providers.dart';
 import '../../widgets/centered_view.dart';
 
+final _log = Logger("TestScreen");
+
 @RoutePage(name: "TestModeRoute")
-class TestScreen extends ConsumerWidget {
+class TestScreen extends ConsumerStatefulWidget {
   const TestScreen({super.key});
 
-  static final _log = Logger("TestScreen");
-
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    if (kIsWeb && !context.router.canPop()) {
+  ConsumerState<TestScreen> createState() => _TestScreenState();
+}
+
+class _TestScreenState extends ConsumerState<TestScreen> {
+  @override
+  void initState() {
+    super.initState();
+    if (kIsWeb) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (ref.read(activeStudyListIdProvider) != null && context.mounted) {
-          context.router.replaceAll([
-            const StartRoute(),
-            const ModeSelectionRoute(),
-            const TestModeRoute(),
-          ]);
+        if (mounted && !context.router.canPop()) {
+          if (ref.read(activeStudyListIdProvider) != null) {
+            context.router.replaceAll([
+              const StartRoute(),
+              const ModeSelectionRoute(),
+              const TestModeRoute(),
+            ]);
+          }
         }
       });
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final t = Translations.of(context);
     final activeListAsync = ref.watch(activeStudyListProvider);
 
@@ -189,17 +201,15 @@ class _TestViewState extends ConsumerState<_TestView> {
       color: tileColor ?? colorScheme.surfaceContainerHighest.withAlpha(40),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
-        side:
-            isSelected && !isSubmitted
-                ? BorderSide(color: colorScheme.primary, width: 1.5)
-                : BorderSide.none,
+        side: isSelected && !isSubmitted
+            ? BorderSide(color: colorScheme.primary, width: 1.5)
+            : BorderSide.none,
       ),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
-        onTap:
-            isSubmitted
-                ? null
-                : () => notifier.updateUserAnswer(questionIndex, option),
+        onTap: isSubmitted
+            ? null
+            : () => notifier.updateUserAnswer(questionIndex, option),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
           child: Row(
@@ -237,18 +247,18 @@ class _TestViewState extends ConsumerState<_TestView> {
     Color? cardBorderColor;
 
     if (isSubmitted) {
-      cardBorderColor =
-          question.isCorrect == true ? colorScheme.primary : colorScheme.error;
+      cardBorderColor = question.isCorrect == true
+          ? colorScheme.primary
+          : colorScheme.error;
     }
 
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 8.0),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12.0),
-        side:
-            cardBorderColor != null
-                ? BorderSide(color: cardBorderColor, width: 1.5)
-                : BorderSide(color: colorScheme.outlineVariant),
+        side: cardBorderColor != null
+            ? BorderSide(color: cardBorderColor, width: 1.5)
+            : BorderSide(color: colorScheme.outlineVariant),
       ),
       clipBehavior: Clip.antiAlias,
       child: Padding(
@@ -297,19 +307,18 @@ class _TestViewState extends ConsumerState<_TestView> {
                   }
                 },
                 child: Column(
-                  children:
-                      question.multipleChoiceOptions!
-                          .map(
-                            (option) => _buildMultipleChoiceOption(
-                              context,
-                              option,
-                              question,
-                              index,
-                              notifier,
-                              isSubmitted,
-                            ),
-                          )
-                          .toList(),
+                  children: question.multipleChoiceOptions!
+                      .map(
+                        (option) => _buildMultipleChoiceOption(
+                          context,
+                          option,
+                          question,
+                          index,
+                          notifier,
+                          isSubmitted,
+                        ),
+                      )
+                      .toList(),
                 ),
               ),
 
@@ -430,31 +439,29 @@ class _TestViewState extends ConsumerState<_TestView> {
                 padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
                 child: SizedBox(
                   width: double.infinity,
-                  child:
-                      state.isSubmitted
-                          ? FilledButton.icon(
-                            icon: const Icon(Icons.bar_chart),
-                            onPressed:
-                                () => context.router.push(const ResultsRoute()),
-                            label: Text(t.testScreen.viewResults),
-                            style: FilledButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(vertical: 16),
-                            ),
-                          )
-                          : FilledButton.icon(
-                            icon: const Icon(Icons.check_circle_outline),
-                            onPressed:
-                                state.questions.isEmpty
-                                    ? null
-                                    : () {
-                                      FocusScope.of(context).unfocus();
-                                      testNotifier.submitTest();
-                                    },
-                            label: Text(t.testScreen.submitTest),
-                            style: FilledButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(vertical: 16),
-                            ),
+                  child: state.isSubmitted
+                      ? FilledButton.icon(
+                          icon: const Icon(Icons.bar_chart),
+                          onPressed: () =>
+                              context.router.push(const ResultsRoute()),
+                          label: Text(t.testScreen.viewResults),
+                          style: FilledButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 16),
                           ),
+                        )
+                      : FilledButton.icon(
+                          icon: const Icon(Icons.check_circle_outline),
+                          onPressed: state.questions.isEmpty
+                              ? null
+                              : () {
+                                  FocusScope.of(context).unfocus();
+                                  testNotifier.submitTest();
+                                },
+                          label: Text(t.testScreen.submitTest),
+                          style: FilledButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                          ),
+                        ),
                 ),
               ),
             ],
@@ -463,7 +470,7 @@ class _TestViewState extends ConsumerState<_TestView> {
       },
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (err, stack) {
-        TestScreen._log.severe("Error in testControllerProvider", err, stack);
+        _log.severe("Error in testControllerProvider", err, stack);
         return Center(
           child: CenteredView(
             child: Padding(

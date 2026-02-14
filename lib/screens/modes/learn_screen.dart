@@ -10,25 +10,37 @@ import '../../providers/controllers/learn_controller.dart';
 import '../../providers/study/study_list_providers.dart';
 import '../../widgets/centered_view.dart';
 
+final _log = Logger("LearnScreen");
+
 @RoutePage()
-class LearnScreen extends ConsumerWidget {
+class LearnScreen extends ConsumerStatefulWidget {
   const LearnScreen({super.key});
 
-  static final _log = Logger("LearnScreen");
-
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    if (kIsWeb && !context.router.canPop()) {
+  ConsumerState<LearnScreen> createState() => _LearnScreenState();
+}
+
+class _LearnScreenState extends ConsumerState<LearnScreen> {
+  @override
+  void initState() {
+    super.initState();
+    if (kIsWeb) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (ref.read(activeStudyListIdProvider) != null && context.mounted) {
-          context.router.replaceAll([
-            const StartRoute(),
-            const ModeSelectionRoute(),
-            const LearnRoute(),
-          ]);
+        if (mounted && !context.router.canPop()) {
+          if (ref.read(activeStudyListIdProvider) != null) {
+            context.router.replaceAll([
+              const StartRoute(),
+              const ModeSelectionRoute(),
+              const LearnRoute(),
+            ]);
+          }
         }
       });
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final t = Translations.of(context);
     final activeListAsync = ref.watch(activeStudyListProvider);
 
@@ -295,11 +307,10 @@ class _LearnViewState extends ConsumerState<_LearnView> {
         }
 
         final questionState = state.currentQuestion!;
-        final progressValue =
-            state.termsToLearnThisCycle.isEmpty
-                ? 0.0
-                : (state.currentTermIndexInCycle + 1) /
-                    state.termsToLearnThisCycle.length;
+        final progressValue = state.termsToLearnThisCycle.isEmpty
+            ? 0.0
+            : (state.currentTermIndexInCycle + 1) /
+                  state.termsToLearnThisCycle.length;
 
         return CenteredView(
           child: SingleChildScrollView(
@@ -370,59 +381,55 @@ class _LearnViewState extends ConsumerState<_LearnView> {
                               child: child,
                             );
                           },
-                          child:
-                              questionState.feedbackMessage.isNotEmpty
-                                  ? Container(
-                                    key: ValueKey(
-                                      questionState.feedbackMessage,
-                                    ),
-                                    padding: const EdgeInsets.all(12.0),
-                                    decoration: BoxDecoration(
-                                      color: _getFeedbackColor(
-                                        context,
-                                        questionState.feedbackType,
-                                      ).withAlpha(15),
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        if (_getFeedbackIcon(
-                                              questionState.feedbackType,
-                                            ) !=
-                                            null)
-                                          Icon(
-                                            _getFeedbackIcon(
-                                              questionState.feedbackType,
-                                            ),
-                                            color: _getFeedbackColor(
-                                              context,
-                                              questionState.feedbackType,
-                                            ),
-                                            size: 20,
-                                          ),
-                                        const SizedBox(width: 8),
-                                        Expanded(
-                                          child: Text(
-                                            questionState.feedbackMessage,
-                                            textAlign: TextAlign.center,
-                                            style: textTheme.titleMedium
-                                                ?.copyWith(
-                                                  color: _getFeedbackColor(
-                                                    context,
-                                                    questionState.feedbackType,
-                                                  ),
-                                                ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                  : const SizedBox(
-                                    key: ValueKey('empty'),
-                                    height: 58,
+                          child: questionState.feedbackMessage.isNotEmpty
+                              ? Container(
+                                  key: ValueKey(questionState.feedbackMessage),
+                                  padding: const EdgeInsets.all(12.0),
+                                  decoration: BoxDecoration(
+                                    color: _getFeedbackColor(
+                                      context,
+                                      questionState.feedbackType,
+                                    ).withAlpha(15),
+                                    borderRadius: BorderRadius.circular(12),
                                   ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      if (_getFeedbackIcon(
+                                            questionState.feedbackType,
+                                          ) !=
+                                          null)
+                                        Icon(
+                                          _getFeedbackIcon(
+                                            questionState.feedbackType,
+                                          ),
+                                          color: _getFeedbackColor(
+                                            context,
+                                            questionState.feedbackType,
+                                          ),
+                                          size: 20,
+                                        ),
+                                      const SizedBox(width: 8),
+                                      Expanded(
+                                        child: Text(
+                                          questionState.feedbackMessage,
+                                          textAlign: TextAlign.center,
+                                          style: textTheme.titleMedium
+                                              ?.copyWith(
+                                                color: _getFeedbackColor(
+                                                  context,
+                                                  questionState.feedbackType,
+                                                ),
+                                              ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              : const SizedBox(
+                                  key: ValueKey('empty'),
+                                  height: 58,
+                                ),
                         ),
                       ],
                     ),
@@ -472,7 +479,7 @@ class _LearnViewState extends ConsumerState<_LearnView> {
       },
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (err, stack) {
-        LearnScreen._log.severe("Error in learnControllerProvider", err, stack);
+        _log.severe("Error in learnControllerProvider", err, stack);
         return Center(
           child: CenteredView(
             child: Padding(

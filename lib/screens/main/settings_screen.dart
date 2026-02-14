@@ -24,8 +24,28 @@ import '../../widgets/centered_view.dart';
 import '../modes/match_leaderboard_screen.dart';
 
 @RoutePage()
-class SettingsScreen extends ConsumerWidget {
+class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
+
+  @override
+  ConsumerState<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends ConsumerState<SettingsScreen> {
+  @override
+  void initState() {
+    super.initState();
+    if (kIsWeb) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted && !context.router.canPop()) {
+          context.router.replaceAll([
+            const StartRoute(),
+            const SettingsRoute(),
+          ]);
+        }
+      });
+    }
+  }
 
   void _showLanguageMenu(BuildContext context, WidgetRef ref) {
     final languageNotifier = ref.read(appLanguageProvider.notifier);
@@ -39,51 +59,53 @@ class SettingsScreen extends ConsumerWidget {
       barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
       transitionDuration: const Duration(milliseconds: 250),
       pageBuilder: (context, animation, secondaryAnimation) {
-        return Align(
-          alignment: Alignment.centerRight,
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 500),
-            child: SimpleDialog(
-              title: Text(t.settingsScreen.languageDialogTitle),
-              contentPadding: const EdgeInsets.all(8.0),
-              children: AppLanguage.values.map((lang) {
-                final isSelected = lang == currentLanguage;
-                return Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 4.0,
-                    horizontal: 8.0,
-                  ),
-                  child: Card(
-                    margin: EdgeInsets.zero,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+        return SafeArea(
+          child: Align(
+            alignment: Alignment.centerRight,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 500),
+              child: SimpleDialog(
+                title: Text(t.settingsScreen.languageDialogTitle),
+                contentPadding: const EdgeInsets.all(8.0),
+                children: AppLanguage.values.map((lang) {
+                  final isSelected = lang == currentLanguage;
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 4.0,
+                      horizontal: 8.0,
                     ),
-                    child: ListTile(
+                    child: Card(
+                      margin: EdgeInsets.zero,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      title: Text(
-                        lang.getDisplayName(t),
-                        style: TextStyle(
-                          fontWeight: isSelected
-                              ? FontWeight.bold
-                              : FontWeight.normal,
+                      child: ListTile(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
                         ),
+                        title: Text(
+                          lang.getDisplayName(t),
+                          style: TextStyle(
+                            fontWeight: isSelected
+                                ? FontWeight.bold
+                                : FontWeight.normal,
+                          ),
+                        ),
+                        trailing: isSelected
+                            ? Icon(
+                                Icons.check_circle,
+                                color: theme.colorScheme.primary,
+                              )
+                            : null,
+                        onTap: () {
+                          languageNotifier.setLanguage(lang);
+                          Navigator.of(context).pop();
+                        },
                       ),
-                      trailing: isSelected
-                          ? Icon(
-                              Icons.check_circle,
-                              color: theme.colorScheme.primary,
-                            )
-                          : null,
-                      onTap: () {
-                        languageNotifier.setLanguage(lang);
-                        Navigator.of(context).pop();
-                      },
                     ),
-                  ),
-                );
-              }).toList(),
+                  );
+                }).toList(),
+              ),
             ),
           ),
         );
@@ -300,18 +322,7 @@ class SettingsScreen extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    if (kIsWeb && !context.router.canPop()) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (context.mounted) {
-          context.router.replaceAll([
-            const StartRoute(),
-            const SettingsRoute(),
-          ]);
-        }
-      });
-    }
-
+  Widget build(BuildContext context) {
     final currentTheme = ref.watch(appThemeProvider);
     final themeNotifier = ref.read(appThemeProvider.notifier);
     final currentLanguage = ref.watch(appLanguageProvider);

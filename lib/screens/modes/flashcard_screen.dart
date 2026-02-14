@@ -14,26 +14,37 @@ import '../../providers/study/study_list_providers.dart';
 import '../../widgets/centered_view.dart';
 import '../../widgets/flashcard_widget.dart';
 
+final _log = Logger("FlashcardScreen");
+
 @RoutePage()
-class FlashcardScreen extends ConsumerWidget {
+class FlashcardScreen extends ConsumerStatefulWidget {
   const FlashcardScreen({super.key});
 
-  static final _log = Logger("FlashcardScreen");
-
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    if (kIsWeb && !context.router.canPop()) {
+  ConsumerState<FlashcardScreen> createState() => _FlashcardScreenState();
+}
+
+class _FlashcardScreenState extends ConsumerState<FlashcardScreen> {
+  @override
+  void initState() {
+    super.initState();
+    if (kIsWeb) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (ref.read(activeStudyListIdProvider) != null && context.mounted) {
-          context.router.replaceAll([
-            const StartRoute(),
-            const ModeSelectionRoute(),
-            const FlashcardRoute(),
-          ]);
+        if (mounted && !context.router.canPop()) {
+          if (ref.read(activeStudyListIdProvider) != null) {
+            context.router.replaceAll([
+              const StartRoute(),
+              const ModeSelectionRoute(),
+              const FlashcardRoute(),
+            ]);
+          }
         }
       });
     }
+  }
 
+  @override
+  Widget build(BuildContext context) {
     final t = Translations.of(context);
     final activeListAsync = ref.watch(activeStudyListProvider);
 
@@ -343,15 +354,16 @@ class _FlashcardViewState extends ConsumerState<_FlashcardView>
                                 _restartController,
                               ]),
                               builder: (context, child) {
-                                final restartOffset = Tween<Offset>(
-                                  begin: Offset.zero,
-                                  end: const Offset(1.5, 0.0),
-                                ).animate(
-                                  CurvedAnimation(
-                                    parent: _restartController,
-                                    curve: Curves.easeIn,
-                                  ),
-                                );
+                                final restartOffset =
+                                    Tween<Offset>(
+                                      begin: Offset.zero,
+                                      end: const Offset(1.5, 0.0),
+                                    ).animate(
+                                      CurvedAnimation(
+                                        parent: _restartController,
+                                        curve: Curves.easeIn,
+                                      ),
+                                    );
 
                                 final shuffleVal = _shuffleController.value;
                                 final shuffleAngle = shuffleVal * 2 * pi;
@@ -370,39 +382,39 @@ class _FlashcardViewState extends ConsumerState<_FlashcardView>
                               },
                               child: AnimatedSwitcher(
                                 duration: const Duration(milliseconds: 400),
-                                transitionBuilder: (
-                                  Widget child,
-                                  Animation<double> animation,
-                                ) {
-                                  final curvedAnimation = CurvedAnimation(
-                                    parent: animation,
-                                    curve: Curves.easeInOut,
-                                  );
+                                transitionBuilder:
+                                    (
+                                      Widget child,
+                                      Animation<double> animation,
+                                    ) {
+                                      final curvedAnimation = CurvedAnimation(
+                                        parent: animation,
+                                        curve: Curves.easeInOut,
+                                      );
 
-                                  final offsetAnimation = Tween<Offset>(
-                                    begin:
-                                        _slideFromRight
+                                      final offsetAnimation = Tween<Offset>(
+                                        begin: _slideFromRight
                                             ? const Offset(0.3, 0.0)
                                             : const Offset(-0.3, 0.0),
-                                    end: Offset.zero,
-                                  ).animate(curvedAnimation);
+                                        end: Offset.zero,
+                                      ).animate(curvedAnimation);
 
-                                  final scaleAnimation = Tween<double>(
-                                    begin: 0.8,
-                                    end: 1.0,
-                                  ).animate(curvedAnimation);
+                                      final scaleAnimation = Tween<double>(
+                                        begin: 0.8,
+                                        end: 1.0,
+                                      ).animate(curvedAnimation);
 
-                                  return FadeTransition(
-                                    opacity: curvedAnimation,
-                                    child: ScaleTransition(
-                                      scale: scaleAnimation,
-                                      child: SlideTransition(
-                                        position: offsetAnimation,
-                                        child: child,
-                                      ),
-                                    ),
-                                  );
-                                },
+                                      return FadeTransition(
+                                        opacity: curvedAnimation,
+                                        child: ScaleTransition(
+                                          scale: scaleAnimation,
+                                          child: SlideTransition(
+                                            position: offsetAnimation,
+                                            child: child,
+                                          ),
+                                        ),
+                                      );
+                                    },
                                 child: FlashcardWidget(
                                   key: ValueKey(state.currentIndex),
                                   term: state.currentCard!,
