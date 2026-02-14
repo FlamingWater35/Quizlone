@@ -58,3 +58,4 @@ android/key.properties
 # Release builds
 /release
 /docs
+/scripts/output
