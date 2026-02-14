@@ -39,51 +39,53 @@ class SettingsScreen extends ConsumerWidget {
       barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
       transitionDuration: const Duration(milliseconds: 250),
       pageBuilder: (context, animation, secondaryAnimation) {
-        return Align(
-          alignment: Alignment.centerRight,
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 500),
-            child: SimpleDialog(
-              title: Text(t.settingsScreen.languageDialogTitle),
-              contentPadding: const EdgeInsets.all(8.0),
-              children: AppLanguage.values.map((lang) {
-                final isSelected = lang == currentLanguage;
-                return Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 4.0,
-                    horizontal: 8.0,
-                  ),
-                  child: Card(
-                    margin: EdgeInsets.zero,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+        return SafeArea(
+          child: Align(
+            alignment: Alignment.centerRight,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 500),
+              child: SimpleDialog(
+                title: Text(t.settingsScreen.languageDialogTitle),
+                contentPadding: const EdgeInsets.all(8.0),
+                children: AppLanguage.values.map((lang) {
+                  final isSelected = lang == currentLanguage;
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 4.0,
+                      horizontal: 8.0,
                     ),
-                    child: ListTile(
+                    child: Card(
+                      margin: EdgeInsets.zero,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      title: Text(
-                        lang.getDisplayName(t),
-                        style: TextStyle(
-                          fontWeight: isSelected
-                              ? FontWeight.bold
-                              : FontWeight.normal,
+                      child: ListTile(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
                         ),
+                        title: Text(
+                          lang.getDisplayName(t),
+                          style: TextStyle(
+                            fontWeight: isSelected
+                                ? FontWeight.bold
+                                : FontWeight.normal,
+                          ),
+                        ),
+                        trailing: isSelected
+                            ? Icon(
+                                Icons.check_circle,
+                                color: theme.colorScheme.primary,
+                              )
+                            : null,
+                        onTap: () {
+                          languageNotifier.setLanguage(lang);
+                          Navigator.of(context).pop();
+                        },
                       ),
-                      trailing: isSelected
-                          ? Icon(
-                              Icons.check_circle,
-                              color: theme.colorScheme.primary,
-                            )
-                          : null,
-                      onTap: () {
-                        languageNotifier.setLanguage(lang);
-                        Navigator.of(context).pop();
-                      },
                     ),
-                  ),
-                );
-              }).toList(),
+                  );
+                }).toList(),
+              ),
             ),
           ),
         );
