@@ -11,6 +11,7 @@ import 'package:quizlone/models/study_group.dart';
 import 'package:quizlone/models/study_list.dart';
 import 'package:quizlone/routing/app_router.dart';
 import 'package:quizlone/widgets/error_snackbar.dart';
+import 'package:quizlone/widgets/web_aware_back_button.dart';
 
 import '../../providers/core/core_providers.dart';
 import '../../providers/study/study_list_providers.dart';
@@ -340,7 +341,7 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
               icon: const Icon(Icons.close),
               onPressed: _toggleSelectMode,
             )
-          : null,
+          : const WebAwareBackButton(),
     );
   }
 

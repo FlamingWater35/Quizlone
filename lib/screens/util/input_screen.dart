@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
 import 'package:quizlone/routing/app_router.dart';
+import 'package:quizlone/services/navigation_service.dart';
 
 import '../../models/study_group.dart';
 import '../../providers/study/study_list_providers.dart';
@@ -155,7 +156,7 @@ class _InputScreenState extends ConsumerState<InputScreen> {
                         onPressed: formState.isLoading
                             ? null
                             : () {
-                                context.router.pop();
+                                NavigationService.back(context);
                               },
                       ),
                       ElevatedButton.icon(

@@ -1,12 +1,12 @@
 import 'dart:math';
 
 import 'package:auto_route/auto_route.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
 import 'package:quizlone/routing/app_router.dart';
+import 'package:quizlone/widgets/web_aware_back_button.dart';
 
 import '../../providers/controllers/match_controller.dart';
 import '../../providers/study/study_list_providers.dart';
@@ -45,23 +45,15 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
       }
     });
 
-    if (kIsWeb && !context.router.canPop()) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (ref.read(activeStudyListIdProvider) != null && context.mounted) {
-          context.router.replaceAll([
-            const StartRoute(),
-            const ModeSelectionRoute(),
-            const MatchRoute(),
-          ]);
-        }
-      });
-    }
-
     final t = Translations.of(context);
     final activeListAsync = ref.watch(activeStudyListProvider);
 
     return Scaffold(
-      appBar: AppBar(title: Text(t.matchScreen.title), centerTitle: true),
+      appBar: AppBar(
+        leading: const WebAwareBackButton(),
+        title: Text(t.matchScreen.title),
+        centerTitle: true,
+      ),
       body: SafeArea(
         child: activeListAsync.when(
           data: (list) {

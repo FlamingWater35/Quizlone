@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
 import 'package:quizlone/widgets/centered_view.dart';
+import 'package:quizlone/widgets/web_aware_back_button.dart';
 
 @RoutePage()
 class AboutScreen extends StatefulWidget {
@@ -66,7 +67,11 @@ class _AboutScreenState extends State<AboutScreen>
     final textTheme = theme.textTheme;
 
     return Scaffold(
-      appBar: AppBar(title: Text(t.drawer.about), centerTitle: true),
+      appBar: AppBar(
+        leading: const WebAwareBackButton(),
+        title: Text(t.drawer.about),
+        centerTitle: true,
+      ),
       body: SafeArea(
         child: CenteredView(
           child: Padding(

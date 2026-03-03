@@ -12,6 +12,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
 import 'package:quizlone/services/migration_service.dart';
 import 'package:quizlone/widgets/error_snackbar.dart';
+import 'package:quizlone/widgets/web_aware_back_button.dart';
 
 import '../../models/settings_app_data.dart';
 import '../../models/study_list.dart';
@@ -316,7 +317,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     final t = Translations.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: Text(t.settingsScreen.title), centerTitle: true),
+      appBar: AppBar(
+        leading: const WebAwareBackButton(),
+        title: Text(t.settingsScreen.title),
+        centerTitle: true,
+      ),
       body: SafeArea(
         child: CenteredView(
           child: ListView(

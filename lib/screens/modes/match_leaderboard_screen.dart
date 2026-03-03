@@ -101,6 +101,7 @@ class _MatchLeaderboardScreenState extends ConsumerState<MatchLeaderboardScreen>
 
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text(t.matchScreen.leaderboard.title),
         centerTitle: true,
       ),

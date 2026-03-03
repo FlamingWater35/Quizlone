@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
 import 'package:quizlone/widgets/centered_view.dart';
+import 'package:quizlone/widgets/web_aware_back_button.dart';
 
 @RoutePage()
 class ControlsScreen extends StatefulWidget {
@@ -16,7 +17,11 @@ class _ControlsScreenState extends State<ControlsScreen> {
   Widget build(BuildContext context) {
     final t = Translations.of(context);
     return Scaffold(
-      appBar: AppBar(title: Text(t.controlsScreen.title), centerTitle: true),
+      appBar: AppBar(
+        leading: const WebAwareBackButton(),
+        title: Text(t.controlsScreen.title),
+        centerTitle: true,
+      ),
       body: SafeArea(
         child: CenteredView(
           child: LayoutBuilder(

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
 import 'package:quizlone/routing/app_router.dart';
+import 'package:quizlone/widgets/web_aware_back_button.dart';
 
 import '../../providers/controllers/learn_controller.dart';
 import '../../providers/study/study_list_providers.dart';
@@ -26,7 +27,11 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
     final activeListAsync = ref.watch(activeStudyListProvider);
 
     return Scaffold(
-      appBar: AppBar(title: Text(t.learnScreen.title), centerTitle: true),
+      appBar: AppBar(
+        leading: const WebAwareBackButton(),
+        title: Text(t.learnScreen.title),
+        centerTitle: true,
+      ),
       body: SafeArea(
         child: activeListAsync.when(
           data: (list) {

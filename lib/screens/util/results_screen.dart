@@ -46,8 +46,39 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
                     context.router.pop();
                   }
                 });
+                return const Center(child: CircularProgressIndicator());
               }
-              return const Center(child: CircularProgressIndicator());
+
+              return Center(
+                child: CenteredView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.history_edu,
+                          size: 64,
+                          color: colorScheme.outline,
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          t.resultsScreen.notSubmitted,
+                          style: textTheme.titleLarge,
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 24),
+                        FilledButton(
+                          onPressed: () {
+                            context.router.replace(const ModeSelectionRoute());
+                          },
+                          child: Text(t.modeSelectionScreen.title),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
             }
 
             if (state.questions.isEmpty) {
@@ -190,6 +221,7 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
                       ),
                       onPressed: () {
                         testNotifier.restartTest();
+                        context.router.replace(const TestModeRoute());
                       },
                     ),
                     const SizedBox(height: 12),
