@@ -210,7 +210,6 @@ def run_full_build():
             "flutter",
             "build",
             "web",
-            "--wasm",
             "--release",
             f"--base-href=/{REPO_NAME}/",
         ],
