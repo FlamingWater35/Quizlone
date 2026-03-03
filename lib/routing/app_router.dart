@@ -23,25 +23,33 @@ class AppRouter extends RootStackRouter {
   @override
   List<AutoRoute> get routes => [
     AutoRoute(page: StartRoute.page, initial: true),
-    AutoRoute(page: LoadListRoute.page),
+
+    AutoRoute(page: LoadListRoute.page, path: '/load-list'),
+
     CustomRoute(
       page: InputRoute.page,
+      path: '/create-list',
       transitionsBuilder: buildSlideDownTransition,
     ),
-    AutoRoute(page: ModeSelectionRoute.page),
-    AutoRoute(page: FlashcardRoute.page),
-    AutoRoute(page: LearnRoute.page),
-    AutoRoute(page: TestModeRoute.page),
-    AutoRoute(page: MatchRoute.page),
-    AutoRoute(page: MatchLeaderboardRoute.page),
-    AutoRoute(page: ResultsRoute.page),
-    AutoRoute(page: AboutRoute.page),
+
+    AutoRoute(page: ModeSelectionRoute.page, path: '/mode-selection'),
+    AutoRoute(page: FlashcardRoute.page, path: '/flashcards'),
+    AutoRoute(page: LearnRoute.page, path: '/learn'),
+    AutoRoute(page: TestModeRoute.page, path: '/test'),
+    AutoRoute(page: MatchRoute.page, path: '/match'),
+    AutoRoute(page: MatchLeaderboardRoute.page, path: '/leaderboard'),
+    AutoRoute(page: ResultsRoute.page, path: '/results'),
+    AutoRoute(page: AboutRoute.page, path: '/about'),
+
     CustomRoute(
       page: SettingsRoute.page,
+      path: '/settings',
       transitionsBuilder: buildSidebarTransition,
     ),
+
     CustomRoute(
       page: ControlsRoute.page,
+      path: '/controls',
       transitionsBuilder: buildSidebarTransition,
     ),
   ];

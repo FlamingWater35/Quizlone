@@ -1,9 +1,7 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
-import 'package:quizlone/routing/app_router.dart';
 import 'package:quizlone/widgets/centered_view.dart';
 
 @RoutePage()
@@ -50,19 +48,6 @@ class _AboutScreenState extends State<AboutScreen>
     );
 
     _controller.forward();
-
-    if (kIsWeb) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted && !context.router.canPop()) {
-          final currentRoutes = context.router.stack
-              .map((e) => e.name)
-              .toList();
-          if (currentRoutes.isEmpty || currentRoutes.first != StartRoute.name) {
-            context.router.replaceAll([const StartRoute(), const AboutRoute()]);
-          }
-        }
-      });
-    }
   }
 
   Future<void> _initPackageInfo() async {

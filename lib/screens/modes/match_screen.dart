@@ -25,29 +25,6 @@ class MatchScreen extends ConsumerStatefulWidget {
 
 class _MatchScreenState extends ConsumerState<MatchScreen> {
   @override
-  void initState() {
-    super.initState();
-    if (kIsWeb) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted && !context.router.canPop()) {
-          final currentRoutes = context.router.stack
-              .map((e) => e.name)
-              .toList();
-          if (currentRoutes.isEmpty || currentRoutes.first != StartRoute.name) {
-            if (ref.read(activeStudyListIdProvider) != null) {
-              context.router.replaceAll([
-                const StartRoute(),
-                const ModeSelectionRoute(),
-                const MatchRoute(),
-              ]);
-            }
-          }
-        }
-      });
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
     ref.listen<AsyncValue<MatchScreenState>>(matchControllerProvider, (
       prev,

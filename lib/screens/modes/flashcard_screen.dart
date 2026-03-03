@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:auto_route/auto_route.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -25,29 +24,6 @@ class FlashcardScreen extends ConsumerStatefulWidget {
 }
 
 class _FlashcardScreenState extends ConsumerState<FlashcardScreen> {
-  @override
-  void initState() {
-    super.initState();
-    if (kIsWeb) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted && !context.router.canPop()) {
-          final currentRoutes = context.router.stack
-              .map((e) => e.name)
-              .toList();
-          if (currentRoutes.isEmpty || currentRoutes.first != StartRoute.name) {
-            if (ref.read(activeStudyListIdProvider) != null) {
-              context.router.replaceAll([
-                const StartRoute(),
-                const ModeSelectionRoute(),
-                const FlashcardRoute(),
-              ]);
-            }
-          }
-        }
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final t = Translations.of(context);

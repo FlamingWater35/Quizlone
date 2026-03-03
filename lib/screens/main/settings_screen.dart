@@ -10,7 +10,6 @@ import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
-import 'package:quizlone/routing/app_router.dart';
 import 'package:quizlone/services/migration_service.dart';
 import 'package:quizlone/widgets/error_snackbar.dart';
 
@@ -32,26 +31,6 @@ class SettingsScreen extends ConsumerStatefulWidget {
 }
 
 class _SettingsScreenState extends ConsumerState<SettingsScreen> {
-  @override
-  void initState() {
-    super.initState();
-    if (kIsWeb) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted && !context.router.canPop()) {
-          final currentRoutes = context.router.stack
-              .map((e) => e.name)
-              .toList();
-          if (currentRoutes.isEmpty || currentRoutes.first != StartRoute.name) {
-            context.router.replaceAll([
-              const StartRoute(),
-              const SettingsRoute(),
-            ]);
-          }
-        }
-      });
-    }
-  }
-
   void _showLanguageMenu(BuildContext context, WidgetRef ref) {
     final languageNotifier = ref.read(appLanguageProvider.notifier);
     final currentLanguage = ref.read(appLanguageProvider);

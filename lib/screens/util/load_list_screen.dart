@@ -2,7 +2,6 @@ import 'package:animated_list_plus/animated_list_plus.dart';
 import 'package:animated_list_plus/transitions.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -75,22 +74,6 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
     _searchController.addListener(() {
       setState(() {});
     });
-
-    if (kIsWeb) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted && !context.router.canPop()) {
-          final currentRoutes = context.router.stack
-              .map((e) => e.name)
-              .toList();
-          if (currentRoutes.isEmpty || currentRoutes.first != StartRoute.name) {
-            context.router.replaceAll([
-              const StartRoute(),
-              const LoadListRoute(),
-            ]);
-          }
-        }
-      });
-    }
   }
 
   Future<void> _handleBulkDelete() async {
