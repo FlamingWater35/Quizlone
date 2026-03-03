@@ -20,10 +20,15 @@ class _ControlsScreenState extends State<ControlsScreen> {
     if (kIsWeb) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted && !context.router.canPop()) {
-          context.router.replaceAll([
-            const StartRoute(),
-            const ControlsRoute(),
-          ]);
+          final currentRoutes = context.router.stack
+              .map((e) => e.name)
+              .toList();
+          if (currentRoutes.isEmpty || currentRoutes.first != StartRoute.name) {
+            context.router.replaceAll([
+              const StartRoute(),
+              const ControlsRoute(),
+            ]);
+          }
         }
       });
     }

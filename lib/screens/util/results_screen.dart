@@ -28,13 +28,18 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
     if (kIsWeb) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted && !context.router.canPop()) {
-          if (ref.read(activeStudyListIdProvider) != null) {
-            context.router.replaceAll([
-              const StartRoute(),
-              const ModeSelectionRoute(),
-            ]);
-          } else {
-            context.router.replaceAll([const StartRoute()]);
+          final currentRoutes = context.router.stack
+              .map((e) => e.name)
+              .toList();
+          if (currentRoutes.isEmpty || currentRoutes.first != StartRoute.name) {
+            if (ref.read(activeStudyListIdProvider) != null) {
+              context.router.replaceAll([
+                const StartRoute(),
+                const ModeSelectionRoute(),
+              ]);
+            } else {
+              context.router.replaceAll([const StartRoute()]);
+            }
           }
         }
       });

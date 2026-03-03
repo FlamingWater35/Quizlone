@@ -27,12 +27,17 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
     if (kIsWeb) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted && !context.router.canPop()) {
-          if (ref.read(activeStudyListIdProvider) != null) {
-            context.router.replaceAll([
-              const StartRoute(),
-              const ModeSelectionRoute(),
-              const LearnRoute(),
-            ]);
+          final currentRoutes = context.router.stack
+              .map((e) => e.name)
+              .toList();
+          if (currentRoutes.isEmpty || currentRoutes.first != StartRoute.name) {
+            if (ref.read(activeStudyListIdProvider) != null) {
+              context.router.replaceAll([
+                const StartRoute(),
+                const ModeSelectionRoute(),
+                const LearnRoute(),
+              ]);
+            }
           }
         }
       });
