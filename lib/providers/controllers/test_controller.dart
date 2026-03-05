@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
+import 'package:quizlone/models/test_record.dart';
+import 'package:quizlone/providers/core/core_providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../i18n/generated/translations.g.dart';
@@ -118,34 +120,50 @@ class TestController extends _$TestController {
     state = AsyncData(currentState.copyWith(questions: updatedQuestions));
   }
 
-  void submitTest() {
+  Future<void> submitTest() async {
     if (state.isLoading || state.value == null || state.value!.isSubmitted) {
       return;
     }
     final currentState = state.value!;
     if (currentState.questions.isEmpty) return;
 
+    final activeListId = ref.read(activeStudyListIdProvider);
+    if (activeListId == null) return;
+
     final allowSubstring = ref.read(allowAnswerSubstringProvider);
     List<TestQuestion> gradedQuestions = [];
+    List<TestAnswerRecord> answerRecords = [];
+
     for (var q in currentState.questions) {
       bool correct = false;
-      if (q.userAnswerText != null) {
-        final userAnswer = q.userAnswerText!.trim().toLowerCase();
-        final correctAnswer = q.correctAnswerText.trim().toLowerCase();
+      final userAnswer = q.userAnswerText?.trim() ?? "";
+      final correctAnswer = q.correctAnswerText.trim();
 
-        if (allowSubstring && correctAnswer.contains(',')) {
-          final correctParts = correctAnswer
+      if (userAnswer.isNotEmpty) {
+        final uaLower = userAnswer.toLowerCase();
+        final caLower = correctAnswer.toLowerCase();
+
+        if (allowSubstring && caLower.contains(',')) {
+          final correctParts = caLower
               .split(',')
               .map((p) => p.trim())
               .where((p) => p.isNotEmpty);
-          correct =
-              (userAnswer == correctAnswer) ||
-              correctParts.contains(userAnswer);
+          correct = (uaLower == caLower) || correctParts.contains(uaLower);
         } else {
-          correct = userAnswer == correctAnswer;
+          correct = uaLower == caLower;
         }
       }
+
       gradedQuestions.add(q.copyWith(isCorrect: correct));
+
+      answerRecords.add(
+        TestAnswerRecord(
+          questionText: q.questionText,
+          correctAnswer: q.correctAnswerText,
+          userAnswer: q.userAnswerText,
+          isCorrect: correct,
+        ),
+      );
     }
 
     final newState = currentState.copyWith(
@@ -154,8 +172,45 @@ class TestController extends _$TestController {
     );
     state = AsyncData(newState);
 
-    _log.fine(
-      "[TestController] Test submitted. Score: ${newState.score}/${newState.totalQuestions}",
+    final record = TestRecord(
+      studyListId: activeListId,
+      score: newState.score,
+      totalQuestions: newState.totalQuestions,
+      answers: answerRecords,
+    );
+
+    try {
+      await ref.read(databaseServiceProvider).saveTestRecord(record);
+      _log.fine("[TestController] Test record saved.");
+    } catch (e, s) {
+      _log.severe("[TestController] Failed to save test record", e, s);
+    }
+  }
+
+  void loadHistoricalRecord(TestRecord record) {
+    final questions = record.answers.map((ans) {
+      final dummyTerm = Term()
+        ..termText = "..."
+        ..definitionText = "...";
+
+      return TestQuestion(
+        originalTerm: dummyTerm,
+        questionText: ans.questionText,
+        correctAnswerText: ans.correctAnswer,
+        isQuestionDefinition: false,
+        userAnswerText: ans.userAnswer,
+        isCorrect: ans.isCorrect,
+      );
+    }).toList();
+
+    state = AsyncData(
+      TestScreenState(
+        questions: questions,
+        isSubmitted: true,
+        isLoading: false,
+        testFormat: TestFormat.written,
+        questionType: StudyQuestionType.definition,
+      ),
     );
   }
 

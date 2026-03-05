@@ -248,7 +248,11 @@
     "congratulations": "Parabéns! Você acertou tudo!",
     "retryTest": "Tentar Teste Novamente",
     "reviewFlashcards": "Revisar com Flashcards",
-    "backToWelcome": "Voltar à Tela de Boas-vindas"
+    "backToWelcome": "Voltar à Tela de Boas-vindas",
+    "history": {
+      "title": "Histórico de testes",
+      "noRecords": "Nenhum teste anterior encontrado para esta lista."
+    }
   },
   "settingsScreen": {
     "title": "Configurações",

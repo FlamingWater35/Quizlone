@@ -248,7 +248,11 @@
     "congratulations": "おめでとうございます！すべて正解です！",
     "retryTest": "テストを再試行",
     "reviewFlashcards": "フラッシュカードで復習",
-    "backToWelcome": "ウェルカム画面に戻る"
+    "backToWelcome": "ウェルカム画面に戻る",
+    "history": {
+      "title": "テスト履歴",
+      "noRecords": "このリストの過去のテストは見つかりませんでした。"
+    }
   },
   "settingsScreen": {
     "title": "設定",

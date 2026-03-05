@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:quizlone/routing/app_router.dart';
 import 'package:quizlone/widgets/error_snackbar.dart';
-import 'package:quizlone/widgets/web_aware_back_button.dart';
 
 import '../../i18n/generated/translations.g.dart';
 import '../../models/enums/enums.dart';
@@ -33,7 +32,13 @@ class _ModeSelectionScreenState extends ConsumerState<ModeSelectionScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: const WebAwareBackButton(),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            ref.read(activeStudyListIdProvider.notifier).set(null);
+            context.router.replaceAll([const StartRoute()]);
+          },
+        ),
         title: Text(t.modeSelectionScreen.title),
         centerTitle: true,
       ),

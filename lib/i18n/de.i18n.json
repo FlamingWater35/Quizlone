@@ -248,7 +248,11 @@
     "congratulations": "Herzlichen Glückwunsch! Sie haben alles richtig!",
     "retryTest": "Test wiederholen",
     "reviewFlashcards": "Mit Karteikarten überprüfen",
-    "backToWelcome": "Zurück zum Begrüßungsbildschirm"
+    "backToWelcome": "Zurück zum Begrüßungsbildschirm",
+    "history": {
+      "title": "Testverlauf",
+      "noRecords": "Keine früheren Tests für diese Liste gefunden."
+    }
   },
   "settingsScreen": {
     "title": "Einstellungen",

@@ -2,12 +2,14 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
 import 'package:quizlone/routing/app_router.dart';
 
 import '../../providers/controllers/flashcard_controller.dart';
 import '../../providers/controllers/test_controller.dart';
+import '../../providers/core/core_providers.dart';
 import '../../providers/study/study_list_providers.dart';
 import '../../widgets/centered_view.dart';
 
@@ -22,6 +24,134 @@ class ResultsScreen extends ConsumerStatefulWidget {
 }
 
 class _ResultsScreenState extends ConsumerState<ResultsScreen> {
+  bool _isLoadingHistory = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (kIsWeb) {
+      _isLoadingHistory = true;
+      _initWebHistory();
+    }
+  }
+
+  Future<void> _initWebHistory() async {
+    try {
+      final state = await ref.read(testControllerProvider.future);
+
+      if (mounted) {
+        if (!state.isSubmitted) {
+          await _loadLatestResult(isInitialWebLoad: true);
+        } else {
+          setState(() => _isLoadingHistory = false);
+        }
+      }
+    } catch (e) {
+      ResultsScreen._log.warning("Error initializing web history", e);
+      if (mounted) setState(() => _isLoadingHistory = false);
+    }
+  }
+
+  Future<void> _loadLatestResult({bool isInitialWebLoad = false}) async {
+    final activeId = ref.read(activeStudyListIdProvider);
+
+    if (activeId == null) {
+      if (mounted) setState(() => _isLoadingHistory = false);
+      return;
+    }
+
+    if (!isInitialWebLoad) {
+      setState(() => _isLoadingHistory = true);
+    }
+
+    try {
+      final latest = await ref
+          .read(databaseServiceProvider)
+          .getLatestTestRecord(activeId);
+
+      if (latest != null && mounted) {
+        ref.read(testControllerProvider.notifier).loadHistoricalRecord(latest);
+      }
+    } catch (e) {
+      ResultsScreen._log.warning("Failed to load latest result", e);
+    } finally {
+      if (mounted) setState(() => _isLoadingHistory = false);
+    }
+  }
+
+  Future<void> _showHistoryDialog() async {
+    final t = Translations.of(context);
+    final activeId = ref.read(activeStudyListIdProvider);
+    if (activeId == null) return;
+
+    final db = ref.read(databaseServiceProvider);
+    final records = await db.getTestRecordsForList(activeId);
+    final dateFormat = DateFormat.yMMMd().add_jm();
+
+    if (!mounted) return;
+
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(t.resultsScreen.history.title),
+        content: SizedBox(
+          width: double.maxFinite,
+          child: records.isEmpty
+              ? Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    t.resultsScreen.history.noRecords,
+                    textAlign: TextAlign.center,
+                  ),
+                )
+              : ListView.separated(
+                  shrinkWrap: true,
+                  itemCount: records.length,
+                  separatorBuilder: (_, _) => const Divider(),
+                  itemBuilder: (context, index) {
+                    final record = records[index];
+                    final percentage = record.totalQuestions > 0
+                        ? (record.score / record.totalQuestions * 100).round()
+                        : 0;
+
+                    return ListTile(
+                      title: Text(dateFormat.format(record.createdAt)),
+                      subtitle: Text(
+                        t.resultsScreen.scoreFraction(
+                          score: record.score,
+                          total: record.totalQuestions,
+                        ),
+                      ),
+                      trailing: Text(
+                        "$percentage%",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: percentage == 100
+                              ? Theme.of(context).colorScheme.primary
+                              : null,
+                        ),
+                      ),
+                      onTap: () {
+                        ref
+                            .read(testControllerProvider.notifier)
+                            .loadHistoricalRecord(record);
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
+                ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(t.general.cancel),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final testStateAsync = ref.watch(testControllerProvider);
@@ -30,25 +160,34 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
     final colorScheme = Theme.of(context).colorScheme;
     final t = Translations.of(context);
 
+    if (_isLoadingHistory) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(t.resultsScreen.title),
+          centerTitle: true,
+          automaticallyImplyLeading: false,
+        ),
+        body: const Center(child: CircularProgressIndicator()),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(t.resultsScreen.title),
         centerTitle: true,
         automaticallyImplyLeading: false,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.history),
+            tooltip: t.resultsScreen.history.title,
+            onPressed: _showHistoryDialog,
+          ),
+        ],
       ),
       body: SafeArea(
         child: testStateAsync.when(
           data: (state) {
             if (!state.isSubmitted) {
-              if (!kIsWeb) {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  if (mounted) {
-                    context.router.pop();
-                  }
-                });
-                return const Center(child: CircularProgressIndicator());
-              }
-
               return Center(
                 child: CenteredView(
                   child: Padding(
@@ -70,7 +209,9 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
                         const SizedBox(height: 24),
                         FilledButton(
                           onPressed: () {
-                            context.router.replace(const ModeSelectionRoute());
+                            context.router.popUntilRouteWithName(
+                              ModeSelectionRoute.name,
+                            );
                           },
                           child: Text(t.modeSelectionScreen.title),
                         ),

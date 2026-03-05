@@ -248,7 +248,11 @@
     "congratulations": "¡Felicidades! ¡Obtuviste todo correcto!",
     "retryTest": "Reintentar Prueba",
     "reviewFlashcards": "Revisar con Tarjetas",
-    "backToWelcome": "Volver a la Pantalla de Bienvenida"
+    "backToWelcome": "Volver a la Pantalla de Bienvenida",
+    "history": {
+      "title": "Historial de Pruebas",
+      "noRecords": "No se encontraron pruebas anteriores para esta lista."
+    }
   },
   "settingsScreen": {
     "title": "Configuración",

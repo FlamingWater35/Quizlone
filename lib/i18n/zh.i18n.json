@@ -248,7 +248,11 @@
     "congratulations": "恭喜！您全部答对了！",
     "retryTest": "重试测试",
     "reviewFlashcards": "使用闪卡复习",
-    "backToWelcome": "返回欢迎屏幕"
+    "backToWelcome": "返回欢迎屏幕",
+    "history": {
+      "title": "测试历史",
+      "noRecords": "未找到此列表的过往测试记录。"
+    }
   },
   "settingsScreen": {
     "title": "设置",

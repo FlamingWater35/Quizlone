@@ -248,7 +248,11 @@
     "congratulations": "Grattis! Du fick allt rätt!",
     "retryTest": "Försök Testa Igen",
     "reviewFlashcards": "Granska med Flashcards",
-    "backToWelcome": "Tillbaka till Välkomstskärmen"
+    "backToWelcome": "Tillbaka till Välkomstskärmen",
+    "history": {
+      "title": "Testhistorik",
+      "noRecords": "Inga tidigare tester hittades för denna lista."
+    }
   },
   "settingsScreen": {
     "title": "Inställningar",

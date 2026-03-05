@@ -248,7 +248,11 @@
     "congratulations": "Félicitations ! Vous avez tout réussi !",
     "retryTest": "Réessayer le Test",
     "reviewFlashcards": "Revoir avec les Flashcards",
-    "backToWelcome": "Retour à l'Écran de Bienvenue"
+    "backToWelcome": "Retour à l'Écran de Bienvenue",
+    "history": {
+      "title": "Historique des tests",
+      "noRecords": "Aucun test précédent trouvé pour cette liste."
+    }
   },
   "settingsScreen": {
     "title": "Paramètres",

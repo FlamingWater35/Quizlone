@@ -10,6 +10,7 @@ import '../models/settings_app_data.dart';
 import '../models/study_group.dart';
 import '../models/study_list.dart';
 import '../models/term.dart';
+import '../models/test_record.dart';
 import '../providers/core/auth_provider.dart';
 
 final _log = Logger("DatabaseService");
@@ -22,12 +23,19 @@ class DatabaseService {
   static const String _activeListIdKey = 'activeListId';
   static const String _apkCleanupPathKey = 'apkCleanupPath';
   static const String _lastSyncTimestampKey = 'lastSyncTimestamp';
+
   static late Box<MatchRecord> _matchRecordsBox;
   static const String _matchRecordsBoxName = 'matchRecordsBox';
+
+  static late Box<TestRecord> _testRecordsBox;
+  static const String _testRecordsBoxName = 'testRecordsBox';
+
   static late Box _settingsBox;
   static const String _settingsBoxName = 'settingsBox';
+
   static late Box<StudyGroup> _studyGroupBox;
   static const String _studyGroupBoxName = 'studyGroupsBox';
+
   static late Box<StudyList> _studyListBox;
   static const String _studyListBoxName = 'studyListsBox';
 
@@ -38,11 +46,14 @@ class DatabaseService {
     Hive.registerAdapter(StudyListAdapter());
     Hive.registerAdapter(MatchRecordAdapter());
     Hive.registerAdapter(StudyGroupAdapter());
+    Hive.registerAdapter(TestRecordAdapter());
+    Hive.registerAdapter(TestAnswerRecordAdapter());
 
     _studyListBox = await Hive.openBox<StudyList>(_studyListBoxName);
     _settingsBox = await Hive.openBox(_settingsBoxName);
     _matchRecordsBox = await Hive.openBox<MatchRecord>(_matchRecordsBoxName);
     _studyGroupBox = await Hive.openBox<StudyGroup>(_studyGroupBoxName);
+    _testRecordsBox = await Hive.openBox<TestRecord>(_testRecordsBoxName);
   }
 
   Future<void> setApkPathForCleanup(String path) async {
@@ -72,6 +83,7 @@ class DatabaseService {
     await _studyListBox.clear();
     await _matchRecordsBox.clear();
     await _studyGroupBox.clear();
+    await _testRecordsBox.clear();
 
     for (final group in data.studyGroups) {
       await _studyGroupBox.put(group.id, group);
@@ -81,6 +93,9 @@ class DatabaseService {
     }
     for (final record in data.matchRecords) {
       await _matchRecordsBox.add(record);
+    }
+    for (final record in data.testRecords) {
+      await _testRecordsBox.put(record.id, record);
     }
   }
 
@@ -142,11 +157,50 @@ class DatabaseService {
     await triggerCloudUpload();
   }
 
+  Future<void> saveTestRecord(TestRecord record) async {
+    await _testRecordsBox.put(record.id, record);
+    await _pruneTestRecords(record.studyListId);
+    await triggerCloudUpload();
+  }
+
+  Future<void> _pruneTestRecords(String studyListId) async {
+    final allRecords = _testRecordsBox.values
+        .where((r) => r.studyListId == studyListId)
+        .toList();
+
+    if (allRecords.length > 20) {
+      allRecords.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+
+      final recordsToDelete = allRecords.sublist(20);
+      final keysToDelete = recordsToDelete.map((r) => r.id).toList();
+
+      await _testRecordsBox.deleteAll(keysToDelete);
+    }
+  }
+
+  Future<List<TestRecord>> getTestRecordsForList(String studyListId) async {
+    final records = _testRecordsBox.values
+        .where((r) => r.studyListId == studyListId)
+        .toList();
+    records.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    return records;
+  }
+
+  Future<List<TestRecord>> getAllTestRecords() async {
+    return _testRecordsBox.values.toList();
+  }
+
+  Future<TestRecord?> getLatestTestRecord(String studyListId) async {
+    final records = await getTestRecordsForList(studyListId);
+    return records.isNotEmpty ? records.first : null;
+  }
+
   Future<void> clearAllUserData() async {
     _log.info("Clearing all user-specific local data.");
     await _studyListBox.clear();
     await _matchRecordsBox.clear();
     await _studyGroupBox.clear();
+    await _testRecordsBox.clear();
     await _settingsBox.delete(_activeListIdKey);
     await _settingsBox.delete(_lastSyncTimestampKey);
   }
@@ -241,8 +295,15 @@ class DatabaseService {
         }
       }
 
-      await triggerCloudUpload();
+      final testRecordsToDelete = _testRecordsBox.values
+          .where((r) => r.studyListId == id)
+          .map((r) => r.id)
+          .toList();
+      if (testRecordsToDelete.isNotEmpty) {
+        await _testRecordsBox.deleteAll(testRecordsToDelete);
+      }
 
+      await triggerCloudUpload();
       return true;
     }
     return false;
@@ -256,6 +317,7 @@ class DatabaseService {
 
   Future<void> deleteAllStudyLists() async {
     await _studyListBox.clear();
+    await _testRecordsBox.clear();
     await triggerCloudUpload();
   }
 

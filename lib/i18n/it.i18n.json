@@ -248,7 +248,11 @@
     "congratulations": "Congratulazioni! Hai azzeccato tutto!",
     "retryTest": "Riprova Test",
     "reviewFlashcards": "Rivedi con Flashcard",
-    "backToWelcome": "Torna alla Schermata di Benvenuto"
+    "backToWelcome": "Torna alla Schermata di Benvenuto",
+    "history": {
+      "title": "Cronologia test",
+      "noRecords": "Nessun test precedente trovato per questa lista."
+    }
   },
   "settingsScreen": {
     "title": "Impostazioni",

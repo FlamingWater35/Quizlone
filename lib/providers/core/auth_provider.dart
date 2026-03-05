@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/widgets.dart';
 import 'package:logging/logging.dart';
+import 'package:quizlone/models/test_record.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -139,6 +140,17 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
     }
     _log.fine("Merged ${mergedRecords.length} records.");
 
+    final remoteTestsMap = {for (var t in remote.testRecords) t.id: t};
+    final mergedTestsMap = Map<String, TestRecord>.from(remoteTestsMap);
+
+    for (final localTest in local.testRecords) {
+      if (!mergedTestsMap.containsKey(localTest.id)) {
+        mergedTestsMap[localTest.id] = localTest;
+      }
+    }
+    final mergedTestRecords = mergedTestsMap.values.toList();
+    _log.fine("Merged ${mergedTestRecords.length} test records.");
+
     final mergedGroupsMap = {
       for (var group in remote.studyGroups) group.id: group,
     };
@@ -154,6 +166,7 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
       studyLists: mergedLists,
       matchRecords: mergedRecords,
       studyGroups: mergedGroups,
+      testRecords: mergedTestRecords,
     );
   }
 
@@ -167,11 +180,14 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
     if (!ref.mounted) return;
     final groups = await dbService.getAllStudyGroups();
     if (!ref.mounted) return;
+    final tests = await dbService.getAllTestRecords();
+    if (!ref.mounted) return;
 
     final appData = AppData(
       studyLists: lists,
       matchRecords: records,
       studyGroups: groups,
+      testRecords: tests,
     );
     await cloudSyncService.uploadData(appData);
     if (!ref.mounted) return;
@@ -258,6 +274,7 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
               studyLists: localLists,
               matchRecords: localRecords,
               studyGroups: localGroups,
+              testRecords: await dbService.getAllTestRecords(),
             );
             final mergedData = _mergeData(
               local: localData,

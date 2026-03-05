@@ -248,7 +248,11 @@
     "congratulations": "Congratulations! You got everything right!",
     "retryTest": "Retry Test",
     "reviewFlashcards": "Review with Flashcards",
-    "backToWelcome": "Back to Welcome Screen"
+    "backToWelcome": "Back to Welcome Screen",
+    "history": {
+      "title": "Test History",
+      "noRecords": "No past tests found for this list."
+    }
   },
   "settingsScreen": {
     "title": "Settings",

@@ -248,7 +248,11 @@
     "congratulations": "Onnittelut! Sait kaiken oikein!",
     "retryTest": "Yritä testi uudelleen",
     "reviewFlashcards": "Kerrata flashcardeilla",
-    "backToWelcome": "Takaisin alkunäkymään"
+    "backToWelcome": "Takaisin alkunäkymään",
+    "history": {
+      "title": "Testihistoria",
+      "noRecords": "Ei aiempia testejä tälle listalle."
+    }
   },
   "settingsScreen": {
     "title": "Asetukset",
