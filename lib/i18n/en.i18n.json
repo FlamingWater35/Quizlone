@@ -169,6 +169,21 @@
       "saveSettingFailed": "Failed to save setting: $error"
     }
   },
+  "multipleChoiceScreen": {
+    "title": "Multiple Choice",
+    "score": "Score: $score",
+    "questionProgress": "$current / $total",
+    "results": {
+      "completed": "Session Completed!",
+      "accuracy": "Accuracy",
+      "correctCount": "$correct out of $total correct",
+      "playAgain": "Play Again",
+      "backToMenu": "Back to Menu"
+    },
+    "errors": {
+      "notEnoughTerms": "You need at least 4 terms to play Multiple Choice."
+    }
+  },
   "flashcardScreen": {
     "title": "Flashcards",
     "noCards": "No flashcards to display.",

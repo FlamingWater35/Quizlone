@@ -179,6 +179,21 @@
       "saveSettingFailed": "Не удалось сохранить настройку: $error"
     }
   },
+  "multipleChoiceScreen": {
+    "title": "Множественный выбор",
+    "score": "Счет: $score",
+    "questionProgress": "$current / $total",
+    "results": {
+      "completed": "Сессия завершена!",
+      "accuracy": "Точность",
+      "correctCount": "$correct из $total верно",
+      "playAgain": "Играть снова",
+      "backToMenu": "В меню"
+    },
+    "errors": {
+      "notEnoughTerms": "Нужно минимум 4 термина для множественного выбора."
+    }
+  },
   "flashcardScreen": {
     "title": "Карточки",
     "noCards": "Нет карточек для отображения.",

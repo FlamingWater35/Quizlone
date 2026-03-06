@@ -169,6 +169,21 @@
       "saveSettingFailed": "Misslyckades med att spara inställning: $error"
     }
   },
+  "multipleChoiceScreen": {
+    "title": "Flervalsfrågor",
+    "score": "Poäng: $score",
+    "questionProgress": "$current / $total",
+    "results": {
+      "completed": "Sessionen avslutad!",
+      "accuracy": "Noggrannhet",
+      "correctCount": "$correct av $total rätt",
+      "playAgain": "Spela igen",
+      "backToMenu": "Tillbaka till menyn"
+    },
+    "errors": {
+      "notEnoughTerms": "Du behöver minst 4 termer för att spela Flervalsfrågor."
+    }
+  },
   "flashcardScreen": {
     "title": "Flashcards",
     "noCards": "Inga flashcards att visa.",

@@ -493,6 +493,11 @@ class _ActionButtons extends StatelessWidget {
         route: const LearnRoute(),
       ),
       (
+        label: t.modeSelectionScreen.multipleChoice,
+        icon: Icons.checklist_rtl_rounded,
+        route: const MultipleChoiceRoute(),
+      ),
+      (
         label: t.modeSelectionScreen.test,
         icon: Icons.quiz,
         route: const TestModeRoute(),

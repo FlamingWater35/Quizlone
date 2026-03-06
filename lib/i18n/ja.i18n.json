@@ -169,6 +169,21 @@
       "saveSettingFailed": "設定の保存に失敗しました: $error"
     }
   },
+  "multipleChoiceScreen": {
+    "title": "多肢選択",
+    "score": "スコア: $score",
+    "questionProgress": "$current / $total",
+    "results": {
+      "completed": "セッション完了！",
+      "accuracy": "正解率",
+      "correctCount": "$total 問中 $correct 問正解",
+      "playAgain": "もう一度プレイ",
+      "backToMenu": "メニューに戻る"
+    },
+    "errors": {
+      "notEnoughTerms": "多肢選択をプレイするには、少なくとも4つの用語が必要です。"
+    }
+  },
   "flashcardScreen": {
     "title": "フラッシュカード",
     "noCards": "表示するフラッシュカードがありません。",

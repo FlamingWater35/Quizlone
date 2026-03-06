@@ -169,6 +169,21 @@
       "saveSettingFailed": "Salvataggio impostazione fallito: $error"
     }
   },
+  "multipleChoiceScreen": {
+    "title": "Scelta multipla",
+    "score": "Punteggio: $score",
+    "questionProgress": "$current / $total",
+    "results": {
+      "completed": "Sessione completata!",
+      "accuracy": "Precisione",
+      "correctCount": "$correct su $total corretti",
+      "playAgain": "Gioca ancora",
+      "backToMenu": "Torna al menu"
+    },
+    "errors": {
+      "notEnoughTerms": "Hai bisogno di almeno 4 termini per giocare a Scelta multipla."
+    }
+  },
   "flashcardScreen": {
     "title": "Flashcard",
     "noCards": "Nessuna flashcard da visualizzare.",

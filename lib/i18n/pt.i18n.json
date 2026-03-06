@@ -169,6 +169,21 @@
       "saveSettingFailed": "Falha ao salvar a configuração: $error"
     }
   },
+  "multipleChoiceScreen": {
+    "title": "Múltipla Escolha",
+    "score": "Pontuação: $score",
+    "questionProgress": "$current / $total",
+    "results": {
+      "completed": "Sessão Concluída!",
+      "accuracy": "Precisão",
+      "correctCount": "$correct de $total corretos",
+      "playAgain": "Jogar Novamente",
+      "backToMenu": "Voltar ao Menu"
+    },
+    "errors": {
+      "notEnoughTerms": "Você precisa de pelo menos 4 termos para jogar Múltipla Escolha."
+    }
+  },
   "flashcardScreen": {
     "title": "Flashcards",
     "noCards": "Nenhum flashcard para exibir.",

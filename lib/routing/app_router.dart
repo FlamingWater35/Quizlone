@@ -10,6 +10,7 @@ import '../screens/modes/flashcard_screen.dart';
 import '../screens/modes/learn_screen.dart';
 import '../screens/modes/match_leaderboard_screen.dart';
 import '../screens/modes/match_screen.dart';
+import '../screens/modes/multiple_choice_screen.dart';
 import '../screens/modes/test_screen.dart';
 import '../screens/util/input_screen.dart';
 import '../screens/util/load_list_screen.dart';
@@ -37,6 +38,7 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: LearnRoute.page, path: '/learn'),
     AutoRoute(page: TestModeRoute.page, path: '/test'),
     AutoRoute(page: MatchRoute.page, path: '/match'),
+    AutoRoute(page: MultipleChoiceRoute.page, path: '/multiple-choice'),
     AutoRoute(page: MatchLeaderboardRoute.page, path: '/leaderboard'),
     AutoRoute(page: ResultsRoute.page, path: '/results'),
     AutoRoute(page: AboutRoute.page, path: '/about'),

@@ -169,6 +169,21 @@
       "saveSettingFailed": "Asetuksen tallennus epäonnistui: $error"
     }
   },
+  "multipleChoiceScreen": {
+    "title": "Monivalinta",
+    "score": "Pisteet: $score",
+    "questionProgress": "$current / $total",
+    "results": {
+      "completed": "Sessio valmis!",
+      "accuracy": "Tarkkuus",
+      "correctCount": "$correct / $total oikein",
+      "playAgain": "Pelaa uudelleen",
+      "backToMenu": "Takaisin valikkoon"
+    },
+    "errors": {
+      "notEnoughTerms": "Tarvitset vähintään 4 termiä pelataksesi monivalintaa."
+    }
+  },
   "flashcardScreen": {
     "title": "Flashcardit",
     "noCards": "Ei flashcardeja näytettäväksi.",

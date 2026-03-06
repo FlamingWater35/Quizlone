@@ -169,6 +169,21 @@
       "saveSettingFailed": "Échec de la sauvegarde du paramètre : $error"
     }
   },
+  "multipleChoiceScreen": {
+    "title": "Choix multiple",
+    "score": "Score : $score",
+    "questionProgress": "$current / $total",
+    "results": {
+      "completed": "Session terminée !",
+      "accuracy": "Précision",
+      "correctCount": "$correct sur $total corrects",
+      "playAgain": "Rejouer",
+      "backToMenu": "Retour au menu"
+    },
+    "errors": {
+      "notEnoughTerms": "Vous avez besoin d'au moins 4 termes pour jouer au Choix multiple."
+    }
+  },
   "flashcardScreen": {
     "title": "Flashcards",
     "noCards": "Aucune flashcard à afficher.",

@@ -169,6 +169,21 @@
       "saveSettingFailed": "保存设置失败：$error"
     }
   },
+  "multipleChoiceScreen": {
+    "title": "多项选择",
+    "score": "分数：$score",
+    "questionProgress": "$current / $total",
+    "results": {
+      "completed": "会话完成！",
+      "accuracy": "准确率",
+      "correctCount": "$total 题中答对 $correct 题",
+      "playAgain": "再玩一次",
+      "backToMenu": "返回菜单"
+    },
+    "errors": {
+      "notEnoughTerms": "您至少需要 4 个术语才能进行多项选择。"
+    }
+  },
   "flashcardScreen": {
     "title": "闪卡",
     "noCards": "没有闪卡可显示。",

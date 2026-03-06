@@ -169,6 +169,21 @@
       "saveSettingFailed": "Fehler beim Speichern der Einstellung: $error"
     }
   },
+  "multipleChoiceScreen": {
+    "title": "Multiple Choice",
+    "score": "Punktzahl: $score",
+    "questionProgress": "$current / $total",
+    "results": {
+      "completed": "Sitzung abgeschlossen!",
+      "accuracy": "Genauigkeit",
+      "correctCount": "$correct von $total richtig",
+      "playAgain": "Nochmal spielen",
+      "backToMenu": "Zurück zum Menü"
+    },
+    "errors": {
+      "notEnoughTerms": "Du benötigst mindestens 4 Begriffe, um Multiple Choice zu spielen."
+    }
+  },
   "flashcardScreen": {
     "title": "Karteikarten",
     "noCards": "Keine Karteikarten zum Anzeigen.",

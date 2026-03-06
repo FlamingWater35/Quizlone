@@ -169,6 +169,21 @@
       "saveSettingFailed": "Error al guardar la configuración: $error"
     }
   },
+  "multipleChoiceScreen": {
+    "title": "Opción Múltiple",
+    "score": "Puntuación: $score",
+    "questionProgress": "$current / $total",
+    "results": {
+      "completed": "¡Sesión Completada!",
+      "accuracy": "Precisión",
+      "correctCount": "$correct de $total correctos",
+      "playAgain": "Jugar de Nuevo",
+      "backToMenu": "Volver al Menú"
+    },
+    "errors": {
+      "notEnoughTerms": "Necesitas al menos 4 términos para jugar Opción Múltiple."
+    }
+  },
   "flashcardScreen": {
     "title": "Tarjetas",
     "noCards": "No hay tarjetas para mostrar.",
