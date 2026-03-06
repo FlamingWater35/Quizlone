@@ -5,7 +5,6 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:logging/logging.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
 import 'package:quizlone/models/study_group.dart';
 import 'package:quizlone/models/study_list.dart';
@@ -17,8 +16,6 @@ import '../../providers/core/core_providers.dart';
 import '../../providers/study/study_list_providers.dart';
 import '../../widgets/centered_view.dart';
 
-final _log = Logger("LoadListScreen");
-
 final studyGroupsProvider = StreamProvider<List<StudyGroup>>((ref) {
   final dbService = ref.watch(databaseServiceProvider);
   return dbService.listenToStudyGroups();
@@ -26,14 +23,14 @@ final studyGroupsProvider = StreamProvider<List<StudyGroup>>((ref) {
 
 enum _ListItemMenuAction { rename, move, delete }
 
-enum _GroupMenuAction { delete }
+enum _GroupMenuAction { rename, delete }
 
-enum _SortOption { custom, name, lastOpened, createdAt, listLength }
+enum _SortOption { none, name, lastOpened, createdAt, listLength }
 
 extension _SortOptionExtension on _SortOption {
   String getDisplayName(Translations t) {
     switch (this) {
-      case _SortOption.custom:
+      case _SortOption.none:
         return t.loadListScreen.sortOptions.none;
       case _SortOption.name:
         return t.loadListScreen.sortOptions.name;
@@ -56,12 +53,12 @@ class LoadListScreen extends ConsumerStatefulWidget {
 }
 
 class _LoadListScreenState extends ConsumerState<LoadListScreen> {
-  _SortOption _currentSort = _SortOption.custom;
+  _SortOption _currentSort = _SortOption.none;
   final Set<String> _expandedGroupIds = {};
   bool _isSelectMode = false;
-  bool _isSortAscending = true;
   final _searchController = TextEditingController();
   final Set<String> _selectedListIds = {};
+  bool _sortAscending = true;
 
   @override
   void dispose() {
@@ -74,6 +71,23 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
     super.initState();
     _searchController.addListener(() {
       setState(() {});
+    });
+  }
+
+  void _toggleSelectMode() {
+    setState(() {
+      _isSelectMode = !_isSelectMode;
+      _selectedListIds.clear();
+    });
+  }
+
+  void _onListSelected(String listId, bool? isSelected) {
+    setState(() {
+      if (isSelected == true) {
+        _selectedListIds.add(listId);
+      } else {
+        _selectedListIds.remove(listId);
+      }
     });
   }
 
@@ -90,12 +104,12 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
             onPressed: () => Navigator.of(ctx).pop(false),
             child: Text(t.general.cancel),
           ),
-          TextButton(
+          FilledButton(
             onPressed: () => Navigator.of(ctx).pop(true),
-            child: Text(
-              t.general.delete,
-              style: TextStyle(color: Theme.of(context).colorScheme.error),
+            style: FilledButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.error,
             ),
+            child: Text(t.general.delete),
           ),
         ],
       ),
@@ -133,12 +147,12 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
             onPressed: () => Navigator.of(ctx).pop(false),
             child: Text(t.general.cancel),
           ),
-          TextButton(
+          FilledButton(
             onPressed: () => Navigator.of(ctx).pop(true),
-            child: Text(
-              t.general.delete,
-              style: TextStyle(color: Theme.of(context).colorScheme.error),
+            style: FilledButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.error,
             ),
+            child: Text(t.general.delete),
           ),
         ],
       ),
@@ -149,45 +163,12 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
     }
   }
 
-  void _onListSelected(String listId, bool? isSelected) {
-    setState(() {
-      if (isSelected == true) {
-        _selectedListIds.add(listId);
-      } else {
-        _selectedListIds.remove(listId);
-      }
-    });
-  }
-
-  void _onSortChanged(_SortOption? newSort) {
-    if (newSort != null) {
-      setState(() {
-        if (_currentSort == newSort && newSort != _SortOption.custom) {
-          _isSortAscending = !_isSortAscending;
-        } else {
-          _currentSort = newSort;
-          switch (newSort) {
-            case _SortOption.name:
-            case _SortOption.custom:
-              _isSortAscending = true;
-              break;
-            case _SortOption.lastOpened:
-            case _SortOption.createdAt:
-            case _SortOption.listLength:
-              _isSortAscending = false;
-              break;
-          }
-        }
-      });
-    }
-  }
-
   Future<void> _showCreateGroupDialog() async {
     final t = Translations.of(context);
     final controller = TextEditingController();
     final formKey = GlobalKey<FormState>();
 
-    return showDialog<void>(
+    await showDialog<void>(
       context: context,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
@@ -199,6 +180,7 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
               autofocus: true,
               decoration: InputDecoration(
                 hintText: t.loadListScreen.createGroupDialog.hint,
+                border: const OutlineInputBorder(),
               ),
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
@@ -231,6 +213,55 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
     );
   }
 
+  Future<void> _showRenameGroupDialog(StudyGroup group) async {
+    final t = Translations.of(context);
+    final controller = TextEditingController(text: group.name);
+    final formKey = GlobalKey<FormState>();
+
+    await showDialog<void>(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: Text(t.startScreen.renameListDialog.rename),
+          content: Form(
+            key: formKey,
+            child: TextFormField(
+              controller: controller,
+              autofocus: true,
+              decoration: InputDecoration(
+                hintText: t.loadListScreen.createGroupDialog.hint,
+                border: const OutlineInputBorder(),
+              ),
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return t.loadListScreen.createGroupDialog.errorEmpty;
+                }
+                return null;
+              },
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text(t.general.cancel),
+              onPressed: () => Navigator.of(dialogContext).pop(),
+            ),
+            FilledButton(
+              child: Text(t.startScreen.renameListDialog.rename),
+              onPressed: () async {
+                if (formKey.currentState?.validate() ?? false) {
+                  await ref
+                      .read(databaseServiceProvider)
+                      .renameStudyGroup(group.id, controller.text.trim());
+                  if (dialogContext.mounted) Navigator.of(dialogContext).pop();
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Future<void> _showMoveDialog(List<String> listIds) async {
     final t = Translations.of(context);
     final allGroups = ref.read(studyGroupsProvider).asData?.value ?? [];
@@ -245,12 +276,19 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
           children: [
             SimpleDialogOption(
               onPressed: () => Navigator.pop(context, "ungrouped"),
-              child: Text(t.loadListScreen.ungrouped),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: Text(t.loadListScreen.ungrouped),
+              ),
             ),
+            if (allGroups.isNotEmpty) const Divider(),
             ...allGroups.map(
               (group) => SimpleDialogOption(
                 onPressed: () => Navigator.pop(context, group.id),
-                child: Text(group.name),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: Text(group.name),
+                ),
               ),
             ),
           ],
@@ -264,7 +302,7 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
         listIds,
         destinationGroupId == "ungrouped" ? null : destinationGroupId,
       );
-      _toggleSelectMode();
+      if (_isSelectMode) _toggleSelectMode();
     }
   }
 
@@ -283,7 +321,10 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
             child: TextFormField(
               controller: controller,
               autofocus: true,
-              decoration: InputDecoration(hintText: t.inputScreen.listName),
+              decoration: InputDecoration(
+                labelText: t.inputScreen.listName,
+                border: const OutlineInputBorder(),
+              ),
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
                   return t.startScreen.renameListDialog.errorNameEmpty;
@@ -323,478 +364,613 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
     }
   }
 
-  void _toggleSelectMode() {
-    setState(() {
-      _isSelectMode = !_isSelectMode;
-      _selectedListIds.clear();
-    });
-  }
-
-  AppBar _buildAppBar(BuildContext context, Translations t) {
-    return AppBar(
-      title: _isSelectMode
-          ? Text(t.loadListScreen.itemsSelected(count: _selectedListIds.length))
-          : Text(t.loadListScreen.title),
-      centerTitle: true,
-      leading: _isSelectMode
-          ? IconButton(
-              icon: const Icon(Icons.close),
-              onPressed: _toggleSelectMode,
-            )
-          : const WebAwareBackButton(),
-    );
-  }
-
-  Widget _buildBottomActionBar(BuildContext context, Translations t) {
-    final hasSelection = _selectedListIds.isNotEmpty;
-    return BottomAppBar(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          TextButton.icon(
-            icon: const Icon(Icons.drive_file_move_outline),
-            label: Text(t.loadListScreen.move),
-            onPressed: hasSelection
+  PreferredSizeWidget _buildAppBar(BuildContext context, Translations t) {
+    if (_isSelectMode) {
+      return AppBar(
+        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+        title: Text(
+          t.loadListScreen.itemsSelected(count: _selectedListIds.length),
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onPrimaryContainer,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        leading: IconButton(
+          icon: Icon(
+            Icons.close,
+            color: Theme.of(context).colorScheme.onPrimaryContainer,
+          ),
+          onPressed: _toggleSelectMode,
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.delete_outline,
+              color: Theme.of(context).colorScheme.error,
+            ),
+            tooltip: t.general.delete,
+            onPressed: _selectedListIds.isNotEmpty
+                ? () => _handleBulkDelete()
+                : null,
+          ),
+          IconButton(
+            icon: Icon(
+              Icons.drive_file_move_outline,
+              color: Theme.of(context).colorScheme.onPrimaryContainer,
+            ),
+            tooltip: t.loadListScreen.move,
+            onPressed: _selectedListIds.isNotEmpty
                 ? () => _showMoveDialog(_selectedListIds.toList())
                 : null,
           ),
-          TextButton.icon(
-            icon: Icon(
-              Icons.delete_outline,
-              color: hasSelection ? Theme.of(context).colorScheme.error : null,
-            ),
-            label: Text(
-              t.general.delete,
-              style: TextStyle(
-                color: hasSelection
-                    ? Theme.of(context).colorScheme.error
-                    : null,
-              ),
-            ),
-            onPressed: hasSelection ? _handleBulkDelete : null,
-          ),
         ],
-      ),
-    );
-  }
+      );
+    }
 
-  Widget _buildFab(BuildContext context, Translations t) {
-    return FloatingActionButton.extended(
-      onPressed: _showCreateGroupDialog,
-      label: Text(t.loadListScreen.createGroup),
-      icon: const Icon(Icons.create_new_folder_outlined),
-    );
-  }
-
-  Widget _buildGroupedListView(
-    List<StudyList> lists,
-    List<StudyGroup> groups,
-    Translations t,
-  ) {
-    final groupedMap = lists.groupListsBy((list) => list.groupId);
-
-    final List<StudyGroup> sortedGroups = List.from(groups)
-      ..sort((a, b) => a.name.compareTo(b.name));
-
-    return ListView(
-      padding: const EdgeInsets.symmetric(horizontal: 14),
-      children: [
-        _buildGroupExpansionTile(
-          title: t.loadListScreen.ungrouped,
-          lists: groupedMap[null] ?? [],
-          t: t,
-          isUngroupedOnlyGroup: sortedGroups.isEmpty,
+    return AppBar(
+      leading: const WebAwareBackButton(),
+      title: Text(t.loadListScreen.title),
+      centerTitle: true,
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.create_new_folder_outlined),
+          tooltip: t.loadListScreen.createGroup,
+          onPressed: _showCreateGroupDialog,
         ),
-        ...sortedGroups.map((group) {
-          return _buildGroupExpansionTile(
-            title: group.name,
-            groupId: group.id,
-            lists: groupedMap[group.id] ?? [],
-            t: t,
-          );
-        }),
+        IconButton(
+          icon: const Icon(Icons.checklist),
+          tooltip: t.loadListScreen.select,
+          onPressed: _toggleSelectMode,
+        ),
       ],
-    ).animate().fadeIn(duration: 500.ms);
+    );
   }
 
-  Widget _buildGroupExpansionTile({
-    required String title,
-    String? groupId,
-    required List<StudyList> lists,
-    required Translations t,
-    bool isUngroupedOnlyGroup = false,
-  }) {
-    final isExpanded = _expandedGroupIds.contains(groupId ?? 'ungrouped');
-
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 6),
-      clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
-      child: ExpansionTile(
-        key: ValueKey(groupId ?? 'ungrouped'),
-        initiallyExpanded: isUngroupedOnlyGroup || isExpanded,
-        onExpansionChanged: (isExpanded) {
-          setState(() {
-            if (isExpanded) {
-              _expandedGroupIds.add(groupId ?? 'ungrouped');
-            } else {
-              _expandedGroupIds.remove(groupId ?? 'ungrouped');
-            }
-          });
-        },
-        title: Row(
-          children: [
-            Expanded(
-              child: Text(
-                title,
-                style: Theme.of(
-                  context,
-                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-              ),
-            ),
-            if (groupId != null)
-              PopupMenuButton<_GroupMenuAction>(
-                onSelected: (action) {
-                  final group = ref
-                      .read(studyGroupsProvider)
-                      .value!
-                      .firstWhere((g) => g.id == groupId);
-                  if (action == _GroupMenuAction.delete) {
-                    _handleGroupDelete(group);
-                  }
+  Widget _buildSearchBar(BuildContext context, Translations t) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+      child: TextField(
+        controller: _searchController,
+        decoration: InputDecoration(
+          hintText: t.loadListScreen.searchHint,
+          prefixIcon: const Icon(Icons.search),
+          suffixIcon: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (_searchController.text.isNotEmpty)
+                IconButton(
+                  icon: const Icon(Icons.clear),
+                  onPressed: () => _searchController.clear(),
+                ),
+              PopupMenuButton<_SortOption>(
+                icon: Icon(
+                  _currentSort == _SortOption.none
+                      ? Icons.sort
+                      : Icons.filter_list,
+                  color: _currentSort != _SortOption.none
+                      ? Theme.of(context).colorScheme.primary
+                      : null,
+                ),
+                tooltip: t.loadListScreen.sortLabel,
+                onSelected: (option) {
+                  setState(() {
+                    if (_currentSort == option && option != _SortOption.none) {
+                      _sortAscending = !_sortAscending;
+                    } else {
+                      _currentSort = option;
+                      switch (option) {
+                        case _SortOption.name:
+                          _sortAscending = true;
+                          break;
+                        default:
+                          _sortAscending = false;
+                      }
+                    }
+                  });
                 },
-                itemBuilder: (context) => [
-                  PopupMenuItem(
-                    value: _GroupMenuAction.delete,
-                    child: Text(t.general.delete),
-                  ),
-                ],
+                itemBuilder: (context) {
+                  return _SortOption.values.map((option) {
+                    final isSelected = _currentSort == option;
+                    return CheckedPopupMenuItem(
+                      value: option,
+                      checked: isSelected,
+                      child: Row(
+                        children: [
+                          Text(option.getDisplayName(t)),
+                          if (isSelected && option != _SortOption.none) ...[
+                            const SizedBox(width: 8),
+                            Icon(
+                              _sortAscending
+                                  ? Icons.arrow_upward
+                                  : Icons.arrow_downward,
+                              size: 16,
+                            ),
+                          ],
+                        ],
+                      ),
+                    );
+                  }).toList();
+                },
               ),
-          ],
-        ),
-        children: [
-          Column(
-            children: lists.asMap().entries.map((entry) {
-              final index = entry.key;
-              final list = entry.value;
-              return _buildListCard(
-                list,
-                t,
-              ).animate().fadeIn(duration: 300.ms, delay: (100 * index).ms);
-            }).toList(),
+            ],
           ),
-        ],
+          filled: true,
+          fillColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(24),
+            borderSide: BorderSide.none,
+          ),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+        ),
       ),
     );
   }
 
-  Widget _buildListCard(StudyList list, Translations t) {
+  Widget _buildListTile(StudyList list, Translations t, {bool fade = false}) {
     final colorScheme = Theme.of(context).colorScheme;
     final isSelected = _selectedListIds.contains(list.id);
 
-    return Hero(
-      key: ValueKey(list.id),
-      tag: list.id,
-      child: Card(
-        margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
-        color: Theme.of(context).colorScheme.secondaryContainer.withAlpha(76),
-        child: Material(
-          type: MaterialType.transparency,
-          child: ListTile(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12.0),
-            ),
-            leading: _isSelectMode
-                ? Checkbox(
+    final card = Card(
+      margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+      elevation: isSelected ? 2 : 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: isSelected
+            ? BorderSide(color: colorScheme.primary, width: 2)
+            : BorderSide.none,
+      ),
+      color: isSelected
+          ? colorScheme.primaryContainer.withAlpha(50)
+          : colorScheme.surfaceContainerLow,
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: () {
+          if (_isSelectMode) {
+            _onListSelected(list.id, !isSelected);
+          } else {
+            ref.read(activeStudyListIdProvider.notifier).set(list.id);
+            context.router.push(const ModeSelectionRoute());
+            list.lastOpenedAt = DateTime.now();
+            ref.read(databaseServiceProvider).saveStudyList(list).ignore();
+          }
+        },
+        onLongPress: () {
+          if (!_isSelectMode) {
+            _toggleSelectMode();
+            _onListSelected(list.id, true);
+          }
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Row(
+            children: [
+              if (_isSelectMode)
+                Padding(
+                  padding: const EdgeInsets.only(right: 12),
+                  child: Checkbox(
                     value: isSelected,
                     onChanged: (val) => _onListSelected(list.id, val),
-                  )
-                : const Icon(Icons.article_outlined),
-            onTap: () {
-              if (_isSelectMode) {
-                _onListSelected(list.id, !isSelected);
-              } else {
-                ref.read(activeStudyListIdProvider.notifier).set(list.id);
-                context.router.push(const ModeSelectionRoute());
-                list.lastOpenedAt = DateTime.now();
-                ref.read(databaseServiceProvider).saveStudyList(list).ignore();
-              }
-            },
-            title: Text(
-              list.name,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-            subtitle: Text(t.startScreen.termCount(count: list.terms.length)),
-            trailing: _isSelectMode
-                ? null
-                : PopupMenuButton<_ListItemMenuAction>(
-                    onSelected: (action) {
-                      switch (action) {
-                        case _ListItemMenuAction.rename:
-                          _showRenameDialog(context, list);
-                          break;
-                        case _ListItemMenuAction.move:
-                          _showMoveDialog([list.id]);
-                          break;
-                        case _ListItemMenuAction.delete:
-                          ref
-                              .read(databaseServiceProvider)
-                              .deleteStudyList(list.id);
-                          break;
-                      }
-                    },
-                    itemBuilder: (context) => [
-                      PopupMenuItem(
-                        value: _ListItemMenuAction.rename,
-                        child: Text(t.startScreen.renameListDialog.rename),
-                      ),
-                      PopupMenuItem(
-                        value: _ListItemMenuAction.move,
-                        child: Text(t.loadListScreen.move),
-                      ),
-                      const PopupMenuDivider(),
-                      PopupMenuItem(
-                        value: _ListItemMenuAction.delete,
-                        child: Text(
-                          t.general.delete,
-                          style: TextStyle(color: colorScheme.error),
-                        ),
-                      ),
-                    ],
                   ),
+                )
+              else
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: colorScheme.primaryContainer,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.article_outlined,
+                    color: colorScheme.onPrimaryContainer,
+                    size: 20,
+                  ),
+                ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      list.name,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      t.startScreen.termCount(count: list.terms.length),
+                      style: TextStyle(color: colorScheme.onSurfaceVariant),
+                    ),
+                  ],
+                ),
+              ),
+              if (!_isSelectMode)
+                PopupMenuButton<_ListItemMenuAction>(
+                  onSelected: (action) {
+                    switch (action) {
+                      case _ListItemMenuAction.rename:
+                        _showRenameDialog(context, list);
+                        break;
+                      case _ListItemMenuAction.move:
+                        _showMoveDialog([list.id]);
+                        break;
+                      case _ListItemMenuAction.delete:
+                        ref
+                            .read(databaseServiceProvider)
+                            .deleteStudyList(list.id);
+                        break;
+                    }
+                  },
+                  itemBuilder: (context) => [
+                    PopupMenuItem(
+                      value: _ListItemMenuAction.rename,
+                      child: Row(
+                        children: [
+                          const Icon(Icons.edit_outlined, size: 20),
+                          const SizedBox(width: 12),
+                          Text(t.startScreen.renameListDialog.rename),
+                        ],
+                      ),
+                    ),
+                    PopupMenuItem(
+                      value: _ListItemMenuAction.move,
+                      child: Row(
+                        children: [
+                          const Icon(Icons.drive_file_move_outline, size: 20),
+                          const SizedBox(width: 12),
+                          Text(t.loadListScreen.move),
+                        ],
+                      ),
+                    ),
+                    const PopupMenuDivider(),
+                    PopupMenuItem(
+                      value: _ListItemMenuAction.delete,
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.delete_outline,
+                            color: colorScheme.error,
+                            size: 20,
+                          ),
+                          const SizedBox(width: 12),
+                          Text(
+                            t.general.delete,
+                            style: TextStyle(color: colorScheme.error),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+            ],
           ),
+        ),
+      ),
+    );
+
+    return fade ? card.animate().fadeIn(duration: 300.ms) : card;
+  }
+
+  Widget _buildGroupTile(
+    String title,
+    String? groupId,
+    List<StudyList> lists,
+    Translations t,
+  ) {
+    final bool isUngrouped = groupId == null;
+    final String uniqueKey = groupId ?? 'ungrouped';
+    final bool isExpanded = _expandedGroupIds.contains(uniqueKey);
+
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+      elevation: 0,
+      color: Theme.of(context).colorScheme.surface,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(
+          color: Theme.of(context).colorScheme.outlineVariant,
+          width: 1,
+        ),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Theme(
+        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+        child: ExpansionTile(
+          key: PageStorageKey(uniqueKey),
+          initiallyExpanded: isExpanded,
+          onExpansionChanged: (expanded) {
+            setState(() {
+              if (expanded) {
+                _expandedGroupIds.add(uniqueKey);
+              } else {
+                _expandedGroupIds.remove(uniqueKey);
+              }
+            });
+          },
+          controlAffinity: ListTileControlAffinity.leading,
+          title: Row(
+            children: [
+              Text(
+                title,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primaryContainer,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  lists.length.toString(),
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: Theme.of(context).colorScheme.onPrimaryContainer,
+                  ),
+                ),
+              ),
+              const Spacer(),
+              if (!isUngrouped && !_isSelectMode)
+                PopupMenuButton<_GroupMenuAction>(
+                  onSelected: (action) async {
+                    final group = ref
+                        .read(studyGroupsProvider)
+                        .value!
+                        .firstWhere((g) => g.id == groupId);
+
+                    if (action == _GroupMenuAction.rename) {
+                      _showRenameGroupDialog(group);
+                    } else if (action == _GroupMenuAction.delete) {
+                      _handleGroupDelete(group);
+                    }
+                  },
+                  itemBuilder: (context) => [
+                    PopupMenuItem(
+                      value: _GroupMenuAction.rename,
+                      child: Row(
+                        children: [
+                          const Icon(Icons.edit_outlined, size: 20),
+                          const SizedBox(width: 12),
+                          Text(t.startScreen.renameListDialog.rename),
+                        ],
+                      ),
+                    ),
+                    PopupMenuItem(
+                      value: _GroupMenuAction.delete,
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.delete_outline,
+                            color: Theme.of(context).colorScheme.error,
+                            size: 20,
+                          ),
+                          const SizedBox(width: 12),
+                          Text(
+                            t.general.delete,
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.error,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+            ],
+          ),
+          children: lists.map((list) => _buildListTile(list, t)).toList(),
         ),
       ),
     );
   }
 
-  List<StudyList> _getSortedLists(List<StudyList> lists) {
-    List<StudyList> processedLists = List.from(lists);
+  List<StudyList> _processLists(List<StudyList> allLists) {
+    List<StudyList> result = List.from(allLists);
+    final query = _searchController.text.trim().toLowerCase();
 
-    final searchQuery = _searchController.text.toLowerCase();
-    if (searchQuery.isNotEmpty) {
-      processedLists = processedLists
-          .where((list) => list.name.toLowerCase().contains(searchQuery))
+    if (query.isNotEmpty) {
+      result = result
+          .where((l) => l.name.toLowerCase().contains(query))
           .toList();
     }
 
-    if (_currentSort == _SortOption.custom) {
-      return processedLists;
+    if (_currentSort != _SortOption.none) {
+      result.sort((a, b) {
+        switch (_currentSort) {
+          case _SortOption.name:
+            return a.name.toLowerCase().compareTo(b.name.toLowerCase());
+          case _SortOption.lastOpened:
+            final dateA = a.lastOpenedAt ?? DateTime(1970);
+            final dateB = b.lastOpenedAt ?? DateTime(1970);
+            return dateA.compareTo(dateB);
+          case _SortOption.createdAt:
+            return a.createdAt.compareTo(b.createdAt);
+          case _SortOption.listLength:
+            return a.terms.length.compareTo(b.terms.length);
+          case _SortOption.none:
+            return 0;
+        }
+      });
+      if (!_sortAscending) {
+        result = result.reversed.toList();
+      }
     }
 
-    Comparator<StudyList> comparator;
-    switch (_currentSort) {
-      case _SortOption.name:
-        comparator = (a, b) =>
-            a.name.toLowerCase().compareTo(b.name.toLowerCase());
-        break;
-      case _SortOption.lastOpened:
-        comparator = (a, b) => (b.lastOpenedAt ?? DateTime(1970)).compareTo(
-          a.lastOpenedAt ?? DateTime(1970),
-        );
-        break;
-      case _SortOption.createdAt:
-        comparator = (a, b) => b.createdAt.compareTo(a.createdAt);
-        break;
-      case _SortOption.listLength:
-        comparator = (a, b) => b.terms.length.compareTo(a.terms.length);
-        break;
-      case _SortOption.custom:
-        return processedLists;
-    }
-
-    processedLists.sort(comparator);
-    return _isSortAscending ? processedLists : processedLists.reversed.toList();
+    return result;
   }
 
-  Widget _buildSortedOrSearchedListView(List<StudyList> lists, Translations t) {
-    final sortedLists = _getSortedLists(lists);
+  Widget _buildGroupedView(
+    List<StudyList> allLists,
+    List<StudyGroup> groups,
+    Translations t,
+  ) {
+    final grouped = allLists.groupListsBy((l) => l.groupId);
+    final sortedGroups = List.from(groups)
+      ..sort((a, b) => a.name.compareTo(b.name));
 
-    if (sortedLists.isEmpty) {
-      return Center(child: Text(t.loadListScreen.noMatches));
+    return ListView(
+      padding: const EdgeInsets.only(bottom: 80),
+      children: [
+        if (grouped[null]?.isNotEmpty ?? false)
+          _buildGroupTile(
+            t.loadListScreen.ungrouped,
+            null,
+            grouped[null]!,
+            t,
+          ).animate().fadeIn(duration: 300.ms),
+        ...sortedGroups.map((group) {
+          final groupLists = grouped[group.id] ?? [];
+          return _buildGroupTile(
+            group.name,
+            group.id,
+            groupLists,
+            t,
+          ).animate().fadeIn(duration: 300.ms);
+        }),
+      ],
+    );
+  }
+
+  Widget _buildFlatView(List<StudyList> processedLists, Translations t) {
+    if (processedLists.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.search_off,
+              size: 48,
+              color: Theme.of(context).disabledColor,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              t.loadListScreen.noMatches,
+              style: TextStyle(color: Theme.of(context).disabledColor),
+            ),
+          ],
+        ),
+      );
     }
 
-    return ImplicitlyAnimatedList<StudyList>(
-      padding: const EdgeInsets.symmetric(horizontal: 6),
-      items: sortedLists,
-      areItemsTheSame: (a, b) => a.id == b.id,
-      itemBuilder: (context, animation, item, index) {
-        return SizeFadeTransition(
-          animation: animation,
-          child: _buildListCard(item, t),
-        );
-      },
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: Row(
+            children: [
+              Text(
+                "${processedLists.length} results",
+                style: Theme.of(
+                  context,
+                ).textTheme.labelMedium?.copyWith(fontWeight: FontWeight.bold),
+              ),
+              const Spacer(),
+              if (_currentSort != _SortOption.none)
+                Text(
+                  "${_currentSort.getDisplayName(t)} (${_sortAscending ? 'Asc' : 'Desc'})",
+                  style: Theme.of(context).textTheme.labelSmall,
+                ),
+            ],
+          ),
+        ),
+        Expanded(
+          child: ImplicitlyAnimatedList<StudyList>(
+            padding: const EdgeInsets.only(bottom: 80),
+            items: processedLists,
+            areItemsTheSame: (a, b) => a.id == b.id,
+            itemBuilder: (context, animation, item, index) {
+              return SizeFadeTransition(
+                animation: animation,
+                child: _buildListTile(item, t),
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 
   @override
   Widget build(BuildContext context) {
     final t = Translations.of(context);
+
     final isSearching = _searchController.text.isNotEmpty;
-    final isCustomSort = _currentSort == _SortOption.custom;
-    final showGroupedView = !isSearching && isCustomSort;
+    final isSorting = _currentSort != _SortOption.none;
+    final isFlatMode = isSearching || isSorting;
 
     return Scaffold(
       appBar: _buildAppBar(context, t),
       body: SafeArea(
         child: CenteredView(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(20.0, 8.0, 20.0, 20.0),
-            child: Column(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 8.0),
-                  child: TextField(
-                    controller: _searchController,
-                    decoration: InputDecoration(
-                      hintText: t.loadListScreen.searchHint,
-                      prefixIcon: const Icon(Icons.search),
-                      border: const OutlineInputBorder(),
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                      ),
-                    ),
-                  ),
-                ),
-                Card(
-                  margin: const EdgeInsets.only(bottom: 8.0),
-                  color: Theme.of(
-                    context,
-                  ).colorScheme.secondaryContainer.withAlpha(76),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12.0,
-                      vertical: 4.0,
-                    ),
-                    child: Wrap(
-                      alignment: WrapAlignment.spaceBetween,
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      spacing: 8.0,
-                      runSpacing: 4.0,
-                      children: [
-                        Wrap(
-                          crossAxisAlignment: WrapCrossAlignment.center,
-                          children: [
-                            Text(
-                              t.loadListScreen.sortLabel,
-                              style: Theme.of(context).textTheme.labelLarge,
-                            ),
-                            const SizedBox(width: 8),
-                            DropdownButtonHideUnderline(
-                              child: DropdownButton<_SortOption>(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 10,
+          child: Column(
+            children: [
+              _buildSearchBar(context, t),
+              Expanded(
+                child: Consumer(
+                  builder: (context, ref, child) {
+                    final listsAsync = ref.watch(studyListsProvider);
+                    final groupsAsync = ref.watch(studyGroupsProvider);
+
+                    return listsAsync.when(
+                      data: (allLists) {
+                        return groupsAsync.when(
+                          data: (groups) {
+                            if (allLists.isEmpty) {
+                              return Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.folder_open,
+                                      size: 48,
+                                      color: Theme.of(context).disabledColor,
+                                    ),
+                                    const SizedBox(height: 16),
+                                    Text(
+                                      t.startScreen.noLists,
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.titleMedium,
+                                    ),
+                                  ],
                                 ),
-                                focusColor: Colors.transparent,
-                                value: _currentSort,
-                                items: _SortOption.values
-                                    .map(
-                                      (option) => DropdownMenuItem(
-                                        value: option,
-                                        child: Text(option.getDisplayName(t)),
-                                      ),
-                                    )
-                                    .toList(),
-                                onChanged: _onSortChanged,
-                              ),
-                            ),
-                            if (_currentSort != _SortOption.custom)
-                              IconButton(
-                                icon: AnimatedSwitcher(
-                                  duration: const Duration(milliseconds: 300),
-                                  transitionBuilder: (child, animation) {
-                                    return ScaleTransition(
-                                      scale: animation,
-                                      child: child,
-                                    );
-                                  },
-                                  child: Icon(
-                                    _isSortAscending
-                                        ? Icons.arrow_upward
-                                        : Icons.arrow_downward,
-                                    key: ValueKey<bool>(_isSortAscending),
-                                  ),
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    _isSortAscending = !_isSortAscending;
-                                  });
-                                },
-                              ),
-                          ],
-                        ),
-                        if (!_isSelectMode)
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 4.0),
-                            child: TextButton(
-                              onPressed: _toggleSelectMode,
-                              child: Text(t.loadListScreen.select),
+                              );
+                            }
+
+                            if (isFlatMode) {
+                              final processed = _processLists(allLists);
+                              return _buildFlatView(processed, t);
+                            } else {
+                              return _buildGroupedView(allLists, groups, t);
+                            }
+                          },
+                          loading: () =>
+                              const Center(child: CircularProgressIndicator()),
+                          error: (e, s) => Center(
+                            child: Text(
+                              t.general.genericError(error: e.toString()),
                             ),
                           ),
-                      ],
-                    ),
-                  ),
+                        );
+                      },
+                      loading: () =>
+                          const Center(child: CircularProgressIndicator()),
+                      error: (e, s) => Center(
+                        child: Text(
+                          t.general.genericError(error: e.toString()),
+                        ),
+                      ),
+                    );
+                  },
                 ),
-                Expanded(
-                  child: Consumer(
-                    builder: (context, ref, child) {
-                      final listsAsync = ref.watch(studyListsProvider);
-                      final groupsAsync = ref.watch(studyGroupsProvider);
-
-                      return listsAsync.when(
-                        data: (lists) {
-                          return groupsAsync.when(
-                            data: (groups) {
-                              if (lists.isEmpty) {
-                                return Center(
-                                  child: Text(t.startScreen.noLists),
-                                );
-                              }
-                              return AnimatedSwitcher(
-                                duration: const Duration(milliseconds: 500),
-                                child: showGroupedView
-                                    ? _buildGroupedListView(lists, groups, t)
-                                    : _buildSortedOrSearchedListView(lists, t),
-                              );
-                            },
-                            loading: () => const Center(
-                              child: CircularProgressIndicator(),
-                            ),
-                            error: (err, stack) {
-                              _log.severe("Error loading groups", err, stack);
-                              return Center(
-                                child: Text(
-                                  t.general.genericError(error: err.toString()),
-                                ),
-                              );
-                            },
-                          );
-                        },
-                        loading: () =>
-                            const Center(child: CircularProgressIndicator()),
-                        error: (err, stack) {
-                          _log.severe("Error loading lists", err, stack);
-                          return Center(
-                            child: Text(
-                              t.general.genericError(error: err.toString()),
-                            ),
-                          );
-                        },
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
-      bottomNavigationBar: _isSelectMode
-          ? _buildBottomActionBar(context, t)
-          : null,
-      floatingActionButton: !_isSelectMode && showGroupedView
-          ? _buildFab(context, t)
-          : null,
     );
   }
 }
