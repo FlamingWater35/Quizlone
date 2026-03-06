@@ -167,30 +167,35 @@ class _FlashcardViewState extends ConsumerState<_FlashcardView>
     return Column(
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
               child: OutlinedButton.icon(
                 icon: const Icon(Icons.arrow_back),
                 label: Text(t.general.previous),
                 onPressed: canGoPrev ? notifier.previousCard : null,
+                style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                ),
               ),
             ),
             const SizedBox(width: 16),
             Expanded(
-              child: OutlinedButton.icon(
+              child: FilledButton.icon(
                 icon: const Icon(Icons.arrow_forward),
                 label: Text(t.general.next),
                 onPressed: canGoNext ? notifier.nextCard : null,
+                style: FilledButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                ),
               ),
             ),
           ],
         ),
-        const Divider(height: 24),
+        const SizedBox(height: 32),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            IconButton(
+            IconButton.filledTonal(
               icon: const Icon(Icons.shuffle),
               tooltip: t.flashcardScreen.shuffle,
               onPressed: () async {
@@ -200,10 +205,9 @@ class _FlashcardViewState extends ConsumerState<_FlashcardView>
                   _shuffleController.reset();
                 }
               },
-              iconSize: 28,
             ),
-            const SizedBox(width: 40),
-            IconButton(
+            const SizedBox(width: 32),
+            IconButton.filledTonal(
               icon: const Icon(Icons.restart_alt),
               tooltip: t.flashcardScreen.restart,
               onPressed: () async {
@@ -213,7 +217,6 @@ class _FlashcardViewState extends ConsumerState<_FlashcardView>
                   _restartController.reset();
                 }
               },
-              iconSize: 28,
             ),
           ],
         ),
@@ -303,6 +306,10 @@ class _FlashcardViewState extends ConsumerState<_FlashcardView>
             return Center(child: Text(t.flashcardScreen.noCards));
           }
 
+          final progressValue = state.displayTerms.isEmpty
+              ? 0.0
+              : (state.currentIndex + 1) / state.displayTerms.length;
+
           return CenteredView(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(16.0),
@@ -312,7 +319,15 @@ class _FlashcardViewState extends ConsumerState<_FlashcardView>
                     state.currentProgress,
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 8),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: LinearProgressIndicator(
+                      value: progressValue,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
                   GestureDetector(
                     onHorizontalDragEnd: (details) {
                       if (details.primaryVelocity != null) {
@@ -329,99 +344,83 @@ class _FlashcardViewState extends ConsumerState<_FlashcardView>
                         flashcardNotifier.flipCard();
                       }
                     },
-                    child: Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          children: [
-                            AnimatedBuilder(
-                              animation: Listenable.merge([
-                                _shuffleController,
-                                _restartController,
-                              ]),
-                              builder: (context, child) {
-                                final restartOffset =
-                                    Tween<Offset>(
-                                      begin: Offset.zero,
-                                      end: const Offset(1.5, 0.0),
-                                    ).animate(
-                                      CurvedAnimation(
-                                        parent: _restartController,
-                                        curve: Curves.easeIn,
-                                      ),
-                                    );
-
-                                final shuffleVal = _shuffleController.value;
-                                final shuffleAngle = shuffleVal * 2 * pi;
-                                final shuffleScale = 1 - sin(shuffleVal * pi);
-
-                                return Transform.translate(
-                                  offset: restartOffset.value,
-                                  child: Transform.scale(
-                                    scale: shuffleScale.abs(),
-                                    child: Transform.rotate(
-                                      angle: shuffleAngle,
-                                      child: child,
-                                    ),
-                                  ),
-                                );
-                              },
-                              child: AnimatedSwitcher(
-                                duration: const Duration(milliseconds: 400),
-                                transitionBuilder:
-                                    (
-                                      Widget child,
-                                      Animation<double> animation,
-                                    ) {
-                                      final curvedAnimation = CurvedAnimation(
-                                        parent: animation,
-                                        curve: Curves.easeInOut,
-                                      );
-
-                                      final offsetAnimation = Tween<Offset>(
-                                        begin: _slideFromRight
-                                            ? const Offset(0.3, 0.0)
-                                            : const Offset(-0.3, 0.0),
-                                        end: Offset.zero,
-                                      ).animate(curvedAnimation);
-
-                                      final scaleAnimation = Tween<double>(
-                                        begin: 0.8,
-                                        end: 1.0,
-                                      ).animate(curvedAnimation);
-
-                                      return FadeTransition(
-                                        opacity: curvedAnimation,
-                                        child: ScaleTransition(
-                                          scale: scaleAnimation,
-                                          child: SlideTransition(
-                                            position: offsetAnimation,
-                                            child: child,
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                child: FlashcardWidget(
-                                  key: ValueKey(state.currentIndex),
-                                  term: state.currentCard!,
-                                  isFlipped: state.isFlipped,
-                                  onTap: flashcardNotifier.flipCard,
-                                  startSide: state.startSide,
-                                  height: 300,
-                                ),
+                    child: AnimatedBuilder(
+                      animation: Listenable.merge([
+                        _shuffleController,
+                        _restartController,
+                      ]),
+                      builder: (context, child) {
+                        final restartOffset =
+                            Tween<Offset>(
+                              begin: Offset.zero,
+                              end: const Offset(1.5, 0.0),
+                            ).animate(
+                              CurvedAnimation(
+                                parent: _restartController,
+                                curve: Curves.easeIn,
                               ),
+                            );
+
+                        final shuffleVal = _shuffleController.value;
+                        final shuffleAngle = shuffleVal * 2 * pi;
+                        final shuffleScale = 1 - sin(shuffleVal * pi);
+
+                        return Transform.translate(
+                          offset: restartOffset.value,
+                          child: Transform.scale(
+                            scale: shuffleScale.abs(),
+                            child: Transform.rotate(
+                              angle: shuffleAngle,
+                              child: child,
                             ),
-                            const SizedBox(height: 24),
-                            _buildNavigationControls(
-                              context,
-                              flashcardNotifier,
-                              state,
-                            ),
-                          ],
+                          ),
+                        );
+                      },
+                      child: AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 400),
+                        transitionBuilder:
+                            (Widget child, Animation<double> animation) {
+                              final curvedAnimation = CurvedAnimation(
+                                parent: animation,
+                                curve: Curves.easeInOut,
+                              );
+
+                              final offsetAnimation = Tween<Offset>(
+                                begin: _slideFromRight
+                                    ? const Offset(0.3, 0.0)
+                                    : const Offset(-0.3, 0.0),
+                                end: Offset.zero,
+                              ).animate(curvedAnimation);
+
+                              final scaleAnimation = Tween<double>(
+                                begin: 0.8,
+                                end: 1.0,
+                              ).animate(curvedAnimation);
+
+                              return FadeTransition(
+                                opacity: curvedAnimation,
+                                child: ScaleTransition(
+                                  scale: scaleAnimation,
+                                  child: SlideTransition(
+                                    position: offsetAnimation,
+                                    child: child,
+                                  ),
+                                ),
+                              );
+                            },
+                        child: FlashcardWidget(
+                          key: ValueKey(state.currentIndex),
+                          term: state.currentCard!,
+                          isFlipped: state.isFlipped,
+                          onTap: flashcardNotifier.flipCard,
+                          startSide: state.startSide,
+                          height: 300,
                         ),
                       ),
                     ),
                   ),
+                  const SizedBox(height: 24),
+                  _buildNavigationControls(context, flashcardNotifier, state),
                 ],
               ),
             ),

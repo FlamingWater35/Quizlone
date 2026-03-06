@@ -268,29 +268,34 @@ class _MatchLeaderboardScreenState extends ConsumerState<MatchLeaderboardScreen>
                       ),
                     ),
                     const SizedBox(height: 24),
-                    FilledButton.icon(
-                      icon: const Icon(Icons.restart_alt),
-                      label: Text(t.matchScreen.playAgain),
-                      onPressed: () {
-                        ref.invalidate(matchControllerProvider);
-                        context.router.replace(const MatchRoute());
-                      },
-                    ),
-                    const SizedBox(height: 12),
-                    TextButton(
-                      onPressed: () {
-                        if (context.router.canPop()) {
-                          context.router.popUntilRouteWithName(
-                            ModeSelectionRoute.name,
-                          );
-                        } else {
-                          context.router.replaceAll([
-                            const StartRoute(),
-                            const ModeSelectionRoute(),
-                          ]);
-                        }
-                      },
-                      child: Text(t.matchScreen.backToOptions),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        OutlinedButton(
+                          onPressed: () {
+                            if (context.router.canPop()) {
+                              context.router.popUntilRouteWithName(
+                                ModeSelectionRoute.name,
+                              );
+                            } else {
+                              context.router.replaceAll([
+                                const StartRoute(),
+                                const ModeSelectionRoute(),
+                              ]);
+                            }
+                          },
+                          child: Text(t.matchScreen.backToOptions),
+                        ),
+                        const SizedBox(width: 16),
+                        FilledButton.icon(
+                          icon: const Icon(Icons.restart_alt),
+                          label: Text(t.matchScreen.playAgain),
+                          onPressed: () {
+                            ref.invalidate(matchControllerProvider);
+                            context.router.replace(const MatchRoute());
+                          },
+                        ),
+                      ],
                     ),
                   ],
                 ),

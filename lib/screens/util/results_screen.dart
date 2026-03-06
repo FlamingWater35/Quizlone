@@ -352,21 +352,32 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
                       ),
                     ],
 
-                    const SizedBox(height: 32),
+                    const SizedBox(height: 48),
 
-                    FilledButton.icon(
-                      icon: const Icon(Icons.restart_alt),
-                      label: Text(t.resultsScreen.retryTest),
-                      style: FilledButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                      ),
-                      onPressed: () {
-                        testNotifier.restartTest();
-                        context.router.replace(const TestModeRoute());
-                      },
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        OutlinedButton(
+                          onPressed: () {
+                            context.router.popUntilRouteWithName(
+                              ModeSelectionRoute.name,
+                            );
+                          },
+                          child: Text(t.modeSelectionScreen.title),
+                        ),
+                        const SizedBox(width: 16),
+                        FilledButton.icon(
+                          icon: const Icon(Icons.restart_alt),
+                          label: Text(t.resultsScreen.retryTest),
+                          onPressed: () {
+                            testNotifier.restartTest();
+                            context.router.replace(const TestModeRoute());
+                          },
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 12),
-                    OutlinedButton.icon(
+                    TextButton.icon(
                       icon: const Icon(Icons.style_outlined),
                       label: Text(t.resultsScreen.reviewFlashcards),
                       onPressed: () {
@@ -375,17 +386,6 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
                             .refreshWithOptions();
                         context.router.replace(const FlashcardRoute());
                       },
-                    ),
-                    const SizedBox(height: 24),
-                    Center(
-                      child: TextButton(
-                        onPressed: () {
-                          context.router.popUntilRouteWithName(
-                            ModeSelectionRoute.name,
-                          );
-                        },
-                        child: Text(t.modeSelectionScreen.title),
-                      ),
                     ),
                   ],
                 ),

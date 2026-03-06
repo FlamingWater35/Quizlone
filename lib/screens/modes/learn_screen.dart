@@ -158,34 +158,49 @@ class _LearnViewState extends ConsumerState<_LearnView> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                Icons.celebration_outlined,
-                size: 80,
-                color: theme.colorScheme.primary,
-              ),
-              const SizedBox(height: 24),
               Text(
-                state.progressMessage,
-                style: theme.textTheme.headlineSmall,
+                t.learnScreen.progress.sessionComplete,
+                style: theme.textTheme.headlineMedium,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 40),
-              FilledButton.icon(
-                icon: const Icon(Icons.restart_alt),
-                onPressed: notifier.refreshAndRestart,
-                label: Text(t.learnScreen.restartSession),
-                style: FilledButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 12,
-                  ),
-                  textStyle: theme.textTheme.titleMedium,
-                ),
+              Icon(
+                Icons.check_circle_outline,
+                size: 80,
+                color: theme.colorScheme.primary,
               ),
-              const SizedBox(height: 12),
-              TextButton(
-                onPressed: () => context.router.pop(),
-                child: Text(t.learnScreen.backToOptions),
+              const SizedBox(height: 16),
+              Text(
+                state.progressMessage,
+                style: theme.textTheme.bodyLarge,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 60),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  OutlinedButton(
+                    onPressed: () => context.router.pop(),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 12,
+                      ),
+                    ),
+                    child: Text(t.learnScreen.backToOptions),
+                  ),
+                  const SizedBox(width: 16),
+                  FilledButton(
+                    onPressed: notifier.refreshAndRestart,
+                    style: FilledButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 12,
+                      ),
+                    ),
+                    child: Text(t.learnScreen.restartSession),
+                  ),
+                ],
               ),
             ],
           ),
@@ -432,25 +447,44 @@ class _LearnViewState extends ConsumerState<_LearnView> {
                         onPressed: () => _onSubmit(learnNotifier, state),
                         label: Text(t.general.submit),
                         style: FilledButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          padding: const EdgeInsets.symmetric(vertical: 16),
                         ),
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 12),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          TextButton.icon(
-                            icon: const Icon(Icons.lightbulb_outline, size: 18),
-                            label: Text(t.learnScreen.hint),
-                            onPressed: learnNotifier.showHint,
-                          ),
-                          TextButton.icon(
-                            icon: const Icon(
-                              Icons.skip_next_outlined,
-                              size: 18,
+                          Expanded(
+                            child: TextButton.icon(
+                              icon: const Icon(
+                                Icons.lightbulb_outline,
+                                size: 18,
+                              ),
+                              label: Text(t.learnScreen.hint),
+                              onPressed: learnNotifier.showHint,
+                              style: TextButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 16,
+                                ),
+                              ),
                             ),
-                            label: Text(t.learnScreen.skip),
-                            onPressed: learnNotifier.skipQuestionAndShowAnswer,
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: TextButton.icon(
+                              icon: const Icon(
+                                Icons.skip_next_outlined,
+                                size: 18,
+                              ),
+                              label: Text(t.learnScreen.skip),
+                              onPressed:
+                                  learnNotifier.skipQuestionAndShowAnswer,
+                              style: TextButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 16,
+                                ),
+                              ),
+                            ),
                           ),
                         ],
                       ),
