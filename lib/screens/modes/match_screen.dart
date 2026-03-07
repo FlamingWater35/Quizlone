@@ -50,7 +50,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: const WebAwareBackButton(),
+        leading: const WebAwareBackButton(fallback: ModeSelectionRoute()),
         title: Text(t.matchScreen.title),
         centerTitle: true,
       ),

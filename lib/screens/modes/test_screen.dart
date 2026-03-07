@@ -29,7 +29,7 @@ class _TestScreenState extends ConsumerState<TestScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: const WebAwareBackButton(),
+        leading: const WebAwareBackButton(fallback: ModeSelectionRoute()),
         title: Text(t.testScreen.title),
         centerTitle: true,
       ),

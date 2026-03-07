@@ -28,7 +28,7 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: const WebAwareBackButton(),
+        leading: const WebAwareBackButton(fallback: ModeSelectionRoute()),
         title: Text(t.learnScreen.title),
         centerTitle: true,
       ),
@@ -180,7 +180,9 @@ class _LearnViewState extends ConsumerState<_LearnView> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   OutlinedButton(
-                    onPressed: () => context.router.pop(),
+                    onPressed: () {
+                      context.router.navigate(const ModeSelectionRoute());
+                    },
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 24,

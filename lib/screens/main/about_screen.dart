@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
+import 'package:quizlone/routing/app_router.dart';
 import 'package:quizlone/widgets/centered_view.dart';
 import 'package:quizlone/widgets/web_aware_back_button.dart';
 
@@ -68,7 +69,7 @@ class _AboutScreenState extends State<AboutScreen>
 
     return Scaffold(
       appBar: AppBar(
-        leading: const WebAwareBackButton(),
+        leading: const WebAwareBackButton(fallback: StartRoute()),
         title: Text(t.drawer.about),
         centerTitle: true,
       ),

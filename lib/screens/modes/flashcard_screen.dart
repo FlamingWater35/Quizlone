@@ -32,7 +32,7 @@ class _FlashcardScreenState extends ConsumerState<FlashcardScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: const WebAwareBackButton(),
+        leading: const WebAwareBackButton(fallback: ModeSelectionRoute()),
         title: Text(t.flashcardScreen.title),
         centerTitle: true,
       ),

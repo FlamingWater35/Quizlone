@@ -408,7 +408,7 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
     }
 
     return AppBar(
-      leading: const WebAwareBackButton(),
+      leading: const WebAwareBackButton(fallback: StartRoute()),
       title: Text(t.loadListScreen.title),
       centerTitle: true,
       actions: [

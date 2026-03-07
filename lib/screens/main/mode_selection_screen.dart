@@ -34,9 +34,14 @@ class _ModeSelectionScreenState extends ConsumerState<ModeSelectionScreen> {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
+          tooltip: MaterialLocalizations.of(context).backButtonTooltip,
           onPressed: () {
-            ref.read(activeStudyListIdProvider.notifier).set(null);
-            context.router.replaceAll([const StartRoute()]);
+            final router = context.router;
+            if (router.canPop()) {
+              router.back();
+            } else {
+              router.replace(const StartRoute());
+            }
           },
         ),
         title: Text(t.modeSelectionScreen.title),

@@ -359,9 +359,7 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
                       children: [
                         OutlinedButton(
                           onPressed: () {
-                            context.router.popUntilRouteWithName(
-                              ModeSelectionRoute.name,
-                            );
+                            context.router.navigate(const ModeSelectionRoute());
                           },
                           child: Text(t.modeSelectionScreen.title),
                         ),

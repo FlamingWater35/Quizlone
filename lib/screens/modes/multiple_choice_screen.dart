@@ -24,7 +24,7 @@ class MultipleChoiceScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        leading: const WebAwareBackButton(),
+        leading: const WebAwareBackButton(fallback: ModeSelectionRoute()),
         title: Text(t.multipleChoiceScreen.title),
         centerTitle: true,
       ),
@@ -320,9 +320,7 @@ class _ResultsView extends ConsumerWidget {
               children: [
                 OutlinedButton(
                   onPressed: () {
-                    context.router.popUntilRouteWithName(
-                      ModeSelectionRoute.name,
-                    );
+                    context.router.navigate(const ModeSelectionRoute());
                   },
                   child: Text(t.multipleChoiceScreen.results.backToMenu),
                 ),

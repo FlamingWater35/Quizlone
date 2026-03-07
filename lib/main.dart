@@ -199,6 +199,12 @@ class MyApp extends ConsumerWidget {
                   ModeSelectionRoute(),
                   MatchRoute(),
                 ]);
+              } else if (deepLink.path.contains('/multiple-choice')) {
+                return const DeepLink([
+                  StartRoute(),
+                  ModeSelectionRoute(),
+                  MultipleChoiceRoute(),
+                ]);
               } else if (deepLink.path.contains('/results')) {
                 return const DeepLink([
                   StartRoute(),

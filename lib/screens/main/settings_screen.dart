@@ -10,6 +10,7 @@ import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
+import 'package:quizlone/routing/app_router.dart';
 import 'package:quizlone/services/migration_service.dart';
 import 'package:quizlone/widgets/error_snackbar.dart';
 import 'package:quizlone/widgets/web_aware_back_button.dart';
@@ -318,7 +319,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: const WebAwareBackButton(),
+        leading: const WebAwareBackButton(fallback: StartRoute()),
         title: Text(t.settingsScreen.title),
         centerTitle: true,
       ),

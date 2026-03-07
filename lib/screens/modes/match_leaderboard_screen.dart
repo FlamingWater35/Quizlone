@@ -273,16 +273,7 @@ class _MatchLeaderboardScreenState extends ConsumerState<MatchLeaderboardScreen>
                       children: [
                         OutlinedButton(
                           onPressed: () {
-                            if (context.router.canPop()) {
-                              context.router.popUntilRouteWithName(
-                                ModeSelectionRoute.name,
-                              );
-                            } else {
-                              context.router.replaceAll([
-                                const StartRoute(),
-                                const ModeSelectionRoute(),
-                              ]);
-                            }
+                            context.router.navigate(const ModeSelectionRoute());
                           },
                           child: Text(t.matchScreen.backToOptions),
                         ),
