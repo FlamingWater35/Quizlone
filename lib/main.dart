@@ -12,6 +12,7 @@ import 'package:quizlone/providers/core/auth_provider.dart';
 import 'package:quizlone/providers/core/core_providers.dart';
 import 'package:quizlone/providers/study/study_list_providers.dart';
 import 'package:quizlone/routing/app_router.dart';
+import 'package:quizlone/widgets/app_scaler.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'providers/core/settings_provider.dart';
@@ -165,12 +166,7 @@ class MyApp extends ConsumerWidget {
 
       themeMode: themeMode,
       builder: (context, child) {
-        return MediaQuery(
-          data: MediaQuery.of(
-            context,
-          ).copyWith(textScaler: TextScaler.linear(uiScale)),
-          child: child!,
-        );
+        return AppScaler(scale: uiScale, child: child!);
       },
       debugShowCheckedModeBanner: false,
       routerConfig: _appRouter.config(
