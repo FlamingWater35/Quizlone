@@ -70,6 +70,9 @@ class _MCGameView extends ConsumerWidget {
         final question = state.currentQuestion;
         if (question == null) return const SizedBox.shrink();
 
+        final options = question.options;
+        final rows = (options.length / 2).ceil();
+
         return CenteredView(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
@@ -97,7 +100,9 @@ class _MCGameView extends ConsumerWidget {
                   value: (state.currentIndex) / state.totalQuestions,
                   borderRadius: BorderRadius.circular(4),
                 ),
+
                 const Spacer(flex: 1),
+
                 Container(
                   padding: const EdgeInsets.all(24),
                   decoration: BoxDecoration(
@@ -111,31 +116,56 @@ class _MCGameView extends ConsumerWidget {
                     textAlign: TextAlign.center,
                   ),
                 ).animate(key: ValueKey(question)).fadeIn().scale(),
+
                 const Spacer(flex: 1),
+
                 Expanded(
                   flex: 4,
-                  child: GridView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          childAspectRatio: 1.4,
-                          crossAxisSpacing: 12,
-                          mainAxisSpacing: 12,
+                  child: Column(
+                    children: [
+                      for (int i = 0; i < rows; i++) ...[
+                        Expanded(
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Expanded(
+                                child: _OptionButton(
+                                  text: options[i * 2],
+                                  state: state,
+                                  onTap: () {
+                                    ref
+                                        .read(
+                                          multipleChoiceControllerProvider
+                                              .notifier,
+                                        )
+                                        .submitAnswer(options[i * 2]);
+                                  },
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              if (i * 2 + 1 < options.length)
+                                Expanded(
+                                  child: _OptionButton(
+                                    text: options[i * 2 + 1],
+                                    state: state,
+                                    onTap: () {
+                                      ref
+                                          .read(
+                                            multipleChoiceControllerProvider
+                                                .notifier,
+                                          )
+                                          .submitAnswer(options[i * 2 + 1]);
+                                    },
+                                  ),
+                                )
+                              else
+                                const Spacer(),
+                            ],
+                          ),
                         ),
-                    itemCount: question.options.length,
-                    itemBuilder: (context, index) {
-                      final option = question.options[index];
-                      return _OptionButton(
-                        text: option,
-                        state: state,
-                        onTap: () {
-                          ref
-                              .read(multipleChoiceControllerProvider.notifier)
-                              .submitAnswer(option);
-                        },
-                      );
-                    },
+                        if (i < rows - 1) const SizedBox(height: 12),
+                      ],
+                    ],
                   ),
                 ),
               ],
@@ -182,7 +212,6 @@ class _OptionButton extends StatelessWidget {
         textColor = colorScheme.onErrorContainer;
         borderSide = BorderSide(color: colorScheme.error, width: 2);
       } else {
-        // Dim other options
         textColor = colorScheme.onSurface.withAlpha(100);
       }
     }
@@ -194,6 +223,8 @@ class _OptionButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 300),
+          width: double.infinity,
+          height: double.infinity,
           decoration: BoxDecoration(
             color: cardColor,
             borderRadius: BorderRadius.circular(12),
