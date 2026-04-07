@@ -149,7 +149,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           params: SaveFileDialogParams(data: bytes, fileName: fileName),
         );
       } else {
-        savedPath = await FilePicker.platform.saveFile(
+        savedPath = await FilePicker.saveFile(
           dialogTitle: t.settingsScreen.exportDialog.saveFileTitle,
           fileName: fileName,
         );
@@ -198,7 +198,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
     if (confirm != true) return;
 
-    final result = await FilePicker.platform.pickFiles(
+    final result = await FilePicker.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['json'],
       withData: kIsWeb,
