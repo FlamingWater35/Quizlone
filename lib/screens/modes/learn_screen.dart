@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
@@ -167,19 +168,23 @@ class _LearnViewState extends ConsumerState<_LearnView>
                 t.learnScreen.progress.sessionComplete,
                 style: theme.textTheme.headlineMedium,
                 textAlign: TextAlign.center,
-              ),
+              ).animate().fadeIn(duration: 400.ms).slideY(begin: -0.2, end: 0),
               const SizedBox(height: 40),
               Icon(
                 Icons.check_circle_outline,
-                size: 80,
+                size: 100,
                 color: theme.colorScheme.primary,
+              ).animate().scale(
+                delay: 200.ms,
+                duration: 500.ms,
+                curve: Curves.elasticOut,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 24),
               Text(
                 state.progressMessage,
                 style: theme.textTheme.bodyLarge,
                 textAlign: TextAlign.center,
-              ),
+              ).animate(delay: 400.ms).fadeIn(),
               const SizedBox(height: 60),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -208,7 +213,7 @@ class _LearnViewState extends ConsumerState<_LearnView>
                     child: Text(t.learnScreen.restartSession),
                   ),
                 ],
-              ),
+              ).animate(delay: 600.ms).fadeIn().slideY(begin: 0.2, end: 0),
             ],
           ),
         ),
