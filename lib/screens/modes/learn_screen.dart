@@ -133,7 +133,8 @@ class _LearnViewState extends ConsumerState<_LearnView> {
   void initState() {
     super.initState();
     _answerController = TextEditingController();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+
+    Future.delayed(const Duration(milliseconds: 450), () {
       if (mounted) {
         _focusNode.requestFocus();
       }
@@ -266,7 +267,7 @@ class _LearnViewState extends ConsumerState<_LearnView> {
           mounted) {
         _answerController.clear();
 
-        WidgetsBinding.instance.addPostFrameCallback((_) {
+        Future.delayed(const Duration(milliseconds: 350), () {
           if (mounted) {
             _focusNode.requestFocus();
           }
@@ -376,7 +377,7 @@ class _LearnViewState extends ConsumerState<_LearnView> {
                           onChanged: learnNotifier.updateUserAnswer,
                           onSubmitted: (_) => _onSubmit(learnNotifier, state),
                           readOnly: questionState.answerSubmitted,
-                          autofocus: true,
+                          autofocus: false,
                         ),
                         const SizedBox(height: 20),
 
