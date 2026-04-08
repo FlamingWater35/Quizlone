@@ -1,8 +1,8 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-
 import '../models/enums/enums.dart';
 import '../models/term.dart';
+import '../services/smooth_scroll.dart';
 
 class FlashcardWidget extends StatefulWidget {
   const FlashcardWidget({
@@ -27,7 +27,9 @@ class FlashcardWidget extends StatefulWidget {
 class _FlashcardWidgetState extends State<FlashcardWidget>
     with SingleTickerProviderStateMixin {
   late Animation<double> _animation;
+  late SmoothScrollController _backScrollController;
   late AnimationController _controller;
+  late SmoothScrollController _frontScrollController;
 
   @override
   void didUpdateWidget(FlashcardWidget oldWidget) {
@@ -39,17 +41,26 @@ class _FlashcardWidgetState extends State<FlashcardWidget>
         _controller.reverse();
       }
     }
+    if (widget.term != oldWidget.term) {
+      _frontScrollController.jumpTo(0);
+      _backScrollController.jumpTo(0);
+    }
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    _frontScrollController.dispose();
+    _backScrollController.dispose();
     super.dispose();
   }
 
   @override
   void initState() {
     super.initState();
+    _frontScrollController = SmoothScrollController();
+    _backScrollController = SmoothScrollController();
+
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 400),
@@ -64,7 +75,14 @@ class _FlashcardWidgetState extends State<FlashcardWidget>
     }
   }
 
-  Widget _buildFace(String text, Color bgColor, Color textColor) {
+  Widget _buildFace(
+    String text,
+    Color bgColor,
+    Color textColor,
+    SmoothScrollController scrollController,
+  ) {
+    const double verticalInset = 16.0;
+
     return RepaintBoundary(
       child: Card(
         margin: EdgeInsets.zero,
@@ -76,15 +94,33 @@ class _FlashcardWidgetState extends State<FlashcardWidget>
         child: SizedBox(
           height: widget.height,
           width: double.infinity,
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(32.0),
-              child: Text(
-                text,
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  color: textColor,
-                  fontWeight: FontWeight.w500,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: verticalInset),
+            child: Scrollbar(
+              controller: scrollController,
+              thumbVisibility: true,
+              thickness: 6.0,
+              radius: const Radius.circular(10),
+              child: SingleChildScrollView(
+                controller: scrollController,
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: Container(
+                  constraints: BoxConstraints(
+                    minHeight: widget.height - (verticalInset * 2),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24.0,
+                    vertical: 16.0,
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    text,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      color: textColor,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -124,12 +160,14 @@ class _FlashcardWidgetState extends State<FlashcardWidget>
                       backText,
                       Theme.of(context).colorScheme.secondaryContainer,
                       Theme.of(context).colorScheme.onSecondaryContainer,
+                      _backScrollController,
                     ),
                   )
                 : _buildFace(
                     frontText,
                     Theme.of(context).colorScheme.primaryContainer,
                     Theme.of(context).colorScheme.onPrimaryContainer,
+                    _frontScrollController,
                   ),
           );
         },
