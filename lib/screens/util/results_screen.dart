@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
 import 'package:quizlone/routing/app_router.dart';
+import 'package:quizlone/services/smooth_scroll.dart';
 
 import '../../providers/controllers/flashcard_controller.dart';
 import '../../providers/controllers/test_controller.dart';
@@ -25,6 +26,13 @@ class ResultsScreen extends ConsumerStatefulWidget {
 
 class _ResultsScreenState extends ConsumerState<ResultsScreen> {
   bool _isLoadingHistory = false;
+  final _scrollController = SmoothScrollController();
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -87,6 +95,7 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
     final db = ref.read(databaseServiceProvider);
     final records = await db.getTestRecordsForList(activeId);
     final dateFormat = DateFormat.yMMMd().add_jm();
+    final dialogScrollController = SmoothScrollController();
 
     if (!mounted) return;
 
@@ -105,6 +114,7 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
                   ),
                 )
               : ListView.separated(
+                  controller: dialogScrollController,
                   shrinkWrap: true,
                   itemCount: records.length,
                   separatorBuilder: (_, _) => const Divider(),
@@ -234,6 +244,7 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
 
             return CenteredView(
               child: SingleChildScrollView(
+                controller: _scrollController,
                 padding: const EdgeInsets.all(24.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,

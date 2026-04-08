@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
 import 'package:quizlone/routing/app_router.dart';
+import 'package:quizlone/services/smooth_scroll.dart';
 import 'package:quizlone/widgets/web_aware_back_button.dart';
 
 import '../../models/enums/enums.dart';
@@ -128,7 +129,7 @@ class _TestViewState extends ConsumerState<_TestView> {
   @override
   void initState() {
     super.initState();
-    _scrollController = ScrollController();
+    _scrollController = SmoothScrollController();
   }
 
   void _initializeControllers(List<TestQuestion> questions) {

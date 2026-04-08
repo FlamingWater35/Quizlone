@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
 import 'package:quizlone/routing/app_router.dart';
+import 'package:quizlone/services/smooth_scroll.dart';
 import 'package:quizlone/widgets/web_aware_back_button.dart';
 
 import '../../providers/controllers/flashcard_controller.dart';
@@ -125,11 +126,13 @@ class _FlashcardViewState extends ConsumerState<_FlashcardView>
 
   final FocusNode _focusNode = FocusNode();
   late final AnimationController _restartController;
+  final _scrollController = SmoothScrollController();
   late final AnimationController _shuffleController;
   var _slideFromRight = true;
 
   @override
   void dispose() {
+    _scrollController.dispose();
     _focusNode.dispose();
     _shuffleController.dispose();
     _restartController.dispose();
@@ -312,6 +315,7 @@ class _FlashcardViewState extends ConsumerState<_FlashcardView>
 
           return CenteredView(
             child: SingleChildScrollView(
+              controller: _scrollController,
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [

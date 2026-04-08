@@ -12,6 +12,7 @@ import '../../models/study_list.dart';
 import '../../providers/study/study_list_providers.dart';
 import '../../providers/study/study_options_provider.dart';
 import '../../widgets/centered_view.dart';
+import 'package:quizlone/services/smooth_scroll.dart';
 
 final _log = Logger("ModeSelectionScreen");
 
@@ -25,6 +26,14 @@ class ModeSelectionScreen extends ConsumerStatefulWidget {
 }
 
 class _ModeSelectionScreenState extends ConsumerState<ModeSelectionScreen> {
+  final _scrollController = SmoothScrollController();
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final t = Translations.of(context);
@@ -89,8 +98,14 @@ class _ModeSelectionScreenState extends ConsumerState<ModeSelectionScreen> {
                       const double breakpoint = 650.0;
                       final isWide = constraints.maxWidth >= breakpoint;
                       return isWide
-                          ? _WideLayout(list: list)
-                          : _NarrowLayout(list: list);
+                          ? _WideLayout(
+                              list: list,
+                              controller: _scrollController,
+                            )
+                          : _NarrowLayout(
+                              list: list,
+                              controller: _scrollController,
+                            );
                     },
                   ),
                 ),
@@ -115,13 +130,15 @@ class _ModeSelectionScreenState extends ConsumerState<ModeSelectionScreen> {
 }
 
 class _NarrowLayout extends StatelessWidget {
-  const _NarrowLayout({required this.list});
+  const _NarrowLayout({required this.list, required this.controller});
 
+  final ScrollController controller;
   final StudyList list;
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      controller: controller,
       padding: const EdgeInsets.all(24.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -136,12 +153,15 @@ class _NarrowLayout extends StatelessWidget {
 }
 
 class _WideLayout extends StatelessWidget {
-  const _WideLayout({required this.list});
+  const _WideLayout({required this.list, required this.controller});
 
+  final ScrollController controller;
   final StudyList list;
 
   @override
   Widget build(BuildContext context) {
+    final actionScrollController = SmoothScrollController();
+
     return Padding(
       padding: const EdgeInsets.all(24.0),
       child: Row(
@@ -150,16 +170,18 @@ class _WideLayout extends StatelessWidget {
           Expanded(
             flex: 2,
             child: SingleChildScrollView(
+              controller: actionScrollController,
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: _ActionPanel(list: list, isWide: true),
             ),
           ),
           const SizedBox(width: 24),
-          const Expanded(
+          Expanded(
             flex: 3,
             child: SingleChildScrollView(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              child: _OptionsPanel(),
+              controller: controller,
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: const _OptionsPanel(),
             ),
           ),
         ],

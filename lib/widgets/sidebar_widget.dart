@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
+import 'package:quizlone/services/smooth_scroll.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../providers/core/auth_provider.dart';
@@ -20,11 +21,13 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
   final _passwordController = TextEditingController();
+  final _scrollController = SmoothScrollController();
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -273,6 +276,7 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
 
     return Drawer(
       child: ListView(
+        controller: _scrollController,
         padding: EdgeInsets.zero,
         children: <Widget>[
           DrawerHeader(

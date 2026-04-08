@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
 import 'package:quizlone/routing/app_router.dart';
+import 'package:quizlone/services/smooth_scroll.dart';
 import 'package:quizlone/widgets/centered_view.dart';
 import 'package:quizlone/widgets/web_aware_back_button.dart';
 
@@ -14,6 +15,14 @@ class ControlsScreen extends StatefulWidget {
 }
 
 class _ControlsScreenState extends State<ControlsScreen> {
+  final _scrollController = SmoothScrollController();
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final t = Translations.of(context);
@@ -30,7 +39,9 @@ class _ControlsScreenState extends State<ControlsScreen> {
               const double breakpoint = 600.0;
               final bool isWide = constraints.maxWidth >= breakpoint;
 
-              return isWide ? const _WideLayout() : const _NarrowLayout();
+              return isWide
+                  ? _WideLayout(controller: _scrollController)
+                  : _NarrowLayout(controller: _scrollController);
             },
           ),
         ),
@@ -40,12 +51,15 @@ class _ControlsScreenState extends State<ControlsScreen> {
 }
 
 class _NarrowLayout extends StatelessWidget {
-  const _NarrowLayout();
+  const _NarrowLayout({required this.controller});
+
+  final ScrollController controller;
 
   @override
   Widget build(BuildContext context) {
-    return const SingleChildScrollView(
-      padding: EdgeInsets.all(16.0),
+    return SingleChildScrollView(
+      controller: controller,
+      padding: const EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [_GesturesPanel(), SizedBox(height: 16), _KeyboardPanel()],
@@ -55,19 +69,24 @@ class _NarrowLayout extends StatelessWidget {
 }
 
 class _WideLayout extends StatelessWidget {
-  const _WideLayout();
+  const _WideLayout({required this.controller});
+
+  final ScrollController controller;
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.all(24.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(child: _GesturesPanel()),
-          SizedBox(width: 24),
-          Expanded(child: _KeyboardPanel()),
-        ],
+    return SingleChildScrollView(
+      controller: controller,
+      child: const Padding(
+        padding: EdgeInsets.all(24.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(child: _GesturesPanel()),
+            SizedBox(width: 24),
+            Expanded(child: _KeyboardPanel()),
+          ],
+        ),
       ),
     );
   }

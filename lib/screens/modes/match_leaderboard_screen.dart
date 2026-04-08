@@ -5,6 +5,7 @@ import 'package:quizlone/i18n/generated/translations.g.dart';
 import 'package:quizlone/models/match_record.dart';
 import 'package:quizlone/providers/core/core_providers.dart';
 import 'package:quizlone/routing/app_router.dart';
+import 'package:quizlone/services/smooth_scroll.dart';
 import 'package:quizlone/widgets/centered_view.dart';
 
 import '../../models/study_list.dart';
@@ -34,7 +35,7 @@ class _MatchLeaderboardScreenState extends ConsumerState<MatchLeaderboardScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   final GlobalKey _newRecordKey = GlobalKey();
-  final ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = SmoothScrollController();
 
   @override
   void dispose() {

@@ -12,6 +12,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
 import 'package:quizlone/routing/app_router.dart';
 import 'package:quizlone/services/migration_service.dart';
+import 'package:quizlone/services/smooth_scroll.dart';
 import 'package:quizlone/widgets/error_snackbar.dart';
 import 'package:quizlone/widgets/web_aware_back_button.dart';
 
@@ -33,6 +34,14 @@ class SettingsScreen extends ConsumerStatefulWidget {
 }
 
 class _SettingsScreenState extends ConsumerState<SettingsScreen> {
+  final _scrollController = SmoothScrollController();
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   void _showLanguageMenu(BuildContext context, WidgetRef ref) {
     final languageNotifier = ref.read(appLanguageProvider.notifier);
     final currentLanguage = ref.read(appLanguageProvider);
@@ -326,6 +335,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       body: SafeArea(
         child: CenteredView(
           child: ListView(
+            controller: _scrollController,
             padding: const EdgeInsets.all(16.0),
             children: [
               _SettingsHeader(title: t.settingsScreen.appearance),

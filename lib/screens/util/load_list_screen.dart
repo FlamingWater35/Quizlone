@@ -9,6 +9,7 @@ import 'package:quizlone/i18n/generated/translations.g.dart';
 import 'package:quizlone/models/study_group.dart';
 import 'package:quizlone/models/study_list.dart';
 import 'package:quizlone/routing/app_router.dart';
+import 'package:quizlone/services/smooth_scroll.dart';
 import 'package:quizlone/widgets/error_snackbar.dart';
 import 'package:quizlone/widgets/web_aware_back_button.dart';
 
@@ -56,6 +57,7 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
   _SortOption _currentSort = _SortOption.none;
   final Set<String> _expandedGroupIds = {};
   bool _isSelectMode = false;
+  final _listScrollController = SmoothScrollController();
   final _searchController = TextEditingController();
   final Set<String> _selectedListIds = {};
   bool _sortAscending = true;
@@ -63,6 +65,7 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
   @override
   void dispose() {
     _searchController.dispose();
+    _listScrollController.dispose();
     super.dispose();
   }
 
@@ -403,6 +406,7 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
                 ? () => _showMoveDialog(_selectedListIds.toList())
                 : null,
           ),
+          const SizedBox(width: 4)
         ],
       );
     }
@@ -422,6 +426,7 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
           tooltip: t.loadListScreen.select,
           onPressed: _toggleSelectMode,
         ),
+        const SizedBox(width: 4)
       ],
     );
   }
@@ -812,6 +817,7 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
       ..sort((a, b) => a.name.compareTo(b.name));
 
     return ListView(
+      controller: _listScrollController,
       padding: const EdgeInsets.only(bottom: 80),
       children: [
         if (grouped[null]?.isNotEmpty ?? false)
@@ -878,6 +884,7 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
         ),
         Expanded(
           child: ImplicitlyAnimatedList<StudyList>(
+            controller: _listScrollController,
             padding: const EdgeInsets.only(bottom: 80),
             items: processedLists,
             areItemsTheSame: (a, b) => a.id == b.id,

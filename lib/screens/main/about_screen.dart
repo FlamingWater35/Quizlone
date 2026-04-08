@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
 import 'package:quizlone/routing/app_router.dart';
+import 'package:quizlone/services/smooth_scroll.dart';
 import 'package:quizlone/widgets/centered_view.dart';
 import 'package:quizlone/widgets/web_aware_back_button.dart';
 
@@ -19,11 +20,13 @@ class _AboutScreenState extends State<AboutScreen>
   late AnimationController _controller;
   late Animation<double> _fadeAnimation;
   late Animation<double> _scaleAnimation;
+  final _scrollController = SmoothScrollController();
   String _version = '...';
 
   @override
   void dispose() {
     _controller.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -75,12 +78,13 @@ class _AboutScreenState extends State<AboutScreen>
       ),
       body: SafeArea(
         child: CenteredView(
-          child: Padding(
+          child: SingleChildScrollView(
+            controller: _scrollController,
             padding: const EdgeInsets.all(24.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Spacer(),
+                const SizedBox(height: 40),
                 FadeTransition(
                   opacity: _fadeAnimation,
                   child: ScaleTransition(
@@ -127,7 +131,7 @@ class _AboutScreenState extends State<AboutScreen>
                   },
                   child: Text(t.aboutScreen.viewLicenses),
                 ),
-                const Spacer(),
+                const SizedBox(height: 60),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 16.0),
                   child: Text(

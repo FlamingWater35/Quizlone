@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
 import 'package:quizlone/routing/app_router.dart';
+import 'package:quizlone/services/smooth_scroll.dart';
 import 'package:quizlone/widgets/web_aware_back_button.dart';
 
 import '../../providers/controllers/learn_controller.dart';
@@ -118,11 +119,13 @@ class _LearnView extends ConsumerStatefulWidget {
 class _LearnViewState extends ConsumerState<_LearnView> {
   late TextEditingController _answerController;
   final FocusNode _focusNode = FocusNode();
+  final _scrollController = SmoothScrollController();
 
   @override
   void dispose() {
     _answerController.dispose();
     _focusNode.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -317,6 +320,7 @@ class _LearnViewState extends ConsumerState<_LearnView> {
 
         return CenteredView(
           child: SingleChildScrollView(
+            controller: _scrollController,
             padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,

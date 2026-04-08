@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
 import 'package:quizlone/routing/app_router.dart';
 import 'package:quizlone/services/navigation_service.dart';
+import 'package:quizlone/services/smooth_scroll.dart';
 
 import '../../models/study_group.dart';
 import '../../providers/study/study_list_providers.dart';
@@ -21,11 +22,13 @@ class InputScreen extends ConsumerStatefulWidget {
 class _InputScreenState extends ConsumerState<InputScreen> {
   late TextEditingController _listNameController;
   late TextEditingController _termsInputController;
+  final _scrollController = SmoothScrollController();
 
   @override
   void dispose() {
     _listNameController.dispose();
     _termsInputController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -58,6 +61,7 @@ class _InputScreenState extends ConsumerState<InputScreen> {
       body: SafeArea(
         child: CenteredView(
           child: SingleChildScrollView(
+            controller: _scrollController,
             padding: const EdgeInsets.all(20.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
