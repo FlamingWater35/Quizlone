@@ -818,7 +818,7 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
 
     return ListView(
       controller: _listScrollController,
-      padding: const EdgeInsets.only(bottom: 80),
+      padding: EdgeInsets.zero,
       children: [
         if (grouped[null]?.isNotEmpty ?? false)
           _buildGroupTile(
@@ -885,7 +885,7 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
         Expanded(
           child: ImplicitlyAnimatedList<StudyList>(
             controller: _listScrollController,
-            padding: const EdgeInsets.only(bottom: 80),
+            padding: EdgeInsets.zero,
             items: processedLists,
             areItemsTheSame: (a, b) => a.id == b.id,
             itemBuilder: (context, animation, item, index) {
