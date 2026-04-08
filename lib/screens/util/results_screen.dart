@@ -131,94 +131,120 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
                       ],
                     ),
                   )
-                : ListView.builder(
-                    controller: dialogScrollController,
-                    shrinkWrap: true,
-                    itemCount: records.length,
-                    itemBuilder: (context, index) {
-                      final record = records[index];
-                      final percentage = record.totalQuestions > 0
-                          ? (record.score / record.totalQuestions)
-                          : 0.0;
-
-                      Color scoreColor = colorScheme.error;
-                      if (percentage >= 1.0)
-                        scoreColor = Colors.green;
-                      else if (percentage >= 0.7)
-                        scoreColor = colorScheme.primary;
-                      else if (percentage >= 0.5)
-                        scoreColor = Colors.orange;
-
-                      return Card(
-                        margin: const EdgeInsets.symmetric(vertical: 6),
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          side: BorderSide(color: colorScheme.outlineVariant),
+                : Theme(
+                    data: theme.copyWith(
+                      scrollbarTheme: theme.scrollbarTheme.copyWith(
+                        mainAxisMargin: 12,
+                        crossAxisMargin: 2,
+                      ),
+                    ),
+                    child: Scrollbar(
+                      controller: dialogScrollController,
+                      thumbVisibility: true,
+                      thickness: 6,
+                      radius: const Radius.circular(10),
+                      child: ListView.builder(
+                        controller: dialogScrollController,
+                        shrinkWrap: true,
+                        padding: const EdgeInsets.only(
+                          right: 13,
+                          left: 2,
+                          top: 4,
+                          bottom: 4,
                         ),
-                        child: InkWell(
-                          borderRadius: BorderRadius.circular(12),
-                          onTap: () {
-                            ref
-                                .read(testControllerProvider.notifier)
-                                .loadHistoricalRecord(record);
-                            Navigator.pop(context);
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: Row(
-                              children: [
-                                Container(
-                                  width: 50,
-                                  height: 50,
-                                  decoration: BoxDecoration(
-                                    color: scoreColor.withAlpha(25),
-                                    shape: BoxShape.circle,
-                                  ),
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    "${(percentage * 100).round()}%",
-                                    style: theme.textTheme.labelLarge?.copyWith(
-                                      color: scoreColor,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 16),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        dateFormat.format(record.createdAt),
-                                        style: theme.textTheme.titleSmall,
+                        itemCount: records.length,
+                        itemBuilder: (context, index) {
+                          final record = records[index];
+                          final percentage = record.totalQuestions > 0
+                              ? (record.score / record.totalQuestions)
+                              : 0.0;
+
+                          Color scoreColor;
+                          if (percentage >= 1.0) {
+                            scoreColor = Colors.green;
+                          } else if (percentage >= 0.7) {
+                            scoreColor = colorScheme.primary;
+                          } else if (percentage >= 0.5) {
+                            scoreColor = Colors.orange;
+                          } else {
+                            scoreColor = colorScheme.error;
+                          }
+
+                          return Card(
+                            margin: const EdgeInsets.symmetric(vertical: 6),
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              side: BorderSide(
+                                color: colorScheme.outlineVariant,
+                              ),
+                            ),
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(12),
+                              onTap: () {
+                                ref
+                                    .read(testControllerProvider.notifier)
+                                    .loadHistoricalRecord(record);
+                                Navigator.pop(context);
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      width: 50,
+                                      height: 50,
+                                      decoration: BoxDecoration(
+                                        color: scoreColor.withAlpha(25),
+                                        shape: BoxShape.circle,
                                       ),
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        t.resultsScreen.scoreFraction(
-                                          score: record.score,
-                                          total: record.totalQuestions,
-                                        ),
-                                        style: theme.textTheme.bodyMedium
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        "${(percentage * 100).round()}%",
+                                        style: theme.textTheme.labelLarge
                                             ?.copyWith(
-                                              color:
-                                                  colorScheme.onSurfaceVariant,
+                                              color: scoreColor,
+                                              fontWeight: FontWeight.bold,
                                             ),
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                    const SizedBox(width: 16),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            dateFormat.format(record.createdAt),
+                                            style: theme.textTheme.titleSmall,
+                                          ),
+                                          const SizedBox(height: 4),
+                                          Text(
+                                            t.resultsScreen.scoreFraction(
+                                              score: record.score,
+                                              total: record.totalQuestions,
+                                            ),
+                                            style: theme.textTheme.bodyMedium
+                                                ?.copyWith(
+                                                  color: colorScheme
+                                                      .onSurfaceVariant,
+                                                ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Icon(
+                                      Icons.chevron_right,
+                                      color: colorScheme.outline,
+                                    ),
+                                  ],
                                 ),
-                                Icon(
-                                  Icons.chevron_right,
-                                  color: colorScheme.outline,
-                                ),
-                              ],
+                              ),
                             ),
-                          ),
-                        ),
-                      );
-                    },
+                          );
+                        },
+                      ),
+                    ),
                   ),
           ),
           actions: [
@@ -262,7 +288,7 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
             tooltip: t.resultsScreen.history.title,
             onPressed: _showHistoryDialog,
           ),
-          const SizedBox(width: 4)
+          const SizedBox(width: 4),
         ],
       ),
       body: SafeArea(
