@@ -116,7 +116,8 @@ class _LearnView extends ConsumerStatefulWidget {
   ConsumerState<_LearnView> createState() => _LearnViewState();
 }
 
-class _LearnViewState extends ConsumerState<_LearnView> {
+class _LearnViewState extends ConsumerState<_LearnView>
+    with TickerProviderStateMixin {
   late TextEditingController _answerController;
   final FocusNode _focusNode = FocusNode();
   final _scrollController = SmoothScrollController();
@@ -379,65 +380,57 @@ class _LearnViewState extends ConsumerState<_LearnView> {
                           readOnly: questionState.answerSubmitted,
                           autofocus: false,
                         ),
-                        const SizedBox(height: 20),
 
-                        AnimatedSwitcher(
+                        AnimatedSize(
                           duration: const Duration(milliseconds: 300),
-                          transitionBuilder: (child, animation) {
-                            return FadeTransition(
-                              opacity: animation,
-                              child: child,
-                            );
-                          },
+                          curve: Curves.easeInOut,
                           child: questionState.feedbackMessage.isNotEmpty
-                              ? Container(
-                                  key: ValueKey(questionState.feedbackMessage),
-                                  padding: const EdgeInsets.all(12.0),
-                                  decoration: BoxDecoration(
-                                    color: _getFeedbackColor(
-                                      context,
-                                      questionState.feedbackType,
-                                    ).withAlpha(15),
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      if (_getFeedbackIcon(
-                                            questionState.feedbackType,
-                                          ) !=
-                                          null)
-                                        Icon(
-                                          _getFeedbackIcon(
-                                            questionState.feedbackType,
+                              ? Padding(
+                                  padding: const EdgeInsets.only(top: 20.0),
+                                  child: Container(
+                                    width: double.infinity,
+                                    padding: const EdgeInsets.all(12.0),
+                                    decoration: BoxDecoration(
+                                      color: _getFeedbackColor(
+                                        context,
+                                        questionState.feedbackType,
+                                      ).withAlpha(15),
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        if (_getFeedbackIcon(
+                                              questionState.feedbackType,
+                                            ) !=
+                                            null)
+                                          Icon(
+                                            _getFeedbackIcon(
+                                              questionState.feedbackType,
+                                            ),
+                                            color: _getFeedbackColor(
+                                              context,
+                                              questionState.feedbackType,
+                                            ),
+                                            size: 20,
                                           ),
-                                          color: _getFeedbackColor(
-                                            context,
-                                            questionState.feedbackType,
-                                          ),
-                                          size: 20,
-                                        ),
-                                      const SizedBox(width: 8),
-                                      Expanded(
-                                        child: Text(
-                                          questionState.feedbackMessage,
-                                          textAlign: TextAlign.center,
-                                          style: textTheme.titleMedium
-                                              ?.copyWith(
-                                                color: _getFeedbackColor(
-                                                  context,
-                                                  questionState.feedbackType,
+                                        const SizedBox(width: 8),
+                                        Expanded(
+                                          child: Text(
+                                            questionState.feedbackMessage,
+                                            style: textTheme.titleMedium
+                                                ?.copyWith(
+                                                  color: _getFeedbackColor(
+                                                    context,
+                                                    questionState.feedbackType,
+                                                  ),
                                                 ),
-                                              ),
+                                          ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 )
-                              : const SizedBox(
-                                  key: ValueKey('empty'),
-                                  height: 58,
-                                ),
+                              : const SizedBox(width: double.infinity),
                         ),
                       ],
                     ),
@@ -445,60 +438,68 @@ class _LearnViewState extends ConsumerState<_LearnView> {
                 ),
                 const SizedBox(height: 20),
 
-                if (!questionState.answerSubmitted)
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      FilledButton.icon(
-                        icon: const Icon(Icons.check),
-                        onPressed: () => _onSubmit(learnNotifier, state),
-                        label: Text(t.general.submit),
-                        style: FilledButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: TextButton.icon(
-                              icon: const Icon(
-                                Icons.lightbulb_outline,
-                                size: 18,
-                              ),
-                              label: Text(t.learnScreen.hint),
-                              onPressed: learnNotifier.showHint,
-                              style: TextButton.styleFrom(
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 400),
+                  reverseDuration: const Duration(milliseconds: 200),
+                  switchInCurve: Curves.easeOutCubic,
+                  switchOutCurve: Curves.easeInCubic,
+                  transitionBuilder:
+                      (Widget child, Animation<double> animation) {
+                        return SizeTransition(
+                          sizeFactor: animation,
+                          axisAlignment: -1.0,
+                          child: FadeTransition(
+                            opacity: animation,
+                            child: child,
+                          ),
+                        );
+                      },
+                  child: !questionState.answerSubmitted
+                      ? Column(
+                          key: const ValueKey('buttons_visible'),
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            FilledButton.icon(
+                              icon: const Icon(Icons.check),
+                              onPressed: () => _onSubmit(learnNotifier, state),
+                              label: Text(t.general.submit),
+                              style: FilledButton.styleFrom(
                                 padding: const EdgeInsets.symmetric(
                                   vertical: 16,
                                 ),
                               ),
                             ),
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: TextButton.icon(
-                              icon: const Icon(
-                                Icons.skip_next_outlined,
-                                size: 18,
-                              ),
-                              label: Text(t.learnScreen.skip),
-                              onPressed:
-                                  learnNotifier.skipQuestionAndShowAnswer,
-                              style: TextButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 16,
+                            const SizedBox(height: 12),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: TextButton.icon(
+                                    icon: const Icon(
+                                      Icons.lightbulb_outline,
+                                      size: 18,
+                                    ),
+                                    label: Text(t.learnScreen.hint),
+                                    onPressed: learnNotifier.showHint,
+                                  ),
                                 ),
-                              ),
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: TextButton.icon(
+                                    icon: const Icon(
+                                      Icons.skip_next_outlined,
+                                      size: 18,
+                                    ),
+                                    label: Text(t.learnScreen.skip),
+                                    onPressed:
+                                        learnNotifier.skipQuestionAndShowAnswer,
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  )
-                else
-                  const SizedBox(height: 80),
+                          ],
+                        )
+                      : const SizedBox.shrink(key: ValueKey('buttons_hidden')),
+                ),
               ],
             ),
           ),
