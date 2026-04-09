@@ -377,7 +377,7 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
                     TextButton(
                       onPressed: () => ref
                           .read(authControllerProvider.notifier)
-                          .requestCloudSync(),
+                          .resetCircuitAndSync(),
                       child: Text(t.drawer.retrySync),
                     ),
                   ],

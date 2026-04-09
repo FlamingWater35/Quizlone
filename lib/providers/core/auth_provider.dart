@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/widgets.dart';
+import 'package:http/http.dart';
 import 'package:logging/logging.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
 import 'package:quizlone/models/test_record.dart';
@@ -32,9 +34,15 @@ class SyncHealth extends _$SyncHealth {
 
 @Riverpod(keepAlive: true)
 class AuthController extends _$AuthController with WidgetsBindingObserver {
+  static const _authErrorDebounceMs = 5000;
+  static const int _maxConsecutiveErrors = 3;
+
   StreamSubscription<AuthState>? _authStateSubscription;
+  bool _circuitOpen = false;
+  int _consecutiveSyncErrors = 0;
   bool _initialSyncDone = false;
   bool _isSyncing = false;
+  DateTime? _lastAuthErrorTime;
   bool _syncPending = false;
   Timer? _syncTimer;
 
@@ -89,9 +97,13 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
   }
 
   Future<void> requestCloudSync({bool isInitialSync = false}) async {
-    if (_isSyncing) {
-      _log.fine("Sync already in progress, scheduling a new one.");
-      _syncPending = true;
+    if (_isSyncing || _circuitOpen) {
+      if (_circuitOpen) {
+        _log.fine("Circuit breaker open, skipping sync");
+      } else {
+        _log.fine("Sync already in progress, scheduling a new one.");
+        _syncPending = true;
+      }
       return;
     }
 
@@ -104,12 +116,36 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
       try {
         await _performSync(isInitialSync: isInitialSync);
         healthNotifier.clear();
+        _consecutiveSyncErrors = 0;
+        _circuitOpen = false;
+      } on AuthRetryableFetchException catch (e) {
+        _consecutiveSyncErrors++;
+        _log.warning("Auth network error (attempt $_consecutiveSyncErrors)", e);
+        healthNotifier.setError(t.drawer.syncErrorOffline);
+
+        if (_consecutiveSyncErrors >= _maxConsecutiveErrors) {
+          _circuitOpen = true;
+          _stopPolling();
+          _log.warning(
+            "Circuit breaker opened after $_maxConsecutiveErrors failures",
+          );
+        }
+      } on SocketException catch (e) {
+        _consecutiveSyncErrors++;
+        _log.warning("Network error (attempt $_consecutiveSyncErrors)", e);
+        healthNotifier.setError(t.drawer.syncErrorOffline);
+
+        if (_consecutiveSyncErrors >= _maxConsecutiveErrors) {
+          _circuitOpen = true;
+          _stopPolling();
+        }
       } catch (e) {
         _log.severe("Sync failed", e);
         healthNotifier.setError(t.drawer.syncError);
+        _consecutiveSyncErrors++;
       }
       isInitialSync = false;
-    } while (_syncPending);
+    } while (_syncPending && !_circuitOpen);
 
     _isSyncing = false;
   }
@@ -118,6 +154,12 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
     final cloudService = ref.read(cloudSyncServiceProvider);
     await cloudService.deleteAccount();
     await signOut();
+  }
+
+  Future<void> resetCircuitAndSync() async {
+    _circuitOpen = false;
+    _consecutiveSyncErrors = 0;
+    await requestCloudSync();
   }
 
   AppData _mergeData({
@@ -214,6 +256,15 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
     await dbService.saveLastSyncTimestamp(DateTime.now().toUtc());
   }
 
+  Future<bool> _performInitialSync() async {
+    try {
+      await requestCloudSync(isInitialSync: true);
+      return ref.read(syncHealthProvider) == null;
+    } catch (e) {
+      return false;
+    }
+  }
+
   Future<void> _performSync({bool isInitialSync = false}) async {
     final connectivityStatus = await ref.read(connectivityProvider.future);
     if (!ref.mounted) return;
@@ -227,6 +278,7 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
     if (user == null) return;
 
     _log.info("Starting cloud sync... (Initial: $isInitialSync)");
+    final healthNotifier = ref.read(syncHealthProvider.notifier);
 
     final cloudSyncService = ref.read(cloudSyncServiceProvider);
     final dbService = ref.read(databaseServiceProvider);
@@ -324,8 +376,22 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
           }
         }
       }
+    } on AuthRetryableFetchException catch (e) {
+      _log.warning("Auth network error during sync (Supabase paused?)", e);
+      healthNotifier.setError(t.drawer.syncErrorOffline);
+      rethrow;
+    } on SocketException catch (e) {
+      _log.warning("Network error during sync (Host unreachable)", e);
+      healthNotifier.setError(t.drawer.syncErrorOffline);
+      rethrow;
+    } on ClientException catch (e) {
+      _log.warning("HTTP client error during sync", e);
+      healthNotifier.setError(t.drawer.syncErrorOffline);
+      rethrow;
     } catch (e, s) {
       _log.severe("Error during cloud sync", e, s);
+      healthNotifier.setError(t.drawer.syncError);
+      rethrow;
     } finally {
       _log.info("Cloud sync finished.");
     }
@@ -371,27 +437,52 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
     });
 
     _authStateSubscription = Supabase.instance.client.auth.onAuthStateChange
-        .listen((data) async {
-          final session = data.session;
-          state = AsyncData(session?.user);
-          _log.fine(
-            "AuthState changed. Event: ${data.event}, User: ${session?.user.id}",
-          );
+        .listen(
+          (data) async {
+            final session = data.session;
+            state = AsyncData(session?.user);
+            _log.fine(
+              "AuthState changed. Event: ${data.event}, User: ${session?.user.id}",
+            );
 
-          final isSignInEvent =
-              data.event == AuthChangeEvent.initialSession ||
-              data.event == AuthChangeEvent.signedIn;
+            final isSignInEvent =
+                data.event == AuthChangeEvent.initialSession ||
+                data.event == AuthChangeEvent.signedIn;
 
-          if (isSignInEvent && session != null && !_initialSyncDone) {
-            _log.info("Initial sign-in detected. Performing first sync.");
-            await requestCloudSync(isInitialSync: true);
-            if (!ref.mounted) return;
-            _startPolling();
-            _initialSyncDone = true;
-          } else if (data.event == AuthChangeEvent.signedOut) {
-            _onSignOut();
-          }
-        });
+            if (isSignInEvent && session != null && !_initialSyncDone) {
+              _log.info("Initial sign-in detected. Performing first sync.");
+              final success = await _performInitialSync();
+
+              if (!ref.mounted) return;
+
+              if (success) {
+                _startPolling();
+                _initialSyncDone = true;
+              } else {
+                _log.info("Initial sync failed, operating in offline mode");
+              }
+            } else if (data.event == AuthChangeEvent.signedOut) {
+              _onSignOut();
+              _initialSyncDone = false;
+            }
+          },
+          onError: (error, stackTrace) {
+            final now = DateTime.now();
+            if (_lastAuthErrorTime != null &&
+                now.difference(_lastAuthErrorTime!).inMilliseconds <
+                    _authErrorDebounceMs) {
+              return;
+            }
+            _lastAuthErrorTime = now;
+
+            _log.warning("Auth stream error (offline?): $error");
+            if (ref.mounted) {
+              ref
+                  .read(syncHealthProvider.notifier)
+                  .setError(t.drawer.syncErrorOffline);
+            }
+          },
+        );
 
     ref.onDispose(() {
       _authStateSubscription?.cancel();

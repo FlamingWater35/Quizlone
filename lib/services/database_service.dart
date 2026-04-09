@@ -23,21 +23,16 @@ class DatabaseService {
   static const String _activeListIdKey = 'activeListId';
   static const String _apkCleanupPathKey = 'apkCleanupPath';
   static const String _lastSyncTimestampKey = 'lastSyncTimestamp';
-
   static late Box<MatchRecord> _matchRecordsBox;
   static const String _matchRecordsBoxName = 'matchRecordsBox';
-
-  static late Box<TestRecord> _testRecordsBox;
-  static const String _testRecordsBoxName = 'testRecordsBox';
-
   static late Box _settingsBox;
   static const String _settingsBoxName = 'settingsBox';
-
   static late Box<StudyGroup> _studyGroupBox;
   static const String _studyGroupBoxName = 'studyGroupsBox';
-
   static late Box<StudyList> _studyListBox;
   static const String _studyListBoxName = 'studyListsBox';
+  static late Box<TestRecord> _testRecordsBox;
+  static const String _testRecordsBoxName = 'testRecordsBox';
 
   static Future<void> init() async {
     await Hive.initFlutter('Quizlone');
@@ -161,21 +156,6 @@ class DatabaseService {
     await _testRecordsBox.put(record.id, record);
     await _pruneTestRecords(record.studyListId);
     await triggerCloudUpload();
-  }
-
-  Future<void> _pruneTestRecords(String studyListId) async {
-    final allRecords = _testRecordsBox.values
-        .where((r) => r.studyListId == studyListId)
-        .toList();
-
-    if (allRecords.length > 20) {
-      allRecords.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-
-      final recordsToDelete = allRecords.sublist(20);
-      final keysToDelete = recordsToDelete.map((r) => r.id).toList();
-
-      await _testRecordsBox.deleteAll(keysToDelete);
-    }
   }
 
   Future<List<TestRecord>> getTestRecordsForList(String studyListId) async {
@@ -409,6 +389,21 @@ class DatabaseService {
       }
     }
     await triggerCloudUpload();
+  }
+
+  Future<void> _pruneTestRecords(String studyListId) async {
+    final allRecords = _testRecordsBox.values
+        .where((r) => r.studyListId == studyListId)
+        .toList();
+
+    if (allRecords.length > 20) {
+      allRecords.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+
+      final recordsToDelete = allRecords.sublist(20);
+      final keysToDelete = recordsToDelete.map((r) => r.id).toList();
+
+      await _testRecordsBox.deleteAll(keysToDelete);
+    }
   }
 
   Box<StudyList> get _box => _studyListBox;
