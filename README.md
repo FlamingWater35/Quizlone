@@ -43,7 +43,7 @@ Cloud sync keeps your progress up to date without sacrificing offline usability.
 
 * **Cross-Platform:** Web, Android, Windows, and Linux from a single codebase.
 * **Theme Selection:** System, Light, or Dark modes.
-* **Multi-Language UI:** English, Finnish, Russian, Spanish, and Swedish.
+* **Multi-Language UI:** English, French, Spanish, Italian, Russian, Finnish, etc.
 * **UI Scaling:** Adjustable interface size for optimal readability.
 
 ---
