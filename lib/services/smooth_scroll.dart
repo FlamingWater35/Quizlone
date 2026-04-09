@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+class SmoothScrollLogic {
+  static bool useSmoothScroll = true;
+}
+
 class SmoothScrollController extends ScrollController {
   SmoothScrollController({
     super.initialScrollOffset,
@@ -39,6 +43,11 @@ class SmoothScrollPosition extends ScrollPositionWithSingleContext {
   @override
   void pointerScroll(double delta) {
     if (delta == 0.0) return;
+
+    if (!SmoothScrollLogic.useSmoothScroll) {
+      super.pointerScroll(delta);
+      return;
+    }
 
     if (activity is! DrivenScrollActivity) {
       _targetPixels = pixels;

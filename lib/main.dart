@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -19,6 +20,7 @@ import 'providers/core/settings_provider.dart';
 import 'providers/core/updater_provider.dart';
 import 'services/database_service.dart';
 import 'services/migration_service.dart';
+import 'services/smooth_scroll.dart';
 import 'services/window_manager.dart';
 
 final _log = Logger('main');
@@ -166,7 +168,15 @@ class MyApp extends ConsumerWidget {
 
       themeMode: themeMode,
       builder: (context, child) {
-        return AppScaler(scale: uiScale, child: child!);
+        return Listener(
+          onPointerSignal: (pointerSignal) {
+            if (pointerSignal is PointerScrollEvent) {
+              SmoothScrollLogic.useSmoothScroll =
+                  pointerSignal.kind == PointerDeviceKind.mouse;
+            }
+          },
+          child: AppScaler(scale: uiScale, child: child!),
+        );
       },
       debugShowCheckedModeBanner: false,
       routerConfig: _appRouter.config(
