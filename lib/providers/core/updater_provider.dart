@@ -94,7 +94,9 @@ class UpdaterController extends _$UpdaterController {
         state = UpdateError(e.toString());
       }
     } else if (Platform.isWindows) {
-      final url = Uri.parse(currentState.info.apkUrl);
+      final url = Uri.parse(
+        'https://github.com/FlamingWater35/Quizlone/releases/latest',
+      );
       if (await canLaunchUrl(url)) {
         await launchUrl(url, mode: LaunchMode.externalApplication);
       } else {
