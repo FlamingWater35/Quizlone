@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/widgets.dart';
 import 'package:logging/logging.dart';
+import 'package:quizlone/i18n/generated/translations.g.dart';
 import 'package:quizlone/models/test_record.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -18,6 +19,16 @@ import 'connectivity_provider.dart';
 part 'auth_provider.g.dart';
 
 final _log = Logger("AuthProvider");
+
+@Riverpod(keepAlive: true)
+class SyncHealth extends _$SyncHealth {
+  void setError(String? error) => state = error;
+
+  void clear() => state = null;
+
+  @override
+  String? build() => null;
+}
 
 @Riverpod(keepAlive: true)
 class AuthController extends _$AuthController with WidgetsBindingObserver {
@@ -85,19 +96,28 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
     }
 
     _isSyncing = true;
+    final healthNotifier = ref.read(syncHealthProvider.notifier);
+
     do {
       _syncPending = false;
 
       try {
         await _performSync(isInitialSync: isInitialSync);
-      } catch (e, s) {
-        _log.severe("Error during cloud sync execution", e, s);
+        healthNotifier.clear();
+      } catch (e) {
+        _log.severe("Sync failed", e);
+        healthNotifier.setError(t.drawer.syncError);
       }
       isInitialSync = false;
     } while (_syncPending);
 
     _isSyncing = false;
-    _log.info("Sync queue is empty. Exiting sync loop.");
+  }
+
+  Future<void> deleteAccount() async {
+    final cloudService = ref.read(cloudSyncServiceProvider);
+    await cloudService.deleteAccount();
+    await signOut();
   }
 
   AppData _mergeData({

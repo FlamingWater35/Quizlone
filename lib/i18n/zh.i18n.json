@@ -19,7 +19,7 @@
     "controls": "控制",
     "about": "关于",
     "aboutDialog": {
-      "legalese": "© 2025 Quizlone",
+      "legalese": "© 2026 Quizlone",
       "description": "一个使用 Flutter 构建的简单、现代的学习应用。"
     },
     "cloudSync": "云同步",
@@ -34,6 +34,8 @@
       "emailEmpty": "请输入邮箱",
       "passwordEmpty": "请输入密码"
     },
+    "syncError": "同步错误：无法连接到云。使用本地数据。",
+    "retrySync": "重试同步",
     "snackbars": {
       "successfulAccountCreation": "账户创建成功。",
       "unexpectedError": "发生意外错误"
@@ -306,6 +308,14 @@
     "importData": "导入数据",
     "importDataSubtitle": "从文件加载列表",
     "deleteAllData": "删除所有数据",
+    "accountManagement": "账户管理",
+    "deleteAccount": "删除账户",
+    "deleteAccountSubtitle": "永久删除您的账户和所有云端数据",
+    "deleteAccountDialog": {
+      "title": "删除账户？",
+      "content": "此操作是永久性的。您的账户和存储在云端的所有数据都将被删除。这无法撤消。",
+      "confirm": "永久删除"
+    },
     "exportDialog": {
       "title": "导出数据",
       "content": "您想如何导出数据？",
@@ -332,7 +342,8 @@
       "fileSaved": "文件保存成功！",
       "importSuccess": "成功导入 $count 个列表！",
       "importError": "导入数据时出错：$error",
-      "allDeleted": "所有学习列表已被删除。"
+      "allDeleted": "所有学习列表已被删除。",
+      "accountDeleted": "账户删除成功。"
     }
   },
   "controlsScreen": {

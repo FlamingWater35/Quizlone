@@ -273,6 +273,7 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
     final colorScheme = theme.colorScheme;
     final t = Translations.of(context);
     final authState = ref.watch(authControllerProvider);
+    final syncError = ref.watch(syncHealthProvider);
 
     return Drawer(
       child: ListView(
@@ -339,6 +340,50 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
               ),
             ),
           ),
+
+          if (syncError != null)
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16.0,
+                vertical: 8.0,
+              ),
+              child: Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: colorScheme.errorContainer,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.sync_problem,
+                          color: colorScheme.error,
+                          size: 20,
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            syncError,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: colorScheme.onErrorContainer,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    TextButton(
+                      onPressed: () => ref
+                          .read(authControllerProvider.notifier)
+                          .requestCloudSync(),
+                      child: Text(t.drawer.retrySync),
+                    ),
+                  ],
+                ),
+              ),
+            ),
         ],
       ),
     );

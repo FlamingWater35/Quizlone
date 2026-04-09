@@ -19,7 +19,7 @@
     "controls": "Controls",
     "about": "About",
     "aboutDialog": {
-      "legalese": "© 2025 Quizlone",
+      "legalese": "© 2026 Quizlone",
       "description": "A simple, modern study application built with Flutter."
     },
     "cloudSync": "Cloud Sync",
@@ -34,6 +34,8 @@
       "emailEmpty": "Please enter an email",
       "passwordEmpty": "Please enter a password"
     },
+    "syncError": "Sync Error: Could not connect to cloud. Using local data.",
+    "retrySync": "Retry Sync",
     "snackbars": {
       "successfulAccountCreation": "Account created successfully.",
       "unexpectedError": "An unexpected error occurred"
@@ -325,6 +327,14 @@
       "content": "Are you sure you want to delete ALL study lists? This action cannot be undone.",
       "deleteAll": "Delete All"
     },
+    "accountManagement": "Account Management",
+    "deleteAccount": "Delete Account",
+    "deleteAccountSubtitle": "Permanently delete your account and all cloud data",
+    "deleteAccountDialog": {
+      "title": "Delete Account?",
+      "content": "This action is permanent. Your account and all data stored in the cloud will be deleted. This cannot be undone.",
+      "confirm": "Delete Permanently"
+    },
     "snackbars": {
       "noDataToExport": "There is no data to export.",
       "exportSuccess": "Data exported successfully!",
@@ -332,7 +342,8 @@
       "fileSaved": "File saved successfully!",
       "importSuccess": "$count lists imported successfully!",
       "importError": "Error importing data: $error",
-      "allDeleted": "All study lists have been deleted."
+      "allDeleted": "All study lists have been deleted.",
+      "accountDeleted": "Account successfully deleted."
     }
   },
   "controlsScreen": {

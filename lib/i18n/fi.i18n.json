@@ -19,7 +19,7 @@
     "controls": "Ohjaus",
     "about": "Tietoja",
     "aboutDialog": {
-      "legalese": "© 2025 Quizlone",
+      "legalese": "© 2026 Quizlone",
       "description": "Yksinkertainen, moderni opiskelusovellus, joka on rakennettu Flutterilla."
     },
     "cloudSync": "Pilvisynkronointi",
@@ -34,6 +34,8 @@
       "emailEmpty": "Syötä sähköpostiosoite",
       "passwordEmpty": "Syötä salasana"
     },
+    "syncError": "Synkronointivirhe: Yhteyttä pilveen ei saatu. Käytetään paikallisia tietoja.",
+    "retrySync": "Yritä synkronointia uudelleen",
     "snackbars": {
       "successfulAccountCreation": "Tili luotu onnistuneesti.",
       "unexpectedError": "Tuntematon virhe tapahtui"
@@ -306,6 +308,14 @@
     "importData": "Tuo tiedot",
     "importDataSubtitle": "Lataa listat tiedostosta",
     "deleteAllData": "Poista kaikki tiedot",
+    "accountManagement": "Tilinhallinta",
+    "deleteAccount": "Poista tili",
+    "deleteAccountSubtitle": "Poista tilisi ja kaikki pilvidatat pysyvästi",
+    "deleteAccountDialog": {
+      "title": "Poistetaanko tili?",
+      "content": "Tämä toiminto on pysyvä. Tilisi ja kaikki pilveen tallennetut tiedot poistetaan. Tätä ei voi peruuttaa.",
+      "confirm": "Poista pysyvästi"
+    },
     "exportDialog": {
       "title": "Vie tiedot",
       "content": "Miten haluat viedä tietosi?",
@@ -332,7 +342,8 @@
       "fileSaved": "Tiedosto tallennettu onnistuneesti!",
       "importSuccess": "$count listaa tuotu onnistuneesti!",
       "importError": "Virhe tietoja tuodessa: $error",
-      "allDeleted": "Kaikki opiskelulistat on poistettu."
+      "allDeleted": "Kaikki opiskelulistat on poistettu.",
+      "accountDeleted": "Tili poistettu onnistuneesti."
     }
   },
   "controlsScreen": {

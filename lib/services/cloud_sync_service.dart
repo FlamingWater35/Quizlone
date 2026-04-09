@@ -99,4 +99,18 @@ class CloudSyncService {
       rethrow;
     }
   }
+
+  Future<void> deleteAccount() async {
+    final user = _client.auth.currentUser;
+    if (user == null) return;
+
+    try {
+      await deleteCloudData();
+      await _client.rpc('delete_user');
+      _log.info('Account deletion request sent for ${user.id}');
+    } catch (e, s) {
+      _log.severe('Error during account deletion', e, s);
+      rethrow;
+    }
+  }
 }

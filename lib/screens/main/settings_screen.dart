@@ -10,6 +10,7 @@ import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
+import 'package:quizlone/providers/core/auth_provider.dart';
 import 'package:quizlone/routing/app_router.dart';
 import 'package:quizlone/services/migration_service.dart';
 import 'package:quizlone/services/smooth_scroll.dart';
@@ -316,6 +317,48 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     }
   }
 
+  Future<void> _confirmDeleteAccount(
+    BuildContext context,
+    WidgetRef ref,
+  ) async {
+    final t = Translations.of(context);
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(t.settingsScreen.deleteAccountDialog.title),
+        content: Text(t.settingsScreen.deleteAccountDialog.content),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text(t.general.cancel),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            style: FilledButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.error,
+            ),
+            child: Text(t.settingsScreen.deleteAccountDialog.confirm),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm == true) {
+      try {
+        await ref.read(authControllerProvider.notifier).deleteAccount();
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(t.settingsScreen.snackbars.accountDeleted)),
+          );
+        }
+      } catch (e) {
+        if (context.mounted) {
+          showErrorSnackBar(context, message: e.toString());
+        }
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final currentTheme = ref.watch(appThemeProvider);
@@ -459,6 +502,24 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   ],
                 ),
               ),
+              if (ref.watch(authControllerProvider).value != null) ...[
+                _SettingsHeader(title: t.settingsScreen.accountManagement),
+                Card(
+                  clipBehavior: Clip.antiAlias,
+                  child: ListTile(
+                    leading: Icon(
+                      Icons.person_remove_outlined,
+                      color: colorScheme.error,
+                    ),
+                    title: Text(
+                      t.settingsScreen.deleteAccount,
+                      style: TextStyle(color: colorScheme.error),
+                    ),
+                    subtitle: Text(t.settingsScreen.deleteAccountSubtitle),
+                    onTap: () => _confirmDeleteAccount(context, ref),
+                  ),
+                ),
+              ],
             ],
           ),
         ),

@@ -19,7 +19,7 @@
     "controls": "Kontroller",
     "about": "Om",
     "aboutDialog": {
-      "legalese": "© 2025 Quizlone",
+      "legalese": "© 2026 Quizlone",
       "description": "En enkel, modern studieapp byggd med Flutter."
     },
     "cloudSync": "MolnSynkronisering",
@@ -34,6 +34,8 @@
       "emailEmpty": "Vänligen ange en e-postadress",
       "passwordEmpty": "Vänligen ange ett lösenord"
     },
+    "syncError": "Synkroniseringsfel: Kunde inte ansluta till molnet. Använder lokala data.",
+    "retrySync": "Försök synkronisera igen",
     "snackbars": {
       "successfulAccountCreation": "Konto skapat framgångsrikt.",
       "unexpectedError": "Ett oväntat fel uppstod"
@@ -306,6 +308,14 @@
     "importData": "Importera Data",
     "importDataSubtitle": "Ladda listor från en fil",
     "deleteAllData": "Radera All Data",
+    "accountManagement": "Kontohantering",
+    "deleteAccount": "Radera konto",
+    "deleteAccountSubtitle": "Radera ditt konto och alla molndata permanent",
+    "deleteAccountDialog": {
+      "title": "Radera konto?",
+      "content": "Denna åtgärd är permanent. Ditt konto och alla data som lagras i molnet kommer att raderas. Detta kan inte ångras.",
+      "confirm": "Radera permanent"
+    },
     "exportDialog": {
       "title": "Exportera Data",
       "content": "Hur vill du exportera dina data?",
@@ -332,7 +342,8 @@
       "fileSaved": "Fil sparades framgångsrikt!",
       "importSuccess": "$count listor importerades framgångsrikt!",
       "importError": "Fel vid import av data: $error",
-      "allDeleted": "Alla studielistor har raderats."
+      "allDeleted": "Alla studielistor har raderats.",
+      "accountDeleted": "Konto raderat framgångsrikt."
     }
   },
   "controlsScreen": {

@@ -19,7 +19,7 @@
     "controls": "操作",
     "about": "について",
     "aboutDialog": {
-      "legalese": "© 2025 Quizlone",
+      "legalese": "© 2026 Quizlone",
       "description": "Flutterで構築されたシンプルでモダンな学習アプリです。"
     },
     "cloudSync": "クラウド同期",
@@ -34,6 +34,8 @@
       "emailEmpty": "メールアドレスを入力してください",
       "passwordEmpty": "パスワードを入力してください"
     },
+    "syncError": "同期エラー: クラウドに接続できませんでした。ローカルデータを使用します。",
+    "retrySync": "同期を再試行",
     "snackbars": {
       "successfulAccountCreation": "アカウントが正常に作成されました。",
       "unexpectedError": "予期しないエラーが発生しました"
@@ -306,6 +308,14 @@
     "importData": "データをインポート",
     "importDataSubtitle": "ファイルからリストを読み込み",
     "deleteAllData": "すべてのデータを削除",
+    "accountManagement": "アカウント管理",
+    "deleteAccount": "アカウントを削除",
+    "deleteAccountSubtitle": "アカウントとすべてのクラウドデータを完全に削除する",
+    "deleteAccountDialog": {
+      "title": "アカウントを削除しますか？",
+      "content": "この操作は元に戻せません。あなたのアカウントとクラウドに保存されているすべてのデータが削除されます。",
+      "confirm": "完全に削除"
+    },
     "exportDialog": {
       "title": "データをエクスポート",
       "content": "データをどのようにエクスポートしますか？",
@@ -332,7 +342,8 @@
       "fileSaved": "ファイルの保存に成功しました！",
       "importSuccess": "$count リストを正常にインポートしました！",
       "importError": "データのインポート中にエラーが発生しました: $error",
-      "allDeleted": "すべての学習リストが削除されました。"
+      "allDeleted": "すべての学習リストが削除されました。",
+      "accountDeleted": "アカウントが正常に削除されました。"
     }
   },
   "controlsScreen": {

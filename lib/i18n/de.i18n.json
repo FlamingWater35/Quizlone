@@ -19,7 +19,7 @@
     "controls": "Steuerung",
     "about": "Über",
     "aboutDialog": {
-      "legalese": "© 2025 Quizlone",
+      "legalese": "© 2026 Quizlone",
       "description": "Eine einfache, moderne Lern-App, die mit Flutter erstellt wurde."
     },
     "cloudSync": "Cloud-Sync",
@@ -34,6 +34,8 @@
       "emailEmpty": "Bitte geben Sie eine E-Mail-Adresse ein",
       "passwordEmpty": "Bitte geben Sie ein Passwort ein"
     },
+    "syncError": "Sync-Fehler: Verbindung zur Cloud fehlgeschlagen. Verwende lokale Daten.",
+    "retrySync": "Sync wiederholen",
     "snackbars": {
       "successfulAccountCreation": "Konto erfolgreich erstellt.",
       "unexpectedError": "Ein unerwarteter Fehler ist aufgetreten"
@@ -306,6 +308,14 @@
     "importData": "Daten importieren",
     "importDataSubtitle": "Listen aus einer Datei laden",
     "deleteAllData": "Alle Daten löschen",
+    "accountManagement": "Kontoverwaltung",
+    "deleteAccount": "Konto löschen",
+    "deleteAccountSubtitle": "Ihr Konto und alle Cloud-Daten dauerhaft löschen",
+    "deleteAccountDialog": {
+      "title": "Konto löschen?",
+      "content": "Diese Aktion ist endgültig. Ihr Konto und alle in der Cloud gespeicherten Daten werden gelöscht. Dies kann nicht rückgängig gemacht werden.",
+      "confirm": "Dauerhaft löschen"
+    },
     "exportDialog": {
       "title": "Daten exportieren",
       "content": "Wie möchten Sie Ihre Daten exportieren?",
@@ -332,7 +342,8 @@
       "fileSaved": "Datei erfolgreich gespeichert!",
       "importSuccess": "$count Listen erfolgreich importiert!",
       "importError": "Fehler beim Importieren der Daten: $error",
-      "allDeleted": "Alle Lernlisten wurden gelöscht."
+      "allDeleted": "Alle Lernlisten wurden gelöscht.",
+      "accountDeleted": "Konto erfolgreich gelöscht."
     }
   },
   "controlsScreen": {

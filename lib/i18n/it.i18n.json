@@ -19,7 +19,7 @@
     "controls": "Controlli",
     "about": "Informazioni",
     "aboutDialog": {
-      "legalese": "© 2025 Quizlone",
+      "legalese": "© 2026 Quizlone",
       "description": "Una semplice e moderna applicazione di studio costruita con Flutter."
     },
     "cloudSync": "Sincronizzazione Cloud",
@@ -34,6 +34,8 @@
       "emailEmpty": "Inserisci un'email",
       "passwordEmpty": "Inserisci una password"
     },
+    "syncError": "Errore di sincronizzazione: Impossibile connettersi al cloud. Utilizzo dei dati locali.",
+    "retrySync": "Riprova sincronizzazione",
     "snackbars": {
       "successfulAccountCreation": "Account creato con successo.",
       "unexpectedError": "Si è verificato un errore imprevisto"
@@ -306,6 +308,14 @@
     "importData": "Importa Dati",
     "importDataSubtitle": "Carica liste da un file",
     "deleteAllData": "Elimina Tutti i Dati",
+    "accountManagement": "Gestione Account",
+    "deleteAccount": "Elimina Account",
+    "deleteAccountSubtitle": "Elimina permanentemente il tuo account e tutti i dati nel cloud",
+    "deleteAccountDialog": {
+      "title": "Eliminare l'account?",
+      "content": "Questa azione è permanente. Il tuo account e tutti i dati memorizzati nel cloud verranno eliminati. Questo non può essere annullato.",
+      "confirm": "Elimina Permanentemente"
+    },
     "exportDialog": {
       "title": "Esporta Dati",
       "content": "Come vuoi esportare i tuoi dati?",
@@ -332,7 +342,8 @@
       "fileSaved": "File salvato con successo!",
       "importSuccess": "$count liste importate con successo!",
       "importError": "Errore nell'importazione dei dati: $error",
-      "allDeleted": "Tutte le liste di studio sono state eliminate."
+      "allDeleted": "Tutte le liste di studio sono state eliminate.",
+      "accountDeleted": "Account eliminato con successo."
     }
   },
   "controlsScreen": {
