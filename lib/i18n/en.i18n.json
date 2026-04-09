@@ -34,8 +34,9 @@
       "emailEmpty": "Please enter an email",
       "passwordEmpty": "Please enter a password"
     },
-    "syncError": "Sync Error: Could not connect to cloud. Using local data.",
-    "retrySync": "Retry Sync",
+    "syncError": "Sync failed. Please try again.",
+    "syncErrorOffline": "Cannot connect to server. Check your internet or try again later.",
+    "retrySync": "Retry",
     "snackbars": {
       "successfulAccountCreation": "Account created successfully.",
       "unexpectedError": "An unexpected error occurred"

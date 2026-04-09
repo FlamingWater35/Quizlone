@@ -34,8 +34,9 @@
       "emailEmpty": "Inserisci un'email",
       "passwordEmpty": "Inserisci una password"
     },
-    "syncError": "Errore di sincronizzazione: Impossibile connettersi al cloud. Utilizzo dei dati locali.",
-    "retrySync": "Riprova sincronizzazione",
+    "syncError": "Sincronizzazione fallita. Riprova.",
+    "syncErrorOffline": "Impossibile connettersi al server. Controlla la tua connessione internet o riprova più tardi.",
+    "retrySync": "Riprova",
     "snackbars": {
       "successfulAccountCreation": "Account creato con successo.",
       "unexpectedError": "Si è verificato un errore imprevisto"

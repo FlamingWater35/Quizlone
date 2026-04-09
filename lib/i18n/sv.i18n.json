@@ -34,8 +34,9 @@
       "emailEmpty": "Vänligen ange en e-postadress",
       "passwordEmpty": "Vänligen ange ett lösenord"
     },
-    "syncError": "Synkroniseringsfel: Kunde inte ansluta till molnet. Använder lokala data.",
-    "retrySync": "Försök synkronisera igen",
+    "syncError": "Synkronisering misslyckades. Försök igen.",
+    "syncErrorOffline": "Kan inte ansluta till servern. Kontrollera din internetanslutning eller försök igen senare.",
+    "retrySync": "Försök igen",
     "snackbars": {
       "successfulAccountCreation": "Konto skapat framgångsrikt.",
       "unexpectedError": "Ett oväntat fel uppstod"

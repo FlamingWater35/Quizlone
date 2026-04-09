@@ -34,8 +34,9 @@
       "emailEmpty": "Por favor ingresa un correo electrónico",
       "passwordEmpty": "Por favor ingresa una contraseña"
     },
-    "syncError": "Error de sincronización: No se pudo conectar a la nube. Usando datos locales.",
-    "retrySync": "Reintentar sincronización",
+    "syncError": "La sincronización falló. Por favor, inténtelo de nuevo.",
+    "syncErrorOffline": "No se puede conectar al servidor. Verifique su conexión a internet o inténtelo más tarde.",
+    "retrySync": "Reintentar",
     "snackbars": {
       "successfulAccountCreation": "Cuenta creada exitosamente.",
       "unexpectedError": "Ocurrió un error inesperado"

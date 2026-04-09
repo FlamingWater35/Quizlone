@@ -34,8 +34,9 @@
       "emailEmpty": "请输入邮箱",
       "passwordEmpty": "请输入密码"
     },
-    "syncError": "同步错误：无法连接到云。使用本地数据。",
-    "retrySync": "重试同步",
+    "syncError": "同步失败。请重试。",
+    "syncErrorOffline": "无法连接到服务器。请检查您的网络连接或稍后重试。",
+    "retrySync": "重试",
     "snackbars": {
       "successfulAccountCreation": "账户创建成功。",
       "unexpectedError": "发生意外错误"

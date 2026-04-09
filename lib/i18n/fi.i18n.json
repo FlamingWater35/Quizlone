@@ -34,8 +34,9 @@
       "emailEmpty": "Syötä sähköpostiosoite",
       "passwordEmpty": "Syötä salasana"
     },
-    "syncError": "Synkronointivirhe: Yhteyttä pilveen ei saatu. Käytetään paikallisia tietoja.",
-    "retrySync": "Yritä synkronointia uudelleen",
+    "syncError": "Synkronointi epäonnistui. Yritä uudelleen.",
+    "syncErrorOffline": "Palvelimeen ei saa yhteyttä. Tarkista internetyhteys tai yritä myöhemmin uudelleen.",
+    "retrySync": "Yritä uudelleen",
     "snackbars": {
       "successfulAccountCreation": "Tili luotu onnistuneesti.",
       "unexpectedError": "Tuntematon virhe tapahtui"

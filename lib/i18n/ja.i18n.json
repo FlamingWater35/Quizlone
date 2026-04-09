@@ -34,8 +34,9 @@
       "emailEmpty": "メールアドレスを入力してください",
       "passwordEmpty": "パスワードを入力してください"
     },
-    "syncError": "同期エラー: クラウドに接続できませんでした。ローカルデータを使用します。",
-    "retrySync": "同期を再試行",
+    "syncError": "同期に失敗しました。もう一度お試しください。",
+    "syncErrorOffline": "サーバーに接続できません。インターネット接続を確認するか、後でもう一度お試しください。",
+    "retrySync": "再試行",
     "snackbars": {
       "successfulAccountCreation": "アカウントが正常に作成されました。",
       "unexpectedError": "予期しないエラーが発生しました"

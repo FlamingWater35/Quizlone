@@ -34,8 +34,9 @@
       "emailEmpty": "Bitte geben Sie eine E-Mail-Adresse ein",
       "passwordEmpty": "Bitte geben Sie ein Passwort ein"
     },
-    "syncError": "Sync-Fehler: Verbindung zur Cloud fehlgeschlagen. Verwende lokale Daten.",
-    "retrySync": "Sync wiederholen",
+    "syncError": "Sync fehlgeschlagen. Bitte versuchen Sie es erneut.",
+    "syncErrorOffline": "Verbindung zum Server nicht möglich. Überprüfen Sie Ihre Internetverbindung oder versuchen Sie es später erneut.",
+    "retrySync": "Wiederholen",
     "snackbars": {
       "successfulAccountCreation": "Konto erfolgreich erstellt.",
       "unexpectedError": "Ein unerwarteter Fehler ist aufgetreten"
