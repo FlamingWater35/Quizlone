@@ -299,6 +299,7 @@
     "noNewVersion": "未找到新版本。",
     "updateAvailable": "有可用更新：v$version",
     "tapToInstall": "点击下载并安装",
+    "clickToDownload": "点击下载最新版本",
     "viewReleaseNotes": "查看发行说明",
     "downloadingUpdate": "正在下载更新...",
     "updateCheckFailed": "更新检查失败",

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
 import 'package:open_filex/open_filex.dart';
@@ -22,7 +23,8 @@ class UpdaterService {
   final Dio _dio = Dio();
 
   Future<UpdateInfo?> checkForUpdate() async {
-    if (!Platform.isAndroid) return null;
+    if (kIsWeb) return null;
+    if (!Platform.isAndroid && !Platform.isWindows) return null;
 
     try {
       final info = await PackageInfo.fromPlatform();
@@ -43,18 +45,22 @@ class UpdaterService {
 
         if (latestVersion > currentVersion) {
           final assets = json['assets'] as List;
-          final apkAsset = assets.firstWhere(
-            (asset) => (asset['name'] as String).endsWith('.apk'),
+
+          final String extension = Platform.isAndroid ? '.apk' : '.7z';
+
+          final asset = assets.firstWhere(
+            (asset) =>
+                (asset['name'] as String).toLowerCase().endsWith(extension),
             orElse: () => null,
           );
 
-          if (apkAsset != null) {
+          if (asset != null) {
             return UpdateInfo(
               version: latestVersionStr,
               releaseNotes: json['body'],
               releaseDate: DateTime.parse(json['published_at']),
-              apkUrl: apkAsset['browser_download_url'],
-              apkAssetName: apkAsset['name'],
+              apkUrl: asset['browser_download_url'],
+              apkAssetName: asset['name'],
             );
           }
         }

@@ -311,6 +311,7 @@
     "noNewVersion": "Новая версия не найдена.",
     "updateAvailable": "Доступно обновление: v$version",
     "tapToInstall": "Нажмите, чтобы скачать и установить",
+    "clickToDownload": "Нажмите, чтобы загрузить последнюю версию",
     "viewReleaseNotes": "Просмотреть заметки о выпуске",
     "downloadingUpdate": "Загрузка обновления...",
     "updateCheckFailed": "Проверка обновлений не удалась",

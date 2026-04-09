@@ -299,6 +299,7 @@
     "noNewVersion": "No new version found.",
     "updateAvailable": "Update Available: v$version",
     "tapToInstall": "Tap to download and install",
+    "clickToDownload": "Click to download latest version",
     "viewReleaseNotes": "View release notes",
     "downloadingUpdate": "Downloading update...",
     "updateCheckFailed": "Update Check Failed",

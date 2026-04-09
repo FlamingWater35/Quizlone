@@ -299,6 +299,7 @@
     "noNewVersion": "Ei uutta versiota löytynyt.",
     "updateAvailable": "Päivitys saatavilla: v$version",
     "tapToInstall": "Napauta ladataksesi ja asentaaksesi",
+    "clickToDownload": "Napsauta ladataksesi uusimman version",
     "viewReleaseNotes": "Näytä julkaisutiedot",
     "downloadingUpdate": "Ladataan päivitystä...",
     "updateCheckFailed": "Päivitysten tarkistus epäonnistui",

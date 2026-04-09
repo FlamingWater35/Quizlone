@@ -299,6 +299,7 @@
     "noNewVersion": "Keine neue Version gefunden.",
     "updateAvailable": "Update verfügbar: v$version",
     "tapToInstall": "Zum Herunterladen und Installieren antippen",
+    "clickToDownload": "Klicken Sie, um die neueste Version herunterzuladen",
     "viewReleaseNotes": "Versionshinweise anzeigen",
     "downloadingUpdate": "Update wird heruntergeladen...",
     "updateCheckFailed": "Update-Prüfung fehlgeschlagen",

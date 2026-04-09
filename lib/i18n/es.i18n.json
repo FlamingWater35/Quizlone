@@ -299,6 +299,7 @@
     "noNewVersion": "No se encontró nueva versión.",
     "updateAvailable": "Actualización Disponible: v$version",
     "tapToInstall": "Toca para descargar e instalar",
+    "clickToDownload": "Haga clic para descargar la última versión",
     "viewReleaseNotes": "Ver notas de la versión",
     "downloadingUpdate": "Descargando actualización...",
     "updateCheckFailed": "Error al Buscar Actualizaciones",

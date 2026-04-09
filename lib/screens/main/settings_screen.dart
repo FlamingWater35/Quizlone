@@ -465,7 +465,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   ],
                 ),
               ),
-              if (!kIsWeb && Platform.isAndroid) ...[
+              if (!kIsWeb && (Platform.isAndroid || Platform.isWindows)) ...[
                 _SettingsHeader(title: t.settingsScreen.update),
                 const _UpdaterCard(),
               ],
@@ -586,13 +586,19 @@ class _UpdaterCard extends ConsumerWidget {
           children: [
             ListTile(
               leading: Icon(
-                Icons.download_for_offline_outlined,
+                Platform.isAndroid
+                    ? Icons.download_for_offline_outlined
+                    : Icons.open_in_browser_outlined,
                 color: theme.colorScheme.secondary,
               ),
               title: Text(
                 t.settingsScreen.updateAvailable(version: info.version),
               ),
-              subtitle: Text(t.settingsScreen.tapToInstall),
+              subtitle: Text(
+                Platform.isAndroid
+                    ? t.settingsScreen.tapToInstall
+                    : t.settingsScreen.clickToDownload,
+              ),
               onTap: updaterNotifier.downloadUpdate,
             ),
             if (info.releaseNotes != null && info.releaseNotes!.isNotEmpty)

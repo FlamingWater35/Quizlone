@@ -299,6 +299,7 @@
     "noNewVersion": "新しいバージョンは見つかりませんでした。",
     "updateAvailable": "利用可能な更新: v$version",
     "tapToInstall": "タップしてダウンロードとインストール",
+    "clickToDownload": "クリックして最新バージョンをダウンロード",
     "viewReleaseNotes": "リリースノートを表示",
     "downloadingUpdate": "更新をダウンロード中...",
     "updateCheckFailed": "更新チェックに失敗しました",

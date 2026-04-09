@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../models/update_info.dart';
 import '../../services/updater_service.dart';
@@ -71,31 +72,40 @@ class UpdaterController extends _$UpdaterController {
     final currentState = state;
     if (currentState is! UpdateAvailable) return;
 
-    state = const UpdateDownloading(0);
-    final service = ref.read(updaterServiceProvider);
-    try {
-      final downloadedPath = await service.downloadAndInstallUpdate(
-        currentState.info,
-        (received, total) {
-          if (total != -1 && state is UpdateDownloading) {
-            state = UpdateDownloading(received / total);
-          }
-        },
-      );
-      if (downloadedPath != null) {
-        await ref
-            .read(databaseServiceProvider)
-            .setApkPathForCleanup(downloadedPath);
+    if (Platform.isAndroid) {
+      state = const UpdateDownloading(0);
+      final service = ref.read(updaterServiceProvider);
+      try {
+        final downloadedPath = await service.downloadAndInstallUpdate(
+          currentState.info,
+          (received, total) {
+            if (total != -1 && state is UpdateDownloading) {
+              state = UpdateDownloading(received / total);
+            }
+          },
+        );
+        if (downloadedPath != null) {
+          await ref
+              .read(databaseServiceProvider)
+              .setApkPathForCleanup(downloadedPath);
+        }
+        state = currentState;
+      } catch (e) {
+        state = UpdateError(e.toString());
       }
-      state = currentState;
-    } catch (e) {
-      state = UpdateError(e.toString());
+    } else if (Platform.isWindows) {
+      final url = Uri.parse(currentState.info.apkUrl);
+      if (await canLaunchUrl(url)) {
+        await launchUrl(url, mode: LaunchMode.externalApplication);
+      } else {
+        state = const UpdateError("Could not open browser");
+      }
     }
   }
 
   @override
   UpdateState build() {
-    if (Platform.isAndroid) {
+    if (!kIsWeb && (Platform.isAndroid || Platform.isWindows)) {
       Future.delayed(const Duration(seconds: 3), () {
         if (state is UpdateInitial) {
           checkForUpdate();
