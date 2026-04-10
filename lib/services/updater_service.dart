@@ -48,46 +48,52 @@ class UpdaterService {
 
         if (latestVersion > currentVersion) {
           final assets = json['assets'] as List;
+          dynamic targetAsset;
 
-          String extension;
           if (Platform.isAndroid) {
-            extension = '.apk';
+            targetAsset = assets.firstWhere(
+              (a) => (a['name'] as String).contains('arm64-v8a.apk'),
+              orElse: () => assets.firstWhere(
+                (a) => (a['name'] as String).endsWith('.apk'),
+                orElse: () => null,
+              ),
+            );
           } else if (Platform.isWindows) {
-            extension = '.7z';
+            targetAsset = assets.firstWhere(
+              (a) => (a['name'] as String).contains('Setup.exe'),
+              orElse: () => assets.firstWhere(
+                (a) => (a['name'] as String).contains('Windows-portable.7z'),
+                orElse: () => null,
+              ),
+            );
+          } else if (Platform.isLinux) {
+            targetAsset = assets.firstWhere(
+              (a) => (a['name'] as String).endsWith('.AppImage'),
+              orElse: () => assets.firstWhere(
+                (a) => (a['name'] as String).endsWith('.tar.gz'),
+                orElse: () => null,
+              ),
+            );
           } else if (Platform.isMacOS) {
-            extension = '.dmg';
-          } else {
-            extension = '.zip';
+            targetAsset = assets.firstWhere(
+              (a) => (a['name'] as String).toLowerCase().endsWith('.dmg'),
+              orElse: () => null,
+            );
           }
 
-          var asset = assets.firstWhere(
-            (asset) =>
-                (asset['name'] as String).toLowerCase().endsWith(extension),
-            orElse: () => null,
-          );
-
-          if (asset == null && isDesktop) {
-            asset = assets.firstWhere((asset) {
-              final name = (asset['name'] as String).toLowerCase();
-              return name.endsWith('.zip') ||
-                  name.endsWith('.7z') ||
-                  name.endsWith('.tar.gz');
-            }, orElse: () => null);
-          }
-
-          if (asset != null) {
+          if (targetAsset != null) {
             return UpdateInfo(
               version: latestVersionStr,
               releaseNotes: json['body'],
               releaseDate: DateTime.parse(json['published_at']),
-              apkUrl: asset['browser_download_url'],
-              apkAssetName: asset['name'],
+              apkUrl: targetAsset['browser_download_url'],
+              apkAssetName: targetAsset['name'],
             );
           }
         }
       } else {
         _log.warning(
-          'Failed to check for updates. Status code: ${response.statusCode}',
+          'Failed to check for updates. Status: ${response.statusCode}',
         );
       }
     } catch (e, s) {
@@ -106,7 +112,7 @@ class UpdaterService {
       final tempDir = await getTemporaryDirectory();
       final filePath = '${tempDir.path}/${updateInfo.apkAssetName}';
 
-      _log.fine('Downloading update from ${updateInfo.apkUrl} to $filePath');
+      _log.fine('Downloading update: ${updateInfo.apkUrl}');
 
       await _dio.download(
         updateInfo.apkUrl,
@@ -114,16 +120,15 @@ class UpdaterService {
         onReceiveProgress: onReceiveProgress,
       );
 
-      _log.fine('Download complete. Opening file...');
+      _log.fine('Download complete. Opening APK...');
       final result = await OpenFilex.open(filePath);
 
       if (result.type != ResultType.done) {
-        _log.warning('Failed to open APK installer: ${result.message}');
-        throw Exception('Could not open APK file: ${result.message}');
+        throw Exception('Could not open APK: ${result.message}');
       }
       return filePath;
     } catch (e, s) {
-      _log.severe('Error during update download/install', e, s);
+      _log.severe('Error during install', e, s);
       rethrow;
     }
   }

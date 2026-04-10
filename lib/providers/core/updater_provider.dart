@@ -96,13 +96,14 @@ class UpdaterController extends _$UpdaterController {
         if (ref.mounted) state = UpdateError(e.toString());
       }
     } else {
-      final url = Uri.parse(
-        'https://github.com/FlamingWater35/Quizlone/releases/latest',
-      );
+      final url = Uri.parse(currentState.info.apkUrl);
       if (await canLaunchUrl(url)) {
         await launchUrl(url, mode: LaunchMode.externalApplication);
       } else {
-        if (ref.mounted) state = const UpdateError("Could not open browser");
+        final fallbackUrl = Uri.parse(
+          'https://github.com/FlamingWater35/Quizlone/releases/latest',
+        );
+        await launchUrl(fallbackUrl, mode: LaunchMode.externalApplication);
       }
     }
   }
