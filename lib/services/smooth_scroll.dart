@@ -1,24 +1,11 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-
-bool _isGlobalRouteAdded = false;
-PointerDeviceKind _lastDeviceKind = PointerDeviceKind.mouse;
 
 class SmoothScrollController extends ScrollController {
   SmoothScrollController({
     super.initialScrollOffset,
     super.keepScrollOffset,
     super.debugLabel,
-  }) {
-    if (!_isGlobalRouteAdded) {
-      _isGlobalRouteAdded = true;
-      GestureBinding.instance.pointerRouter.addGlobalRoute((event) {
-        if (event is PointerScrollEvent) {
-          _lastDeviceKind = event.kind;
-        }
-      });
-    }
-  }
+  });
 
   @override
   ScrollPosition createScrollPosition(
@@ -52,11 +39,6 @@ class SmoothScrollPosition extends ScrollPositionWithSingleContext {
   @override
   void pointerScroll(double delta) {
     if (delta == 0.0) return;
-
-    if (_lastDeviceKind != PointerDeviceKind.mouse) {
-      super.pointerScroll(delta);
-      return;
-    }
 
     if (activity is! DrivenScrollActivity) {
       _targetPixels = pixels;
