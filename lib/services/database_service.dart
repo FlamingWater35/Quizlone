@@ -1,9 +1,12 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:logging/logging.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 
 import '../models/match_record.dart';
 import '../models/settings_app_data.dart';
@@ -35,7 +38,15 @@ class DatabaseService {
   static const String _testRecordsBoxName = 'testRecordsBox';
 
   static Future<void> init() async {
-    await Hive.initFlutter('Quizlone');
+    final supportDir = await getApplicationSupportDirectory();
+    final dbPath = p.join(supportDir.path, 'Quizlone');
+
+    final directory = Directory(dbPath);
+    if (!await directory.exists()) {
+      await directory.create(recursive: true);
+    }
+
+    Hive.init(dbPath);
 
     Hive.registerAdapter(TermAdapter());
     Hive.registerAdapter(StudyListAdapter());
