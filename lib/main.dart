@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
@@ -24,28 +25,37 @@ import 'services/window_manager.dart';
 final _log = Logger('main');
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+
   initLocaleSettings();
   _setupLogging();
 
-  await dotenv.load(fileName: ".env");
+  try {
+    await dotenv.load(fileName: ".env");
 
-  await Supabase.initialize(
-    url: dotenv.env['SUPABASE_URL']!,
-    anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
-  );
+    await Supabase.initialize(
+      url: dotenv.env['SUPABASE_URL']!,
+      anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
+    );
 
-  await DatabaseService.init();
-  await _runCleanupTasks();
-  await runMigrations();
+    await DatabaseService.init();
+    await _runCleanupTasks();
+    await runMigrations();
 
-  final container = ProviderContainer();
-  final dbService = container.read(databaseServiceProvider);
-  final savedLangCode = dbService.getLanguage();
-  AppLanguageExtension.fromCode(savedLangCode).applyLocale();
-  container.dispose();
+    final container = ProviderContainer();
+    final dbService = container.read(databaseServiceProvider);
+    final savedLangCode = dbService.getLanguage();
+    AppLanguageExtension.fromCode(savedLangCode).applyLocale();
+    container.dispose();
 
-  setupWindow();
+    setupWindow();
+  } catch (e) {
+    _log.severe("Error during initialization: $e");
+  }
+
+  FlutterNativeSplash.remove();
+
   runApp(ProviderScope(child: TranslationProvider(child: const MyApp())));
 }
 
