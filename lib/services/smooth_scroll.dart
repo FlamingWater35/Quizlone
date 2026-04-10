@@ -1,6 +1,3 @@
-import 'dart:io';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class SmoothScrollController extends ScrollController {
@@ -41,16 +38,6 @@ class SmoothScrollPosition extends ScrollPositionWithSingleContext {
 
   @override
   void pointerScroll(double delta) {
-    if (!kIsWeb && Platform.isAndroid) {
-      super.pointerScroll(delta);
-      return;
-    }
-
-    if (delta.abs() < 20) {
-      super.pointerScroll(delta);
-      return;
-    }
-
     if (delta == 0.0) return;
 
     if (activity is! DrivenScrollActivity) {
