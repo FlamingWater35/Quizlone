@@ -31,6 +31,7 @@ class DatabaseService {
   static const String _matchRecordsBoxName = 'matchRecordsBox';
   static late Box _settingsBox;
   static const String _settingsBoxName = 'settingsBox';
+  static const String _smoothScrollKey = 'smoothScrollEnabled';
   static late Box<StudyGroup> _studyGroupBox;
   static const String _studyGroupBoxName = 'studyGroupsBox';
   static late Box<StudyList> _studyListBox;
@@ -339,6 +340,14 @@ class DatabaseService {
 
   double getUiScale() {
     return _settingsBox.get('uiScale', defaultValue: 1.0);
+  }
+
+  Future<void> saveSmoothScroll(bool enabled) async {
+    await _settingsBox.put(_smoothScrollKey, enabled);
+  }
+
+  bool getSmoothScroll() {
+    return _settingsBox.get(_smoothScrollKey, defaultValue: false);
   }
 
   Future<void> saveActiveListId(String? id) async {

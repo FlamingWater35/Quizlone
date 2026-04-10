@@ -366,8 +366,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     final currentLanguage = ref.watch(appLanguageProvider);
     final uiScale = ref.watch(uiScaleProvider);
     final uiScaleNotifier = ref.read(uiScaleProvider.notifier);
+    final smoothScrollEnabled = ref.watch(smoothScrollProvider);
     final colorScheme = Theme.of(context).colorScheme;
     final t = Translations.of(context);
+
+    final isDesktop =
+        !kIsWeb && (Platform.isWindows || Platform.isMacOS || Platform.isLinux);
 
     return Scaffold(
       appBar: AppBar(
@@ -465,7 +469,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   ],
                 ),
               ),
-              if (!kIsWeb && (Platform.isAndroid || Platform.isWindows)) ...[
+              if (!kIsWeb &&
+                  (Platform.isAndroid ||
+                      Platform.isWindows ||
+                      Platform.isMacOS ||
+                      Platform.isLinux)) ...[
                 _SettingsHeader(title: t.settingsScreen.update),
                 const _UpdaterCard(),
               ],
@@ -517,6 +525,22 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     ),
                     subtitle: Text(t.settingsScreen.deleteAccountSubtitle),
                     onTap: () => _confirmDeleteAccount(context, ref),
+                  ),
+                ),
+              ],
+              if (isDesktop) ...[
+                _SettingsHeader(title: "Experimental"),
+                Card(
+                  clipBehavior: Clip.antiAlias,
+                  child: SwitchListTile(
+                    title: const Text("Smooth Scrolling"),
+                    subtitle: const Text(
+                      "Enables custom physics for pointer/mouse scrolling.",
+                    ),
+                    secondary: const Icon(Icons.mouse_outlined),
+                    value: smoothScrollEnabled,
+                    onChanged: (val) =>
+                        ref.read(smoothScrollProvider.notifier).toggle(val),
                   ),
                 ),
               ],

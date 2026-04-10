@@ -3,6 +3,7 @@ import 'package:logging/logging.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../services/smooth_scroll.dart';
 import 'core_providers.dart';
 
 part 'settings_provider.g.dart';
@@ -256,5 +257,24 @@ class UiScaleNotifier extends _$UiScaleNotifier {
     final scale = ref.watch(databaseServiceProvider).getUiScale();
     _log.fine("[UiScaleNotifier] Initializing with scale: $scale");
     return scale;
+  }
+}
+
+@riverpod
+class SmoothScrollNotifier extends _$SmoothScrollNotifier {
+  Future<void> toggle(bool enabled) async {
+    _log.fine("[SmoothScrollNotifier] Setting enabled to $enabled");
+    await ref.read(databaseServiceProvider).saveSmoothScroll(enabled);
+    SmoothScrollController.enabledGlobally = enabled;
+    if (!ref.mounted) return;
+    state = enabled;
+  }
+
+  @override
+  bool build() {
+    final enabled = ref.watch(databaseServiceProvider).getSmoothScroll();
+    _log.fine("[SmoothScrollNotifier] Initializing with enabled: $enabled");
+    SmoothScrollController.enabledGlobally = enabled;
+    return enabled;
   }
 }

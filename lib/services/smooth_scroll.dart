@@ -7,6 +7,8 @@ class SmoothScrollController extends ScrollController {
     super.debugLabel,
   });
 
+  static bool enabledGlobally = false;
+
   @override
   ScrollPosition createScrollPosition(
     ScrollPhysics physics,
@@ -39,6 +41,11 @@ class SmoothScrollPosition extends ScrollPositionWithSingleContext {
   @override
   void pointerScroll(double delta) {
     if (delta == 0.0) return;
+
+    if (!SmoothScrollController.enabledGlobally) {
+      super.pointerScroll(delta);
+      return;
+    }
 
     if (activity is! DrivenScrollActivity) {
       _targetPixels = pixels;

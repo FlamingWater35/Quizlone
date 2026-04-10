@@ -20,6 +20,7 @@ import 'providers/core/settings_provider.dart';
 import 'providers/core/updater_provider.dart';
 import 'services/database_service.dart';
 import 'services/migration_service.dart';
+import 'services/smooth_scroll.dart';
 import 'services/window_manager.dart';
 
 final _log = Logger('main');
@@ -45,8 +46,11 @@ Future<void> main() async {
 
     final container = ProviderContainer();
     final dbService = container.read(databaseServiceProvider);
+
     final savedLangCode = dbService.getLanguage();
     AppLanguageExtension.fromCode(savedLangCode).applyLocale();
+    SmoothScrollController.enabledGlobally = dbService.getSmoothScroll();
+
     container.dispose();
 
     setupWindow();
@@ -109,6 +113,7 @@ class MyApp extends ConsumerWidget {
     MyApp._log.info("Building MyApp widget");
 
     ref.watch(authControllerProvider);
+    ref.watch(smoothScrollProvider);
 
     if (!kIsWeb && Platform.isAndroid) {
       ref.watch(updaterControllerProvider);

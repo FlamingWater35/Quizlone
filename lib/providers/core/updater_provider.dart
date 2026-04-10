@@ -93,7 +93,7 @@ class UpdaterController extends _$UpdaterController {
       } catch (e) {
         state = UpdateError(e.toString());
       }
-    } else if (Platform.isWindows) {
+    } else if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
       final url = Uri.parse(
         'https://github.com/FlamingWater35/Quizlone/releases/latest',
       );
@@ -107,7 +107,9 @@ class UpdaterController extends _$UpdaterController {
 
   @override
   UpdateState build() {
-    if (!kIsWeb && (Platform.isAndroid || Platform.isWindows)) {
+    final bool isDesktop =
+        !kIsWeb && (Platform.isWindows || Platform.isMacOS || Platform.isLinux);
+    if (!kIsWeb && (Platform.isAndroid || isDesktop)) {
       Future.delayed(const Duration(seconds: 3), () {
         if (state is UpdateInitial) {
           checkForUpdate();
