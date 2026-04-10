@@ -94,6 +94,16 @@ class _MatchLeaderboardScreenState extends ConsumerState<MatchLeaderboardScreen>
     }
   }
 
+  void _returnToModeSelection() {
+    context.router.popUntil(
+      (route) =>
+          route.settings.name == ModeSelectionRoute.name || route.isFirst,
+    );
+    if (context.router.current.name != ModeSelectionRoute.name) {
+      context.router.replace(const ModeSelectionRoute());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final activeListAsync = ref.watch(activeStudyListProvider);
@@ -105,6 +115,17 @@ class _MatchLeaderboardScreenState extends ConsumerState<MatchLeaderboardScreen>
         automaticallyImplyLeading: false,
         title: Text(t.matchScreen.leaderboard.title),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.home_outlined),
+            tooltip: t.modeSelectionScreen.returnToWelcome,
+            onPressed: () {
+              ref.read(activeStudyListIdProvider.notifier).set(null);
+              context.router.popUntilRoot();
+            },
+          ),
+          const SizedBox(width: 4),
+        ],
       ),
       body: SafeArea(
         child: CenteredView(
@@ -123,7 +144,7 @@ class _MatchLeaderboardScreenState extends ConsumerState<MatchLeaderboardScreen>
                       const SizedBox(height: 20),
                       ElevatedButton(
                         onPressed: () {
-                          context.router.replaceAll([const StartRoute()]);
+                          context.router.popUntilRoot();
                         },
                         child: Text(t.modeSelectionScreen.returnToWelcome),
                       ),
@@ -273,9 +294,7 @@ class _MatchLeaderboardScreenState extends ConsumerState<MatchLeaderboardScreen>
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         OutlinedButton(
-                          onPressed: () {
-                            context.router.navigate(const ModeSelectionRoute());
-                          },
+                          onPressed: _returnToModeSelection,
                           child: Text(t.matchScreen.backToOptions),
                         ),
                         const SizedBox(width: 16),
@@ -284,7 +303,8 @@ class _MatchLeaderboardScreenState extends ConsumerState<MatchLeaderboardScreen>
                           label: Text(t.matchScreen.playAgain),
                           onPressed: () {
                             ref.invalidate(matchControllerProvider);
-                            context.router.replace(const MatchRoute());
+                            _returnToModeSelection();
+                            context.router.push(const MatchRoute());
                           },
                         ),
                       ],

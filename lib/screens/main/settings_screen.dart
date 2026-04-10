@@ -55,52 +55,83 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
       transitionDuration: const Duration(milliseconds: 250),
       pageBuilder: (context, animation, secondaryAnimation) {
+        final dialogScrollController = SmoothScrollController();
         return SafeArea(
           child: Align(
             alignment: Alignment.centerRight,
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 500),
-              child: SimpleDialog(
-                title: Text(t.settingsScreen.languageDialogTitle),
-                contentPadding: const EdgeInsets.all(8.0),
-                children: AppLanguage.values.map((lang) {
-                  final isSelected = lang == currentLanguage;
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 4.0,
-                      horizontal: 8.0,
-                    ),
-                    child: Card(
-                      margin: EdgeInsets.zero,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: ListTile(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+              child: Dialog(
+                insetPadding: const EdgeInsets.all(20),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24.0,
+                          vertical: 8.0,
                         ),
-                        title: Text(
-                          lang.getDisplayName(t),
-                          style: TextStyle(
-                            fontWeight: isSelected
-                                ? FontWeight.bold
-                                : FontWeight.normal,
+                        child: Text(
+                          t.settingsScreen.languageDialogTitle,
+                          style: theme.textTheme.titleLarge,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Flexible(
+                        child: Scrollbar(
+                          controller: dialogScrollController,
+                          thumbVisibility: true,
+                          child: ListView(
+                            controller: dialogScrollController,
+                            shrinkWrap: true,
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            children: AppLanguage.values.map((lang) {
+                              final isSelected = lang == currentLanguage;
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 4.0,
+                                ),
+                                child: Card(
+                                  margin: EdgeInsets.zero,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: ListTile(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    title: Text(
+                                      lang.getDisplayName(t),
+                                      style: TextStyle(
+                                        fontWeight: isSelected
+                                            ? FontWeight.bold
+                                            : FontWeight.normal,
+                                      ),
+                                    ),
+                                    trailing: isSelected
+                                        ? Icon(
+                                            Icons.check_circle,
+                                            color: theme.colorScheme.primary,
+                                          )
+                                        : null,
+                                    onTap: () {
+                                      languageNotifier.setLanguage(lang);
+                                      Navigator.of(context).pop();
+                                      dialogScrollController.dispose();
+                                    },
+                                  ),
+                                ),
+                              );
+                            }).toList(),
                           ),
                         ),
-                        trailing: isSelected
-                            ? Icon(
-                                Icons.check_circle,
-                                color: theme.colorScheme.primary,
-                              )
-                            : null,
-                        onTap: () {
-                          languageNotifier.setLanguage(lang);
-                          Navigator.of(context).pop();
-                        },
                       ),
-                    ),
-                  );
-                }).toList(),
+                    ],
+                  ),
+                ),
               ),
             ),
           ),

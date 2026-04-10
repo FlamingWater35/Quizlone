@@ -272,27 +272,54 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
     final String? destinationGroupId = await showDialog<String?>(
       context: context,
       builder: (context) {
-        return SimpleDialog(
+        final dialogScrollController = SmoothScrollController();
+        return AlertDialog(
           title: Text(
             t.loadListScreen.moveToGroupDialog.title(count: listIds.length),
           ),
-          children: [
-            SimpleDialogOption(
-              onPressed: () => Navigator.pop(context, "ungrouped"),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                child: Text(t.loadListScreen.ungrouped),
+          contentPadding: const EdgeInsets.only(top: 16, bottom: 8),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          content: SizedBox(
+            width: double.maxFinite,
+            child: Scrollbar(
+              controller: dialogScrollController,
+              thumbVisibility: true,
+              child: ListView(
+                controller: dialogScrollController,
+                shrinkWrap: true,
+                children: [
+                  ListTile(
+                    leading: const Icon(Icons.folder_off_outlined),
+                    title: Text(t.loadListScreen.ungrouped),
+                    onTap: () {
+                      Navigator.pop(context, "ungrouped");
+                      dialogScrollController.dispose();
+                    },
+                  ),
+                  if (allGroups.isNotEmpty) const Divider(height: 1),
+                  ...allGroups.map(
+                    (group) => ListTile(
+                      leading: const Icon(Icons.folder_outlined),
+                      title: Text(group.name),
+                      onTap: () {
+                        Navigator.pop(context, group.id);
+                        dialogScrollController.dispose();
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
-            if (allGroups.isNotEmpty) const Divider(),
-            ...allGroups.map(
-              (group) => SimpleDialogOption(
-                onPressed: () => Navigator.pop(context, group.id),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: Text(group.name),
-                ),
-              ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                dialogScrollController.dispose();
+              },
+              child: Text(t.general.cancel),
             ),
           ],
         );
@@ -406,7 +433,7 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
                 ? () => _showMoveDialog(_selectedListIds.toList())
                 : null,
           ),
-          const SizedBox(width: 4)
+          const SizedBox(width: 4),
         ],
       );
     }
@@ -426,7 +453,15 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
           tooltip: t.loadListScreen.select,
           onPressed: _toggleSelectMode,
         ),
-        const SizedBox(width: 4)
+        IconButton(
+          icon: const Icon(Icons.home_outlined),
+          tooltip: t.modeSelectionScreen.returnToWelcome,
+          onPressed: () {
+            ref.read(activeStudyListIdProvider.notifier).set(null);
+            context.router.popUntilRoot();
+          },
+        ),
+        const SizedBox(width: 4),
       ],
     );
   }

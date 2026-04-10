@@ -36,6 +36,17 @@ class _FlashcardScreenState extends ConsumerState<FlashcardScreen> {
         leading: const WebAwareBackButton(fallback: ModeSelectionRoute()),
         title: Text(t.flashcardScreen.title),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.home_outlined),
+            tooltip: t.modeSelectionScreen.returnToWelcome,
+            onPressed: () {
+              ref.read(activeStudyListIdProvider.notifier).set(null);
+              context.router.popUntilRoot();
+            },
+          ),
+          const SizedBox(width: 4),
+        ],
       ),
       body: SafeArea(
         child: activeListAsync.when(
@@ -58,7 +69,7 @@ class _FlashcardScreenState extends ConsumerState<FlashcardScreen> {
                             ref
                                 .read(activeStudyListIdProvider.notifier)
                                 .set(null);
-                            context.router.replaceAll([const StartRoute()]);
+                            context.router.popUntilRoot();
                           },
                           child: Text(t.modeSelectionScreen.returnToWelcome),
                         ),

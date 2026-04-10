@@ -43,6 +43,16 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
     }
   }
 
+  void _returnToModeSelection() {
+    context.router.popUntil(
+      (route) =>
+          route.settings.name == ModeSelectionRoute.name || route.isFirst,
+    );
+    if (context.router.current.name != ModeSelectionRoute.name) {
+      context.router.replace(const ModeSelectionRoute());
+    }
+  }
+
   Future<void> _initWebHistory() async {
     try {
       final state = await ref.read(testControllerProvider.future);
@@ -288,6 +298,14 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
             tooltip: t.resultsScreen.history.title,
             onPressed: _showHistoryDialog,
           ),
+          IconButton(
+            icon: const Icon(Icons.home_outlined),
+            tooltip: t.modeSelectionScreen.returnToWelcome,
+            onPressed: () {
+              ref.read(activeStudyListIdProvider.notifier).set(null);
+              context.router.popUntilRoot();
+            },
+          ),
           const SizedBox(width: 4),
         ],
       ),
@@ -315,11 +333,7 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
                         ),
                         const SizedBox(height: 24),
                         FilledButton(
-                          onPressed: () {
-                            context.router.popUntilRouteWithName(
-                              ModeSelectionRoute.name,
-                            );
-                          },
+                          onPressed: _returnToModeSelection,
                           child: Text(t.modeSelectionScreen.title),
                         ),
                       ],
@@ -466,9 +480,7 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         OutlinedButton(
-                          onPressed: () {
-                            context.router.navigate(const ModeSelectionRoute());
-                          },
+                          onPressed: _returnToModeSelection,
                           child: Text(t.modeSelectionScreen.title),
                         ),
                         const SizedBox(width: 16),
@@ -477,7 +489,8 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
                           label: Text(t.resultsScreen.retryTest),
                           onPressed: () {
                             testNotifier.restartTest();
-                            context.router.replace(const TestModeRoute());
+                            _returnToModeSelection();
+                            context.router.push(const TestModeRoute());
                           },
                         ),
                       ],
@@ -490,7 +503,8 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
                         ref
                             .read(flashcardControllerProvider.notifier)
                             .refreshWithOptions();
-                        context.router.replace(const FlashcardRoute());
+                        _returnToModeSelection();
+                        context.router.push(const FlashcardRoute());
                       },
                     ),
                   ],
@@ -523,7 +537,7 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
                           ref
                               .read(activeStudyListIdProvider.notifier)
                               .set(null);
-                          context.router.replace(const StartRoute());
+                          context.router.popUntilRoot();
                         },
                         child: Text(t.modeSelectionScreen.returnToWelcome),
                       ),

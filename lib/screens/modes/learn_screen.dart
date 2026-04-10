@@ -33,6 +33,17 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
         leading: const WebAwareBackButton(fallback: ModeSelectionRoute()),
         title: Text(t.learnScreen.title),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.home_outlined),
+            tooltip: t.modeSelectionScreen.returnToWelcome,
+            onPressed: () {
+              ref.read(activeStudyListIdProvider.notifier).set(null);
+              context.router.popUntilRoot();
+            },
+          ),
+          const SizedBox(width: 4),
+        ],
       ),
       body: SafeArea(
         child: activeListAsync.when(
@@ -55,7 +66,7 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
                             ref
                                 .read(activeStudyListIdProvider.notifier)
                                 .set(null);
-                            context.router.replaceAll([const StartRoute()]);
+                            context.router.popUntilRoot();
                           },
                           child: Text(t.modeSelectionScreen.returnToWelcome),
                         ),
@@ -150,6 +161,16 @@ class _LearnViewState extends ConsumerState<_LearnView>
     }
   }
 
+  void _returnToModeSelection() {
+    context.router.popUntil(
+      (route) =>
+          route.settings.name == ModeSelectionRoute.name || route.isFirst,
+    );
+    if (context.router.current.name != ModeSelectionRoute.name) {
+      context.router.replace(const ModeSelectionRoute());
+    }
+  }
+
   Widget _buildSessionCompleteUI(
     BuildContext context,
     LearnModeScreenState state,
@@ -190,9 +211,7 @@ class _LearnViewState extends ConsumerState<_LearnView>
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   OutlinedButton(
-                    onPressed: () {
-                      context.router.navigate(const ModeSelectionRoute());
-                    },
+                    onPressed: _returnToModeSelection,
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 24,

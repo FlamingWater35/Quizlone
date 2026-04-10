@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:quizlone/routing/app_router.dart';
+import 'package:quizlone/services/smooth_scroll.dart';
 import 'package:quizlone/widgets/error_snackbar.dart';
 
 import '../../i18n/generated/translations.g.dart';
@@ -12,7 +13,6 @@ import '../../models/study_list.dart';
 import '../../providers/study/study_list_providers.dart';
 import '../../providers/study/study_options_provider.dart';
 import '../../widgets/centered_view.dart';
-import 'package:quizlone/services/smooth_scroll.dart';
 
 final _log = Logger("ModeSelectionScreen");
 
@@ -55,6 +55,17 @@ class _ModeSelectionScreenState extends ConsumerState<ModeSelectionScreen> {
         ),
         title: Text(t.modeSelectionScreen.title),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.home_outlined),
+            tooltip: t.modeSelectionScreen.returnToWelcome,
+            onPressed: () {
+              ref.read(activeStudyListIdProvider.notifier).set(null);
+              context.router.popUntilRoot();
+            },
+          ),
+          const SizedBox(width: 4),
+        ],
       ),
       body: SafeArea(
         child: activeStudyListAsync.when(
@@ -77,7 +88,7 @@ class _ModeSelectionScreenState extends ConsumerState<ModeSelectionScreen> {
                             ref
                                 .read(activeStudyListIdProvider.notifier)
                                 .set(null);
-                            context.router.replaceAll([const StartRoute()]);
+                            context.router.popUntilRoot();
                           },
                           child: Text(t.modeSelectionScreen.returnToWelcome),
                         ),

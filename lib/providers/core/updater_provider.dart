@@ -58,13 +58,14 @@ class UpdaterController extends _$UpdaterController {
     final service = ref.read(updaterServiceProvider);
     try {
       final updateInfo = await service.checkForUpdate();
+      if (!ref.mounted) return;
       if (updateInfo != null) {
         state = UpdateAvailable(updateInfo);
       } else {
         state = const UpdateNotAvailable();
       }
     } catch (e) {
-      state = UpdateError(e.toString());
+      if (ref.mounted) state = UpdateError(e.toString());
     }
   }
 
@@ -79,11 +80,12 @@ class UpdaterController extends _$UpdaterController {
         final downloadedPath = await service.downloadAndInstallUpdate(
           currentState.info,
           (received, total) {
-            if (total != -1 && state is UpdateDownloading) {
+            if (total != -1 && ref.mounted && state is UpdateDownloading) {
               state = UpdateDownloading(received / total);
             }
           },
         );
+        if (!ref.mounted) return;
         if (downloadedPath != null) {
           await ref
               .read(databaseServiceProvider)
@@ -91,16 +93,16 @@ class UpdaterController extends _$UpdaterController {
         }
         state = currentState;
       } catch (e) {
-        state = UpdateError(e.toString());
+        if (ref.mounted) state = UpdateError(e.toString());
       }
-    } else if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
+    } else {
       final url = Uri.parse(
         'https://github.com/FlamingWater35/Quizlone/releases/latest',
       );
       if (await canLaunchUrl(url)) {
         await launchUrl(url, mode: LaunchMode.externalApplication);
       } else {
-        state = const UpdateError("Could not open browser");
+        if (ref.mounted) state = const UpdateError("Could not open browser");
       }
     }
   }
@@ -109,9 +111,10 @@ class UpdaterController extends _$UpdaterController {
   UpdateState build() {
     final bool isDesktop =
         !kIsWeb && (Platform.isWindows || Platform.isMacOS || Platform.isLinux);
+
     if (!kIsWeb && (Platform.isAndroid || isDesktop)) {
       Future.delayed(const Duration(seconds: 3), () {
-        if (state is UpdateInitial) {
+        if (ref.mounted && state is UpdateInitial) {
           checkForUpdate();
         }
       });

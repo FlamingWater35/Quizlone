@@ -24,7 +24,10 @@ class UpdaterService {
 
   Future<UpdateInfo?> checkForUpdate() async {
     if (kIsWeb) return null;
-    if (!Platform.isAndroid && !Platform.isWindows) return null;
+
+    final bool isDesktop =
+        Platform.isWindows || Platform.isMacOS || Platform.isLinux;
+    if (!Platform.isAndroid && !isDesktop) return null;
 
     try {
       final info = await PackageInfo.fromPlatform();
@@ -46,13 +49,31 @@ class UpdaterService {
         if (latestVersion > currentVersion) {
           final assets = json['assets'] as List;
 
-          final String extension = Platform.isAndroid ? '.apk' : '.7z';
+          String extension;
+          if (Platform.isAndroid) {
+            extension = '.apk';
+          } else if (Platform.isWindows) {
+            extension = '.7z';
+          } else if (Platform.isMacOS) {
+            extension = '.dmg';
+          } else {
+            extension = '.zip';
+          }
 
-          final asset = assets.firstWhere(
+          var asset = assets.firstWhere(
             (asset) =>
                 (asset['name'] as String).toLowerCase().endsWith(extension),
             orElse: () => null,
           );
+
+          if (asset == null && isDesktop) {
+            asset = assets.firstWhere((asset) {
+              final name = (asset['name'] as String).toLowerCase();
+              return name.endsWith('.zip') ||
+                  name.endsWith('.7z') ||
+                  name.endsWith('.tar.gz');
+            }, orElse: () => null);
+          }
 
           if (asset != null) {
             return UpdateInfo(

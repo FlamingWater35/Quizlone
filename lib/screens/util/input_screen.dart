@@ -1,7 +1,9 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
+import 'package:quizlone/providers/immutables/study_list_form_state.dart';
 import 'package:quizlone/routing/app_router.dart';
 import 'package:quizlone/services/navigation_service.dart';
 import 'package:quizlone/services/smooth_scroll.dart';
@@ -21,8 +23,8 @@ class InputScreen extends ConsumerStatefulWidget {
 
 class _InputScreenState extends ConsumerState<InputScreen> {
   late TextEditingController _listNameController;
-  late TextEditingController _termsInputController;
   final _scrollController = SmoothScrollController();
+  late TextEditingController _termsInputController;
 
   @override
   void dispose() {
@@ -44,6 +46,75 @@ class _InputScreenState extends ConsumerState<InputScreen> {
     );
   }
 
+  Future<void> _showGroupSelectionDialog(
+    BuildContext context,
+    StudyListFormState formState,
+    List<StudyGroup> groups,
+    StudyListFormNotifier formNotifier,
+  ) async {
+    final t = Translations.of(context);
+    final String? selectedId = await showDialog<String?>(
+      context: context,
+      builder: (context) {
+        final dialogScrollController = SmoothScrollController();
+        return AlertDialog(
+          title: Text(t.inputScreen.assignToGroup),
+          contentPadding: const EdgeInsets.only(top: 16, bottom: 8),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          content: SizedBox(
+            width: double.maxFinite,
+            child: Scrollbar(
+              controller: dialogScrollController,
+              thumbVisibility: true,
+              child: ListView(
+                controller: dialogScrollController,
+                shrinkWrap: true,
+                children: [
+                  ListTile(
+                    leading: const Icon(Icons.folder_off_outlined),
+                    title: Text(t.loadListScreen.ungrouped),
+                    selected: formState.selectedGroupId == null,
+                    onTap: () {
+                      Navigator.pop(context, "ungrouped");
+                      dialogScrollController.dispose();
+                    },
+                  ),
+                  if (groups.isNotEmpty) const Divider(height: 1),
+                  ...groups.map(
+                    (group) => ListTile(
+                      leading: const Icon(Icons.folder_outlined),
+                      title: Text(group.name),
+                      selected: formState.selectedGroupId == group.id,
+                      onTap: () {
+                        Navigator.pop(context, group.id);
+                        dialogScrollController.dispose();
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                dialogScrollController.dispose();
+              },
+              child: Text(t.general.cancel),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (selectedId != null && mounted) {
+      formNotifier.setGroupId(selectedId == "ungrouped" ? null : selectedId);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final formState = ref.watch(studyListFormProvider);
@@ -57,6 +128,17 @@ class _InputScreenState extends ConsumerState<InputScreen> {
         title: Text(t.inputScreen.title),
         centerTitle: true,
         automaticallyImplyLeading: false,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.home_outlined),
+            tooltip: t.modeSelectionScreen.returnToWelcome,
+            onPressed: () {
+              ref.read(activeStudyListIdProvider.notifier).set(null);
+              context.router.popUntilRoot();
+            },
+          ),
+          const SizedBox(width: 4),
+        ],
       ),
       body: SafeArea(
         child: CenteredView(
@@ -89,29 +171,41 @@ class _InputScreenState extends ConsumerState<InputScreen> {
                     if (groups.isEmpty) {
                       return const SizedBox.shrink();
                     }
-                    return DropdownButtonFormField<String?>(
-                      initialValue: formState.selectedGroupId,
-                      decoration: InputDecoration(
-                        labelText: t.inputScreen.assignToGroup,
-                        border: const OutlineInputBorder(),
-                      ),
-                      items: [
-                        DropdownMenuItem<String?>(
-                          value: null,
-                          child: Text(t.loadListScreen.ungrouped),
-                        ),
-                        ...groups.map((StudyGroup group) {
-                          return DropdownMenuItem<String?>(
-                            value: group.id,
-                            child: Text(group.name),
-                          );
-                        }),
-                      ],
-                      onChanged: formState.isLoading
+                    return InkWell(
+                      onTap: formState.isLoading
                           ? null
-                          : (String? newValue) {
-                              formNotifier.setGroupId(newValue);
-                            },
+                          : () => _showGroupSelectionDialog(
+                              context,
+                              formState,
+                              groups,
+                              formNotifier,
+                            ),
+                      borderRadius: BorderRadius.circular(4),
+                      child: InputDecorator(
+                        decoration: InputDecoration(
+                          labelText: t.inputScreen.assignToGroup,
+                          border: const OutlineInputBorder(),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              formState.selectedGroupId == null
+                                  ? t.loadListScreen.ungrouped
+                                  : groups
+                                            .firstWhereOrNull(
+                                              (g) =>
+                                                  g.id ==
+                                                  formState.selectedGroupId,
+                                            )
+                                            ?.name ??
+                                        t.loadListScreen.ungrouped,
+                              style: textTheme.bodyLarge,
+                            ),
+                            const Icon(Icons.arrow_drop_down),
+                          ],
+                        ),
+                      ),
                     );
                   },
                   loading: () => const SizedBox.shrink(),

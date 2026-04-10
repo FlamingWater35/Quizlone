@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
 import 'package:quizlone/routing/app_router.dart';
+import 'package:quizlone/services/smooth_scroll.dart';
 import 'package:quizlone/widgets/centered_view.dart';
 import 'package:quizlone/widgets/web_aware_back_button.dart';
 
@@ -27,6 +28,17 @@ class MultipleChoiceScreen extends ConsumerWidget {
         leading: const WebAwareBackButton(fallback: ModeSelectionRoute()),
         title: Text(t.multipleChoiceScreen.title),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.home_outlined),
+            tooltip: t.modeSelectionScreen.returnToWelcome,
+            onPressed: () {
+              ref.read(activeStudyListIdProvider.notifier).set(null);
+              context.router.popUntilRoot();
+            },
+          ),
+          const SizedBox(width: 4),
+        ],
       ),
       body: SafeArea(
         child: activeListAsync.when(
@@ -56,6 +68,7 @@ class _MCGameView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final mcStateAsync = ref.watch(multipleChoiceControllerProvider);
     final t = Translations.of(context);
+    final scrollController = SmoothScrollController();
 
     return mcStateAsync.when(
       data: (state) {
@@ -74,7 +87,8 @@ class _MCGameView extends ConsumerWidget {
         final rows = (options.length / 2).ceil();
 
         return CenteredView(
-          child: Padding(
+          child: SingleChildScrollView(
+            controller: scrollController,
             padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -101,7 +115,7 @@ class _MCGameView extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(4),
                 ),
 
-                const Spacer(flex: 1),
+                const SizedBox(height: 32),
 
                 Container(
                   padding: const EdgeInsets.all(24),
@@ -117,20 +131,38 @@ class _MCGameView extends ConsumerWidget {
                   ),
                 ).animate(key: ValueKey(question)).fadeIn().scale(),
 
-                const Spacer(flex: 1),
+                const SizedBox(height: 32),
 
-                Expanded(
-                  flex: 4,
-                  child: Column(
-                    children: [
-                      for (int i = 0; i < rows; i++) ...[
-                        Expanded(
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              Expanded(
+                Column(
+                  children: [
+                    for (int i = 0; i < rows; i++) ...[
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: SizedBox(
+                              height: 120,
+                              child: _OptionButton(
+                                text: options[i * 2],
+                                state: state,
+                                onTap: () {
+                                  ref
+                                      .read(
+                                        multipleChoiceControllerProvider
+                                            .notifier,
+                                      )
+                                      .submitAnswer(options[i * 2]);
+                                },
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          if (i * 2 + 1 < options.length)
+                            Expanded(
+                              child: SizedBox(
+                                height: 120,
                                 child: _OptionButton(
-                                  text: options[i * 2],
+                                  text: options[i * 2 + 1],
                                   state: state,
                                   onTap: () {
                                     ref
@@ -138,35 +170,18 @@ class _MCGameView extends ConsumerWidget {
                                           multipleChoiceControllerProvider
                                               .notifier,
                                         )
-                                        .submitAnswer(options[i * 2]);
+                                        .submitAnswer(options[i * 2 + 1]);
                                   },
                                 ),
                               ),
-                              const SizedBox(width: 12),
-                              if (i * 2 + 1 < options.length)
-                                Expanded(
-                                  child: _OptionButton(
-                                    text: options[i * 2 + 1],
-                                    state: state,
-                                    onTap: () {
-                                      ref
-                                          .read(
-                                            multipleChoiceControllerProvider
-                                                .notifier,
-                                          )
-                                          .submitAnswer(options[i * 2 + 1]);
-                                    },
-                                  ),
-                                )
-                              else
-                                const Spacer(),
-                            ],
-                          ),
-                        ),
-                        if (i < rows - 1) const SizedBox(height: 12),
-                      ],
+                            )
+                          else
+                            const Spacer(),
+                        ],
+                      ),
+                      if (i < rows - 1) const SizedBox(height: 12),
                     ],
-                  ),
+                  ],
                 ),
               ],
             ),
@@ -262,6 +277,22 @@ class _ResultsView extends ConsumerWidget {
 
   final MultipleChoiceState state;
 
+  void _returnToModeSelection(BuildContext context) {
+    context.router.popUntil(
+      (route) =>
+          route.settings.name == ModeSelectionRoute.name || route.isFirst,
+    );
+    if (context.router.current.name != ModeSelectionRoute.name) {
+      context.router.replace(const ModeSelectionRoute());
+    }
+  }
+
+  Color _getProgressColor(double percentage) {
+    if (percentage >= 0.8) return Colors.green;
+    if (percentage >= 0.5) return Colors.orange;
+    return Colors.red;
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final t = Translations.of(context);
@@ -319,9 +350,7 @@ class _ResultsView extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 OutlinedButton(
-                  onPressed: () {
-                    context.router.navigate(const ModeSelectionRoute());
-                  },
+                  onPressed: () => _returnToModeSelection(context),
                   child: Text(t.multipleChoiceScreen.results.backToMenu),
                 ),
                 const SizedBox(width: 16),
@@ -339,11 +368,5 @@ class _ResultsView extends ConsumerWidget {
         ),
       ),
     );
-  }
-
-  Color _getProgressColor(double percentage) {
-    if (percentage >= 0.8) return Colors.green;
-    if (percentage >= 0.5) return Colors.orange;
-    return Colors.red;
   }
 }
