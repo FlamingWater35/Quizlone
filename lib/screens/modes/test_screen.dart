@@ -451,7 +451,7 @@ class _TestViewState extends ConsumerState<_TestView> {
                       ? FilledButton.icon(
                           icon: const Icon(Icons.bar_chart),
                           onPressed: () =>
-                              context.router.push(const ResultsRoute()),
+                              context.router.replace(const ResultsRoute()),
                           label: Text(t.testScreen.viewResults),
                           style: FilledButton.styleFrom(
                             padding: const EdgeInsets.symmetric(vertical: 16),
