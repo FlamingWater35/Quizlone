@@ -401,8 +401,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     final colorScheme = Theme.of(context).colorScheme;
     final t = Translations.of(context);
 
-    final isDesktop =
-        !kIsWeb && (Platform.isWindows || Platform.isMacOS || Platform.isLinux);
+    final bool showExperimental =
+        kIsWeb ||
+        (!kIsWeb &&
+            (Platform.isWindows || Platform.isMacOS || Platform.isLinux));
 
     return Scaffold(
       appBar: AppBar(
@@ -559,7 +561,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   ),
                 ),
               ],
-              if (isDesktop) ...[
+              if (showExperimental) ...[
                 _SettingsHeader(title: "Experimental"),
                 Card(
                   clipBehavior: Clip.antiAlias,
