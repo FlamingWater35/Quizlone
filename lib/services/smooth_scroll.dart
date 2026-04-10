@@ -1,20 +1,7 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-class SmoothScrollGlobal {
-  static bool isMouse = true;
-
-  static bool _initialized = false;
-
-  static void init() {
-    if (_initialized) return;
-    _initialized = true;
-    GestureBinding.instance.pointerRouter.addGlobalRoute((PointerEvent event) {
-      if (event is PointerScrollEvent) {
-        isMouse = event.kind == PointerDeviceKind.mouse;
-      }
-    });
-  }
+class SmoothScrollLogic {
+  static bool useSmoothScroll = true;
 }
 
 class SmoothScrollController extends ScrollController {
@@ -57,7 +44,7 @@ class SmoothScrollPosition extends ScrollPositionWithSingleContext {
   void pointerScroll(double delta) {
     if (delta == 0.0) return;
 
-    if (!SmoothScrollGlobal.isMouse || delta.abs() < 15.0) {
+    if (!SmoothScrollLogic.useSmoothScroll) {
       super.pointerScroll(delta);
       return;
     }
