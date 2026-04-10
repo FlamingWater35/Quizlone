@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -27,6 +26,9 @@ final _log = Logger('main');
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  SmoothScrollGlobal.init();
+
   initLocaleSettings();
   _setupLogging();
 
@@ -168,15 +170,7 @@ class MyApp extends ConsumerWidget {
 
       themeMode: themeMode,
       builder: (context, child) {
-        return Listener(
-          onPointerSignal: (pointerSignal) {
-            if (pointerSignal is PointerScrollEvent) {
-              SmoothScrollLogic.useSmoothScroll =
-                  pointerSignal.kind == PointerDeviceKind.mouse;
-            }
-          },
-          child: AppScaler(scale: uiScale, child: child!),
-        );
+        return AppScaler(scale: uiScale, child: child!);
       },
       debugShowCheckedModeBanner: false,
       routerConfig: _appRouter.config(
