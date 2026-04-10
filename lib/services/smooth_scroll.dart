@@ -38,6 +38,9 @@ class SmoothScrollPosition extends ScrollPositionWithSingleContext {
   });
 
   double _targetPixels = 0.0;
+  DateTime? _lastScrollTime;
+
+  static const int _trackpadDetectionThresholdMs = 80;
 
   @override
   void pointerScroll(double delta) {
@@ -46,9 +49,16 @@ class SmoothScrollPosition extends ScrollPositionWithSingleContext {
       return;
     }
 
-    if (delta.abs() < 20) {
-      super.pointerScroll(delta);
-      return;
+    final now = DateTime.now();
+    final lastTime = _lastScrollTime;
+    _lastScrollTime = now;
+
+    if (lastTime != null) {
+      final diffMs = now.difference(lastTime).inMilliseconds;
+      if (diffMs < _trackpadDetectionThresholdMs) {
+        super.pointerScroll(delta);
+        return;
+      }
     }
 
     if (delta == 0.0) return;
