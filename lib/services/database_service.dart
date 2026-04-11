@@ -42,17 +42,11 @@ class DatabaseService {
   static Future<void> init() async {
     if (kIsWeb) {
       await Hive.initFlutter('Quizlone');
+    } else if (Platform.isAndroid || Platform.isIOS) {
+      final dir = await getApplicationDocumentsDirectory();
+      Hive.init(dir.path);
     } else {
-      final Directory dir;
-      if (Platform.isAndroid || Platform.isIOS) {
-        dir = await getApplicationDocumentsDirectory();
-      } else {
-        dir = await getApplicationSupportDirectory();
-      }
-
-      if (!dir.existsSync()) {
-        dir.createSync(recursive: true);
-      }
+      final dir = await getApplicationSupportDirectory();
       Hive.init(dir.path);
     }
 
