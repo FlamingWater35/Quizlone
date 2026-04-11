@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
-import 'package:quizlone/routing/app_router.dart';
+import 'package:quizlone/routing/app_navigator.dart';
 import 'package:quizlone/services/smooth_scroll.dart';
 
 import '../../providers/controllers/flashcard_controller.dart';
@@ -44,13 +44,7 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
   }
 
   void _returnToModeSelection() {
-    context.router.popUntil(
-      (route) =>
-          route.settings.name == ModeSelectionRoute.name || route.isFirst,
-    );
-    if (context.router.current.name != ModeSelectionRoute.name) {
-      context.router.replace(const ModeSelectionRoute());
-    }
+    AppNavigator.returnToModeSelection(context);
   }
 
   Future<void> _initWebHistory() async {
@@ -301,10 +295,7 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
           IconButton(
             icon: const Icon(Icons.home_outlined),
             tooltip: t.modeSelectionScreen.returnToWelcome,
-            onPressed: () {
-              ref.read(activeStudyListIdProvider.notifier).set(null);
-              context.router.popUntilRoot();
-            },
+            onPressed: () => AppNavigator.navigateHome(context, ref),
           ),
           const SizedBox(width: 4),
         ],
@@ -489,8 +480,8 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
                           label: Text(t.resultsScreen.retryTest),
                           onPressed: () {
                             testNotifier.restartTest();
-                            _returnToModeSelection();
-                            context.router.push(const TestModeRoute());
+                            AppNavigator.returnToModeSelection(context);
+                            AppNavigator.pushTest(context);
                           },
                         ),
                       ],
@@ -503,8 +494,8 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
                         ref
                             .read(flashcardControllerProvider.notifier)
                             .refreshWithOptions();
-                        _returnToModeSelection();
-                        context.router.push(const FlashcardRoute());
+                        AppNavigator.returnToModeSelection(context);
+                        AppNavigator.pushFlashcards(context);
                       },
                     ),
                   ],
@@ -533,12 +524,8 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
                       ),
                       const SizedBox(height: 20),
                       ElevatedButton(
-                        onPressed: () {
-                          ref
-                              .read(activeStudyListIdProvider.notifier)
-                              .set(null);
-                          context.router.popUntilRoot();
-                        },
+                        onPressed: () =>
+                            AppNavigator.navigateHome(context, ref),
                         child: Text(t.modeSelectionScreen.returnToWelcome),
                       ),
                     ],

@@ -4,6 +4,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
+import 'package:quizlone/routing/app_navigator.dart';
 import 'package:quizlone/routing/app_router.dart';
 import 'package:quizlone/services/smooth_scroll.dart';
 import 'package:quizlone/widgets/centered_view.dart';
@@ -32,10 +33,7 @@ class MultipleChoiceScreen extends ConsumerWidget {
           IconButton(
             icon: const Icon(Icons.home_outlined),
             tooltip: t.modeSelectionScreen.returnToWelcome,
-            onPressed: () {
-              ref.read(activeStudyListIdProvider.notifier).set(null);
-              context.router.popUntilRoot();
-            },
+            onPressed: () => AppNavigator.navigateHome(context, ref),
           ),
           const SizedBox(width: 4),
         ],
@@ -277,16 +275,6 @@ class _ResultsView extends ConsumerWidget {
 
   final MultipleChoiceState state;
 
-  void _returnToModeSelection(BuildContext context) {
-    context.router.popUntil(
-      (route) =>
-          route.settings.name == ModeSelectionRoute.name || route.isFirst,
-    );
-    if (context.router.current.name != ModeSelectionRoute.name) {
-      context.router.replace(const ModeSelectionRoute());
-    }
-  }
-
   Color _getProgressColor(double percentage) {
     if (percentage >= 0.8) return Colors.green;
     if (percentage >= 0.5) return Colors.orange;
@@ -350,7 +338,7 @@ class _ResultsView extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 OutlinedButton(
-                  onPressed: () => _returnToModeSelection(context),
+                  onPressed: () => AppNavigator.returnToModeSelection(context),
                   child: Text(t.multipleChoiceScreen.results.backToMenu),
                 ),
                 const SizedBox(width: 16),

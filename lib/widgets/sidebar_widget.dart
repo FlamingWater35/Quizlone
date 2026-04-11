@@ -1,12 +1,11 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
+import 'package:quizlone/routing/app_navigator.dart';
 import 'package:quizlone/services/smooth_scroll.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../providers/core/auth_provider.dart';
-import '../routing/app_router.dart';
 import 'error_snackbar.dart';
 
 class AppDrawer extends ConsumerStatefulWidget {
@@ -297,7 +296,7 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
             ),
             onTap: () {
               Navigator.pop(context);
-              context.router.push(const SettingsRoute());
+              AppNavigator.pushSettings(context);
             },
           ),
           ListTile(
@@ -308,7 +307,7 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
             ),
             onTap: () {
               Navigator.pop(context);
-              context.router.push(const ControlsRoute());
+              AppNavigator.pushControls(context);
             },
           ),
           const Divider(indent: 16, endIndent: 16),
@@ -320,7 +319,7 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
             ),
             onTap: () {
               Navigator.pop(context);
-              context.router.push(const AboutRoute());
+              AppNavigator.pushAbout(context);
             },
           ),
           const Divider(indent: 16, endIndent: 16),

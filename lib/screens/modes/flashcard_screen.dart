@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
+import 'package:quizlone/routing/app_navigator.dart';
 import 'package:quizlone/routing/app_router.dart';
 import 'package:quizlone/services/smooth_scroll.dart';
 import 'package:quizlone/widgets/web_aware_back_button.dart';
@@ -40,10 +41,7 @@ class _FlashcardScreenState extends ConsumerState<FlashcardScreen> {
           IconButton(
             icon: const Icon(Icons.home_outlined),
             tooltip: t.modeSelectionScreen.returnToWelcome,
-            onPressed: () {
-              ref.read(activeStudyListIdProvider.notifier).set(null);
-              context.router.popUntilRoot();
-            },
+            onPressed: () => AppNavigator.navigateHome(context, ref),
           ),
           const SizedBox(width: 4),
         ],
@@ -65,12 +63,8 @@ class _FlashcardScreenState extends ConsumerState<FlashcardScreen> {
                         ),
                         const SizedBox(height: 20),
                         ElevatedButton(
-                          onPressed: () {
-                            ref
-                                .read(activeStudyListIdProvider.notifier)
-                                .set(null);
-                            context.router.popUntilRoot();
-                          },
+                          onPressed: () =>
+                              AppNavigator.navigateToStart(context, ref),
                           child: Text(t.modeSelectionScreen.returnToWelcome),
                         ),
                       ],
@@ -104,12 +98,8 @@ class _FlashcardScreenState extends ConsumerState<FlashcardScreen> {
                       ),
                       const SizedBox(height: 20),
                       ElevatedButton(
-                        onPressed: () {
-                          ref
-                              .read(activeStudyListIdProvider.notifier)
-                              .set(null);
-                          context.router.replace(const StartRoute());
-                        },
+                        onPressed: () =>
+                            AppNavigator.navigateToStart(context, ref),
                         child: Text(t.modeSelectionScreen.returnToWelcome),
                       ),
                     ],
@@ -302,12 +292,8 @@ class _FlashcardViewState extends ConsumerState<_FlashcardView>
                       ),
                       const SizedBox(height: 20),
                       ElevatedButton(
-                        onPressed: () {
-                          ref
-                              .read(activeStudyListIdProvider.notifier)
-                              .set(null);
-                          context.router.replace(const StartRoute());
-                        },
+                        onPressed: () =>
+                            AppNavigator.navigateToStart(context, ref),
                         child: Text(t.modeSelectionScreen.returnToWelcome),
                       ),
                     ],

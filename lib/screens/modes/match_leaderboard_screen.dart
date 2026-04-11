@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
 import 'package:quizlone/models/match_record.dart';
 import 'package:quizlone/providers/core/core_providers.dart';
-import 'package:quizlone/routing/app_router.dart';
+import 'package:quizlone/routing/app_navigator.dart';
 import 'package:quizlone/services/smooth_scroll.dart';
 import 'package:quizlone/widgets/centered_view.dart';
 
@@ -95,13 +95,7 @@ class _MatchLeaderboardScreenState extends ConsumerState<MatchLeaderboardScreen>
   }
 
   void _returnToModeSelection() {
-    context.router.popUntil(
-      (route) =>
-          route.settings.name == ModeSelectionRoute.name || route.isFirst,
-    );
-    if (context.router.current.name != ModeSelectionRoute.name) {
-      context.router.replace(const ModeSelectionRoute());
-    }
+    AppNavigator.returnToModeSelection(context);
   }
 
   @override
@@ -119,10 +113,7 @@ class _MatchLeaderboardScreenState extends ConsumerState<MatchLeaderboardScreen>
           IconButton(
             icon: const Icon(Icons.home_outlined),
             tooltip: t.modeSelectionScreen.returnToWelcome,
-            onPressed: () {
-              ref.read(activeStudyListIdProvider.notifier).set(null);
-              context.router.popUntilRoot();
-            },
+            onPressed: () => AppNavigator.navigateHome(context, ref),
           ),
           const SizedBox(width: 4),
         ],
@@ -143,9 +134,8 @@ class _MatchLeaderboardScreenState extends ConsumerState<MatchLeaderboardScreen>
                       ),
                       const SizedBox(height: 20),
                       ElevatedButton(
-                        onPressed: () {
-                          context.router.popUntilRoot();
-                        },
+                        onPressed: () =>
+                            AppNavigator.navigateHome(context, ref),
                         child: Text(t.modeSelectionScreen.returnToWelcome),
                       ),
                     ],
@@ -303,8 +293,8 @@ class _MatchLeaderboardScreenState extends ConsumerState<MatchLeaderboardScreen>
                           label: Text(t.matchScreen.playAgain),
                           onPressed: () {
                             ref.invalidate(matchControllerProvider);
-                            _returnToModeSelection();
-                            context.router.push(const MatchRoute());
+                            AppNavigator.returnToModeSelection(context);
+                            AppNavigator.pushMatch(context);
                           },
                         ),
                       ],

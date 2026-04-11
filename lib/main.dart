@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -188,62 +187,11 @@ class MyApp extends ConsumerWidget {
         deepLinkBuilder: (deepLink) {
           if (kIsWeb && deepLink.path != '/') {
             final activeListId = ref.read(activeStudyListIdProvider);
-
-            if (activeListId != null) {
-              if (deepLink.path.contains('/flashcards')) {
-                return const DeepLink([
-                  StartRoute(),
-                  ModeSelectionRoute(),
-                  FlashcardRoute(),
-                ]);
-              } else if (deepLink.path.contains('/learn')) {
-                return const DeepLink([
-                  StartRoute(),
-                  ModeSelectionRoute(),
-                  LearnRoute(),
-                ]);
-              } else if (deepLink.path.contains('/test')) {
-                return const DeepLink([
-                  StartRoute(),
-                  ModeSelectionRoute(),
-                  TestModeRoute(),
-                ]);
-              } else if (deepLink.path.contains('/match')) {
-                return const DeepLink([
-                  StartRoute(),
-                  ModeSelectionRoute(),
-                  MatchRoute(),
-                ]);
-              } else if (deepLink.path.contains('/multiple-choice')) {
-                return const DeepLink([
-                  StartRoute(),
-                  ModeSelectionRoute(),
-                  MultipleChoiceRoute(),
-                ]);
-              } else if (deepLink.path.contains('/results')) {
-                return const DeepLink([
-                  StartRoute(),
-                  ModeSelectionRoute(),
-                  ResultsRoute(),
-                ]);
-              } else if (deepLink.path.contains('/mode-selection')) {
-                return const DeepLink([StartRoute(), ModeSelectionRoute()]);
-              }
-            }
-
-            if (deepLink.path.contains('/settings')) {
-              return const DeepLink([StartRoute(), SettingsRoute()]);
-            } else if (deepLink.path.contains('/controls')) {
-              return const DeepLink([StartRoute(), ControlsRoute()]);
-            } else if (deepLink.path.contains('/about')) {
-              return const DeepLink([StartRoute(), AboutRoute()]);
-            } else if (deepLink.path.contains('/create-list')) {
-              return const DeepLink([StartRoute(), InputRoute()]);
-            } else if (deepLink.path.contains('/load-list')) {
-              return const DeepLink([StartRoute(), LoadListRoute()]);
-            }
+            return DeepLinkResolver.resolve(
+              deepLink.path,
+              activeListId: activeListId,
+            );
           }
-
           return deepLink;
         },
       ),

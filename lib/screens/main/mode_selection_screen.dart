@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
-import 'package:quizlone/routing/app_router.dart';
+import 'package:quizlone/routing/app_navigator.dart';
 import 'package:quizlone/services/smooth_scroll.dart';
 import 'package:quizlone/widgets/error_snackbar.dart';
 
@@ -44,14 +44,7 @@ class _ModeSelectionScreenState extends ConsumerState<ModeSelectionScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           tooltip: MaterialLocalizations.of(context).backButtonTooltip,
-          onPressed: () {
-            final router = context.router;
-            if (router.canPop()) {
-              router.back();
-            } else {
-              router.replace(const StartRoute());
-            }
-          },
+          onPressed: () => AppNavigator.goBack(context),
         ),
         title: Text(t.modeSelectionScreen.title),
         centerTitle: true,
@@ -59,10 +52,7 @@ class _ModeSelectionScreenState extends ConsumerState<ModeSelectionScreen> {
           IconButton(
             icon: const Icon(Icons.home_outlined),
             tooltip: t.modeSelectionScreen.returnToWelcome,
-            onPressed: () {
-              ref.read(activeStudyListIdProvider.notifier).set(null);
-              context.router.popUntilRoot();
-            },
+            onPressed: () => AppNavigator.navigateHome(context, ref),
           ),
           const SizedBox(width: 4),
         ],
@@ -84,12 +74,8 @@ class _ModeSelectionScreenState extends ConsumerState<ModeSelectionScreen> {
                         ),
                         const SizedBox(height: 20),
                         ElevatedButton(
-                          onPressed: () {
-                            ref
-                                .read(activeStudyListIdProvider.notifier)
-                                .set(null);
-                            context.router.popUntilRoot();
-                          },
+                          onPressed: () =>
+                              AppNavigator.navigateHome(context, ref),
                           child: Text(t.modeSelectionScreen.returnToWelcome),
                         ),
                       ],
@@ -523,27 +509,27 @@ class _ActionButtons extends StatelessWidget {
       (
         label: t.modeSelectionScreen.flashcards,
         icon: Icons.style,
-        route: const FlashcardRoute(),
+        onTap: () => AppNavigator.pushFlashcards(context),
       ),
       (
         label: t.modeSelectionScreen.learn,
         icon: Icons.school,
-        route: const LearnRoute(),
+        onTap: () => AppNavigator.pushLearn(context),
       ),
       (
         label: t.modeSelectionScreen.multipleChoice,
         icon: Icons.checklist_rtl_rounded,
-        route: const MultipleChoiceRoute(),
+        onTap: () => AppNavigator.pushMultipleChoice(context),
       ),
       (
         label: t.modeSelectionScreen.test,
         icon: Icons.quiz,
-        route: const TestModeRoute(),
+        onTap: () => AppNavigator.pushTest(context),
       ),
       (
         label: t.modeSelectionScreen.match,
         icon: Icons.extension,
-        route: const MatchRoute(),
+        onTap: () => AppNavigator.pushMatch(context),
       ),
     ];
 
@@ -559,7 +545,7 @@ class _ActionButtons extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 16),
               textStyle: textTheme.titleLarge,
             ),
-            onPressed: () => context.router.push(mode.route),
+            onPressed: mode.onTap,
           ),
         );
       }).toList(),

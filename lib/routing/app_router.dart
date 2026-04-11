@@ -57,6 +57,103 @@ class AppRouter extends RootStackRouter {
   ];
 }
 
+class DeepLinkResolver {
+  DeepLinkResolver._();
+
+  static final List<_DeepLinkEntry> _entries = [
+    _DeepLinkEntry(
+      path: '/multiple-choice',
+      stack: [StartRoute(), ModeSelectionRoute(), MultipleChoiceRoute()],
+      requiresActiveList: true,
+    ),
+    _DeepLinkEntry(
+      path: '/mode-selection',
+      stack: [StartRoute(), ModeSelectionRoute()],
+      requiresActiveList: true,
+    ),
+    _DeepLinkEntry(
+      path: '/flashcards',
+      stack: [StartRoute(), ModeSelectionRoute(), FlashcardRoute()],
+      requiresActiveList: true,
+    ),
+    _DeepLinkEntry(
+      path: '/learn',
+      stack: [StartRoute(), ModeSelectionRoute(), LearnRoute()],
+      requiresActiveList: true,
+    ),
+    _DeepLinkEntry(
+      path: '/test',
+      stack: [StartRoute(), ModeSelectionRoute(), TestModeRoute()],
+      requiresActiveList: true,
+    ),
+    _DeepLinkEntry(
+      path: '/match',
+      stack: [StartRoute(), ModeSelectionRoute(), MatchRoute()],
+      requiresActiveList: true,
+    ),
+    _DeepLinkEntry(
+      path: '/results',
+      stack: [StartRoute(), ModeSelectionRoute(), ResultsRoute()],
+      requiresActiveList: true,
+    ),
+    _DeepLinkEntry(
+      path: '/leaderboard',
+      stack: [StartRoute(), ModeSelectionRoute(), MatchLeaderboardRoute()],
+      requiresActiveList: true,
+    ),
+    _DeepLinkEntry(
+      path: '/settings',
+      stack: [StartRoute(), SettingsRoute()],
+      requiresActiveList: false,
+    ),
+    _DeepLinkEntry(
+      path: '/controls',
+      stack: [StartRoute(), ControlsRoute()],
+      requiresActiveList: false,
+    ),
+    _DeepLinkEntry(
+      path: '/about',
+      stack: [StartRoute(), AboutRoute()],
+      requiresActiveList: false,
+    ),
+    _DeepLinkEntry(
+      path: '/create-list',
+      stack: [StartRoute(), InputRoute()],
+      requiresActiveList: false,
+    ),
+    _DeepLinkEntry(
+      path: '/load-list',
+      stack: [StartRoute(), LoadListRoute()],
+      requiresActiveList: false,
+    ),
+  ];
+
+  static DeepLink resolve(String path, {String? activeListId}) {
+    for (final entry in _entries) {
+      if (path == entry.path || path.startsWith('${entry.path}/')) {
+        if (entry.requiresActiveList && activeListId == null) {
+          return DeepLink([StartRoute()]);
+        }
+        return DeepLink(entry.stack);
+      }
+    }
+
+    return DeepLink([StartRoute()]);
+  }
+}
+
+class _DeepLinkEntry {
+  const _DeepLinkEntry({
+    required this.path,
+    required this.stack,
+    required this.requiresActiveList,
+  });
+
+  final String path;
+  final bool requiresActiveList;
+  final List<PageRouteInfo> stack;
+}
+
 Widget buildSlideDownTransition(
   BuildContext context,
   Animation<double> animation,

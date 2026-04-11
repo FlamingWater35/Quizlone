@@ -2,9 +2,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
-import 'package:quizlone/routing/app_router.dart';
+import 'package:quizlone/routing/app_navigator.dart';
 
-import '../../providers/study/study_list_providers.dart';
 import '../../widgets/centered_view.dart';
 import '../../widgets/sidebar_widget.dart';
 
@@ -37,8 +36,7 @@ class StartScreen extends ConsumerWidget {
                 ElevatedButton.icon(
                   icon: const Icon(Icons.add_circle_outline, size: 28),
                   onPressed: () {
-                    ref.invalidate(studyListFormProvider);
-                    context.router.push(const InputRoute());
+                    AppNavigator.pushCreateList(context, ref);
                   },
                   label: Text(t.startScreen.createNewList),
                   style: ElevatedButton.styleFrom(
@@ -50,7 +48,7 @@ class StartScreen extends ConsumerWidget {
                 ElevatedButton.icon(
                   icon: const Icon(Icons.folder_open_outlined, size: 28),
                   onPressed: () {
-                    context.router.push(const LoadListRoute());
+                    AppNavigator.pushLoadList(context);
                   },
                   label: Text(t.startScreen.openSavedList),
                   style: ElevatedButton.styleFrom(

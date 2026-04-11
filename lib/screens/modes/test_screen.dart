@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
+import 'package:quizlone/routing/app_navigator.dart';
 import 'package:quizlone/routing/app_router.dart';
 import 'package:quizlone/services/smooth_scroll.dart';
 import 'package:quizlone/widgets/web_aware_back_button.dart';
@@ -37,10 +38,7 @@ class _TestScreenState extends ConsumerState<TestScreen> {
           IconButton(
             icon: const Icon(Icons.home_outlined),
             tooltip: t.modeSelectionScreen.returnToWelcome,
-            onPressed: () {
-              ref.read(activeStudyListIdProvider.notifier).set(null);
-              context.router.popUntilRoot();
-            },
+            onPressed: () => AppNavigator.navigateHome(context, ref),
           ),
           const SizedBox(width: 4),
         ],
@@ -62,12 +60,8 @@ class _TestScreenState extends ConsumerState<TestScreen> {
                         ),
                         const SizedBox(height: 20),
                         ElevatedButton(
-                          onPressed: () {
-                            ref
-                                .read(activeStudyListIdProvider.notifier)
-                                .set(null);
-                            context.router.popUntilRoot();
-                          },
+                          onPressed: () =>
+                              AppNavigator.navigateToStart(context, ref),
                           child: Text(t.modeSelectionScreen.returnToWelcome),
                         ),
                       ],
@@ -97,12 +91,8 @@ class _TestScreenState extends ConsumerState<TestScreen> {
                       ),
                       const SizedBox(height: 20),
                       ElevatedButton(
-                        onPressed: () {
-                          ref
-                              .read(activeStudyListIdProvider.notifier)
-                              .set(null);
-                          context.router.replace(const StartRoute());
-                        },
+                        onPressed: () =>
+                            AppNavigator.navigateToStart(context, ref),
                         child: Text(t.modeSelectionScreen.returnToWelcome),
                       ),
                     ],
@@ -390,10 +380,8 @@ class _TestViewState extends ConsumerState<_TestView> {
                     ),
                     const SizedBox(height: 20),
                     ElevatedButton(
-                      onPressed: () {
-                        ref.read(activeStudyListIdProvider.notifier).set(null);
-                        context.router.replace(const StartRoute());
-                      },
+                      onPressed: () =>
+                          AppNavigator.navigateToStart(context, ref),
                       child: Text(t.modeSelectionScreen.returnToWelcome),
                     ),
                   ],
@@ -451,7 +439,7 @@ class _TestViewState extends ConsumerState<_TestView> {
                       ? FilledButton.icon(
                           icon: const Icon(Icons.bar_chart),
                           onPressed: () =>
-                              context.router.replace(const ResultsRoute()),
+                              AppNavigator.replaceWithResults(context),
                           label: Text(t.testScreen.viewResults),
                           style: FilledButton.styleFrom(
                             padding: const EdgeInsets.symmetric(vertical: 16),

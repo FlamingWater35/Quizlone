@@ -1,6 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:quizlone/routing/app_router.dart';
+import 'package:quizlone/routing/app_navigator.dart';
 
 class WebAwareBackButton extends StatelessWidget {
   const WebAwareBackButton({super.key, this.fallback});
@@ -12,14 +12,7 @@ class WebAwareBackButton extends StatelessWidget {
     return IconButton(
       icon: const Icon(Icons.arrow_back),
       tooltip: MaterialLocalizations.of(context).backButtonTooltip,
-      onPressed: () {
-        final router = context.router;
-        if (router.canPop()) {
-          router.back();
-        } else {
-          router.replace(fallback ?? const StartRoute());
-        }
-      },
+      onPressed: () => AppNavigator.goBack(context, fallback: fallback),
     );
   }
 }

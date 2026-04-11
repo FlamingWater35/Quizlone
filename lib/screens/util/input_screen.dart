@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
 import 'package:quizlone/providers/immutables/study_list_form_state.dart';
-import 'package:quizlone/routing/app_router.dart';
-import 'package:quizlone/services/navigation_service.dart';
+import 'package:quizlone/routing/app_navigator.dart';
 import 'package:quizlone/services/smooth_scroll.dart';
 
 import '../../models/study_group.dart';
@@ -132,10 +131,7 @@ class _InputScreenState extends ConsumerState<InputScreen> {
           IconButton(
             icon: const Icon(Icons.home_outlined),
             tooltip: t.modeSelectionScreen.returnToWelcome,
-            onPressed: () {
-              ref.read(activeStudyListIdProvider.notifier).set(null);
-              context.router.popUntilRoot();
-            },
+            onPressed: () => AppNavigator.navigateHome(context, ref),
           ),
           const SizedBox(width: 4),
         ],
@@ -253,9 +249,7 @@ class _InputScreenState extends ConsumerState<InputScreen> {
                         label: Text(t.general.back),
                         onPressed: formState.isLoading
                             ? null
-                            : () {
-                                NavigationService.back(context);
-                              },
+                            : () => AppNavigator.goBack(context),
                       ),
                       ElevatedButton.icon(
                         icon: const Icon(Icons.save_alt),
@@ -267,8 +261,8 @@ class _InputScreenState extends ConsumerState<InputScreen> {
                                 final success = await formNotifier
                                     .saveListAndContinue();
                                 if (success && context.mounted) {
-                                  context.router.replace(
-                                    const ModeSelectionRoute(),
+                                  AppNavigator.replaceWithModeSelection(
+                                    context,
                                   );
                                 }
                               },

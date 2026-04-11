@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
 import 'package:quizlone/models/study_group.dart';
 import 'package:quizlone/models/study_list.dart';
+import 'package:quizlone/routing/app_navigator.dart';
 import 'package:quizlone/routing/app_router.dart';
 import 'package:quizlone/services/smooth_scroll.dart';
 import 'package:quizlone/widgets/error_snackbar.dart';
@@ -456,10 +457,7 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
         IconButton(
           icon: const Icon(Icons.home_outlined),
           tooltip: t.modeSelectionScreen.returnToWelcome,
-          onPressed: () {
-            ref.read(activeStudyListIdProvider.notifier).set(null);
-            context.router.popUntilRoot();
-          },
+          onPressed: () => AppNavigator.navigateHome(context, ref),
         ),
         const SizedBox(width: 4),
       ],
@@ -569,7 +567,7 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
             _onListSelected(list.id, !isSelected);
           } else {
             ref.read(activeStudyListIdProvider.notifier).set(list.id);
-            context.router.push(const ModeSelectionRoute());
+            AppNavigator.pushModeSelection(context);
             list.lastOpenedAt = DateTime.now();
             ref.read(databaseServiceProvider).saveStudyList(list).ignore();
           }

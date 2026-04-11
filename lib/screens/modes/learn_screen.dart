@@ -4,6 +4,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
+import 'package:quizlone/routing/app_navigator.dart';
 import 'package:quizlone/routing/app_router.dart';
 import 'package:quizlone/services/smooth_scroll.dart';
 import 'package:quizlone/widgets/web_aware_back_button.dart';
@@ -37,10 +38,7 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
           IconButton(
             icon: const Icon(Icons.home_outlined),
             tooltip: t.modeSelectionScreen.returnToWelcome,
-            onPressed: () {
-              ref.read(activeStudyListIdProvider.notifier).set(null);
-              context.router.popUntilRoot();
-            },
+            onPressed: () => AppNavigator.navigateHome(context, ref),
           ),
           const SizedBox(width: 4),
         ],
@@ -62,12 +60,8 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
                         ),
                         const SizedBox(height: 20),
                         ElevatedButton(
-                          onPressed: () {
-                            ref
-                                .read(activeStudyListIdProvider.notifier)
-                                .set(null);
-                            context.router.popUntilRoot();
-                          },
+                          onPressed: () =>
+                              AppNavigator.navigateToStart(context, ref),
                           child: Text(t.modeSelectionScreen.returnToWelcome),
                         ),
                       ],
@@ -101,12 +95,8 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
                       ),
                       const SizedBox(height: 20),
                       ElevatedButton(
-                        onPressed: () {
-                          ref
-                              .read(activeStudyListIdProvider.notifier)
-                              .set(null);
-                          context.router.replace(const StartRoute());
-                        },
+                        onPressed: () =>
+                            AppNavigator.navigateToStart(context, ref),
                         child: Text(t.modeSelectionScreen.returnToWelcome),
                       ),
                     ],
@@ -162,13 +152,7 @@ class _LearnViewState extends ConsumerState<_LearnView>
   }
 
   void _returnToModeSelection() {
-    context.router.popUntil(
-      (route) =>
-          route.settings.name == ModeSelectionRoute.name || route.isFirst,
-    );
-    if (context.router.current.name != ModeSelectionRoute.name) {
-      context.router.replace(const ModeSelectionRoute());
-    }
+    AppNavigator.returnToModeSelection(context);
   }
 
   Widget _buildSessionCompleteUI(
@@ -319,10 +303,8 @@ class _LearnViewState extends ConsumerState<_LearnView>
                     ),
                     const SizedBox(height: 20),
                     ElevatedButton(
-                      onPressed: () {
-                        ref.read(activeStudyListIdProvider.notifier).set(null);
-                        context.router.replace(const StartRoute());
-                      },
+                      onPressed: () =>
+                          AppNavigator.navigateToStart(context, ref),
                       child: Text(t.modeSelectionScreen.returnToWelcome),
                     ),
                   ],
