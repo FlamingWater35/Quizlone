@@ -268,61 +268,88 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
 
   Future<void> _showMoveDialog(List<String> listIds) async {
     final t = Translations.of(context);
+    final theme = Theme.of(context);
     final allGroups = ref.read(studyGroupsProvider).asData?.value ?? [];
 
     final String? destinationGroupId = await showDialog<String?>(
       context: context,
       builder: (context) {
         final dialogScrollController = SmoothScrollController();
-        return AlertDialog(
-          title: Text(
-            t.loadListScreen.moveToGroupDialog.title(count: listIds.length),
-          ),
-          contentPadding: const EdgeInsets.only(top: 16, bottom: 8),
+        return Dialog(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(20),
           ),
-          content: SizedBox(
-            width: double.maxFinite,
-            child: Scrollbar(
-              controller: dialogScrollController,
-              thumbVisibility: true,
-              child: ListView(
-                controller: dialogScrollController,
-                shrinkWrap: true,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 400),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  ListTile(
-                    leading: const Icon(Icons.folder_off_outlined),
-                    title: Text(t.loadListScreen.ungrouped),
-                    onTap: () {
-                      Navigator.pop(context, "ungrouped");
-                      dialogScrollController.dispose();
-                    },
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: Text(
+                      t.loadListScreen.moveToGroupDialog.title(
+                        count: listIds.length,
+                      ),
+                      style: theme.textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
-                  if (allGroups.isNotEmpty) const Divider(height: 1),
-                  ...allGroups.map(
-                    (group) => ListTile(
-                      leading: const Icon(Icons.folder_outlined),
-                      title: Text(group.name),
-                      onTap: () {
-                        Navigator.pop(context, group.id);
-                        dialogScrollController.dispose();
-                      },
+                  const SizedBox(height: 16),
+                  Flexible(
+                    child: Scrollbar(
+                      controller: dialogScrollController,
+                      thumbVisibility: true,
+                      child: ListView(
+                        controller: dialogScrollController,
+                        shrinkWrap: true,
+                        children: [
+                          _buildMoveOption(
+                            context: context,
+                            title: t.loadListScreen.ungrouped,
+                            icon: Icons.folder_off_outlined,
+                            onTap: () => Navigator.pop(context, "ungrouped"),
+                          ),
+                          if (allGroups.isNotEmpty)
+                            const Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 24,
+                                vertical: 8,
+                              ),
+                              child: Divider(height: 1),
+                            ),
+                          ...allGroups.map(
+                            (group) => _buildMoveOption(
+                              context: context,
+                              title: group.name,
+                              icon: Icons.folder_outlined,
+                              onTap: () => Navigator.pop(context, group.id),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: Text(t.general.cancel),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
             ),
           ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                dialogScrollController.dispose();
-              },
-              child: Text(t.general.cancel),
-            ),
-          ],
         );
       },
     );
@@ -335,6 +362,24 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
       );
       if (_isSelectMode) _toggleSelectMode();
     }
+  }
+
+  Widget _buildMoveOption({
+    required BuildContext context,
+    required String title,
+    required IconData icon,
+    required VoidCallback onTap,
+  }) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+      child: ListTile(
+        leading: Icon(icon, color: theme.colorScheme.onSurfaceVariant),
+        title: Text(title),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        onTap: onTap,
+      ),
+    );
   }
 
   Future<void> _showRenameDialog(BuildContext context, StudyList list) async {

@@ -52,59 +52,87 @@ class _InputScreenState extends ConsumerState<InputScreen> {
     StudyListFormNotifier formNotifier,
   ) async {
     final t = Translations.of(context);
+    final theme = Theme.of(context);
+
     final String? selectedId = await showDialog<String?>(
       context: context,
       builder: (context) {
         final dialogScrollController = SmoothScrollController();
-        return AlertDialog(
-          title: Text(t.inputScreen.assignToGroup),
-          contentPadding: const EdgeInsets.only(top: 16, bottom: 8),
+        return Dialog(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(20),
           ),
-          content: SizedBox(
-            width: double.maxFinite,
-            child: Scrollbar(
-              controller: dialogScrollController,
-              thumbVisibility: true,
-              child: ListView(
-                controller: dialogScrollController,
-                shrinkWrap: true,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 400),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  ListTile(
-                    leading: const Icon(Icons.folder_off_outlined),
-                    title: Text(t.loadListScreen.ungrouped),
-                    selected: formState.selectedGroupId == null,
-                    onTap: () {
-                      Navigator.pop(context, "ungrouped");
-                      dialogScrollController.dispose();
-                    },
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: Text(
+                      t.inputScreen.assignToGroup,
+                      style: theme.textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
-                  if (groups.isNotEmpty) const Divider(height: 1),
-                  ...groups.map(
-                    (group) => ListTile(
-                      leading: const Icon(Icons.folder_outlined),
-                      title: Text(group.name),
-                      selected: formState.selectedGroupId == group.id,
-                      onTap: () {
-                        Navigator.pop(context, group.id);
-                        dialogScrollController.dispose();
-                      },
+                  const SizedBox(height: 16),
+                  Flexible(
+                    child: Scrollbar(
+                      controller: dialogScrollController,
+                      thumbVisibility: true,
+                      child: ListView(
+                        controller: dialogScrollController,
+                        shrinkWrap: true,
+                        children: [
+                          _buildDialogOption(
+                            context: context,
+                            title: t.loadListScreen.ungrouped,
+                            icon: Icons.folder_off_outlined,
+                            isSelected: formState.selectedGroupId == null,
+                            onTap: () => Navigator.pop(context, "ungrouped"),
+                          ),
+                          if (groups.isNotEmpty)
+                            const Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 24,
+                                vertical: 8,
+                              ),
+                              child: Divider(height: 1),
+                            ),
+                          ...groups.map(
+                            (group) => _buildDialogOption(
+                              context: context,
+                              title: group.name,
+                              icon: Icons.folder_outlined,
+                              isSelected: formState.selectedGroupId == group.id,
+                              onTap: () => Navigator.pop(context, group.id),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: Text(t.general.cancel),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
             ),
           ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                dialogScrollController.dispose();
-              },
-              child: Text(t.general.cancel),
-            ),
-          ],
         );
       },
     );
@@ -114,11 +142,50 @@ class _InputScreenState extends ConsumerState<InputScreen> {
     }
   }
 
+  Widget _buildDialogOption({
+    required BuildContext context,
+    required String title,
+    required IconData icon,
+    required bool isSelected,
+    required VoidCallback onTap,
+  }) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+      child: ListTile(
+        leading: Icon(
+          icon,
+          color: isSelected
+              ? theme.colorScheme.primary
+              : theme.colorScheme.onSurfaceVariant,
+        ),
+        title: Text(
+          title,
+          style: TextStyle(
+            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+            color: isSelected
+                ? theme.colorScheme.primary
+                : theme.colorScheme.onSurface,
+          ),
+        ),
+        trailing: isSelected
+            ? Icon(Icons.check_circle, color: theme.colorScheme.primary)
+            : null,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        tileColor: isSelected
+            ? theme.colorScheme.primaryContainer.withAlpha(40)
+            : null,
+        onTap: onTap,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final formState = ref.watch(studyListFormProvider);
     final formNotifier = ref.read(studyListFormProvider.notifier);
-    final textTheme = Theme.of(context).textTheme;
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
     final t = Translations.of(context);
     final groupsAsync = ref.watch(studyGroupsProvider);
 
@@ -150,6 +217,7 @@ class _InputScreenState extends ConsumerState<InputScreen> {
                     labelText: t.inputScreen.listName,
                     hintText: t.inputScreen.listNameHint,
                     border: const OutlineInputBorder(),
+                    prefixIcon: const Icon(Icons.label_outline),
                     errorText:
                         (formState.errorMessage != null &&
                             formState.errorMessage!.toLowerCase().contains(
@@ -167,6 +235,15 @@ class _InputScreenState extends ConsumerState<InputScreen> {
                     if (groups.isEmpty) {
                       return const SizedBox.shrink();
                     }
+                    final currentGroupName = formState.selectedGroupId == null
+                        ? t.loadListScreen.ungrouped
+                        : groups
+                                  .firstWhereOrNull(
+                                    (g) => g.id == formState.selectedGroupId,
+                                  )
+                                  ?.name ??
+                              t.loadListScreen.ungrouped;
+
                     return InkWell(
                       onTap: formState.isLoading
                           ? null
@@ -176,29 +253,44 @@ class _InputScreenState extends ConsumerState<InputScreen> {
                               groups,
                               formNotifier,
                             ),
-                      borderRadius: BorderRadius.circular(4),
-                      child: InputDecorator(
-                        decoration: InputDecoration(
-                          labelText: t.inputScreen.assignToGroup,
-                          border: const OutlineInputBorder(),
+                      borderRadius: BorderRadius.circular(12),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 14,
+                        ),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: theme.colorScheme.outline),
+                          borderRadius: BorderRadius.circular(4),
                         ),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              formState.selectedGroupId == null
-                                  ? t.loadListScreen.ungrouped
-                                  : groups
-                                            .firstWhereOrNull(
-                                              (g) =>
-                                                  g.id ==
-                                                  formState.selectedGroupId,
-                                            )
-                                            ?.name ??
-                                        t.loadListScreen.ungrouped,
-                              style: textTheme.bodyLarge,
+                            Icon(
+                              Icons.folder_outlined,
+                              color: theme.colorScheme.onSurfaceVariant,
                             ),
-                            const Icon(Icons.arrow_drop_down),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    t.inputScreen.assignToGroup,
+                                    style: textTheme.bodySmall?.copyWith(
+                                      color: theme.colorScheme.onSurfaceVariant,
+                                    ),
+                                  ),
+                                  Text(
+                                    currentGroupName,
+                                    style: textTheme.bodyLarge,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Icon(
+                              Icons.arrow_drop_down,
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
                           ],
                         ),
                       ),
