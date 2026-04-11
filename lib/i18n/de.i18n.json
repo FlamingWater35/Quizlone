@@ -313,6 +313,9 @@
     "accountManagement": "Kontoverwaltung",
     "deleteAccount": "Konto löschen",
     "deleteAccountSubtitle": "Ihr Konto und alle Cloud-Daten dauerhaft löschen",
+    "experimental": "Experimentell",
+    "smoothScrolling": "Sanftes Scrollen",
+    "smoothScrollingSubtitle": "Aktiviert benutzerdefinierte Physik für Mauszeiger-Scrolling.",
     "deleteAccountDialog": {
       "title": "Konto löschen?",
       "content": "Diese Aktion ist endgültig. Ihr Konto und alle in der Cloud gespeicherten Daten werden gelöscht. Dies kann nicht rückgängig gemacht werden.",

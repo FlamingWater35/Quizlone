@@ -313,6 +313,9 @@
     "accountManagement": "Gerenciamento de Conta",
     "deleteAccount": "Excluir Conta",
     "deleteAccountSubtitle": "Excluir permanentemente sua conta e todos os dados na nuvem",
+    "experimental": "Experimental",
+    "smoothScrolling": "Rolagem suave",
+    "smoothScrollingSubtitle": "Ativa física personalizada para rolagem com ponteiro/mouse.",
     "deleteAccountDialog": {
       "title": "Excluir conta?",
       "content": "Esta ação é permanente. Sua conta e todos os dados armazenados na nuvem serão excluídos. Isso não pode ser desfeito.",

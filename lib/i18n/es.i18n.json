@@ -313,6 +313,9 @@
     "accountManagement": "Gestión de Cuenta",
     "deleteAccount": "Eliminar Cuenta",
     "deleteAccountSubtitle": "Eliminar permanentemente tu cuenta y todos los datos en la nube",
+    "experimental": "Experimental",
+    "smoothScrolling": "Desplazamiento suave",
+    "smoothScrollingSubtitle": "Activa físicas personalizadas para el desplazamiento con puntero/ratón.",
     "deleteAccountDialog": {
       "title": "¿Eliminar cuenta?",
       "content": "Esta acción es permanente. Tu cuenta y todos los datos almacenados en la nube serán eliminados. Esto no se puede deshacer.",

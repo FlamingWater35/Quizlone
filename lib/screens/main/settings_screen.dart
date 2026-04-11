@@ -562,14 +562,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 ),
               ],
               if (showExperimental) ...[
-                _SettingsHeader(title: "Experimental"),
+                _SettingsHeader(title: t.settingsScreen.experimental),
                 Card(
                   clipBehavior: Clip.antiAlias,
                   child: SwitchListTile(
-                    title: const Text("Smooth Scrolling"),
-                    subtitle: const Text(
-                      "Enables custom physics for pointer/mouse scrolling.",
-                    ),
+                    title: Text(t.settingsScreen.smoothScrolling),
+                    subtitle: Text(t.settingsScreen.smoothScrollingSubtitle),
                     secondary: const Icon(Icons.mouse_outlined),
                     value: smoothScrollEnabled,
                     onChanged: (val) =>

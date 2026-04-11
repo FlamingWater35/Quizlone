@@ -313,6 +313,9 @@
     "accountManagement": "アカウント管理",
     "deleteAccount": "アカウントを削除",
     "deleteAccountSubtitle": "アカウントとすべてのクラウドデータを完全に削除する",
+    "experimental": "実験的",
+    "smoothScrolling": "スムーズスクロール",
+    "smoothScrollingSubtitle": "ポインター/マウスのスクロールにカスタム物理演算を有効にします。",
     "deleteAccountDialog": {
       "title": "アカウントを削除しますか？",
       "content": "この操作は元に戻せません。あなたのアカウントとクラウドに保存されているすべてのデータが削除されます。",

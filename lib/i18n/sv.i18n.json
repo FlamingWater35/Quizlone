@@ -313,6 +313,9 @@
     "accountManagement": "Kontohantering",
     "deleteAccount": "Radera konto",
     "deleteAccountSubtitle": "Radera ditt konto och alla molndata permanent",
+    "experimental": "Experimentell",
+    "smoothScrolling": "Jämn rullning",
+    "smoothScrollingSubtitle": "Aktiverar anpassad fysik för pekare/musrullning.",
     "deleteAccountDialog": {
       "title": "Radera konto?",
       "content": "Denna åtgärd är permanent. Ditt konto och alla data som lagras i molnet kommer att raderas. Detta kan inte ångras.",

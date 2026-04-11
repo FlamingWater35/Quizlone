@@ -310,6 +310,9 @@
     "importData": "Import Data",
     "importDataSubtitle": "Load lists from a file",
     "deleteAllData": "Delete All Data",
+    "experimental": "Experimental",
+    "smoothScrolling": "Smooth Scrolling",
+    "smoothScrollingSubtitle": "Enables custom physics for pointer/mouse scrolling.",
     "exportDialog": {
       "title": "Export Data",
       "content": "How would you like to export your data?",

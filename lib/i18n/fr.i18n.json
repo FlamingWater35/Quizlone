@@ -313,6 +313,9 @@
     "accountManagement": "Gestion du compte",
     "deleteAccount": "Supprimer le compte",
     "deleteAccountSubtitle": "Supprimer définitivement votre compte et toutes les données cloud",
+    "experimental": "Expérimental",
+    "smoothScrolling": "Défilement fluide",
+    "smoothScrollingSubtitle": "Active une physique personnalisée pour le défilement du pointeur/souris.",
     "deleteAccountDialog": {
       "title": "Supprimer le compte ?",
       "content": "Cette action est permanente. Votre compte et toutes les données stockées dans le cloud seront supprimés. Cela ne peut pas être annulé.",
