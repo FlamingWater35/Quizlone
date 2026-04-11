@@ -762,13 +762,14 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
         child: ExpansionTile(
           key: PageStorageKey(uniqueKey),
           initiallyExpanded: isExpanded,
-          maintainState: true,
           onExpansionChanged: (expanded) {
-            if (expanded) {
-              _expandedGroupIds.add(uniqueKey);
-            } else {
-              _expandedGroupIds.remove(uniqueKey);
-            }
+            setState(() {
+              if (expanded) {
+                _expandedGroupIds.add(uniqueKey);
+              } else {
+                _expandedGroupIds.remove(uniqueKey);
+              }
+            });
           },
           controlAffinity: ListTileControlAffinity.leading,
           title: Row(
@@ -902,14 +903,20 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
         physics: const AlwaysScrollableScrollPhysics(),
         children: [
           if (grouped[null]?.isNotEmpty ?? false)
-            _buildGroupTile(t.loadListScreen.ungrouped, null, grouped[null]!, t)
-                .animate(key: const ValueKey('ungrouped_anim'))
-                .fadeIn(duration: 300.ms),
+            _buildGroupTile(
+              t.loadListScreen.ungrouped,
+              null,
+              grouped[null]!,
+              t,
+            ).animate().fadeIn(duration: 300.ms),
           ...sortedGroups.map((group) {
             final groupLists = grouped[group.id] ?? [];
-            return _buildGroupTile(group.name, group.id, groupLists, t)
-                .animate(key: ValueKey('${group.id}_anim'))
-                .fadeIn(duration: 300.ms);
+            return _buildGroupTile(
+              group.name,
+              group.id,
+              groupLists,
+              t,
+            ).animate().fadeIn(duration: 300.ms);
           }),
         ],
       ),
