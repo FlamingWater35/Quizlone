@@ -76,6 +76,7 @@ class CloudSyncService {
       await _client.from(_tableName).upsert({
         'user_id': user.id,
         'data': jsonData,
+        'last_updated_at': DateTime.now().toUtc().toIso8601String(),
       });
       _log.fine('Successfully uploaded data for user ${user.id}.');
     } catch (e, s) {
