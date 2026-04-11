@@ -762,6 +762,7 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
         child: ExpansionTile(
           key: PageStorageKey(uniqueKey),
           initiallyExpanded: isExpanded,
+          maintainState: true,
           onExpansionChanged: (expanded) {
             setState(() {
               if (expanded) {
@@ -897,10 +898,12 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
     return Scrollbar(
       controller: _listScrollController,
       thumbVisibility: true,
+      interactive: true,
       child: ListView(
         controller: _listScrollController,
         padding: const EdgeInsets.symmetric(horizontal: 8),
         physics: const AlwaysScrollableScrollPhysics(),
+        cacheExtent: 1000,
         children: [
           if (grouped[null]?.isNotEmpty ?? false)
             _buildGroupTile(
@@ -969,6 +972,7 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
           child: Scrollbar(
             controller: _listScrollController,
             thumbVisibility: true,
+            interactive: true,
             child: ImplicitlyAnimatedList<StudyList>(
               controller: _listScrollController,
               padding: const EdgeInsets.symmetric(horizontal: 8),
