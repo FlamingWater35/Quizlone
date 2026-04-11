@@ -30,6 +30,9 @@ Future<void> main() async {
 
   initLocaleSettings();
   _setupLogging();
+  setupWindow();
+
+  String? initError;
 
   try {
     await dotenv.load(fileName: ".env");
@@ -51,13 +54,84 @@ Future<void> main() async {
     SmoothScrollController.enabledGlobally = dbService.getSmoothScroll();
 
     container.dispose();
-
-    setupWindow();
-  } catch (e) {
-    _log.severe("Error during initialization: $e");
+  } catch (e, s) {
+    _log.severe("Error during initialization", e, s);
+    initError = "$e\n\nStackTrace:\n$s";
   }
 
-  FlutterNativeSplash.remove();
+  if (initError != null) {
+    FlutterNativeSplash.remove();
+    runApp(
+      MaterialApp(
+        theme: ThemeData.dark(),
+        debugShowCheckedModeBanner: false,
+        home: Scaffold(
+          backgroundColor: const Color(0xFF121212),
+          body: SafeArea(
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 600),
+                child: Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        Icons.error_outline,
+                        color: Colors.redAccent,
+                        size: 64,
+                      ),
+                      const SizedBox(height: 16),
+                      const Text(
+                        "Critical Error During Startup",
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                      Expanded(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.black26,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: Colors.white10),
+                          ),
+                          child: Scrollbar(
+                            thumbVisibility: true,
+                            child: SingleChildScrollView(
+                              primary: true,
+                              padding: const EdgeInsets.all(16.0),
+                              child: Text(
+                                initError,
+                                style: const TextStyle(
+                                  fontFamily: 'monospace',
+                                  fontSize: 13,
+                                  color: Colors.white70,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      const Text(
+                        "Please try restarting the app.",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.white54, fontSize: 14),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    return;
+  }
 
   runApp(ProviderScope(child: TranslationProvider(child: const MyApp())));
 }
@@ -101,15 +175,28 @@ void _setupLogging() {
   });
 }
 
-class MyApp extends ConsumerWidget {
+class MyApp extends ConsumerStatefulWidget {
   const MyApp({super.key});
 
+  @override
+  ConsumerState<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends ConsumerState<MyApp> {
   static final _appRouter = AppRouter();
   static final _log = Logger('MyApp');
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    MyApp._log.info("Building MyApp widget");
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      FlutterNativeSplash.remove();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    _log.info("Building MyApp widget");
 
     ref.watch(authControllerProvider);
     ref.watch(smoothScrollProvider);
