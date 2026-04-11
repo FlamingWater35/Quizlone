@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:logging/logging.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:quizlone/services/migration_service.dart';
 
 import '../models/match_record.dart';
 import '../models/settings_app_data.dart';
@@ -101,6 +102,8 @@ class DatabaseService {
     for (final record in data.testRecords) {
       await _testRecordsBox.put(record.id, record);
     }
+
+    await runMigrations();
   }
 
   Future<void> saveLastSyncTimestamp(DateTime timestamp) async {

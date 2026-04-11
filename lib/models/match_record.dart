@@ -12,8 +12,12 @@ class MatchRecord {
     DateTime? createdAt,
   }) : createdAt = createdAt ?? DateTime.now();
 
-  factory MatchRecord.fromJson(Map<String, dynamic> json) =>
-      _$MatchRecordFromJson(json);
+  factory MatchRecord.fromJson(Map<String, dynamic> json) {
+    if (json['studyListId'] == null && json['studyListName'] != null) {
+      json['studyListId'] = json['studyListName'];
+    }
+    return _$MatchRecordFromJson(json);
+  }
 
   @HiveField(2)
   final DateTime createdAt;

@@ -41,8 +41,10 @@ class CloudSyncService {
       final data = response['data'] != null
           ? AppData.fromJson(response['data'] as Map<String, dynamic>)
           : null;
-      final timestamp = response['last_updated_at'] != null
-          ? DateTime.parse(response['last_updated_at'] as String)
+
+      final rawTimestamp = response['last_updated_at'];
+      final timestamp = rawTimestamp != null
+          ? DateTime.tryParse(rawTimestamp.toString())
           : null;
 
       _log.fine(
