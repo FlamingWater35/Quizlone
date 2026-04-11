@@ -1,5 +1,6 @@
 import 'package:hive_ce/hive.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:uuid/uuid.dart';
 
 import './term.dart';
 import 'enums/enums.dart';
@@ -9,7 +10,14 @@ part 'study_list.g.dart';
 @HiveType(typeId: 0)
 @JsonSerializable(explicitToJson: true)
 class StudyList {
-  StudyList();
+  StudyList({
+    String? id,
+    this.name = "",
+    List<Term>? terms,
+    DateTime? createdAt,
+  }) : id = id ?? const Uuid().v4(),
+       terms = terms ?? [],
+       createdAt = createdAt ?? DateTime.now();
 
   factory StudyList.fromJson(Map<String, dynamic> json) =>
       _$StudyListFromJson(json);
@@ -18,7 +26,7 @@ class StudyList {
   bool allowAnswerSubstring = false;
 
   @HiveField(2)
-  DateTime createdAt = DateTime.now();
+  DateTime createdAt;
 
   @HiveField(4)
   bool flashcardShowTermFirst = true;
@@ -27,7 +35,7 @@ class StudyList {
   String? groupId;
 
   @HiveField(9)
-  late String id;
+  String id;
 
   @HiveField(8)
   DateTime? lastOpenedAt;
@@ -36,13 +44,13 @@ class StudyList {
   DateTime lastUsedAt = DateTime.now();
 
   @HiveField(0)
-  late String name;
+  String name;
 
   @HiveField(5)
   bool studyShowDefinitionAskTerm = true;
 
   @HiveField(1)
-  List<Term> terms = [];
+  List<Term> terms;
 
   @HiveField(6)
   int? testStudyLength;
@@ -78,20 +86,24 @@ class StudyList {
     bool? allowAnswerSubstring,
     String? groupId,
   }) {
-    return StudyList()
-      ..id = id ?? this.id
-      ..name = name ?? this.name
-      ..terms = terms ?? this.terms
-      ..createdAt = createdAt ?? this.createdAt
-      ..lastUsedAt = lastUsedAt ?? this.lastUsedAt
-      ..lastOpenedAt = lastOpenedAt ?? this.lastOpenedAt
-      ..flashcardShowTermFirst =
-          flashcardShowTermFirst ?? this.flashcardShowTermFirst
-      ..studyShowDefinitionAskTerm =
-          studyShowDefinitionAskTerm ?? this.studyShowDefinitionAskTerm
-      ..testStudyLength = testStudyLength ?? this.testStudyLength
-      ..testFormat = testFormat ?? this.testFormat
-      ..allowAnswerSubstring = allowAnswerSubstring ?? this.allowAnswerSubstring
-      ..groupId = groupId ?? this.groupId;
+    final newList =
+        StudyList(
+            id: id ?? this.id,
+            name: name ?? this.name,
+            terms: terms ?? List.from(this.terms),
+            createdAt: createdAt ?? this.createdAt,
+          )
+          ..lastUsedAt = lastUsedAt ?? this.lastUsedAt
+          ..lastOpenedAt = lastOpenedAt ?? this.lastOpenedAt
+          ..flashcardShowTermFirst =
+              flashcardShowTermFirst ?? this.flashcardShowTermFirst
+          ..studyShowDefinitionAskTerm =
+              studyShowDefinitionAskTerm ?? this.studyShowDefinitionAskTerm
+          ..testStudyLength = testStudyLength ?? this.testStudyLength
+          ..testFormat = testFormat ?? this.testFormat
+          ..allowAnswerSubstring =
+              allowAnswerSubstring ?? this.allowAnswerSubstring
+          ..groupId = groupId ?? this.groupId;
+    return newList;
   }
 }

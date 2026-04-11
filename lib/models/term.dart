@@ -6,15 +6,15 @@ part 'term.g.dart';
 @HiveType(typeId: 1)
 @JsonSerializable()
 class Term {
-  Term();
+  Term({this.termText = "", this.definitionText = ""});
 
   factory Term.fromJson(Map<String, dynamic> json) => _$TermFromJson(json);
 
   @HiveField(0)
-  late String definitionText;
+  String definitionText;
 
   @HiveField(1)
-  late String termText;
+  String termText;
 
   Map<String, dynamic> toJson() => _$TermToJson(this);
 }

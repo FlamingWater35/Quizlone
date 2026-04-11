@@ -88,7 +88,6 @@ const int maxMatchPairs = 10;
 
 @riverpod
 class MatchController extends _$MatchController {
-  bool _isDisposed = false;
   final Stopwatch _stopwatch = Stopwatch();
   Timer? _timer;
 
@@ -155,7 +154,7 @@ class MatchController extends _$MatchController {
         );
 
         Future.delayed(const Duration(milliseconds: 500), () {
-          if (!_isDisposed && state.hasValue) {
+          if (ref.mounted && state.hasValue) {
             state = AsyncData(state.value!.copyWith(incorrectPair: {}));
           }
         });
@@ -179,7 +178,7 @@ class MatchController extends _$MatchController {
 
     _timer?.cancel();
     _timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
-      if (state.value?.isComplete == false) {
+      if (ref.mounted && state.value?.isComplete == false) {
         final timeString = (_stopwatch.elapsedMilliseconds / 1000)
             .toStringAsFixed(1);
         ref.read(matchTimerProvider.notifier).set(timeString);
@@ -194,7 +193,6 @@ class MatchController extends _$MatchController {
     _log.fine("[MatchController] build started");
 
     ref.onDispose(() {
-      _isDisposed = true;
       _log.fine("[MatchController] disposed, cancelling timer.");
       _timer?.cancel();
       _stopwatch.stop();
