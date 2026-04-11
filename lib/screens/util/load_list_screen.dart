@@ -849,27 +849,32 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
     final sortedGroups = List.from(groups)
       ..sort((a, b) => a.name.compareTo(b.name));
 
-    return ListView(
+    return Scrollbar(
       controller: _listScrollController,
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      children: [
-        if (grouped[null]?.isNotEmpty ?? false)
-          _buildGroupTile(
-            t.loadListScreen.ungrouped,
-            null,
-            grouped[null]!,
-            t,
-          ).animate().fadeIn(duration: 300.ms),
-        ...sortedGroups.map((group) {
-          final groupLists = grouped[group.id] ?? [];
-          return _buildGroupTile(
-            group.name,
-            group.id,
-            groupLists,
-            t,
-          ).animate().fadeIn(duration: 300.ms);
-        }),
-      ],
+      thumbVisibility: true,
+      child: ListView(
+        controller: _listScrollController,
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        physics: const AlwaysScrollableScrollPhysics(),
+        children: [
+          if (grouped[null]?.isNotEmpty ?? false)
+            _buildGroupTile(
+              t.loadListScreen.ungrouped,
+              null,
+              grouped[null]!,
+              t,
+            ).animate().fadeIn(duration: 300.ms),
+          ...sortedGroups.map((group) {
+            final groupLists = grouped[group.id] ?? [];
+            return _buildGroupTile(
+              group.name,
+              group.id,
+              groupLists,
+              t,
+            ).animate().fadeIn(duration: 300.ms);
+          }),
+        ],
+      ),
     );
   }
 
@@ -916,17 +921,22 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
           ),
         ),
         Expanded(
-          child: ImplicitlyAnimatedList<StudyList>(
+          child: Scrollbar(
             controller: _listScrollController,
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            items: processedLists,
-            areItemsTheSame: (a, b) => a.id == b.id,
-            itemBuilder: (context, animation, item, index) {
-              return SizeFadeTransition(
-                animation: animation,
-                child: _buildListTile(item, t),
-              );
-            },
+            thumbVisibility: true,
+            child: ImplicitlyAnimatedList<StudyList>(
+              controller: _listScrollController,
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              physics: const AlwaysScrollableScrollPhysics(),
+              items: processedLists,
+              areItemsTheSame: (a, b) => a.id == b.id,
+              itemBuilder: (context, animation, item, index) {
+                return SizeFadeTransition(
+                  animation: animation,
+                  child: _buildListTile(item, t),
+                );
+              },
+            ),
           ),
         ),
       ],
