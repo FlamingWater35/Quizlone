@@ -36,7 +36,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
       if (isComplete && finalRecord != null) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (context.mounted) {
-            ref.invalidate(matchRecordsProvider(finalRecord.studyListName));
+            ref.invalidate(matchRecordsProvider(finalRecord.studyListId));
             AppNavigator.replaceWithMatchLeaderboard(
               context,
               newRecord: finalRecord,

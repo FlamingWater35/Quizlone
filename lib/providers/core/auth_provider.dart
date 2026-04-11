@@ -189,13 +189,13 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
     _log.fine("Merged ${mergedLists.length} lists.");
 
     final remoteRecordsSet = remote.matchRecords
-        .map((r) => "${r.studyListName}-${r.createdAt.toIso8601String()}")
+        .map((r) => "${r.studyListId}-${r.createdAt.toIso8601String()}")
         .toSet();
     final mergedRecords = List<MatchRecord>.from(remote.matchRecords);
 
     for (final localRecord in local.matchRecords) {
       final key =
-          "${localRecord.studyListName}-${localRecord.createdAt.toIso8601String()}";
+          "${localRecord.studyListId}-${localRecord.createdAt.toIso8601String()}";
       if (!remoteRecordsSet.contains(key)) {
         mergedRecords.add(localRecord);
       }
@@ -405,9 +405,9 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
 
   void _startPolling() {
     _stopPolling();
-    _log.info("Starting periodic sync timer (every 10 seconds).");
+    _log.info("Starting periodic sync timer (every 30 seconds).");
     _syncTimer = Timer.periodic(
-      const Duration(seconds: 10),
+      const Duration(seconds: 30),
       (timer) => requestCloudSync(),
     );
   }

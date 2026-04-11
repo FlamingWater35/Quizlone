@@ -120,12 +120,12 @@ class DatabaseService {
     await triggerCloudUpload();
   }
 
-  Future<void> pruneMatchRecords(String studyListName) async {
+  Future<void> pruneMatchRecords(String studyListId) async {
     final allRecords = _matchRecordsBox.toMap();
     final List<MapEntry<dynamic, MatchRecord>> listRecords = [];
 
     allRecords.forEach((key, value) {
-      if (value.studyListName == studyListName) {
+      if (value.studyListId == studyListId) {
         listRecords.add(MapEntry(key, value));
       }
     });
@@ -144,9 +144,9 @@ class DatabaseService {
     }
   }
 
-  Future<List<MatchRecord>> getRecordsForList(String studyListName) async {
+  Future<List<MatchRecord>> getRecordsForList(String studyListId) async {
     final records = _matchRecordsBox.values
-        .where((r) => r.studyListName == studyListName)
+        .where((r) => r.studyListId == studyListId)
         .toList();
     records.sort((a, b) => a.timeInTenths.compareTo(b.timeInTenths));
     return records;
@@ -213,32 +213,11 @@ class DatabaseService {
       return false;
     }
 
-    final oldName = listToRename.name;
     final updatedList = listToRename.copyWith(
       name: newName,
       lastUsedAt: DateTime.now(),
     );
     await _box.put(id, updatedList);
-
-    final Map<dynamic, MatchRecord> recordsToUpdate = {};
-    final allRecords = _matchRecordsBox.toMap();
-    allRecords.forEach((key, value) {
-      if (value.studyListName == oldName) {
-        recordsToUpdate[key] = value;
-      }
-    });
-
-    if (recordsToUpdate.isNotEmpty) {
-      for (var entry in recordsToUpdate.entries) {
-        final oldRecord = entry.value;
-        final newRecord = MatchRecord(
-          studyListName: newName,
-          timeInTenths: oldRecord.timeInTenths,
-          createdAt: oldRecord.createdAt,
-        );
-        await _matchRecordsBox.put(entry.key, newRecord);
-      }
-    }
 
     await triggerCloudUpload();
     return true;
@@ -256,32 +235,23 @@ class DatabaseService {
     });
   }
 
-  Future<StudyList?> getStudyListByName(String name) async {
-    return _box.values.firstWhere((list) => list.name == name);
-  }
-
   Future<StudyList?> getStudyListById(String id) async {
     return _box.get(id);
   }
 
   Future<bool> deleteStudyList(String id) async {
     if (_box.containsKey(id)) {
-      final listToDelete = await getStudyListById(id);
-      final listName = listToDelete?.name;
-
       await _box.delete(id);
 
-      if (listName != null) {
-        final List<dynamic> keysToDelete = [];
-        final allRecords = _matchRecordsBox.toMap();
-        allRecords.forEach((key, value) {
-          if (value.studyListName == listName) {
-            keysToDelete.add(key);
-          }
-        });
-        if (keysToDelete.isNotEmpty) {
-          await _matchRecordsBox.deleteAll(keysToDelete);
+      final List<dynamic> matchKeysToDelete = [];
+      final allMatchRecords = _matchRecordsBox.toMap();
+      allMatchRecords.forEach((key, value) {
+        if (value.studyListId == id) {
+          matchKeysToDelete.add(key);
         }
+      });
+      if (matchKeysToDelete.isNotEmpty) {
+        await _matchRecordsBox.deleteAll(matchKeysToDelete);
       }
 
       final testRecordsToDelete = _testRecordsBox.values

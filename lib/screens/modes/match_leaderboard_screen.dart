@@ -14,10 +14,10 @@ import '../../providers/study/study_list_providers.dart';
 
 final matchRecordsProvider = FutureProvider.family<List<MatchRecord>, String>((
   ref,
-  studyListName,
+  studyListId,
 ) {
   final dbService = ref.watch(databaseServiceProvider);
-  return dbService.getRecordsForList(studyListName);
+  return dbService.getRecordsForList(studyListId);
 });
 
 @RoutePage()
@@ -142,7 +142,7 @@ class _MatchLeaderboardScreenState extends ConsumerState<MatchLeaderboardScreen>
                   ),
                 );
               }
-              final recordsAsync = ref.watch(matchRecordsProvider(list.name));
+              final recordsAsync = ref.watch(matchRecordsProvider(list.id));
               return Padding(
                 padding: const EdgeInsets.all(24.0),
                 child: Column(

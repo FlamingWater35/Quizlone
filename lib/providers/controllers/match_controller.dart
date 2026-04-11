@@ -119,22 +119,23 @@ class MatchController extends _$MatchController {
           _stopwatch.stop();
           _timer?.cancel();
           final db = ref.read(databaseServiceProvider);
-          final listName =
-              ref.read(activeStudyListProvider).value?.name ?? "Unknown";
+          final listId = ref.read(activeStudyListIdProvider);
 
-          newRecord = MatchRecord(
-            studyListName: listName,
-            timeInTenths: _stopwatch.elapsedMilliseconds ~/ 100,
-            createdAt: DateTime.now(),
-          );
-          db
-              .saveMatchRecord(newRecord)
-              .then((_) {
-                db.pruneMatchRecords(listName);
-              })
-              .catchError((e, s) {
-                _log.severe("Error saving or pruning match records", e, s);
-              });
+          if (listId != null) {
+            newRecord = MatchRecord(
+              studyListId: listId,
+              timeInTenths: _stopwatch.elapsedMilliseconds ~/ 100,
+              createdAt: DateTime.now(),
+            );
+            db
+                .saveMatchRecord(newRecord)
+                .then((_) {
+                  db.pruneMatchRecords(listId);
+                })
+                .catchError((e, s) {
+                  _log.severe("Error saving or pruning match records", e, s);
+                });
+          }
         }
 
         state = AsyncData(

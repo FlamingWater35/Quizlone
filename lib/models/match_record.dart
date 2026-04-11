@@ -7,7 +7,7 @@ part 'match_record.g.dart';
 @JsonSerializable()
 class MatchRecord {
   MatchRecord({
-    required this.studyListName,
+    required this.studyListId,
     required this.timeInTenths,
     DateTime? createdAt,
   }) : createdAt = createdAt ?? DateTime.now();
@@ -19,7 +19,7 @@ class MatchRecord {
   final DateTime createdAt;
 
   @HiveField(0)
-  final String studyListName;
+  final String studyListId;
 
   @HiveField(1)
   final int timeInTenths;
