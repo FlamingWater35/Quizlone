@@ -117,6 +117,10 @@ class MultipleChoiceController extends _$MultipleChoiceController {
     _nextQuestion();
   }
 
+  void restart() {
+    ref.invalidateSelf();
+  }
+
   void _nextQuestion() {
     final currentState = state.value;
     if (currentState == null) return;
@@ -132,10 +136,6 @@ class MultipleChoiceController extends _$MultipleChoiceController {
     } else {
       state = AsyncData(currentState.copyWith(isSessionComplete: true));
     }
-  }
-
-  void restart() {
-    ref.invalidateSelf();
   }
 
   @override
@@ -157,6 +157,7 @@ class MultipleChoiceController extends _$MultipleChoiceController {
 
     final bool askDefinition = questionType == StudyQuestionType.term;
 
+    final random = Random();
     for (int i = 0; i < terms.length; i++) {
       final currentTerm = terms[i];
       final correctAnswer = askDefinition
@@ -166,13 +167,23 @@ class MultipleChoiceController extends _$MultipleChoiceController {
           ? currentTerm.termText
           : currentTerm.definitionText;
 
-      final otherTerms = List<Term>.from(terms)..removeAt(i);
-      otherTerms.shuffle();
-      final distractors = otherTerms.take(3).map((t) {
-        return askDefinition ? t.definitionText : t.termText;
-      }).toList();
+      final distractorTexts = <String>{};
+      int attempts = 0;
+      while (distractorTexts.length < 3 && attempts < 100) {
+        attempts++;
+        final randomIndex = random.nextInt(terms.length);
+        if (randomIndex == i) continue;
 
-      final options = [...distractors, correctAnswer]..shuffle();
+        final distractor = askDefinition
+            ? terms[randomIndex].definitionText
+            : terms[randomIndex].termText;
+
+        if (distractor.toLowerCase() != correctAnswer.toLowerCase()) {
+          distractorTexts.add(distractor);
+        }
+      }
+
+      final options = [...distractorTexts, correctAnswer]..shuffle(random);
 
       questions.add(
         MCQuestion(

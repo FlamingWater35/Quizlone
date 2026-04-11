@@ -85,23 +85,34 @@ class DatabaseService {
   }
 
   Future<void> applyCloudData(AppData data) async {
-    await _studyListBox.clear();
-    await _matchRecordsBox.clear();
-    await _studyGroupBox.clear();
-    await _testRecordsBox.clear();
+    final oldListKeys = _studyListBox.keys.toSet();
+    final oldGroupKeys = _studyGroupBox.keys.toSet();
+    final oldTestKeys = _testRecordsBox.keys.toSet();
 
-    for (final group in data.studyGroups) {
-      await _studyGroupBox.put(group.id, group);
+    if (data.studyGroups.isNotEmpty) {
+      final groupMap = {for (var g in data.studyGroups) g.id: g};
+      await _studyGroupBox.putAll(groupMap);
+      oldGroupKeys.removeAll(groupMap.keys);
     }
-    for (final list in data.studyLists) {
-      await _studyListBox.put(list.id, list);
+
+    if (data.studyLists.isNotEmpty) {
+      final listMap = {for (var l in data.studyLists) l.id: l};
+      await _studyListBox.putAll(listMap);
+      oldListKeys.removeAll(listMap.keys);
     }
-    for (final record in data.matchRecords) {
-      await _matchRecordsBox.add(record);
+
+    if (data.testRecords.isNotEmpty) {
+      final testMap = {for (var t in data.testRecords) t.id: t};
+      await _testRecordsBox.putAll(testMap);
+      oldTestKeys.removeAll(testMap.keys);
     }
-    for (final record in data.testRecords) {
-      await _testRecordsBox.put(record.id, record);
-    }
+
+    await _matchRecordsBox.clear();
+    await _matchRecordsBox.addAll(data.matchRecords);
+
+    if (oldGroupKeys.isNotEmpty) await _studyGroupBox.deleteAll(oldGroupKeys);
+    if (oldListKeys.isNotEmpty) await _studyListBox.deleteAll(oldListKeys);
+    if (oldTestKeys.isNotEmpty) await _testRecordsBox.deleteAll(oldTestKeys);
 
     await runMigrations();
   }
