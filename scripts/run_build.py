@@ -211,6 +211,7 @@ def run_full_build():
             "build",
             "web",
             "--release",
+            "--wasm",
             f"--base-href=/{REPO_NAME}/",
         ],
         "Web Build",
@@ -268,7 +269,7 @@ def run_full_build():
             command_to_run = [
                 iscc_path,
                 f"/DMyAppVersion={APP_VERSION}",
-                INNO_SCRIPT_PATH
+                INNO_SCRIPT_PATH,
             ]
             run_command_realtime_colored(command_to_run, "Compile Inno Setup Installer")
         else:

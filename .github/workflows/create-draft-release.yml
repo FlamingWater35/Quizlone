@@ -163,7 +163,7 @@ jobs:
       - run: flutter clean
       - run: flutter pub get
       - run: dart run build_runner build --delete-conflicting-outputs && dart run slang
-      - run: flutter build web --release --base-href /${{ env.REPO_NAME }}/
+      - run: flutter build web --release --wasm --base-href /${{ env.REPO_NAME }}/
       - name: Upload GitHub Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
