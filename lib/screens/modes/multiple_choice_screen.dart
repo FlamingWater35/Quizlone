@@ -322,7 +322,7 @@ class _OptionButtonState extends State<_OptionButton> {
               controller: _scrollController,
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: Container(
-                constraints: const BoxConstraints(minHeight: 100 - 16),
+                constraints: const BoxConstraints(minHeight: 100 - 16 - 4),
                 alignment: Alignment.center,
                 child: Text(
                   widget.text,
