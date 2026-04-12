@@ -59,14 +59,38 @@ class MultipleChoiceScreen extends ConsumerWidget {
   }
 }
 
-class _MCGameView extends ConsumerWidget {
+class _MCGameView extends ConsumerStatefulWidget {
   const _MCGameView();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_MCGameView> createState() => _MCGameViewState();
+}
+
+class _MCGameViewState extends ConsumerState<_MCGameView> {
+  final _questionScrollController = SmoothScrollController();
+
+  @override
+  void dispose() {
+    _questionScrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final mcStateAsync = ref.watch(multipleChoiceControllerProvider);
     final t = Translations.of(context);
     final scrollController = SmoothScrollController();
+
+    ref.listen<AsyncValue<MultipleChoiceState>>(
+      multipleChoiceControllerProvider,
+      (prev, next) {
+        if (prev?.value?.currentIndex != next.value?.currentIndex) {
+          if (_questionScrollController.hasClients) {
+            _questionScrollController.jumpTo(0);
+          }
+        }
+      },
+    );
 
     return mcStateAsync.when(
       data: (state) {
@@ -115,17 +139,34 @@ class _MCGameView extends ConsumerWidget {
 
                 const SizedBox(height: 32),
 
-                Container(
-                  padding: const EdgeInsets.all(24),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surfaceContainer,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  alignment: Alignment.center,
-                  child: Text(
-                    question.questionText,
-                    style: Theme.of(context).textTheme.headlineSmall,
-                    textAlign: TextAlign.center,
+                ConstrainedBox(
+                  constraints: const BoxConstraints(maxHeight: 250),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.surfaceContainer,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 12.0),
+                    child: Scrollbar(
+                      controller: _questionScrollController,
+                      thumbVisibility: true,
+                      child: SingleChildScrollView(
+                        controller: _questionScrollController,
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        child: Container(
+                          width: double.infinity,
+                          alignment: Alignment.center,
+                          constraints: const BoxConstraints(
+                            minHeight: 250 - 24,
+                          ),
+                          child: Text(
+                            question.questionText,
+                            style: Theme.of(context).textTheme.headlineSmall,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
                 ).animate(key: ValueKey(question)).fadeIn().scale(),
 
@@ -193,7 +234,7 @@ class _MCGameView extends ConsumerWidget {
   }
 }
 
-class _OptionButton extends StatelessWidget {
+class _OptionButton extends StatefulWidget {
   const _OptionButton({
     required this.text,
     required this.state,
@@ -205,22 +246,43 @@ class _OptionButton extends StatelessWidget {
   final String text;
 
   @override
+  State<_OptionButton> createState() => _OptionButtonState();
+}
+
+class _OptionButtonState extends State<_OptionButton> {
+  final _scrollController = SmoothScrollController();
+
+  @override
+  void didUpdateWidget(covariant _OptionButton oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.text != oldWidget.text && _scrollController.hasClients) {
+      _scrollController.jumpTo(0);
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final question = state.currentQuestion!;
+    final question = widget.state.currentQuestion!;
 
     Color cardColor = colorScheme.surfaceContainerLow;
     Color textColor = colorScheme.onSurface;
     BorderSide borderSide = BorderSide.none;
 
-    if (state.isAnswerProcessed) {
-      if (text == question.correctAnswer) {
+    if (widget.state.isAnswerProcessed) {
+      if (widget.text == question.correctAnswer) {
         cardColor = Colors.green.withAlpha(50);
         textColor = Colors.green;
         borderSide = const BorderSide(color: Colors.green, width: 2);
-      } else if (text == state.selectedAnswer &&
-          text != question.correctAnswer) {
+      } else if (widget.text == widget.state.selectedAnswer &&
+          widget.text != question.correctAnswer) {
         cardColor = colorScheme.errorContainer;
         textColor = colorScheme.onErrorContainer;
         borderSide = BorderSide(color: colorScheme.error, width: 2);
@@ -232,7 +294,7 @@ class _OptionButton extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: state.isAnswerProcessed ? null : onTap,
+        onTap: widget.state.isAnswerProcessed ? null : widget.onTap,
         borderRadius: BorderRadius.circular(12),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 300),
@@ -242,7 +304,7 @@ class _OptionButton extends StatelessWidget {
             color: cardColor,
             borderRadius: BorderRadius.circular(12),
             border: Border.fromBorderSide(borderSide),
-            boxShadow: state.isAnswerProcessed
+            boxShadow: widget.state.isAnswerProcessed
                 ? []
                 : [
                     BoxShadow(
@@ -252,17 +314,26 @@ class _OptionButton extends StatelessWidget {
                     ),
                   ],
           ),
-          padding: const EdgeInsets.all(12),
-          alignment: Alignment.center,
-          child: Text(
-            text,
-            textAlign: TextAlign.center,
-            style: theme.textTheme.titleMedium?.copyWith(
-              color: textColor,
-              fontWeight: FontWeight.w600,
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Scrollbar(
+            controller: _scrollController,
+            thumbVisibility: true,
+            child: SingleChildScrollView(
+              controller: _scrollController,
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Container(
+                constraints: const BoxConstraints(minHeight: 120 - 16),
+                alignment: Alignment.center,
+                child: Text(
+                  widget.text,
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    color: textColor,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
             ),
-            maxLines: 4,
-            overflow: TextOverflow.ellipsis,
           ),
         ),
       ),

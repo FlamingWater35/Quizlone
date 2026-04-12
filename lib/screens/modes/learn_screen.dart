@@ -122,6 +122,7 @@ class _LearnViewState extends ConsumerState<_LearnView>
     with TickerProviderStateMixin {
   late TextEditingController _answerController;
   final FocusNode _focusNode = FocusNode();
+  final _questionScrollController = SmoothScrollController();
   final _scrollController = SmoothScrollController();
 
   @override
@@ -129,6 +130,7 @@ class _LearnViewState extends ConsumerState<_LearnView>
     _answerController.dispose();
     _focusNode.dispose();
     _scrollController.dispose();
+    _questionScrollController.dispose();
     super.dispose();
   }
 
@@ -276,6 +278,10 @@ class _LearnViewState extends ConsumerState<_LearnView>
           mounted) {
         _answerController.clear();
 
+        if (_questionScrollController.hasClients) {
+          _questionScrollController.jumpTo(0);
+        }
+
         Future.delayed(const Duration(milliseconds: 350), () {
           if (mounted) {
             _focusNode.requestFocus();
@@ -364,11 +370,28 @@ class _LearnViewState extends ConsumerState<_LearnView>
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 12),
-                        Text(
-                          questionState.questionText,
-                          style: textTheme.headlineSmall,
-                          textAlign: TextAlign.center,
-                          softWrap: true,
+                        ConstrainedBox(
+                          constraints: const BoxConstraints(maxHeight: 250),
+                          child: Scrollbar(
+                            controller: _questionScrollController,
+                            thumbVisibility: true,
+                            child: SingleChildScrollView(
+                              controller: _questionScrollController,
+                              child: Container(
+                                width: double.infinity,
+                                alignment: Alignment.center,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16.0,
+                                ),
+                                child: Text(
+                                  questionState.questionText,
+                                  style: textTheme.headlineSmall,
+                                  textAlign: TextAlign.center,
+                                  softWrap: true,
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
                         const SizedBox(height: 24),
                         const Divider(),
