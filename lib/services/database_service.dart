@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
@@ -39,12 +40,14 @@ class DatabaseService {
   static const String _testRecordsBoxName = 'testRecordsBox';
 
   static Future<void> init() async {
-    if (!kIsWeb) {
-      final supportDir = await getApplicationSupportDirectory();
-      final dbPath = supportDir.path;
-      Hive.init(dbPath);
-    } else {
+    if (kIsWeb) {
       await Hive.initFlutter('Quizlone');
+    } else if (Platform.isAndroid || Platform.isIOS) {
+      final dir = await getApplicationDocumentsDirectory();
+      Hive.init(dir.path);
+    } else {
+      final dir = await getApplicationSupportDirectory();
+      Hive.init(dir.path);
     }
 
     Hive.registerAdapter(TermAdapter());

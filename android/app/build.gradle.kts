@@ -10,7 +10,7 @@ plugins {
 
 android {
     namespace = "com.flamingwater.quizlone"
-    compileSdk = 36
+    compileSdk = flutter.compileSdkVersion
     ndkVersion = "28.2.13676358"
 
     compileOptions {
@@ -27,7 +27,7 @@ android {
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = 24
-        targetSdk = 36
+        targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
@@ -51,6 +51,11 @@ android {
         release {
             signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
 }
