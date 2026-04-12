@@ -140,7 +140,7 @@ class _MCGameViewState extends ConsumerState<_MCGameView> {
                 const SizedBox(height: 32),
 
                 ConstrainedBox(
-                  constraints: const BoxConstraints(maxHeight: 250),
+                  constraints: const BoxConstraints(maxHeight: 200),
                   child: Container(
                     decoration: BoxDecoration(
                       color: Theme.of(context).colorScheme.surfaceContainer,
@@ -157,7 +157,7 @@ class _MCGameViewState extends ConsumerState<_MCGameView> {
                           width: double.infinity,
                           alignment: Alignment.center,
                           constraints: const BoxConstraints(
-                            minHeight: 250 - 24,
+                            minHeight: 200 - 24,
                           ),
                           child: Text(
                             question.questionText,
@@ -180,7 +180,7 @@ class _MCGameViewState extends ConsumerState<_MCGameView> {
                         children: [
                           Expanded(
                             child: SizedBox(
-                              height: 120,
+                              height: 100,
                               child: _OptionButton(
                                 text: options[i * 2],
                                 state: state,
@@ -199,7 +199,7 @@ class _MCGameViewState extends ConsumerState<_MCGameView> {
                           if (i * 2 + 1 < options.length)
                             Expanded(
                               child: SizedBox(
-                                height: 120,
+                                height: 100,
                                 child: _OptionButton(
                                   text: options[i * 2 + 1],
                                   state: state,
@@ -322,7 +322,7 @@ class _OptionButtonState extends State<_OptionButton> {
               controller: _scrollController,
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: Container(
-                constraints: const BoxConstraints(minHeight: 120 - 16),
+                constraints: const BoxConstraints(minHeight: 100 - 16),
                 alignment: Alignment.center,
                 child: Text(
                   widget.text,
