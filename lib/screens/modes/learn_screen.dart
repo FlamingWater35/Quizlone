@@ -38,7 +38,7 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
           IconButton(
             icon: const Icon(Icons.home_outlined),
             tooltip: t.modeSelectionScreen.returnToWelcome,
-            onPressed: () => AppNavigator.navigateHome(context, ref),
+            onPressed: () => AppNavigator.navigateHome(context),
           ),
           const SizedBox(width: 4),
         ],
@@ -60,8 +60,7 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
                         ),
                         const SizedBox(height: 20),
                         ElevatedButton(
-                          onPressed: () =>
-                              AppNavigator.navigateToStart(context, ref),
+                          onPressed: () => AppNavigator.navigateHome(context),
                           child: Text(t.modeSelectionScreen.returnToWelcome),
                         ),
                       ],
@@ -95,8 +94,7 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
                       ),
                       const SizedBox(height: 20),
                       ElevatedButton(
-                        onPressed: () =>
-                            AppNavigator.navigateToStart(context, ref),
+                        onPressed: () => AppNavigator.navigateHome(context),
                         child: Text(t.modeSelectionScreen.returnToWelcome),
                       ),
                     ],
@@ -309,8 +307,7 @@ class _LearnViewState extends ConsumerState<_LearnView>
                     ),
                     const SizedBox(height: 20),
                     ElevatedButton(
-                      onPressed: () =>
-                          AppNavigator.navigateToStart(context, ref),
+                      onPressed: () => AppNavigator.navigateHome(context),
                       child: Text(t.modeSelectionScreen.returnToWelcome),
                     ),
                   ],

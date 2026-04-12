@@ -17,9 +17,13 @@ class AppNavigator {
     }
   }
 
-  static void navigateHome(BuildContext context, WidgetRef ref) {
-    ref.read(activeStudyListIdProvider.notifier).set(null);
-    context.router.popUntilRoot();
+  static void navigateHome(BuildContext context) {
+    final router = context.router;
+    if (router.canPop()) {
+      router.popUntilRoot();
+    } else {
+      router.replace(const StartRoute());
+    }
   }
 
   static void pushModeSelection(BuildContext context) {
@@ -91,15 +95,5 @@ class AppNavigator {
 
   static void pushAbout(BuildContext context) {
     context.router.push(const AboutRoute());
-  }
-
-  static void navigateToStart(BuildContext context, WidgetRef ref) {
-    ref.read(activeStudyListIdProvider.notifier).set(null);
-    final router = context.router;
-    if (router.canPop()) {
-      router.popUntilRoot();
-    } else {
-      router.replace(const StartRoute());
-    }
   }
 }

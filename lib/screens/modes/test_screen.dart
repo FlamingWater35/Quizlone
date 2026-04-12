@@ -38,7 +38,7 @@ class _TestScreenState extends ConsumerState<TestScreen> {
           IconButton(
             icon: const Icon(Icons.home_outlined),
             tooltip: t.modeSelectionScreen.returnToWelcome,
-            onPressed: () => AppNavigator.navigateHome(context, ref),
+            onPressed: () => AppNavigator.navigateHome(context),
           ),
           const SizedBox(width: 4),
         ],
@@ -60,8 +60,7 @@ class _TestScreenState extends ConsumerState<TestScreen> {
                         ),
                         const SizedBox(height: 20),
                         ElevatedButton(
-                          onPressed: () =>
-                              AppNavigator.navigateToStart(context, ref),
+                          onPressed: () => AppNavigator.navigateHome(context),
                           child: Text(t.modeSelectionScreen.returnToWelcome),
                         ),
                       ],
@@ -91,8 +90,7 @@ class _TestScreenState extends ConsumerState<TestScreen> {
                       ),
                       const SizedBox(height: 20),
                       ElevatedButton(
-                        onPressed: () =>
-                            AppNavigator.navigateToStart(context, ref),
+                        onPressed: () => AppNavigator.navigateHome(context),
                         child: Text(t.modeSelectionScreen.returnToWelcome),
                       ),
                     ],
@@ -380,8 +378,7 @@ class _TestViewState extends ConsumerState<_TestView> {
                     ),
                     const SizedBox(height: 20),
                     ElevatedButton(
-                      onPressed: () =>
-                          AppNavigator.navigateToStart(context, ref),
+                      onPressed: () => AppNavigator.navigateHome(context),
                       child: Text(t.modeSelectionScreen.returnToWelcome),
                     ),
                   ],

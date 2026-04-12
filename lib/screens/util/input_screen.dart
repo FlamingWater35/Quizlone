@@ -198,7 +198,7 @@ class _InputScreenState extends ConsumerState<InputScreen> {
           IconButton(
             icon: const Icon(Icons.home_outlined),
             tooltip: t.modeSelectionScreen.returnToWelcome,
-            onPressed: () => AppNavigator.navigateHome(context, ref),
+            onPressed: () => AppNavigator.navigateHome(context),
           ),
           const SizedBox(width: 4),
         ],
