@@ -92,7 +92,7 @@ class _AboutScreenState extends State<AboutScreen>
                     child: SizedBox(
                       width: 128,
                       height: 128,
-                      child: Image.asset('assets/icon_transparent.png'),
+                      child: Image.asset('assets/icon.png'),
                     ),
                   ),
                 ),
@@ -124,7 +124,7 @@ class _AboutScreenState extends State<AboutScreen>
                       applicationName: t.appName,
                       applicationVersion: _version,
                       applicationIcon: Image.asset(
-                        'assets/icon_transparent.png',
+                        'assets/icon.png',
                         width: 64,
                       ),
                     );
