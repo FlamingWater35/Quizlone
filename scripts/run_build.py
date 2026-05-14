@@ -17,6 +17,9 @@ REPO_NAME = "Quizlone"
 INNO_SCRIPT_PATH = os.path.join("scripts", "installer_script.iss")
 
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
+
+SECRETS_JSON_PATH = os.path.join(PROJECT_ROOT, "secrets.json")
+
 FLUTTER_WEB_BUILD_DIR = os.path.join(PROJECT_ROOT, "build", "web")
 DOCS_DIR = os.path.join(PROJECT_ROOT, "docs")
 APK_OUTPUT_DIR = os.path.join(PROJECT_ROOT, "build", "app", "outputs", "apk", "release")
@@ -26,6 +29,19 @@ WINDOWS_OUTPUT_DIR = os.path.join(
 RELEASE_DIR = os.path.join(PROJECT_ROOT, "release")
 
 # --- Core Functions ---
+
+
+def get_secrets_flag():
+    """Returns the --dart-define-from-file flag if secrets.json exists."""
+    if os.path.exists(SECRETS_JSON_PATH):
+        return [f"--dart-define-from-file={SECRETS_JSON_PATH}"]
+    else:
+        print(Fore.YELLOW + "WARNING: secrets.json not found at project root.")
+        print(
+            Fore.YELLOW
+            + "Proceeding without injected secrets (app may not function correctly)."
+        )
+        return []
 
 
 def get_sanitized_version():
@@ -65,7 +81,6 @@ def stream_pipe(pipe, prefix, color, encoding="utf-8"):
                 print(color + prefix + f"[RAW BYTES (decode error)]: {line_bytes!r}")
                 sys.stdout.flush()
     except Exception as e:
-        # Suppress a common, non-fatal pipe error on Windows when the process exits
         if not (hasattr(e, "winerror") and e.winerror == 232):
             print(Fore.RED + f"Error streaming {prefix}: {e}")
     finally:
@@ -86,10 +101,9 @@ def run_command_realtime_colored(
     use_shell = platform.system() == "Windows"
 
     try:
-        # For interactive processes, we don't capture pipes.
         if interactive:
             process = subprocess.Popen(command_parts, cwd=CWD, shell=use_shell)
-            process.wait()  # Wait for the user to terminate the process (e.g., Ctrl+C)
+            process.wait()
             return_code = process.returncode
         else:
             process = subprocess.Popen(
@@ -120,8 +134,6 @@ def run_command_realtime_colored(
                 + Style.BRIGHT
                 + f"\nWARNING: {step_name} exited with code {return_code}."
             )
-            # In an interactive script, we might not want to exit the whole script.
-            # Let the user decide the next step.
             return False
 
         print(Fore.GREEN + Style.BRIGHT + f"\nCompleted: {step_name} successfully.")
@@ -170,8 +182,10 @@ def run_web_debug():
         Fore.YELLOW
         + ">>> Use 'r' for Hot Reload, 'R' for Hot Restart, 'q' to quit the debug session."
     )
+
+    cmd = ["flutter", "run", "-d", "web-server", "--web-port=8080"] + get_secrets_flag()
     run_command_realtime_colored(
-        ["flutter", "run", "-d", "web-server", "--web-port=8080"],
+        cmd,
         "Flutter Web Debug",
         interactive=True,
     )
@@ -182,12 +196,13 @@ def run_full_build():
     """Executes the entire build and packaging process."""
     APP_VERSION = get_sanitized_version()
     final_release_dir = os.path.join(RELEASE_DIR, f"v{APP_VERSION}")
+    secrets_flag = get_secrets_flag()
 
     print(Style.BRIGHT + Fore.MAGENTA + "=" * 60)
     print(
         Style.BRIGHT
         + Fore.MAGENTA
-        + f"Starting full build process for {APP_NAME} v{APP_VERSION}..."
+        + f"Starting full build for {APP_NAME} v{APP_VERSION}..."
     )
     print(Style.BRIGHT + Fore.MAGENTA + "=" * 60)
 
@@ -196,24 +211,26 @@ def run_full_build():
         return
     if not run_command_realtime_colored(["flutter", "pub", "get"], "Flutter Pub Get"):
         return
-    run_builders()  # Contains its own print statements
+
+    run_builders()
+
+    # Build Android
     if not run_command_realtime_colored(
-        ["flutter", "build", "apk", "--release", "--split-per-abi"], "Android APK Build"
+        ["flutter", "build", "apk", "--release", "--split-per-abi"] + secrets_flag,
+        "Android APK Build",
     ):
         return
+
+    # Build Windows
     if not run_command_realtime_colored(
-        ["flutter", "build", "windows", "--release"], "Windows Build"
+        ["flutter", "build", "windows", "--release"] + secrets_flag, "Windows Build"
     ):
         return
+
+    # Build Web
     if not run_command_realtime_colored(
-        [
-            "flutter",
-            "build",
-            "web",
-            "--release",
-            "--wasm",
-            f"--base-href=/{REPO_NAME}/",
-        ],
+        ["flutter", "build", "web", "--release", "--wasm", f"--base-href=/{REPO_NAME}/"]
+        + secrets_flag,
         "Web Build",
     ):
         return
@@ -342,7 +359,7 @@ def main():
         print(Fore.CYAN + "1. Run Builders (build_runner & slang)")
         print(Fore.CYAN + "2. Run Builders and Web Debug")
         print(Fore.CYAN + "3. Build Application (Full Release Process)")
-        print(Fore.CYAN + "4. Quit")
+        print(Fore.CYAN + "0. Quit")
         print("-" * 30)
 
         choice = input(Fore.WHITE + "Enter your choice (1-4): ")
@@ -353,7 +370,7 @@ def main():
             run_web_debug()
         elif choice == "3":
             run_full_build()
-        elif choice == "4":
+        elif choice == "0":
             print(Fore.YELLOW + "Exiting script. Goodbye!")
             break
         else:

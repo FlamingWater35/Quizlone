@@ -7,19 +7,15 @@ on:
 env:
   REPO_NAME: Quizlone
   APP_NAME: Quizlone
+  DART_DEFINES: --dart-define=SUPABASE_URL=${{ secrets.SUPABASE_URL }} --dart-define=SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}
 
 jobs:
   build_android:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - name: Create .env file
-        run: |
-          echo "SUPABASE_URL=${{ secrets.SUPABASE_URL }}" >> .env
-          echo "SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}" >> .env
       - name: Decode and Create Keystore File
-        run: |
-          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/upload-keystore.jks
+        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/upload-keystore.jks
       - name: Create key.properties File
         run: |
           echo "storePassword=${{ secrets.KEY_STORE_PASSWORD }}" >> android/key.properties
@@ -30,10 +26,9 @@ jobs:
         with: { distribution: "temurin", java-version: "17" }
       - uses: subosito/flutter-action@v2
         with: { channel: "stable", cache: true }
-      - run: flutter clean
       - run: flutter pub get
       - run: dart run build_runner build --delete-conflicting-outputs && dart run slang
-      - run: flutter build apk --release --split-per-abi
+      - run: flutter build apk --release --split-per-abi ${{ env.DART_DEFINES }}
       - name: Prepare APKs for Release
         run: |
           find build/app/outputs/apk/release -name "*x86_64*.apk" -delete
@@ -55,16 +50,11 @@ jobs:
       app_version: ${{ steps.get_version.outputs.app_version }}
     steps:
       - uses: actions/checkout@v5
-      - name: Create .env file
-        run: |
-          echo "SUPABASE_URL=${{ secrets.SUPABASE_URL }}" >> .env
-          echo "SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}" >> .env
       - uses: subosito/flutter-action@v2
         with: { channel: "stable", cache: true }
-      - run: flutter clean
       - run: flutter pub get
       - run: dart run build_runner build --delete-conflicting-outputs && dart run slang
-      - run: flutter build windows --release
+      - run: flutter build windows --release ${{ env.DART_DEFINES }}
       - name: Compress Portable Build
         run: |
           choco install 7zip
@@ -76,8 +66,6 @@ jobs:
           $fullVersion = (Get-Content pubspec.yaml | Select-String -Pattern "version:\s*([0-9A-Za-z\-+.]+)").Matches.Groups[1].Value.Trim()
           $cleanVersion = $fullVersion.Split('+')[0]
           echo "app_version=$cleanVersion" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
-          echo "Detected full version: $fullVersion"
-          echo "Using sanitized version for release: $cleanVersion"
         shell: powershell
       - name: Compile Inno Setup Installer
         uses: Minionguyjpro/Inno-Setup-Action@v1.2.7
@@ -95,23 +83,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - name: Create .env file
-        run: |
-          echo "SUPABASE_URL=${{ secrets.SUPABASE_URL }}" >> .env
-          echo "SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}" >> .env
       - name: Install dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y ninja-build libgtk-3-dev libfuse2
       - uses: subosito/flutter-action@v2
         with: { channel: "stable", cache: true }
-      - run: flutter clean
       - run: flutter pub get
       - run: dart run build_runner build --delete-conflicting-outputs && dart run slang
-      - run: flutter build linux --release
+      - run: flutter build linux --release ${{ env.DART_DEFINES }}
       - name: Create Portable Tarball
-        run: |
-          tar -czvf ${{ env.APP_NAME }}-linux.tar.gz -C build/linux/x64/release/bundle .
+        run: tar -czvf ${{ env.APP_NAME }}-linux.tar.gz -C build/linux/x64/release/bundle .
       - name: Install AppImageTool
         run: |
           wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
@@ -122,7 +104,6 @@ jobs:
           cp -r build/linux/x64/release/bundle/* AppDir/usr/bin/
 
           EXECUTABLE_NAME=$(find build/linux/x64/release/bundle -maxdepth 1 -type f -executable -exec basename {} \; | grep -v '\.so$')
-          echo "Found executable file: ${EXECUTABLE_NAME}"
 
           cat <<EOF > AppDir/AppRun
           #!/bin/bash
@@ -154,16 +135,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - name: Create .env file
-        run: |
-          echo "SUPABASE_URL=${{ secrets.SUPABASE_URL }}" >> .env
-          echo "SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}" >> .env
       - uses: subosito/flutter-action@v2
         with: { channel: "stable", cache: true }
-      - run: flutter clean
       - run: flutter pub get
       - run: dart run build_runner build --delete-conflicting-outputs && dart run slang
-      - run: flutter build web --release --wasm --base-href /${{ env.REPO_NAME }}/
+      - run: flutter build web --release --wasm --base-href /${{ env.REPO_NAME }}/ ${{ env.DART_DEFINES }}
       - name: Upload GitHub Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
@@ -199,16 +175,9 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          artifacts: |
-            artifacts/**/*.apk
-            artifacts/**/*.7z
-            artifacts/**/*.exe
-            artifacts/**/*.tar.gz
-            artifacts/**/*.AppImage
+          artifacts: "artifacts/**/*.apk,artifacts/**/*.7z,artifacts/**/*.exe,artifacts/**/*.tar.gz,artifacts/**/*.AppImage"
           draft: true
           allowUpdates: true
           tag: "dev-build-${{ github.run_number }}"
           name: "Version ${{ needs.build_windows.outputs.app_version }}"
-          body: |
-            Automated development build.
-            Triggered by commit: `${{ github.sha }}`
+          body: "Automated build triggered by commit: `${{ github.sha }}`"

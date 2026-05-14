@@ -45,11 +45,11 @@ app.*.map.json
 /android/app/release
 
 # Keystore and key properties
-android/upload-keystore.jks
-android/key.properties
+/android/upload-keystore.jks
+/android/key.properties
 
 # Supabase credentials
-.env
+/secrets.json
 
 # Generated code
 *.g.dart

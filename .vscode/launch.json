@@ -1,0 +1,18 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Quizlone (Debug)",
+      "request": "launch",
+      "type": "dart",
+      "toolArgs": ["--dart-define-from-file=secrets.json"]
+    },
+    {
+      "name": "Quizlone (Release)",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release",
+      "toolArgs": ["--dart-define-from-file=secrets.json"]
+    }
+  ]
+}
