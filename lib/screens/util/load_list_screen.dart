@@ -126,6 +126,34 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
     }
   }
 
+  Future<void> _handleSingleDelete(StudyList list) async {
+    final t = Translations.of(context);
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(t.loadListScreen.deleteListsDialog.title(count: 1)),
+        content: Text(t.loadListScreen.deleteListsDialog.content(count: 1)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: Text(t.general.cancel),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            style: FilledButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.error,
+            ),
+            child: Text(t.general.delete),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm == true && mounted) {
+      await ref.read(databaseServiceProvider).deleteStudyList(list.id);
+    }
+  }
+
   Future<void> _handleGroupDelete(StudyGroup group) async {
     final t = Translations.of(context);
     final confirm = await showDialog<bool>(
@@ -679,9 +707,7 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
                         _showMoveDialog([list.id]);
                         break;
                       case _ListItemMenuAction.delete:
-                        ref
-                            .read(databaseServiceProvider)
-                            .deleteStudyList(list.id);
+                        _handleSingleDelete(list);
                         break;
                     }
                   },
