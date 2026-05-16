@@ -362,7 +362,7 @@ def main():
         print(Fore.CYAN + "0. Quit")
         print("-" * 30)
 
-        choice = input(Fore.WHITE + "Enter your choice (1-4): ")
+        choice = input(Fore.WHITE + "Enter your choice (0-3): ")
 
         if choice == "1":
             run_builders()

@@ -27,7 +27,7 @@ jobs:
       - uses: subosito/flutter-action@v2
         with: { channel: "stable", cache: true }
       - run: flutter pub get
-      - run: dart run build_runner build --delete-conflicting-outputs && dart run slang
+      - run: dart run build_runner build && dart run slang
       - run: flutter build apk --release --split-per-abi ${{ env.DART_DEFINES }}
       - name: Prepare APKs for Release
         run: |
@@ -53,7 +53,7 @@ jobs:
       - uses: subosito/flutter-action@v2
         with: { channel: "stable", cache: true }
       - run: flutter pub get
-      - run: dart run build_runner build --delete-conflicting-outputs && dart run slang
+      - run: dart run build_runner build && dart run slang
       - run: flutter build windows --release ${{ env.DART_DEFINES }}
       - name: Compress Portable Build
         run: |
@@ -90,7 +90,7 @@ jobs:
       - uses: subosito/flutter-action@v2
         with: { channel: "stable", cache: true }
       - run: flutter pub get
-      - run: dart run build_runner build --delete-conflicting-outputs && dart run slang
+      - run: dart run build_runner build && dart run slang
       - run: flutter build linux --release ${{ env.DART_DEFINES }}
       - name: Create Portable Tarball
         run: tar -czvf ${{ env.APP_NAME }}-linux.tar.gz -C build/linux/x64/release/bundle .
@@ -138,7 +138,7 @@ jobs:
       - uses: subosito/flutter-action@v2
         with: { channel: "stable", cache: true }
       - run: flutter pub get
-      - run: dart run build_runner build --delete-conflicting-outputs && dart run slang
+      - run: dart run build_runner build && dart run slang
       - run: flutter build web --release --wasm --base-href /${{ env.REPO_NAME }}/ ${{ env.DART_DEFINES }}
       - name: Upload GitHub Pages artifact
         uses: actions/upload-pages-artifact@v3
