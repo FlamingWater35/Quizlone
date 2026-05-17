@@ -167,7 +167,7 @@ def run_builders():
     """Runs the code generators (build_runner and slang)."""
     print(Style.BRIGHT + Fore.MAGENTA + "\n>>> Running Code Generators...")
     run_command_realtime_colored(
-        ["dart", "run", "build_runner", "build", "--delete-conflicting-outputs"],
+        ["dart", "run", "build_runner", "build"],
         "Build Runner",
     )
     run_command_realtime_colored(["dart", "run", "slang"], "Build Localization")
@@ -371,10 +371,10 @@ def main():
         elif choice == "3":
             run_full_build()
         elif choice == "0":
-            print(Fore.YELLOW + "Exiting script. Goodbye!")
+            print(Fore.YELLOW + "Exiting script.")
             break
         else:
-            print(Fore.RED + "Invalid choice. Please enter a number between 1 and 4.")
+            print(Fore.RED + "Invalid choice. Please enter a number between 0 and 3.")
 
 
 if __name__ == "__main__":
