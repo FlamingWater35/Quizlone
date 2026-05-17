@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:file_picker/file_picker.dart';
@@ -239,51 +240,70 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
     if (confirm != true) return;
 
-    final result = await FilePicker.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['json'],
-      withData: kIsWeb,
-    );
+    try {
+      String? filePath;
+      Uint8List? fileBytes;
 
-    if (result != null) {
-      try {
-        String jsonString;
-        if (kIsWeb) {
-          final bytes = result.files.single.bytes;
-          if (bytes == null) {
-            throw Exception("Could not read file bytes on web.");
-          }
-          jsonString = utf8.decode(bytes);
-        } else {
-          final path = result.files.single.path;
-          if (path == null) {
-            throw Exception("File path is null on a non-web platform.");
-          }
-          final file = File(path);
-          jsonString = await file.readAsString();
+      if (kIsWeb) {
+        final result = await FilePicker.pickFiles(
+          type: FileType.custom,
+          allowedExtensions: ['json'],
+          withData: true,
+        );
+        if (result != null) {
+          fileBytes = result.files.single.bytes;
         }
-
-        final dynamic jsonData = jsonDecode(jsonString);
-        AppData appData;
-
-        if (jsonData is Map<String, dynamic>) {
-          appData = AppData.fromJson(jsonData);
-        } else if (jsonData is List<dynamic>) {
-          final studyLists = jsonData
-              .map((json) => StudyList.fromJson(json))
-              .toList();
-          appData = AppData(studyLists: studyLists, matchRecords: []);
-        } else {
-          throw Exception("Invalid backup file format.");
+      } else if (Platform.isAndroid || Platform.isIOS) {
+        final params = OpenFileDialogParams(
+          dialogType: OpenFileDialogType.document,
+          fileExtensionsFilter: ['json'],
+          mimeTypesFilter: ['application/json'],
+        );
+        filePath = await FlutterFileDialog.pickFile(params: params);
+      } else {
+        final result = await FilePicker.pickFiles(
+          type: FileType.custom,
+          allowedExtensions: ['json'],
+          withData: false,
+        );
+        if (result != null) {
+          filePath = result.files.single.path;
         }
+      }
 
-        await dbService.applyCloudData(appData);
-        await runMigrations();
-        await dbService.triggerCloudUpload();
+      if (filePath == null && fileBytes == null) return;
 
-        ref.invalidate(studyListsProvider);
-        ref.invalidate(matchRecordsProvider);
+      String jsonString;
+      if (fileBytes != null) {
+        jsonString = utf8.decode(fileBytes);
+      } else if (filePath != null) {
+        jsonString = await File(filePath).readAsString();
+      } else {
+        throw Exception("No file selected.");
+      }
 
+      final dynamic jsonData = jsonDecode(jsonString);
+      AppData appData;
+
+      if (jsonData is Map<String, dynamic>) {
+        appData = AppData.fromJson(jsonData);
+      } else if (jsonData is List<dynamic>) {
+        final studyLists = jsonData
+            .map((json) => StudyList.fromJson(json))
+            .toList();
+        appData = AppData(studyLists: studyLists, matchRecords: []);
+      } else {
+        throw Exception("Invalid backup file format.");
+      }
+
+      await dbService.applyCloudData(appData);
+      await runMigrations();
+      await dbService.triggerCloudUpload();
+
+      ref.invalidate(studyListsProvider);
+      ref.invalidate(matchRecordsProvider);
+
+      if (context.mounted) {
         scaffoldMessenger.showSnackBar(
           SnackBar(
             content: Text(
@@ -293,15 +313,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             ),
           ),
         );
-      } catch (e) {
-        if (context.mounted) {
-          showErrorSnackBar(
-            context,
-            message: t.settingsScreen.snackbars.importError(
-              error: e.toString(),
-            ),
-          );
-        }
+      }
+    } catch (e) {
+      if (context.mounted) {
+        showErrorSnackBar(
+          context,
+          message: t.settingsScreen.snackbars.importError(error: e.toString()),
+        );
       }
     }
   }
