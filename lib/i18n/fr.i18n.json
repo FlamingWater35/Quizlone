@@ -1,5 +1,9 @@
 {
   "appName": "Quizlone",
+  "criticalError": {
+    "title": "Erreur critique au démarrage",
+    "message": "Veuillez redémarrer l'application."
+  },
   "general": {
     "back": "Retour",
     "cancel": "Annuler",
@@ -101,6 +105,12 @@
     "title": "Charger une Liste",
     "searchHint": "Rechercher une liste...",
     "noMatches": "Aucune liste ne correspond à votre recherche.",
+    "resultsCount(param=count)": {
+      "one": "1 résultat",
+      "other": "$count résultats"
+    },
+    "ascending": "Croissant",
+    "descending": "Décroissant",
     "createGroup": "Créer un Groupe",
     "select": "Sélectionner",
     "cancel": "Annuler",
@@ -245,6 +255,7 @@
   },
   "testScreen": {
     "title": "Tester",
+    "mcFallbackOption": "Option $number",
     "noQuestions": "Aucune question pour ce test.",
     "viewResults": "Voir les Résultats",
     "submitTest": "Soumettre le Test",
@@ -304,6 +315,7 @@
     "viewReleaseNotes": "Voir les notes de version",
     "downloadingUpdate": "Téléchargement de la mise à jour...",
     "updateCheckFailed": "Échec de la Vérification des Mises à Jour",
+    "updateErrorDetails": "Erreur : $error",
     "dataManagement": "Gestion des Données",
     "exportData": "Exporter les Données",
     "exportDataSubtitle": "Sauvegarder toutes les listes dans un fichier",

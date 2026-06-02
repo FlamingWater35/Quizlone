@@ -964,7 +964,7 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
           child: Row(
             children: [
               Text(
-                "${processedLists.length} results",
+                t.loadListScreen.resultsCount(count: processedLists.length),
                 style: Theme.of(
                   context,
                 ).textTheme.labelMedium?.copyWith(fontWeight: FontWeight.bold),
@@ -972,7 +972,7 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
               const Spacer(),
               if (_currentSort != _SortOption.none)
                 Text(
-                  "${_currentSort.getDisplayName(t)} (${_sortAscending ? 'Asc' : 'Desc'})",
+                  "${_currentSort.getDisplayName(t)} (${_sortAscending ? t.loadListScreen.ascending : t.loadListScreen.descending})",
                   style: Theme.of(context).textTheme.labelSmall,
                 ),
             ],

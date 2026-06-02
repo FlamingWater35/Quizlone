@@ -1,5 +1,9 @@
 {
   "appName": "Quizlone",
+  "criticalError": {
+    "title": "Critical Error During Startup",
+    "message": "Please try restarting the app."
+  },
   "general": {
     "back": "Back",
     "cancel": "Cancel",
@@ -101,6 +105,12 @@
     "title": "Load List",
     "searchHint": "Search for a list...",
     "noMatches": "No lists match your search.",
+    "resultsCount(param=count)": {
+      "one": "1 result",
+      "other": "$count results"
+    },
+    "ascending": "Asc",
+    "descending": "Desc",
     "createGroup": "Create Group",
     "select": "Select",
     "cancel": "Cancel",
@@ -245,6 +255,7 @@
   },
   "testScreen": {
     "title": "Test",
+    "mcFallbackOption": "Option $number",
     "noQuestions": "No questions for this test.",
     "viewResults": "View Results",
     "submitTest": "Submit Test",
@@ -304,6 +315,7 @@
     "viewReleaseNotes": "View release notes",
     "downloadingUpdate": "Downloading update...",
     "updateCheckFailed": "Update Check Failed",
+    "updateErrorDetails": "Error: $error",
     "dataManagement": "Data Management",
     "exportData": "Export Data",
     "exportDataSubtitle": "Save all lists to a file",

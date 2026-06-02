@@ -263,10 +263,14 @@ class TestController extends _$TestController {
     // Fallback filler options if the study list is too short to provide unique distractors.
     int fillerIndex = 1;
     while (choices.length < count) {
-      String fillerOption = "Option ${choices.length + fillerIndex}";
+      String fillerOption = t.testScreen.mcFallbackOption(
+        number: choices.length + fillerIndex,
+      );
       while (choices.contains(fillerOption) || fillerOption == correctAnswer) {
         fillerIndex++;
-        fillerOption = "Option ${choices.length + fillerIndex}";
+        fillerOption = t.testScreen.mcFallbackOption(
+          number: choices.length + fillerIndex,
+        );
       }
       choices.add(fillerOption);
     }

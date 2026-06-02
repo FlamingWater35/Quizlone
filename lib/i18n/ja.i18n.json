@@ -1,5 +1,9 @@
 {
   "appName": "Quizlone",
+  "criticalError": {
+    "title": "起動時の重大なエラー",
+    "message": "アプリを再起動してください。"
+  },
   "general": {
     "back": "戻る",
     "cancel": "キャンセル",
@@ -101,6 +105,12 @@
     "title": "リストを読み込み",
     "searchHint": "リストを検索...",
     "noMatches": "検索に一致するリストはありません。",
+    "resultsCount(param=count)": {
+      "one": "1 件",
+      "other": "$count 件"
+    },
+    "ascending": "昇順",
+    "descending": "降順",
     "createGroup": "グループを作成",
     "select": "選択",
     "cancel": "キャンセル",
@@ -245,6 +255,7 @@
   },
   "testScreen": {
     "title": "テスト",
+    "mcFallbackOption": "オプション $number",
     "noQuestions": "このテストには問題がありません。",
     "viewResults": "結果を表示",
     "submitTest": "テストを送信",
@@ -304,6 +315,7 @@
     "viewReleaseNotes": "リリースノートを表示",
     "downloadingUpdate": "更新をダウンロード中...",
     "updateCheckFailed": "更新チェックに失敗しました",
+    "updateErrorDetails": "エラー: $error",
     "dataManagement": "データ管理",
     "exportData": "データをエクスポート",
     "exportDataSubtitle": "すべてのリストをファイルに保存",

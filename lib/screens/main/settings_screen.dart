@@ -711,7 +711,7 @@ class _UpdaterCard extends ConsumerWidget {
         UpdateError(message: final message) => ListTile(
           leading: Icon(Icons.error_outline, color: theme.colorScheme.error),
           title: Text(t.settingsScreen.updateCheckFailed),
-          subtitle: Text(message),
+          subtitle: Text(t.settingsScreen.updateErrorDetails(error: message)),
           onTap: updaterNotifier.checkForUpdate,
         ),
       },

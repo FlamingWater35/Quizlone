@@ -1,5 +1,9 @@
 {
   "appName": "Quizlone",
+  "criticalError": {
+    "title": "Критическая ошибка при запуске",
+    "message": "Пожалуйста, перезапустите приложение."
+  },
   "general": {
     "back": "Назад",
     "cancel": "Отмена",
@@ -103,6 +107,14 @@
     "title": "Загрузить список",
     "searchHint": "Поиск списка...",
     "noMatches": "Нет списков, соответствующих вашему запросу.",
+    "resultsCount(param=count)": {
+      "one": "1 результат",
+      "few": "$count результата",
+      "many": "$count результатов",
+      "other": "$count результатов"
+    },
+    "ascending": "Возр",
+    "descending": "Убыв",
     "createGroup": "Создать группу",
     "select": "Выбрать",
     "cancel": "Отмена",
@@ -257,6 +269,7 @@
   },
   "testScreen": {
     "title": "Тест",
+    "mcFallbackOption": "Вариант $number",
     "noQuestions": "Нет вопросов для этого теста.",
     "viewResults": "Посмотреть результаты",
     "submitTest": "Отправить тест",
@@ -316,6 +329,7 @@
     "viewReleaseNotes": "Просмотреть заметки о выпуске",
     "downloadingUpdate": "Загрузка обновления...",
     "updateCheckFailed": "Проверка обновлений не удалась",
+    "updateErrorDetails": "Ошибка: $error",
     "dataManagement": "Управление данными",
     "exportData": "Экспорт данных",
     "exportDataSubtitle": "Сохранить все списки в файл",

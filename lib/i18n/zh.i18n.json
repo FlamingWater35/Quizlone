@@ -1,5 +1,9 @@
 {
   "appName": "Quizlone",
+  "criticalError": {
+    "title": "启动时发生严重错误",
+    "message": "请重新启动应用。"
+  },
   "general": {
     "back": "返回",
     "cancel": "取消",
@@ -101,6 +105,12 @@
     "title": "加载列表",
     "searchHint": "搜索列表...",
     "noMatches": "没有列表匹配您的搜索。",
+    "resultsCount(param=count)": {
+      "one": "1 个结果",
+      "other": "$count 个结果"
+    },
+    "ascending": "升序",
+    "descending": "降序",
     "createGroup": "创建组",
     "select": "选择",
     "cancel": "取消",
@@ -245,6 +255,7 @@
   },
   "testScreen": {
     "title": "测试",
+    "mcFallbackOption": "选项 $number",
     "noQuestions": "此测试没有问题。",
     "viewResults": "查看结果",
     "submitTest": "提交测试",
@@ -304,6 +315,7 @@
     "viewReleaseNotes": "查看发行说明",
     "downloadingUpdate": "正在下载更新...",
     "updateCheckFailed": "更新检查失败",
+    "updateErrorDetails": "错误：$error",
     "dataManagement": "数据管理",
     "exportData": "导出数据",
     "exportDataSubtitle": "将所有列表保存到文件",

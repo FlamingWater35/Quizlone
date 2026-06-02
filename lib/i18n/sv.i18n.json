@@ -1,5 +1,9 @@
 {
   "appName": "Quizlone",
+  "criticalError": {
+    "title": "Kritiskt fel vid start",
+    "message": "Starta om appen."
+  },
   "general": {
     "back": "Tillbaka",
     "cancel": "Avbryt",
@@ -101,6 +105,12 @@
     "title": "Ladda Lista",
     "searchHint": "Sök efter en lista...",
     "noMatches": "Inga listor matchar din sökning.",
+    "resultsCount(param=count)": {
+      "one": "1 resultat",
+      "other": "$count resultat"
+    },
+    "ascending": "Stig",
+    "descending": "Fall",
     "createGroup": "Skapa Grupp",
     "select": "Välj",
     "cancel": "Avbryt",
@@ -245,6 +255,7 @@
   },
   "testScreen": {
     "title": "Testa",
+    "mcFallbackOption": "Alternativ $number",
     "noQuestions": "Inga frågor för detta test.",
     "viewResults": "Visa Resultat",
     "submitTest": "Skicka Test",
@@ -304,6 +315,7 @@
     "viewReleaseNotes": "Visa versionsfakta",
     "downloadingUpdate": "Laddar ner uppdatering...",
     "updateCheckFailed": "Uppdateringskontroll Misslyckades",
+    "updateErrorDetails": "Fel: $error",
     "dataManagement": "Datahantering",
     "exportData": "Exportera Data",
     "exportDataSubtitle": "Spara alla listor till en fil",

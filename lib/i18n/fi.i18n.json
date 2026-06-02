@@ -1,5 +1,9 @@
 {
   "appName": "Quizlone",
+  "criticalError": {
+    "title": "Kriittinen virhe käynnistyksessä",
+    "message": "Käynnistä sovellus uudelleen."
+  },
   "general": {
     "back": "Takaisin",
     "cancel": "Peruuta",
@@ -101,6 +105,12 @@
     "title": "Lataa lista",
     "searchHint": "Etsi listaa...",
     "noMatches": "Yksikään lista ei vastaa hakua.",
+    "resultsCount(param=count)": {
+      "one": "1 tulos",
+      "other": "$count tulosta"
+    },
+    "ascending": "Nouseva",
+    "descending": "Laskeva",
     "createGroup": "Luo ryhmä",
     "select": "Valitse",
     "cancel": "Peruuta",
@@ -245,6 +255,7 @@
   },
   "testScreen": {
     "title": "Testi",
+    "mcFallbackOption": "Vaihtoehto $number",
     "noQuestions": "Ei kysymyksiä tässä testissä.",
     "viewResults": "Näytä tulokset",
     "submitTest": "Lähetä testi",
@@ -304,6 +315,7 @@
     "viewReleaseNotes": "Näytä julkaisutiedot",
     "downloadingUpdate": "Ladataan päivitystä...",
     "updateCheckFailed": "Päivitysten tarkistus epäonnistui",
+    "updateErrorDetails": "Virhe: $error",
     "dataManagement": "Tietojen hallinta",
     "exportData": "Vie tiedot",
     "exportDataSubtitle": "Tallenna kaikki listat tiedostoon",

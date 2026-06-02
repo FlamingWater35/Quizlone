@@ -1,5 +1,9 @@
 {
   "appName": "Quizlone",
+  "criticalError": {
+    "title": "Kritischer Fehler beim Start",
+    "message": "Bitte starten Sie die App neu."
+  },
   "general": {
     "back": "Zurück",
     "cancel": "Abbrechen",
@@ -101,6 +105,12 @@
     "title": "Liste laden",
     "searchHint": "Nach einer Liste suchen...",
     "noMatches": "Keine Listen entsprechen Ihrer Suche.",
+    "resultsCount(param=count)": {
+      "one": "1 Ergebnis",
+      "other": "$count Ergebnisse"
+    },
+    "ascending": "Aufst",
+    "descending": "Abst",
     "createGroup": "Gruppe erstellen",
     "select": "Auswählen",
     "cancel": "Abbrechen",
@@ -245,6 +255,7 @@
   },
   "testScreen": {
     "title": "Testen",
+    "mcFallbackOption": "Option $number",
     "noQuestions": "Keine Fragen für diesen Test.",
     "viewResults": "Ergebnisse anzeigen",
     "submitTest": "Test abschicken",
@@ -304,6 +315,7 @@
     "viewReleaseNotes": "Versionshinweise anzeigen",
     "downloadingUpdate": "Update wird heruntergeladen...",
     "updateCheckFailed": "Update-Prüfung fehlgeschlagen",
+    "updateErrorDetails": "Fehler: $error",
     "dataManagement": "Datenverwaltung",
     "exportData": "Daten exportieren",
     "exportDataSubtitle": "Alle Listen in einer Datei speichern",

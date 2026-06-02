@@ -1,5 +1,9 @@
 {
   "appName": "Quizlone",
+  "criticalError": {
+    "title": "Errore critico all'avvio",
+    "message": "Riavvia l'applicazione."
+  },
   "general": {
     "back": "Indietro",
     "cancel": "Annulla",
@@ -101,6 +105,12 @@
     "title": "Carica Lista",
     "searchHint": "Cerca una lista...",
     "noMatches": "Nessuna lista corrisponde alla tua ricerca.",
+    "resultsCount(param=count)": {
+      "one": "1 risultato",
+      "other": "$count risultati"
+    },
+    "ascending": "Cresc",
+    "descending": "Disc",
     "createGroup": "Crea Gruppo",
     "select": "Seleziona",
     "cancel": "Annulla",
@@ -245,6 +255,7 @@
   },
   "testScreen": {
     "title": "Test",
+    "mcFallbackOption": "Opzione $number",
     "noQuestions": "Nessuna domanda per questo test.",
     "viewResults": "Visualizza Risultati",
     "submitTest": "Invia Test",
@@ -304,6 +315,7 @@
     "viewReleaseNotes": "Visualizza note di rilascio",
     "downloadingUpdate": "Scaricamento aggiornamento...",
     "updateCheckFailed": "Controllo Aggiornamento Fallito",
+    "updateErrorDetails": "Errore: $error",
     "dataManagement": "Gestione Dati",
     "exportData": "Esporta Dati",
     "exportDataSubtitle": "Salva tutte le liste in un file",
