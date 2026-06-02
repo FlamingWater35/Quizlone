@@ -6,6 +6,7 @@ import 'package:quizlone/i18n/generated/translations.g.dart';
 import 'package:quizlone/routing/app_navigator.dart';
 import 'package:quizlone/routing/app_router.dart';
 import 'package:quizlone/services/smooth_scroll.dart';
+import 'package:quizlone/widgets/error_snackbar.dart';
 import 'package:quizlone/widgets/web_aware_back_button.dart';
 
 import '../../models/enums/enums.dart';
@@ -18,7 +19,6 @@ final _log = Logger("TestScreen");
 @RoutePage(name: "TestModeRoute")
 class TestScreen extends ConsumerStatefulWidget {
   const TestScreen({super.key});
-
   @override
   ConsumerState<TestScreen> createState() => _TestScreenState();
 }
@@ -107,7 +107,6 @@ class _TestScreenState extends ConsumerState<TestScreen> {
 
 class _TestView extends ConsumerStatefulWidget {
   const _TestView();
-
   @override
   ConsumerState<_TestView> createState() => _TestViewState();
 }
@@ -133,7 +132,6 @@ class _TestViewState extends ConsumerState<_TestView> {
 
   void _initializeControllers(List<TestQuestion> questions) {
     if (_writtenAnswerControllers.isNotEmpty) return;
-
     for (int i = 0; i < questions.length; i++) {
       if (ref.read(testControllerProvider).value?.testFormat ==
           TestFormat.written) {
@@ -142,6 +140,121 @@ class _TestViewState extends ConsumerState<_TestView> {
         );
       }
     }
+  }
+
+  /// Renders a single question card, dynamically switching between Written and MC UI.
+  /// Wrapped in RepaintBoundary to prevent full-list repaints on individual text changes.
+  Widget _buildQuestionItem(
+    BuildContext context,
+    TestQuestion question,
+    int index,
+    TestController notifier,
+    TestScreenState screenState,
+  ) {
+    final isSubmitted = screenState.isSubmitted;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
+    final t = Translations.of(context);
+
+    Color? cardBorderColor;
+    if (isSubmitted) {
+      cardBorderColor = question.isCorrect == true
+          ? colorScheme.primary
+          : colorScheme.error;
+    }
+
+    return RepaintBoundary(
+      child: Card(
+        margin: const EdgeInsets.symmetric(vertical: 8.0),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
+          side: cardBorderColor != null
+              ? BorderSide(color: cardBorderColor, width: 1.5)
+              : BorderSide(color: colorScheme.outlineVariant),
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text.rich(
+                TextSpan(
+                  text: "${index + 1}. ",
+                  style: textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: colorScheme.primary,
+                  ),
+                  children: [
+                    TextSpan(
+                      text: question.questionText,
+                      style: textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.normal,
+                        color: colorScheme.onSurface,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+              if (screenState.testFormat == TestFormat.written)
+                TextField(
+                  controller: _writtenAnswerControllers[index],
+                  decoration: InputDecoration(
+                    border: const OutlineInputBorder(),
+                    hintText: t.learnScreen.answerHint,
+                  ),
+                  onChanged: (value) => notifier.updateUserAnswer(index, value),
+                  readOnly: isSubmitted,
+                )
+              else if (screenState.testFormat == TestFormat.mc &&
+                  question.multipleChoiceOptions != null)
+                RadioGroup<String>(
+                  groupValue: question.userAnswerText,
+                  onChanged: (value) {
+                    if (isSubmitted) return;
+                    if (value != null) notifier.updateUserAnswer(index, value);
+                  },
+                  child: Column(
+                    children: question.multipleChoiceOptions!
+                        .map(
+                          (option) => _buildMultipleChoiceOption(
+                            context,
+                            option,
+                            question,
+                            index,
+                            notifier,
+                            isSubmitted,
+                          ),
+                        )
+                        .toList(),
+                  ),
+                ),
+              if (isSubmitted && question.isCorrect == false)
+                Padding(
+                  padding: const EdgeInsets.only(top: 16.0),
+                  child: Text.rich(
+                    TextSpan(
+                      text:
+                          "${t.resultsScreen.reviewIncorrect.split(':').first}: ",
+                      style: textTheme.titleSmall?.copyWith(
+                        color: colorScheme.primary,
+                      ),
+                      children: [
+                        TextSpan(
+                          text: question.correctAnswerText,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   Widget _buildMultipleChoiceOption(
@@ -218,130 +331,23 @@ class _TestViewState extends ConsumerState<_TestView> {
     );
   }
 
-  Widget _buildQuestionItem(
-    BuildContext context,
-    TestQuestion question,
-    int index,
-    TestController notifier,
-    TestScreenState screenState,
-  ) {
-    final isSubmitted = screenState.isSubmitted;
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final textTheme = theme.textTheme;
-    final t = Translations.of(context);
-    Color? cardBorderColor;
-
-    if (isSubmitted) {
-      cardBorderColor = question.isCorrect == true
-          ? colorScheme.primary
-          : colorScheme.error;
-    }
-
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 8.0),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12.0),
-        side: cardBorderColor != null
-            ? BorderSide(color: cardBorderColor, width: 1.5)
-            : BorderSide(color: colorScheme.outlineVariant),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text.rich(
-              TextSpan(
-                text: "${index + 1}. ",
-                style: textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: colorScheme.primary,
-                ),
-                children: [
-                  TextSpan(
-                    text: question.questionText,
-                    style: textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.normal,
-                      color: colorScheme.onSurface,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 16),
-
-            if (screenState.testFormat == TestFormat.written)
-              TextField(
-                controller: _writtenAnswerControllers[index],
-                decoration: InputDecoration(
-                  border: const OutlineInputBorder(),
-                  hintText: t.learnScreen.answerHint,
-                ),
-                onChanged: (value) => notifier.updateUserAnswer(index, value),
-                readOnly: isSubmitted,
-              )
-            else if (screenState.testFormat == TestFormat.mc &&
-                question.multipleChoiceOptions != null)
-              RadioGroup<String>(
-                groupValue: question.userAnswerText,
-                onChanged: (value) {
-                  if (isSubmitted) return;
-                  if (value != null) {
-                    notifier.updateUserAnswer(index, value);
-                  }
-                },
-                child: Column(
-                  children: question.multipleChoiceOptions!
-                      .map(
-                        (option) => _buildMultipleChoiceOption(
-                          context,
-                          option,
-                          question,
-                          index,
-                          notifier,
-                          isSubmitted,
-                        ),
-                      )
-                      .toList(),
-                ),
-              ),
-
-            if (isSubmitted && question.isCorrect == false)
-              Padding(
-                padding: const EdgeInsets.only(top: 16.0),
-                child: Text.rich(
-                  TextSpan(
-                    text:
-                        "${t.resultsScreen.reviewIncorrect.split(':').first}: ",
-                    style: textTheme.titleSmall?.copyWith(
-                      color: colorScheme.primary,
-                    ),
-                    children: [
-                      TextSpan(
-                        text: question.correctAnswerText,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-          ],
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
+    final t = Translations.of(context);
+
+    // Listen for non-fatal submission errors (e.g., DB save failed) to warn the user without blocking the UI.
     ref.listen<AsyncValue<TestScreenState>>(testControllerProvider, (
       previous,
       next,
     ) {
+      final prevError = previous?.asData?.value.submissionError;
+      final nextError = next.asData?.value.submissionError;
+      if (nextError != null && nextError != prevError && mounted) {
+        showErrorSnackBar(context, message: nextError);
+      }
+
       final wasSubmitted = previous?.asData?.value.isSubmitted ?? false;
       final isSubmittedNow = next.asData?.value.isSubmitted ?? false;
-
       if (wasSubmitted && !isSubmittedNow) {
         if (mounted) {
           for (var controller in _writtenAnswerControllers.values) {
@@ -357,7 +363,6 @@ class _TestViewState extends ConsumerState<_TestView> {
 
     final testStateAsync = ref.watch(testControllerProvider);
     final testNotifier = ref.read(testControllerProvider.notifier);
-    final t = Translations.of(context);
 
     return testStateAsync.when(
       data: (state) {
@@ -390,7 +395,6 @@ class _TestViewState extends ConsumerState<_TestView> {
         if (state.questions.isEmpty && !state.isLoading) {
           return Center(child: Text(t.testScreen.noQuestions));
         }
-
         if (state.questions.isNotEmpty &&
             state.testFormat == TestFormat.written) {
           WidgetsBinding.instance.addPostFrameCallback((_) {

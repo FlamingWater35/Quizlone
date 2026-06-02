@@ -27,7 +27,6 @@ class _MergeInput {
     required this.remote,
     required this.localTimestamp,
   });
-
   final AppData local;
   final DateTime? localTimestamp;
   final AppData remote;
@@ -35,18 +34,20 @@ class _MergeInput {
 
 class _MergeResult {
   _MergeResult({required this.mergedData, required this.wasLocalUpdated});
-
   final AppData mergedData;
   final bool wasLocalUpdated;
 }
 
+/// Merges local and remote app data using a "last-write-wins" strategy for lists,
+/// and a union strategy for historical records (match/test).
+/// Runs in an isolate to prevent blocking the UI thread during large dataset merges.
 _MergeResult _runMergeInIsolate(_MergeInput input) {
   final local = input.local;
   final remote = input.remote;
   final localTimestamp = input.localTimestamp;
-
   bool wasLocalUpdated = false;
 
+  // 1. Merge Study Lists (Last-Write-Wins based on lastUsedAt)
   final remoteListsMap = {for (var list in remote.studyLists) list.id: list};
   final mergedListsMap = Map<String, StudyList>.from(remoteListsMap);
 
@@ -59,11 +60,12 @@ _MergeResult _runMergeInIsolate(_MergeInput input) {
         wasLocalUpdated = true;
       }
     } else {
+      // List exists locally but not remotely. Keep it if created after last sync.
       if (localTimestamp == null ||
           localList.createdAt.isAfter(localTimestamp)) {
         mergedListsMap[localList.id] = localList;
       } else {
-        wasLocalUpdated = true;
+        wasLocalUpdated = true; // Remote deleted it intentionally
       }
     }
   }
@@ -73,6 +75,7 @@ _MergeResult _runMergeInIsolate(_MergeInput input) {
     wasLocalUpdated = true;
   }
 
+  // 2. Merge Match Records (Union - keep all unique records)
   final remoteRecordsSet = remote.matchRecords
       .map((r) => "${r.studyListId}-${r.createdAt.toIso8601String()}")
       .toSet();
@@ -81,13 +84,10 @@ _MergeResult _runMergeInIsolate(_MergeInput input) {
       .toSet();
 
   final mergedRecords = List<MatchRecord>.from(remote.matchRecords);
-
   for (final localRecord in local.matchRecords) {
     final key =
         "${localRecord.studyListId}-${localRecord.createdAt.toIso8601String()}";
-    if (!remoteRecordsSet.contains(key)) {
-      mergedRecords.add(localRecord);
-    }
+    if (!remoteRecordsSet.contains(key)) mergedRecords.add(localRecord);
   }
 
   if (remote.matchRecords.any((rr) {
@@ -97,9 +97,9 @@ _MergeResult _runMergeInIsolate(_MergeInput input) {
     wasLocalUpdated = true;
   }
 
+  // 3. Merge Test Records & Groups (Union)
   final remoteTestsMap = {for (var t in remote.testRecords) t.id: t};
   final mergedTestsMap = Map<String, TestRecord>.from(remoteTestsMap);
-
   for (final localTest in local.testRecords) {
     if (!mergedTestsMap.containsKey(localTest.id)) {
       mergedTestsMap[localTest.id] = localTest;
@@ -136,16 +136,17 @@ _MergeResult _runMergeInIsolate(_MergeInput input) {
   );
 }
 
+/// Tracks global sync errors to display a banner in the UI drawer.
 @Riverpod(keepAlive: true)
 class SyncHealth extends _$SyncHealth {
   void setError(String? error) => state = error;
-
   void clear() => state = null;
-
   @override
   String? build() => null;
 }
 
+/// Manages user authentication, session state, and the background cloud sync engine.
+/// Implements a circuit breaker pattern to prevent infinite retry loops when offline.
 @Riverpod(keepAlive: true)
 class AuthController extends _$AuthController with WidgetsBindingObserver {
   static const _authErrorDebounceMs = 5000;
@@ -201,6 +202,7 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
     }
   }
 
+  /// Wipes local database and resets active list tracking upon explicit user logout.
   Future<void> clearLocalDataOnSignOut() async {
     _log.info("User requested clearing of local data on sign out.");
     final dbService = ref.read(databaseServiceProvider);
@@ -210,12 +212,12 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
     ref.read(activeStudyListIdProvider.notifier).set(null);
   }
 
+  /// Entry point for the sync engine. Queues requests if a sync is already in progress.
   Future<void> requestCloudSync({bool isInitialSync = false}) async {
     if (_isSyncing || _circuitOpen) {
       if (!_circuitOpen) _syncPending = true;
       return;
     }
-
     _isSyncing = true;
     final healthNotifier = ref.read(syncHealthProvider.notifier);
 
@@ -231,7 +233,7 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
       } on SocketException catch (e) {
         _handleSyncError(e, healthNotifier);
       } catch (e) {
-        _log.severe("Sync failed", e);
+        _log.severe("Sync failed unexpectedly", e);
         healthNotifier.setError(t.drawer.syncError);
         _consecutiveSyncErrors++;
       }
@@ -247,20 +249,25 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
     await signOut();
   }
 
+  /// Manually resets the circuit breaker and forces a sync attempt.
   Future<void> resetCircuitAndSync() async {
     _circuitOpen = false;
     _consecutiveSyncErrors = 0;
     await requestCloudSync();
   }
 
+  /// Increments error counter and opens the circuit breaker if max errors are reached.
   void _handleSyncError(dynamic e, SyncHealth healthNotifier) {
     _consecutiveSyncErrors++;
     _log.warning("Sync network error (attempt $_consecutiveSyncErrors)", e);
     healthNotifier.setError(t.drawer.syncErrorOffline);
+
     if (_consecutiveSyncErrors >= _maxConsecutiveErrors) {
       _circuitOpen = true;
       _stopPolling();
-      _log.warning("Circuit breaker opened");
+      _log.warning(
+        "Circuit breaker opened due to consecutive network failures.",
+      );
     }
   }
 
@@ -290,6 +297,7 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
     }
   }
 
+  /// Core sync logic: Determines whether to upload, download, or merge based on timestamps.
   Future<void> _performSync({bool isInitialSync = false}) async {
     final connectivityStatus = await ref.read(connectivityProvider.future);
     if (!ref.mounted || connectivityStatus == ConnectivityResult.none) return;
@@ -303,6 +311,7 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
     try {
       final cloudResponse = await cloudSyncService.getCloudData();
       if (!ref.mounted) return;
+
       final cloudData = cloudResponse.data;
       final cloudTimestamp = cloudResponse.timestamp;
 
@@ -342,6 +351,7 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
               (localTimestamp == null ||
                   cloudTimestamp.isAfter(localTimestamp));
 
+          // Only merge if the update came from a DIFFERENT device to avoid self-overwrites.
           if (isCloudNewer && cloudInstanceId != localInstanceId) {
             final localData = AppData(
               studyLists: localLists,
@@ -380,7 +390,7 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
         }
       }
     } catch (e) {
-      rethrow;
+      rethrow; // Let requestCloudSync handle the error classification
     }
   }
 
@@ -407,6 +417,7 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
     _authStateSubscription?.cancel();
     WidgetsBinding.instance.addObserver(this);
 
+    // Trigger sync immediately when network connectivity is restored.
     ref.listen<AsyncValue<ConnectivityResult>>(connectivityProvider, (
       previous,
       next,
@@ -426,7 +437,6 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
             final isSignInEvent =
                 data.event == AuthChangeEvent.initialSession ||
                 data.event == AuthChangeEvent.signedIn;
-
             if (isSignInEvent && session != null && !_initialSyncDone) {
               final success = await _performInitialSync();
               if (ref.mounted && success) {
@@ -438,6 +448,7 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
             }
           },
           onError: (error) {
+            // Debounce rapid auth errors to prevent UI spam.
             final now = DateTime.now();
             if (_lastAuthErrorTime != null &&
                 now.difference(_lastAuthErrorTime!).inMilliseconds <

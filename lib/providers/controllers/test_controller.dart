@@ -17,6 +17,8 @@ part 'test_controller.g.dart';
 
 final _log = Logger("TestController");
 
+/// Represents a single question in the test, tracking user input and grading status.
+/// Used to render both the interactive test view and the post-submission review screen.
 @immutable
 class TestQuestion {
   const TestQuestion({
@@ -56,6 +58,8 @@ class TestQuestion {
   }
 }
 
+/// Encapsulates the entire state of the Test Mode screen.
+/// Tracks the generated questions, user progress, and any submission errors.
 @immutable
 class TestScreenState {
   const TestScreenState({
@@ -64,6 +68,7 @@ class TestScreenState {
     this.questionType = StudyQuestionType.definition,
     this.isLoading = true,
     this.isSubmitted = false,
+    this.submissionError,
     this.errorMessage,
   });
 
@@ -74,10 +79,12 @@ class TestScreenState {
   final List<TestQuestion> questions;
   final TestFormat testFormat;
 
+  /// Non-fatal error that occurs after grading (e.g., DB save failure).
+  /// Allows the UI to show results while warning the user about sync issues.
+  final String? submissionError;
+
   int get score => questions.where((q) => q.isCorrect == true).length;
-
   int get totalQuestions => questions.length;
-
   List<TestQuestion> get incorrectAnswers =>
       questions.where((q) => q.isCorrect == false).toList();
 
@@ -88,7 +95,9 @@ class TestScreenState {
     bool? isLoading,
     bool? isSubmitted,
     String? errorMessage,
+    String? submissionError,
     bool clearError = false,
+    bool clearSubmissionError = false,
   }) {
     return TestScreenState(
       questions: questions ?? this.questions,
@@ -97,16 +106,22 @@ class TestScreenState {
       isLoading: isLoading ?? this.isLoading,
       isSubmitted: isSubmitted ?? this.isSubmitted,
       errorMessage: clearError ? null : errorMessage ?? this.errorMessage,
+      submissionError: clearSubmissionError
+          ? null
+          : submissionError ?? this.submissionError,
     );
   }
 }
 
 @riverpod
 class TestController extends _$TestController {
+  /// Updates the user's typed answer for a specific written question.
+  /// Ignores input if the test has already been submitted to prevent data tampering.
   void updateUserAnswer(int questionIndex, String answer) {
     if (state.isLoading || state.value == null || state.value!.isSubmitted) {
       return;
     }
+
     final currentState = state.value!;
     if (questionIndex < 0 || questionIndex >= currentState.questions.length) {
       return;
@@ -116,14 +131,16 @@ class TestController extends _$TestController {
     updatedQuestions[questionIndex] = updatedQuestions[questionIndex].copyWith(
       userAnswerText: answer,
     );
-
     state = AsyncData(currentState.copyWith(questions: updatedQuestions));
   }
 
+  /// Grades the test, saves the record to the local DB, and transitions to the results view.
+  /// Catches DB errors and exposes them via `submissionError` without blocking the UI.
   Future<void> submitTest() async {
     if (state.isLoading || state.value == null || state.value!.isSubmitted) {
       return;
     }
+
     final currentState = state.value!;
     if (currentState.questions.isEmpty) return;
 
@@ -143,6 +160,7 @@ class TestController extends _$TestController {
         final uaLower = userAnswer.toLowerCase();
         final caLower = correctAnswer.toLowerCase();
 
+        // Supports comma-separated accepted answers for flexible grading.
         if (allowSubstring && caLower.contains(',')) {
           final correctParts = caLower
               .split(',')
@@ -155,7 +173,6 @@ class TestController extends _$TestController {
       }
 
       gradedQuestions.add(q.copyWith(isCorrect: correct));
-
       answerRecords.add(
         TestAnswerRecord(
           questionText: q.questionText,
@@ -166,33 +183,41 @@ class TestController extends _$TestController {
       );
     }
 
-    final newState = currentState.copyWith(
+    final gradedState = currentState.copyWith(
       questions: gradedQuestions,
       isSubmitted: true,
     );
-    state = AsyncData(newState);
+    state = AsyncData(gradedState);
 
     final record = TestRecord(
       studyListId: activeListId,
-      score: newState.score,
-      totalQuestions: newState.totalQuestions,
+      score: gradedState.score,
+      totalQuestions: gradedState.totalQuestions,
       answers: answerRecords,
     );
 
     try {
       await ref.read(databaseServiceProvider).saveTestRecord(record);
-      _log.fine("[TestController] Test record saved.");
+      _log.fine("[TestController] Test record saved successfully.");
     } catch (e, s) {
-      _log.severe("[TestController] Failed to save test record", e, s);
+      _log.severe("[TestController] Failed to save test record to DB", e, s);
+      // Degrade gracefully: Show results but warn user that history wasn't saved.
+      if (ref.mounted) {
+        state = AsyncData(
+          gradedState.copyWith(
+            submissionError: t.general.genericError(error: e.toString()),
+          ),
+        );
+      }
     }
   }
 
+  /// Rehydrates the controller state from a historical DB record for the review screen.
   void loadHistoricalRecord(TestRecord record) {
     final questions = record.answers.map((ans) {
       final dummyTerm = Term()
         ..termText = "..."
         ..definitionText = "...";
-
       return TestQuestion(
         originalTerm: dummyTerm,
         questionText: ans.questionText,
@@ -214,10 +239,9 @@ class TestController extends _$TestController {
     );
   }
 
-  void restartTest() {
-    ref.invalidateSelf();
-  }
+  void restartTest() => ref.invalidateSelf();
 
+  /// Generates fallback options for Multiple Choice questions when insufficient distractors exist.
   List<String> _generateMultipleChoices(
     String correctAnswer,
     List<Term> allSourceTerms,
@@ -226,19 +250,17 @@ class TestController extends _$TestController {
   ) {
     final Set<String> choices = {correctAnswer};
     final List<String> potentialDistractors = allSourceTerms
-        .map((t) {
-          final text = fromDefinitions ? t.definitionText : t.termText;
-          return text;
-        })
+        .map((t) => fromDefinitions ? t.definitionText : t.termText)
         .where((text) => text.toLowerCase() != correctAnswer.toLowerCase())
         .toList();
 
     potentialDistractors.shuffle(Random());
-
     for (var distractor in potentialDistractors) {
       if (choices.length >= count) break;
       choices.add(distractor);
     }
+
+    // Fallback filler options if the study list is too short to provide unique distractors.
     int fillerIndex = 1;
     while (choices.length < count) {
       String fillerOption = "Option ${choices.length + fillerIndex}";
@@ -248,14 +270,16 @@ class TestController extends _$TestController {
       }
       choices.add(fillerOption);
     }
-    final finalChoices = choices.toList();
-    finalChoices.shuffle(Random());
+
+    final finalChoices = choices.toList()..shuffle(Random());
     return finalChoices;
   }
 
+  /// Fetches the active list and generates the initial test questions based on user settings.
   Future<TestScreenState> _generateTestState() async {
     _log.fine("[TestController] _generateTestState started");
     ref.watch(activeStudyListProvider);
+
     final studyLengthOption = ref.watch(studyLengthProvider);
     final testFormatOption = ref.watch(testQuestionFormatProvider);
     final questionTypeOption = ref.watch(studyAskWithProvider);
@@ -283,9 +307,7 @@ class TestController extends _$TestController {
       );
     }
 
-    List<Term> termsForTest = List.from(activeList.terms);
-    termsForTest.shuffle(Random());
-
+    List<Term> termsForTest = List.from(activeList.terms)..shuffle(Random());
     if (studyLengthOption != null &&
         studyLengthOption > 0 &&
         studyLengthOption < termsForTest.length) {
@@ -306,12 +328,9 @@ class TestController extends _$TestController {
           questionTypeOption == StudyQuestionType.definition;
       List<String>? mcOptions;
 
-      final termText = term.termText;
-      final definitionText = term.definitionText;
-
       if (testFormatOption == TestFormat.mc) {
         mcOptions = _generateMultipleChoices(
-          isQuestionDef ? termText : definitionText,
+          isQuestionDef ? term.termText : term.definitionText,
           activeList!.terms,
           isQuestionDef ? false : true,
           4,
@@ -329,9 +348,6 @@ class TestController extends _$TestController {
       );
     }).toList();
 
-    _log.fine(
-      "[TestController] Test questions generated: ${testQuestions.length}",
-    );
     return TestScreenState(
       questions: testQuestions,
       isLoading: false,
@@ -341,7 +357,5 @@ class TestController extends _$TestController {
   }
 
   @override
-  Future<TestScreenState> build() async {
-    return _generateTestState();
-  }
+  Future<TestScreenState> build() async => _generateTestState();
 }

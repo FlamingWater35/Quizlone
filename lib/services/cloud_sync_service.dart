@@ -9,22 +9,25 @@ import '../providers/core/core_providers.dart';
 
 final _log = Logger('CloudSyncService');
 
+/// Encapsulates the response from the cloud database, including the timestamp.
+/// Used to determine if local or remote data is newer during merge conflicts.
 class CloudDataResponse {
   CloudDataResponse(this.data, this.timestamp);
-
   final AppData? data;
   final DateTime? timestamp;
 }
 
+/// Manages all network interactions with the Supabase backend.
+/// Isolates cloud logic from local DB logic to maintain single-responsibility principles.
 class CloudSyncService {
   CloudSyncService(this.ref);
-
   final Ref ref;
 
   static const String _tableName = 'user_data';
-
   final SupabaseClient _client = Supabase.instance.client;
 
+  /// Fetches the user's serialized app data and last update timestamp from Supabase.
+  /// Returns empty response instead of throwing on 404 (PGRST116) to simplify initial sync logic.
   Future<CloudDataResponse> getCloudData() async {
     final user = _client.auth.currentUser;
     if (user == null) {
@@ -56,14 +59,16 @@ class CloudSyncService {
         _log.info('No cloud data found for user ${user.id}.');
         return CloudDataResponse(null, null);
       }
-      _log.severe('Error downloading data from Supabase', e);
+      _log.severe('Supabase PostgREST error downloading data', e);
       rethrow;
     } catch (e, s) {
-      _log.severe('An unexpected error occurred while downloading data', e, s);
+      _log.severe('Unexpected network/parsing error downloading data', e, s);
       rethrow;
     }
   }
 
+  /// Serializes and uploads the entire local AppData state to Supabase.
+  /// Attaches the device instance ID to prevent infinite sync loops between devices.
   Future<void> uploadData(AppData data) async {
     final user = _client.auth.currentUser;
     if (user == null) {
@@ -75,6 +80,7 @@ class CloudSyncService {
       final instanceId = ref.read(instanceIdProvider);
       final dataToUpload = data.copyWith(lastUpdatedBy: instanceId);
       final jsonData = dataToUpload.toJson();
+
       await _client.from(_tableName).upsert({
         'user_id': user.id,
         'data': jsonData,
@@ -82,11 +88,12 @@ class CloudSyncService {
       });
       _log.fine('Successfully uploaded data for user ${user.id}.');
     } catch (e, s) {
-      _log.severe('Error uploading data to Supabase', e, s);
+      _log.severe('Failed to upload data to Supabase', e, s);
       rethrow;
     }
   }
 
+  /// Deletes the user's cloud record, typically used when clearing local data or signing out.
   Future<void> deleteCloudData() async {
     final user = _client.auth.currentUser;
     if (user == null) {
@@ -98,11 +105,13 @@ class CloudSyncService {
       await _client.from(_tableName).delete().eq('user_id', user.id);
       _log.fine('Successfully deleted cloud data for user ${user.id}.');
     } catch (e, s) {
-      _log.severe('Error deleting cloud data', e, s);
+      _log.severe('Failed to delete cloud data', e, s);
       rethrow;
     }
   }
 
+  /// Executes account deletion via Supabase RPC and cleans up cloud records.
+  /// Ensures GDPR compliance and prevents orphaned database rows.
   Future<void> deleteAccount() async {
     final user = _client.auth.currentUser;
     if (user == null) return;
@@ -112,7 +121,7 @@ class CloudSyncService {
       await _client.rpc('delete_user');
       _log.info('Account deletion request sent for ${user.id}');
     } catch (e, s) {
-      _log.severe('Error during account deletion', e, s);
+      _log.severe('RPC or network error during account deletion', e, s);
       rethrow;
     }
   }

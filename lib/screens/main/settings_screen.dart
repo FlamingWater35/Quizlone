@@ -194,10 +194,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         savedPath = await FilePicker.saveFile(
           dialogTitle: t.settingsScreen.exportDialog.saveFileTitle,
           fileName: fileName,
+          bytes: bytes,
         );
-        if (savedPath != null) {
-          await File(savedPath).writeAsBytes(bytes);
-        }
       }
 
       if (savedPath != null && context.mounted) {
@@ -248,10 +246,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         final result = await FilePicker.pickFiles(
           type: FileType.custom,
           allowedExtensions: ['json'],
-          withData: true,
         );
         if (result != null) {
-          fileBytes = result.files.single.bytes;
+          final platformFile = result.files.single;
+          fileBytes = await platformFile.readAsBytes();
         }
       } else if (Platform.isAndroid || Platform.isIOS) {
         final params = OpenFileDialogParams(
@@ -264,7 +262,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         final result = await FilePicker.pickFiles(
           type: FileType.custom,
           allowedExtensions: ['json'],
-          withData: false,
         );
         if (result != null) {
           filePath = result.files.single.path;

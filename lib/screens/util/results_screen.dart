@@ -5,8 +5,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
+import 'package:quizlone/models/test_record.dart';
 import 'package:quizlone/routing/app_navigator.dart';
 import 'package:quizlone/services/smooth_scroll.dart';
+import 'package:quizlone/widgets/error_snackbar.dart';
 
 import '../../providers/controllers/flashcard_controller.dart';
 import '../../providers/controllers/test_controller.dart';
@@ -14,12 +16,11 @@ import '../../providers/core/core_providers.dart';
 import '../../providers/study/study_list_providers.dart';
 import '../../widgets/centered_view.dart';
 
+final _log = Logger("ResultsScreen");
+
 @RoutePage()
 class ResultsScreen extends ConsumerStatefulWidget {
   const ResultsScreen({super.key});
-
-  static final _log = Logger("ResultScreen");
-
   @override
   ConsumerState<ResultsScreen> createState() => _ResultsScreenState();
 }
@@ -37,6 +38,7 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
   @override
   void initState() {
     super.initState();
+    // On web, history isn't pre-loaded by the controller, so we fetch the latest record manually.
     if (kIsWeb) {
       _isLoadingHistory = true;
       _initWebHistory();
@@ -47,10 +49,11 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
     AppNavigator.returnToModeSelection(context);
   }
 
+  /// Initializes web-specific history loading.
+  /// Prevents blank screens on web by fetching the last test record if the controller is empty.
   Future<void> _initWebHistory() async {
     try {
       final state = await ref.read(testControllerProvider.future);
-
       if (mounted) {
         if (!state.isSubmitted) {
           await _loadLatestResult(isInitialWebLoad: true);
@@ -58,46 +61,52 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
           setState(() => _isLoadingHistory = false);
         }
       }
-    } catch (e) {
-      ResultsScreen._log.warning("Error initializing web history", e);
+    } catch (e, s) {
+      _log.warning("Error initializing web history", e, s);
       if (mounted) setState(() => _isLoadingHistory = false);
     }
   }
 
+  /// Fetches the most recent test record for the active list from the local DB.
+  /// Used to pre-populate the results screen when navigating directly via web URL.
   Future<void> _loadLatestResult({bool isInitialWebLoad = false}) async {
     final activeId = ref.read(activeStudyListIdProvider);
-
     if (activeId == null) {
       if (mounted) setState(() => _isLoadingHistory = false);
       return;
     }
-
     if (!isInitialWebLoad) {
       setState(() => _isLoadingHistory = true);
     }
-
     try {
       final latest = await ref
           .read(databaseServiceProvider)
           .getLatestTestRecord(activeId);
-
       if (latest != null && mounted) {
         ref.read(testControllerProvider.notifier).loadHistoricalRecord(latest);
       }
-    } catch (e) {
-      ResultsScreen._log.warning("Failed to load latest result", e);
+    } catch (e, s) {
+      _log.warning("Failed to load latest result", e, s);
+      if (mounted) {
+        showErrorSnackBar(
+          context,
+          message: t.general.genericError(error: e.toString()),
+        );
+      }
     } finally {
       if (mounted) setState(() => _isLoadingHistory = false);
     }
   }
 
+  /// Displays a modal dialog containing the user's past test attempts for the current list.
+  /// Includes strict error handling to prevent crashes if the DB returns corrupted records.
+  // Around line 133 - Fix invalid return type in onError handler
   Future<void> _showHistoryDialog() async {
     final t = Translations.of(context);
     final activeId = ref.read(activeStudyListIdProvider);
     if (activeId == null) return;
 
     final db = ref.read(databaseServiceProvider);
-    final records = await db.getTestRecordsForList(activeId);
     final dateFormat = DateFormat.yMMMd().add_jm();
     final dialogScrollController = SmoothScrollController();
 
@@ -108,7 +117,6 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
       builder: (context) {
         final theme = Theme.of(context);
         final colorScheme = theme.colorScheme;
-
         return AlertDialog(
           title: Row(
             children: [
@@ -119,8 +127,20 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
           ),
           content: SizedBox(
             width: 500,
-            child: records.isEmpty
-                ? Padding(
+            child: FutureBuilder<List<TestRecord>>(
+              future: db.getTestRecordsForList(activeId).catchError((e, s) {
+                // Return empty list instead of List<dynamic>
+                return <TestRecord>[];
+              }),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                final records = snapshot.data ?? [];
+
+                if (records.isEmpty) {
+                  return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 40),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
@@ -134,122 +154,123 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
                         Text(t.resultsScreen.history.noRecords),
                       ],
                     ),
-                  )
-                : Theme(
-                    data: theme.copyWith(
-                      scrollbarTheme: theme.scrollbarTheme.copyWith(
-                        mainAxisMargin: 12,
-                        crossAxisMargin: 2,
-                      ),
-                    ),
-                    child: Scrollbar(
-                      controller: dialogScrollController,
-                      thumbVisibility: true,
-                      thickness: 6,
-                      radius: const Radius.circular(10),
-                      child: ListView.builder(
-                        controller: dialogScrollController,
-                        shrinkWrap: true,
-                        padding: const EdgeInsets.only(
-                          right: 13,
-                          left: 2,
-                          top: 4,
-                          bottom: 4,
-                        ),
-                        itemCount: records.length,
-                        itemBuilder: (context, index) {
-                          final record = records[index];
-                          final percentage = record.totalQuestions > 0
-                              ? (record.score / record.totalQuestions)
-                              : 0.0;
+                  );
+                }
 
-                          Color scoreColor;
-                          if (percentage >= 1.0) {
-                            scoreColor = Colors.green;
-                          } else if (percentage >= 0.7) {
-                            scoreColor = colorScheme.primary;
-                          } else if (percentage >= 0.5) {
-                            scoreColor = Colors.orange;
-                          } else {
-                            scoreColor = colorScheme.error;
-                          }
-
-                          return Card(
-                            margin: const EdgeInsets.symmetric(vertical: 6),
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              side: BorderSide(
-                                color: colorScheme.outlineVariant,
-                              ),
-                            ),
-                            child: InkWell(
-                              borderRadius: BorderRadius.circular(12),
-                              onTap: () {
-                                ref
-                                    .read(testControllerProvider.notifier)
-                                    .loadHistoricalRecord(record);
-                                Navigator.pop(context);
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.all(12.0),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      width: 50,
-                                      height: 50,
-                                      decoration: BoxDecoration(
-                                        color: scoreColor.withAlpha(25),
-                                        shape: BoxShape.circle,
-                                      ),
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        "${(percentage * 100).round()}%",
-                                        style: theme.textTheme.labelLarge
-                                            ?.copyWith(
-                                              color: scoreColor,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 16),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            dateFormat.format(record.createdAt),
-                                            style: theme.textTheme.titleSmall,
-                                          ),
-                                          const SizedBox(height: 4),
-                                          Text(
-                                            t.resultsScreen.scoreFraction(
-                                              score: record.score,
-                                              total: record.totalQuestions,
-                                            ),
-                                            style: theme.textTheme.bodyMedium
-                                                ?.copyWith(
-                                                  color: colorScheme
-                                                      .onSurfaceVariant,
-                                                ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Icon(
-                                      Icons.chevron_right,
-                                      color: colorScheme.outline,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
+                return Theme(
+                  data: theme.copyWith(
+                    scrollbarTheme: theme.scrollbarTheme.copyWith(
+                      mainAxisMargin: 12,
+                      crossAxisMargin: 2,
                     ),
                   ),
+                  child: Scrollbar(
+                    controller: dialogScrollController,
+                    thumbVisibility: true,
+                    thickness: 6,
+                    radius: const Radius.circular(10),
+                    child: ListView.builder(
+                      controller: dialogScrollController,
+                      shrinkWrap: true,
+                      padding: const EdgeInsets.only(
+                        right: 13,
+                        left: 2,
+                        top: 4,
+                        bottom: 4,
+                      ),
+                      itemCount: records.length,
+                      itemBuilder: (context, index) {
+                        final record = records[index];
+                        final percentage = record.totalQuestions > 0
+                            ? (record.score / record.totalQuestions)
+                            : 0.0;
+                        Color scoreColor;
+                        if (percentage >= 1.0) {
+                          scoreColor = Colors.green;
+                        } else if (percentage >= 0.7) {
+                          scoreColor = colorScheme.primary;
+                        } else if (percentage >= 0.5) {
+                          scoreColor = Colors.orange;
+                        } else {
+                          scoreColor = colorScheme.error;
+                        }
+
+                        return Card(
+                          margin: const EdgeInsets.symmetric(vertical: 6),
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            side: BorderSide(color: colorScheme.outlineVariant),
+                          ),
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(12),
+                            onTap: () {
+                              ref
+                                  .read(testControllerProvider.notifier)
+                                  .loadHistoricalRecord(record);
+                              Navigator.pop(context);
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: 50,
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                      color: scoreColor.withAlpha(25),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      "${(percentage * 100).round()}%",
+                                      style: theme.textTheme.labelLarge
+                                          ?.copyWith(
+                                            color: scoreColor,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 16),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          dateFormat.format(record.createdAt),
+                                          style: theme.textTheme.titleSmall,
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          t.resultsScreen.scoreFraction(
+                                            score: record.score,
+                                            total: record.totalQuestions,
+                                          ),
+                                          style: theme.textTheme.bodyMedium
+                                              ?.copyWith(
+                                                color: colorScheme
+                                                    .onSurfaceVariant,
+                                              ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Icon(
+                                    Icons.chevron_right,
+                                    color: colorScheme.outline,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                );
+              },
+            ),
           ),
           actions: [
             TextButton(
@@ -333,7 +354,6 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
                 ),
               );
             }
-
             if (state.questions.isEmpty) {
               return Center(child: Text(t.resultsScreen.noQuestions));
             }
@@ -374,7 +394,6 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 32),
-
                     if (incorrectAnswers.isNotEmpty) ...[
                       Text(
                         t.resultsScreen.reviewIncorrect,
@@ -464,9 +483,7 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
                         textAlign: TextAlign.center,
                       ),
                     ],
-
                     const SizedBox(height: 48),
-
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -503,9 +520,9 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
               ),
             );
           },
-          loading: () => Center(child: Text(t.general.loading)),
+          loading: () => const Center(child: CircularProgressIndicator()),
           error: (err, stack) {
-            ResultsScreen._log.severe(
+            _log.severe(
               "Error in testControllerProvider for ResultsScreen",
               err,
               stack,

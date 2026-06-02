@@ -15,6 +15,7 @@ import '../../widgets/centered_view.dart';
 
 final _log = Logger("LearnScreen");
 
+/// Main screen for the Learn (spaced-repetition) study mode.
 @RoutePage()
 class LearnScreen extends ConsumerStatefulWidget {
   const LearnScreen({super.key});
@@ -109,6 +110,7 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
   }
 }
 
+/// Renders the active learning session, including the question card, feedback animations, and input field.
 class _LearnView extends ConsumerStatefulWidget {
   const _LearnView();
 
@@ -136,11 +138,9 @@ class _LearnViewState extends ConsumerState<_LearnView>
   void initState() {
     super.initState();
     _answerController = TextEditingController();
-
+    // Delay focus to allow the AnimatedSwitcher transition to complete smoothly.
     Future.delayed(const Duration(milliseconds: 450), () {
-      if (mounted) {
-        _focusNode.requestFocus();
-      }
+      if (mounted) _focusNode.requestFocus();
     });
   }
 
@@ -155,6 +155,7 @@ class _LearnViewState extends ConsumerState<_LearnView>
     AppNavigator.returnToModeSelection(context);
   }
 
+  /// Renders the UI shown when the user completes all cycles or hits the max cycle limit.
   Widget _buildSessionCompleteUI(
     BuildContext context,
     LearnModeScreenState state,
@@ -162,6 +163,7 @@ class _LearnViewState extends ConsumerState<_LearnView>
   ) {
     final t = Translations.of(context);
     final theme = Theme.of(context);
+
     return Center(
       child: CenteredView(
         child: Padding(
@@ -262,6 +264,7 @@ class _LearnViewState extends ConsumerState<_LearnView>
     final textTheme = Theme.of(context).textTheme;
     final t = Translations.of(context);
 
+    // Listen for question changes to clear the input field and reset focus.
     ref.listen<AsyncValue<LearnModeScreenState>>(learnControllerProvider, (
       prev,
       next,
@@ -275,15 +278,12 @@ class _LearnViewState extends ConsumerState<_LearnView>
           !nextQuestionSubmitted &&
           mounted) {
         _answerController.clear();
-
         if (_questionScrollController.hasClients) {
           _questionScrollController.jumpTo(0);
         }
 
         Future.delayed(const Duration(milliseconds: 350), () {
-          if (mounted) {
-            _focusNode.requestFocus();
-          }
+          if (mounted) _focusNode.requestFocus();
         });
       }
     });
@@ -350,7 +350,6 @@ class _LearnViewState extends ConsumerState<_LearnView>
                   ),
                 ),
                 const SizedBox(height: 20),
-
                 Card(
                   elevation: 2,
                   clipBehavior: Clip.antiAlias,
@@ -393,7 +392,6 @@ class _LearnViewState extends ConsumerState<_LearnView>
                         const SizedBox(height: 24),
                         const Divider(),
                         const SizedBox(height: 24),
-
                         TextField(
                           focusNode: _focusNode,
                           controller: _answerController,
@@ -406,7 +404,6 @@ class _LearnViewState extends ConsumerState<_LearnView>
                           readOnly: questionState.answerSubmitted,
                           autofocus: false,
                         ),
-
                         AnimatedSize(
                           duration: const Duration(milliseconds: 300),
                           curve: Curves.easeInOut,
@@ -463,7 +460,6 @@ class _LearnViewState extends ConsumerState<_LearnView>
                   ),
                 ),
                 const SizedBox(height: 20),
-
                 AnimatedSwitcher(
                   duration: const Duration(milliseconds: 400),
                   reverseDuration: const Duration(milliseconds: 200),

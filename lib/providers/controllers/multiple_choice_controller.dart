@@ -15,6 +15,7 @@ part 'multiple_choice_controller.g.dart';
 
 final _log = Logger("MultipleChoiceController");
 
+/// Represents a single multiple-choice question with its correct answer and shuffled options.
 @immutable
 class MCQuestion {
   const MCQuestion({
@@ -30,6 +31,7 @@ class MCQuestion {
   final Term term;
 }
 
+/// Encapsulates the state of the multiple-choice session, tracking score and progression.
 @immutable
 class MultipleChoiceState {
   const MultipleChoiceState({
@@ -56,7 +58,6 @@ class MultipleChoiceState {
       (questions.isNotEmpty && currentIndex < questions.length)
       ? questions[currentIndex]
       : null;
-
   int get totalQuestions => questions.length;
 
   MultipleChoiceState copyWith({
@@ -87,6 +88,7 @@ class MultipleChoiceState {
 
 @riverpod
 class MultipleChoiceController extends _$MultipleChoiceController {
+  /// Processes the user's selection, updates the score, and delays before advancing.
   Future<void> submitAnswer(String answer) async {
     final currentState = state.value;
     if (currentState == null ||
@@ -111,16 +113,18 @@ class MultipleChoiceController extends _$MultipleChoiceController {
       ),
     );
 
+    // Delay allows the user to see the green/red highlight before the screen changes.
     await Future.delayed(const Duration(seconds: 1, milliseconds: 500));
-    if (!ref.mounted) return;
 
+    // CRITICAL: Prevent navigation/state update if the user left the screen during the delay.
+    if (!ref.mounted) return;
     _nextQuestion();
   }
 
-  void restart() {
-    ref.invalidateSelf();
-  }
+  /// Resets the provider to generate a new shuffled set of questions.
+  void restart() => ref.invalidateSelf();
 
+  /// Advances to the next question or marks the session as complete.
   void _nextQuestion() {
     final currentState = state.value;
     if (currentState == null) return;
@@ -143,8 +147,8 @@ class MultipleChoiceController extends _$MultipleChoiceController {
     _log.fine("[MultipleChoiceController] build started");
     final activeList = await ref.watch(activeStudyListProvider.future);
     if (!ref.mounted) throw Exception("Provider disposed");
-    final questionType = ref.watch(studyAskWithProvider);
 
+    final questionType = ref.watch(studyAskWithProvider);
     if (activeList == null || activeList.terms.length < 4) {
       return MultipleChoiceState(
         isLoading: false,
@@ -154,10 +158,9 @@ class MultipleChoiceController extends _$MultipleChoiceController {
 
     final List<Term> terms = List.from(activeList.terms)..shuffle(Random());
     final List<MCQuestion> questions = [];
-
     final bool askDefinition = questionType == StudyQuestionType.term;
-
     final random = Random();
+
     for (int i = 0; i < terms.length; i++) {
       final currentTerm = terms[i];
       final correctAnswer = askDefinition
@@ -169,6 +172,8 @@ class MultipleChoiceController extends _$MultipleChoiceController {
 
       final distractorTexts = <String>{};
       int attempts = 0;
+
+      // Safely gather up to 3 unique distractors, with a hard limit of 100 attempts to prevent infinite loops on tiny datasets.
       while (distractorTexts.length < 3 && attempts < 100) {
         attempts++;
         final randomIndex = random.nextInt(terms.length);
@@ -177,14 +182,12 @@ class MultipleChoiceController extends _$MultipleChoiceController {
         final distractor = askDefinition
             ? terms[randomIndex].definitionText
             : terms[randomIndex].termText;
-
         if (distractor.toLowerCase() != correctAnswer.toLowerCase()) {
           distractorTexts.add(distractor);
         }
       }
 
       final options = [...distractorTexts, correctAnswer]..shuffle(random);
-
       questions.add(
         MCQuestion(
           term: currentTerm,

@@ -23,6 +23,8 @@ import 'services/window_manager.dart';
 
 final _log = Logger('main');
 
+/// Application entry point. Initializes core services, handles fatal startup errors,
+/// and renders a safe fallback UI if the database or network setup fails.
 Future<void> main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
@@ -32,13 +34,11 @@ Future<void> main() async {
   setupWindow();
 
   String? initError;
-
   try {
     await Supabase.initialize(
       url: const String.fromEnvironment('SUPABASE_URL'),
       anonKey: const String.fromEnvironment('SUPABASE_ANON_KEY'),
     );
-
     await DatabaseService.init();
     await _runCleanupTasks();
     await runMigrations();
@@ -48,14 +48,16 @@ Future<void> main() async {
 
     final savedLangCode = dbService.getLanguage();
     AppLanguageExtension.fromCode(savedLangCode).applyLocale();
-    SmoothScrollController.enabledGlobally = dbService.getSmoothScroll();
 
+    SmoothScrollController.enabledGlobally = dbService.getSmoothScroll();
     container.dispose();
   } catch (e, s) {
-    _log.severe("Error during initialization", e, s);
-    initError = "$e\n\nStackTrace:\n$s";
+    _log.severe("Fatal error during initialization", e, s);
+    initError = "$e\nStackTrace:\n$s";
   }
 
+  // Renders a safe, offline-capable error screen if core services fail to boot.
+  // Prevents the user from seeing a generic white screen of death.
   if (initError != null) {
     FlutterNativeSplash.remove();
     runApp(
@@ -133,10 +135,11 @@ Future<void> main() async {
   runApp(ProviderScope(child: TranslationProvider(child: const MyApp())));
 }
 
+/// Cleans up leftover APK files from previous app updates on Android.
+/// Prevents storage bloat by removing installers that are no longer needed.
 Future<void> _runCleanupTasks() async {
   final container = ProviderContainer();
   final dbService = container.read(databaseServiceProvider);
-
   try {
     final apkPath = dbService.getApkPathForCleanup();
     if (apkPath != null) {
@@ -157,6 +160,8 @@ Future<void> _runCleanupTasks() async {
   }
 }
 
+/// Configures the global logging system to output debug info in dev and warnings in prod.
+/// Ensures we don't flood production consoles while retaining crucial crash data.
 void _setupLogging() {
   Logger.root.level = kDebugMode ? Level.ALL : Level.WARNING;
   Logger.root.onRecord.listen((record) {
@@ -172,6 +177,8 @@ void _setupLogging() {
   });
 }
 
+/// Root widget that sets up routing, theming, localization, and global state listeners.
+/// Acts as the bridge between Riverpod providers and the Flutter rendering tree.
 class MyApp extends ConsumerStatefulWidget {
   const MyApp({super.key});
 
@@ -186,6 +193,7 @@ class _MyAppState extends ConsumerState<MyApp> {
   @override
   void initState() {
     super.initState();
+    // Delay splash screen removal until after the first frame to prevent UI flickering.
     WidgetsBinding.instance.addPostFrameCallback((_) {
       FlutterNativeSplash.remove();
     });
@@ -195,6 +203,7 @@ class _MyAppState extends ConsumerState<MyApp> {
   Widget build(BuildContext context) {
     _log.info("Building MyApp widget");
 
+    // Watch global providers to ensure they stay alive and react to state changes.
     ref.watch(authControllerProvider);
     ref.watch(smoothScrollProvider);
 
@@ -206,6 +215,7 @@ class _MyAppState extends ConsumerState<MyApp> {
     final uiScale = ref.watch(uiScaleProvider);
     const seedColor = Colors.deepPurple;
 
+    // Generates consistent Snackbar styling across both light and dark themes.
     SnackBarThemeData buildSnackBarTheme(ColorScheme colorScheme) {
       return SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
@@ -233,7 +243,6 @@ class _MyAppState extends ConsumerState<MyApp> {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           seedColor: seedColor,
@@ -247,7 +256,6 @@ class _MyAppState extends ConsumerState<MyApp> {
           ),
         ),
       ),
-
       darkTheme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           seedColor: seedColor,
@@ -261,14 +269,15 @@ class _MyAppState extends ConsumerState<MyApp> {
           ),
         ),
       ),
-
       themeMode: themeMode,
       builder: (context, child) {
+        // Applies global UI scaling factor defined in user settings.
         return AppScaler(scale: uiScale, child: child!);
       },
       debugShowCheckedModeBanner: false,
       routerConfig: _appRouter.config(
         deepLinkBuilder: (deepLink) {
+          // Reconstructs navigation stack for web deep links to prevent blank screens.
           if (kIsWeb && deepLink.path != '/') {
             final activeListId = ref.read(activeStudyListIdProvider);
             return DeepLinkResolver.resolve(

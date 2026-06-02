@@ -18,6 +18,8 @@ import '../../widgets/flashcard_widget.dart';
 
 final _log = Logger("FlashcardScreen");
 
+/// Main screen for the Flashcard study mode.
+/// Handles initial list validation and delegates rendering to _FlashcardView.
 @RoutePage()
 class FlashcardScreen extends ConsumerStatefulWidget {
   const FlashcardScreen({super.key});
@@ -112,6 +114,7 @@ class _FlashcardScreenState extends ConsumerState<FlashcardScreen> {
   }
 }
 
+/// Renders the interactive flashcard UI, including animations, keyboard shortcuts, and navigation controls.
 class _FlashcardView extends ConsumerStatefulWidget {
   const _FlashcardView();
 
@@ -122,7 +125,6 @@ class _FlashcardView extends ConsumerStatefulWidget {
 class _FlashcardViewState extends ConsumerState<_FlashcardView>
     with TickerProviderStateMixin {
   static final _log = Logger("FlashcardView");
-
   final FocusNode _focusNode = FocusNode();
   late final AnimationController _restartController;
   final _scrollController = SmoothScrollController();
@@ -141,12 +143,10 @@ class _FlashcardViewState extends ConsumerState<_FlashcardView>
   @override
   void initState() {
     super.initState();
+    // Delay focus request to ensure the widget tree is fully built and animated in.
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
-        _focusNode.requestFocus();
-      }
+      if (mounted) _focusNode.requestFocus();
     });
-
     _shuffleController = AnimationController(
       duration: const Duration(milliseconds: 500),
       vsync: this,
@@ -157,6 +157,7 @@ class _FlashcardViewState extends ConsumerState<_FlashcardView>
     );
   }
 
+  /// Renders the navigation and action buttons below the flashcard.
   Widget _buildNavigationControls(
     BuildContext context,
     FlashcardController notifier,
@@ -232,13 +233,13 @@ class _FlashcardViewState extends ConsumerState<_FlashcardView>
     final flashcardNotifier = ref.read(flashcardControllerProvider.notifier);
     final t = Translations.of(context);
 
+    // Track direction of index change to animate slide transition correctly.
     ref.listen<AsyncValue<FlashcardScreenState>>(flashcardControllerProvider, (
       prev,
       next,
     ) {
       final prevData = prev?.asData?.value;
       final nextData = next.asData?.value;
-
       if (prevData != null && nextData != null) {
         if (nextData.currentIndex > prevData.currentIndex) {
           if (mounted) setState(() => _slideFromRight = true);
@@ -252,6 +253,7 @@ class _FlashcardViewState extends ConsumerState<_FlashcardView>
       focusNode: _focusNode,
       autofocus: true,
       onKeyEvent: (node, event) {
+        // Provides desktop keyboard accessibility for flashcard navigation.
         if (event is KeyDownEvent) {
           if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
             flashcardNotifier.previousCard();
@@ -358,7 +360,6 @@ class _FlashcardViewState extends ConsumerState<_FlashcardView>
                                 curve: Curves.easeIn,
                               ),
                             );
-
                         final shuffleVal = _shuffleController.value;
                         final shuffleAngle = shuffleVal * 2 * pi;
                         final shuffleScale = 1 - sin(shuffleVal * pi);
@@ -382,14 +383,12 @@ class _FlashcardViewState extends ConsumerState<_FlashcardView>
                                 parent: animation,
                                 curve: Curves.easeInOut,
                               );
-
                               final offsetAnimation = Tween<Offset>(
                                 begin: _slideFromRight
                                     ? const Offset(0.3, 0.0)
                                     : const Offset(-0.3, 0.0),
                                 end: Offset.zero,
                               ).animate(curvedAnimation);
-
                               final scaleAnimation = Tween<double>(
                                 begin: 0.8,
                                 end: 1.0,

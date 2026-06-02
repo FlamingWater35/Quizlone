@@ -15,16 +15,15 @@ part 'match_controller.g.dart';
 
 final _log = Logger("MatchController");
 
+/// Global timer string provider to allow external widgets (like AppBar) to display time.
 @Riverpod(keepAlive: true)
 class MatchTimer extends _$MatchTimer {
-  void set(String value) {
-    state = value;
-  }
-
+  void set(String value) => state = value;
   @override
   String build() => "0.0";
 }
 
+/// Represents a single draggable/clickable card in the Match grid.
 @immutable
 class MatchItem {
   const MatchItem({
@@ -38,6 +37,7 @@ class MatchItem {
   final int uniqueId;
 }
 
+/// Encapsulates the grid state, selection logic, and completion status for Match mode.
 @immutable
 class MatchScreenState {
   const MatchScreenState({
@@ -91,7 +91,8 @@ class MatchController extends _$MatchController {
   final Stopwatch _stopwatch = Stopwatch();
   Timer? _timer;
 
-  void selectItem(MatchItem item) {
+  /// Handles card selection logic, checking for matches, incorrect pairs, and game completion.
+  void selectItem(MatchItem item) async {
     final currentState = state.value;
     if (currentState == null ||
         currentState.isComplete ||
@@ -112,28 +113,28 @@ class MatchController extends _$MatchController {
         final newMatched = {...currentState.matchedPairIds, item.pairId};
         final isNowComplete =
             newMatched.length == (currentState.items.length / 2);
-
         MatchRecord? newRecord;
+
         if (isNowComplete) {
           _stopwatch.stop();
           _timer?.cancel();
-          final db = ref.read(databaseServiceProvider);
-          final listId = ref.read(activeStudyListIdProvider);
 
+          final listId = ref.read(activeStudyListIdProvider);
           if (listId != null) {
             newRecord = MatchRecord(
               studyListId: listId,
               timeInTenths: _stopwatch.elapsedMilliseconds ~/ 100,
               createdAt: DateTime.now(),
             );
-            db
-                .saveMatchRecord(newRecord)
-                .then((_) {
-                  db.pruneMatchRecords(listId);
-                })
-                .catchError((e, s) {
-                  _log.severe("Error saving or pruning match records", e, s);
-                });
+
+            try {
+              final db = ref.read(databaseServiceProvider);
+              await db.saveMatchRecord(newRecord);
+              await db.pruneMatchRecords(listId);
+            } catch (e, s) {
+              _log.severe("Error saving or pruning match records", e, s);
+              // Fallback: Game completes successfully for the user, but record is lost locally.
+            }
           }
         }
 
@@ -146,6 +147,7 @@ class MatchController extends _$MatchController {
           ),
         );
       } else {
+        // Briefly highlight incorrect pair before resetting selection.
         state = AsyncData(
           currentState.copyWith(
             selectedItem: () => null,
@@ -168,10 +170,10 @@ class MatchController extends _$MatchController {
     ref.invalidateSelf();
   }
 
+  /// Starts the internal stopwatch and syncs the global timer provider every 100ms.
   void _initializeAndStartTimer() {
     final timerNotifier = ref.read(matchTimerProvider.notifier);
     timerNotifier.set("0.0");
-
     _stopwatch
       ..reset()
       ..start();
@@ -243,7 +245,6 @@ class MatchController extends _$MatchController {
     items.shuffle(Random());
 
     Future.microtask(_initializeAndStartTimer);
-
     return MatchScreenState(items: items, isLoading: false);
   }
 }

@@ -16,6 +16,8 @@ enum LearnFeedbackType { none, correct, incorrect, hint, skipped }
 
 final _log = Logger("LearnController");
 
+/// Tracks the user's interaction state for a single learn question.
+/// Encapsulates the question text, expected answer, and feedback status.
 @immutable
 class LearnQuestionState {
   const LearnQuestionState({
@@ -57,6 +59,8 @@ class LearnQuestionState {
   }
 }
 
+/// Encapsulates the entire spaced-repetition learning session state.
+/// Tracks current cycle, incorrect terms to retry, and overall session progress.
 @immutable
 class LearnModeScreenState {
   const LearnModeScreenState({
@@ -122,6 +126,8 @@ const int learnFeedbackDelayMS = 1500;
 
 @riverpod
 class LearnController extends _$LearnController {
+  /// Updates the typed answer for the current question in real-time.
+  /// Ignores input if the session is loading or the answer was already submitted.
   void updateUserAnswer(String answer) {
     final currentVal = state.value;
     if (currentVal == null ||
@@ -139,6 +145,8 @@ class LearnController extends _$LearnController {
     );
   }
 
+  /// Evaluates the user's answer, provides feedback, and queues the next step.
+  /// Uses a delay to let the user read the feedback before advancing.
   Future<void> submitAnswer() async {
     final currentVal = state.value;
     if (currentVal == null ||
@@ -151,8 +159,8 @@ class LearnController extends _$LearnController {
     final questionState = currentVal.currentQuestion!;
     final userAnswer = questionState.userAnswer.trim().toLowerCase();
     final correctAnswer = questionState.expectedAnswer.trim().toLowerCase();
-
     final allowSubstring = ref.read(allowAnswerSubstringProvider);
+
     bool isCorrect;
     if (allowSubstring && correctAnswer.contains(',')) {
       final correctParts = correctAnswer
@@ -166,9 +174,7 @@ class LearnController extends _$LearnController {
     }
 
     List<Term> updatedIncorrect = List.from(currentVal.termsIncorrectThisCycle);
-    if (!isCorrect) {
-      updatedIncorrect.add(questionState.term);
-    }
+    if (!isCorrect) updatedIncorrect.add(questionState.term);
 
     state = AsyncData(
       currentVal.copyWith(
@@ -188,10 +194,12 @@ class LearnController extends _$LearnController {
     );
 
     await Future.delayed(const Duration(milliseconds: learnFeedbackDelayMS));
+    // CRITICAL: Prevent state update if the user navigated away during the delay.
     if (!ref.mounted) return;
     _moveToNextStep();
   }
 
+  /// Reveals the first character of the expected answer as a hint.
   void showHint() {
     final currentVal = state.value;
     if (currentVal == null ||
@@ -200,7 +208,6 @@ class LearnController extends _$LearnController {
         currentVal.currentQuestion!.answerSubmitted) {
       return;
     }
-
     final questionState = currentVal.currentQuestion!;
     if (questionState.expectedAnswer.isNotEmpty) {
       state = AsyncData(
@@ -216,6 +223,7 @@ class LearnController extends _$LearnController {
     }
   }
 
+  /// Marks the current question as incorrect, shows the answer, and advances.
   Future<void> skipQuestionAndShowAnswer() async {
     final currentVal = state.value;
     if (currentVal == null ||
@@ -224,7 +232,6 @@ class LearnController extends _$LearnController {
         currentVal.currentQuestion!.answerSubmitted) {
       return;
     }
-
     final questionState = currentVal.currentQuestion!;
     state = AsyncData(
       currentVal.copyWith(
@@ -249,10 +256,10 @@ class LearnController extends _$LearnController {
     _moveToNextStep();
   }
 
-  Future<void> refreshAndRestart() async {
-    ref.invalidateSelf();
-  }
+  /// Completely resets the provider, forcing a rebuild and a new shuffled set.
+  void refreshAndRestart() => ref.invalidateSelf();
 
+  /// Formats a Term into a LearnQuestionState based on the active question type.
   LearnQuestionState _createLearnQuestion(
     Term term,
     StudyQuestionType questionType,
@@ -268,6 +275,7 @@ class LearnController extends _$LearnController {
     );
   }
 
+  /// Initializes a new learning cycle, shuffling incorrect terms if advancing.
   LearnModeScreenState _initializeCycle({
     required List<Term> allTerms,
     required List<Term> termsForThisCycle,
@@ -299,12 +307,12 @@ class LearnController extends _$LearnController {
     );
   }
 
+  /// Advances to the next question or triggers the next spaced-repetition cycle.
   void _moveToNextStep() {
     final currentVal = state.value;
     if (currentVal == null || currentVal.isLoading) return;
 
     final nextIndex = currentVal.currentTermIndexInCycle + 1;
-
     if (nextIndex < currentVal.termsToLearnThisCycle.length) {
       final questionTypeOption = ref.read(studyAskWithProvider);
       state = AsyncData(
@@ -345,8 +353,7 @@ class LearnController extends _$LearnController {
         final nextCycleNum = currentVal.cycleCount + 1;
         List<Term> termsForNextCycle = List.from(
           currentVal.termsIncorrectThisCycle,
-        );
-        termsForNextCycle.shuffle(Random());
+        )..shuffle(Random());
 
         state = AsyncData(
           _initializeCycle(
@@ -370,6 +377,7 @@ class LearnController extends _$LearnController {
     _log.fine("[LearnController] build started");
     final activeList = await ref.watch(activeStudyListProvider.future);
     if (!ref.mounted) throw Exception("Provider disposed");
+
     final studyLengthOption = ref.watch(studyLengthProvider);
     final questionTypeOption = ref.watch(studyAskWithProvider);
 
@@ -380,9 +388,8 @@ class LearnController extends _$LearnController {
       );
     }
 
-    List<Term> termsForLearnSet = List.from(activeList.terms);
-    termsForLearnSet.shuffle(Random());
-
+    List<Term> termsForLearnSet = List.from(activeList.terms)
+      ..shuffle(Random());
     if (studyLengthOption != null &&
         studyLengthOption > 0 &&
         studyLengthOption < termsForLearnSet.length) {
@@ -397,9 +404,8 @@ class LearnController extends _$LearnController {
     }
 
     _log.fine(
-      "[LearnController] Learn set has ${termsForLearnSet.length} terms. QuestionType: $questionTypeOption",
+      "[LearnController] Learn set has ${termsForLearnSet.length} terms.",
     );
-
     return _initializeCycle(
       allTerms: termsForLearnSet,
       termsForThisCycle: termsForLearnSet,

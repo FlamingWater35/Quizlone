@@ -6,6 +6,7 @@ import 'package:quizlone/i18n/generated/translations.g.dart';
 import 'package:quizlone/providers/immutables/study_list_form_state.dart';
 import 'package:quizlone/routing/app_navigator.dart';
 import 'package:quizlone/services/smooth_scroll.dart';
+import 'package:quizlone/widgets/error_snackbar.dart';
 
 import '../../models/study_group.dart';
 import '../../providers/study/study_list_providers.dart';
@@ -15,7 +16,6 @@ import 'load_list_screen.dart';
 @RoutePage()
 class InputScreen extends ConsumerStatefulWidget {
   const InputScreen({super.key});
-
   @override
   ConsumerState<InputScreen> createState() => _InputScreenState();
 }
@@ -45,6 +45,7 @@ class _InputScreenState extends ConsumerState<InputScreen> {
     );
   }
 
+  /// Displays a modal to assign the new study list to an existing group or leave it ungrouped.
   Future<void> _showGroupSelectionDialog(
     BuildContext context,
     StudyListFormState formState,
@@ -232,9 +233,7 @@ class _InputScreenState extends ConsumerState<InputScreen> {
                 const SizedBox(height: 16),
                 groupsAsync.when(
                   data: (groups) {
-                    if (groups.isEmpty) {
-                      return const SizedBox.shrink();
-                    }
+                    if (groups.isEmpty) return const SizedBox.shrink();
                     final currentGroupName = formState.selectedGroupId == null
                         ? t.loadListScreen.ungrouped
                         : groups
@@ -297,7 +296,8 @@ class _InputScreenState extends ConsumerState<InputScreen> {
                     );
                   },
                   loading: () => const SizedBox.shrink(),
-                  error: (err, stack) => const SizedBox.shrink(),
+                  error: (err, stack) =>
+                      const SizedBox.shrink(), // Graceful degradation: hide group selector if groups fail to load
                 ),
                 const SizedBox(height: 24),
                 Text(t.inputScreen.pasteTerms, style: textTheme.titleMedium),
@@ -355,6 +355,13 @@ class _InputScreenState extends ConsumerState<InputScreen> {
                                 if (success && context.mounted) {
                                   AppNavigator.replaceWithModeSelection(
                                     context,
+                                  );
+                                } else if (context.mounted &&
+                                    formState.errorMessage != null) {
+                                  // Fallback UI feedback if the notifier caught a non-validation DB error
+                                  showErrorSnackBar(
+                                    context,
+                                    message: formState.errorMessage!,
                                   );
                                 }
                               },

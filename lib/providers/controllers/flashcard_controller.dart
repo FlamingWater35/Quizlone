@@ -14,6 +14,8 @@ part 'flashcard_controller.g.dart';
 
 final _log = Logger("FlashcardController");
 
+/// Encapsulates the state of the flashcard viewing session.
+/// Tracks the original set, the currently displayed (potentially shuffled) set, and flip state.
 @immutable
 class FlashcardScreenState {
   const FlashcardScreenState({
@@ -38,7 +40,6 @@ class FlashcardScreenState {
       displayTerms.isNotEmpty && currentIndex < displayTerms.length
       ? displayTerms[currentIndex]
       : null;
-
   String get currentProgress => displayTerms.isEmpty
       ? "0/0"
       : "${currentIndex + 1}/${displayTerms.length}";
@@ -67,6 +68,7 @@ class FlashcardScreenState {
 
 @riverpod
 class FlashcardController extends _$FlashcardController {
+  /// Toggles the visual flip state of the current card.
   void flipCard() {
     if (state.isLoading || state.value == null) return;
     final currentState = state.value!;
@@ -75,6 +77,7 @@ class FlashcardController extends _$FlashcardController {
     );
   }
 
+  /// Advances to the next card, resetting the flip state.
   void nextCard() {
     if (state.isLoading || state.value == null) return;
     final currentState = state.value!;
@@ -88,6 +91,7 @@ class FlashcardController extends _$FlashcardController {
     }
   }
 
+  /// Moves to the previous card, resetting the flip state.
   void previousCard() {
     if (state.isLoading || state.value == null) return;
     final currentState = state.value!;
@@ -101,13 +105,14 @@ class FlashcardController extends _$FlashcardController {
     }
   }
 
+  /// Randomizes the display order of the cards while preserving the original set for restarts.
   void shuffleCards() {
     if (state.isLoading || state.value == null) return;
     final currentState = state.value!;
     if (currentState.originalTerms.isEmpty) return;
 
-    final shuffled = List<Term>.from(currentState.originalTerms);
-    shuffled.shuffle(Random());
+    final shuffled = List<Term>.from(currentState.originalTerms)
+      ..shuffle(Random());
     state = AsyncData(
       currentState.copyWith(
         displayTerms: shuffled,
@@ -115,11 +120,10 @@ class FlashcardController extends _$FlashcardController {
         isFlipped: false,
       ),
     );
-    _log.fine(
-      "[FlashcardController] Cards shuffled. New first term: ${shuffled.first.termText}",
-    );
+    _log.fine("[FlashcardController] Cards shuffled.");
   }
 
+  /// Resets the viewing progress to the first card without reshuffling.
   void restart() {
     if (state.isLoading || state.value == null) return;
     final currentState = state.value!;
@@ -127,32 +131,40 @@ class FlashcardController extends _$FlashcardController {
     _log.fine("[FlashcardController] Flashcards restarted.");
   }
 
+  /// Re-evaluates the active list and user options to rebuild the flashcard set.
   Future<void> refreshWithOptions() async {
     state = const AsyncLoading();
-    final activeList = await ref.read(activeStudyListProvider.future);
-    if (!ref.mounted) return;
-    final startSideOption = ref.read(flashcardStartWithProvider);
+    try {
+      final activeList = await ref.read(activeStudyListProvider.future);
+      if (!ref.mounted) return;
 
-    if (activeList == null || activeList.terms.isEmpty) {
+      final startSideOption = ref.read(flashcardStartWithProvider);
+      if (activeList == null || activeList.terms.isEmpty) {
+        state = AsyncData(
+          FlashcardScreenState(
+            originalTerms: [],
+            displayTerms: [],
+            isLoading: false,
+            errorMessage: t.flashcardScreen.noTerms,
+            startSide: startSideOption,
+          ),
+        );
+        return;
+      }
+
       state = AsyncData(
         FlashcardScreenState(
-          originalTerms: [],
-          displayTerms: [],
+          originalTerms: List.from(activeList.terms),
+          displayTerms: List.from(activeList.terms),
           isLoading: false,
-          errorMessage: t.flashcardScreen.noTerms,
           startSide: startSideOption,
         ),
       );
-      return;
+    } catch (e, s) {
+      if (!ref.mounted) return;
+      _log.severe("[FlashcardController] Failed to refresh options", e, s);
+      state = AsyncError(e, s);
     }
-    state = AsyncData(
-      FlashcardScreenState(
-        originalTerms: List.from(activeList.terms),
-        displayTerms: List.from(activeList.terms),
-        isLoading: false,
-        startSide: startSideOption,
-      ),
-    );
   }
 
   @override
@@ -160,12 +172,10 @@ class FlashcardController extends _$FlashcardController {
     _log.fine("[FlashcardController] build started");
     final activeList = await ref.watch(activeStudyListProvider.future);
     if (!ref.mounted) throw Exception("Provider disposed");
-    final startSideOption = ref.watch(flashcardStartWithProvider);
 
+    final startSideOption = ref.watch(flashcardStartWithProvider);
     if (activeList == null || activeList.terms.isEmpty) {
-      _log.warning(
-        "[FlashcardController] No active list or terms empty for build. Active ID: ${ref.read(activeStudyListIdProvider)}",
-      );
+      _log.warning("[FlashcardController] No active list or terms empty.");
       return FlashcardScreenState(
         originalTerms: [],
         displayTerms: [],
@@ -175,9 +185,6 @@ class FlashcardController extends _$FlashcardController {
       );
     }
 
-    _log.fine(
-      "[FlashcardController] Active list loaded: ${activeList.name}, Terms: ${activeList.terms.length}",
-    );
     return FlashcardScreenState(
       originalTerms: List.from(activeList.terms),
       displayTerms: List.from(activeList.terms),
