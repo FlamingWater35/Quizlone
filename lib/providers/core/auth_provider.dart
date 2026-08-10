@@ -21,8 +21,9 @@ part 'auth_provider.g.dart';
 
 final _log = Logger("AuthProvider");
 
-class _MergeInput {
-  _MergeInput({
+/// Input to the cloud merge operation.
+class MergeInput {
+  MergeInput({
     required this.local,
     required this.remote,
     required this.localTimestamp,
@@ -32,8 +33,8 @@ class _MergeInput {
   final AppData remote;
 }
 
-class _MergeResult {
-  _MergeResult({required this.mergedData, required this.wasLocalUpdated});
+class MergeResult {
+  MergeResult({required this.mergedData, required this.wasLocalUpdated});
   final AppData mergedData;
   final bool wasLocalUpdated;
 }
@@ -41,7 +42,7 @@ class _MergeResult {
 /// Merges local and remote app data using a "last-write-wins" strategy for lists,
 /// and a union strategy for historical records (match/test).
 /// Runs in an isolate to prevent blocking the UI thread during large dataset merges.
-_MergeResult _runMergeInIsolate(_MergeInput input) {
+MergeResult runMergeInIsolate(MergeInput input) {
   final local = input.local;
   final remote = input.remote;
   final localTimestamp = input.localTimestamp;
@@ -125,7 +126,7 @@ _MergeResult _runMergeInIsolate(_MergeInput input) {
     wasLocalUpdated = true;
   }
 
-  return _MergeResult(
+  return MergeResult(
     mergedData: AppData(
       studyLists: mergedListsMap.values.toList(),
       matchRecords: mergedRecords,
@@ -361,8 +362,8 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
             );
 
             final mergeResult = await compute(
-              _runMergeInIsolate,
-              _MergeInput(
+              runMergeInIsolate,
+              MergeInput(
                 local: localData,
                 remote: cloudData,
                 localTimestamp: localTimestamp,

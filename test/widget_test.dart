@@ -1,30 +1,38 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-
+import 'package:quizlone/i18n/generated/translations.g.dart';
 import 'package:quizlone/main.dart';
+import 'package:quizlone/providers/core/auth_provider.dart';
+import 'package:quizlone/providers/core/settings_provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+import 'helpers/fake_database_service.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  setUpAll(() {
+    initLocaleSettings();
+  });
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+  testWidgets('app boots to the start screen', (tester) async {
+    final fakeDb = FakeDatabaseService();
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          FakeDatabaseService.asOverride(fakeDb),
+          // Auth depends on Supabase, which cannot be initialized in a unit
+          // test. Overriding with "signed out" exercises the same UI path.
+          authControllerProvider.overrideWithValue(AsyncData<User?>(null)),
+        ],
+        child: TranslationProvider(child: const MyApp()),
+      ),
+    );
+    await tester.pumpAndSettle();
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // Start screen content is visible.
+    expect(find.text('Welcome!'), findsOneWidget);
+    expect(find.text('Create New List'), findsOneWidget);
+    expect(find.text('Open Saved List'), findsOneWidget);
+    expect(find.text('Quizlone'), findsWidgets);
   });
 }
