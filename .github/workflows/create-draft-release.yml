@@ -2,7 +2,10 @@ name: Build, Release, and Deploy
 
 on:
   push:
-    branches: [main]
+    tags:
+      - 'v*'
+    branches:
+      - main
 
 env:
   REPO_NAME: Quizlone
