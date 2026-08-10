@@ -469,7 +469,10 @@ class _LearnViewState extends ConsumerState<_LearnView>
                       (Widget child, Animation<double> animation) {
                         return SizeTransition(
                           sizeFactor: animation,
-                          axisAlignment: -1.0,
+                          // Axis is vertical (default), so -1.0 on the
+                          // vertical axis maps to top alignment (replaces the
+                          // deprecated axisAlignment: -1.0).
+                          alignment: const Alignment(-1.0, -1.0),
                           child: FadeTransition(
                             opacity: animation,
                             child: child,

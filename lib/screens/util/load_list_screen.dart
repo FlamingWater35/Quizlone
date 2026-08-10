@@ -3,6 +3,7 @@ import 'package:animated_list_plus/transitions.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart' show ScrollCacheExtent;
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
@@ -914,7 +915,7 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
         controller: _listScrollController,
         padding: const EdgeInsets.symmetric(horizontal: 8),
         physics: const AlwaysScrollableScrollPhysics(),
-        cacheExtent: 1000,
+        scrollCacheExtent: const ScrollCacheExtent.pixels(1000),
         children: [
           if (grouped[null]?.isNotEmpty ?? false)
             _buildGroupTile(
