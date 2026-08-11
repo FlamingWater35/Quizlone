@@ -191,6 +191,6 @@ jobs:
           artifacts: "artifacts/**/*.apk,artifacts/**/*.7z,artifacts/**/*.exe,artifacts/**/*.tar.gz,artifacts/**/*.AppImage"
           draft: true
           allowUpdates: true
-          tag: "dev-build-${{ github.run_number }}"
+          tag: ${{ github.ref_name }}
           name: "Version ${{ needs.build_windows.outputs.app_version }}"
           body: "Automated build triggered by commit: `${{ github.sha }}`"
