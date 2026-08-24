@@ -317,6 +317,22 @@ class FakeDatabaseService implements DatabaseService {
   bool getSmoothScroll() => settings['smoothScrollEnabled'] as bool? ?? false;
 
   @override
+  Future<void> saveScrollSpeed(double value) async {
+    settings['scrollSpeed'] = value;
+  }
+
+  @override
+  double getScrollSpeed() => settings['scrollSpeed'] as double? ?? 1.1;
+
+  @override
+  Future<void> saveScrollDuration(int value) async {
+    settings['scrollDuration'] = value;
+  }
+
+  @override
+  int getScrollDuration() => settings['scrollDuration'] as int? ?? 1400;
+
+  @override
   Future<void> saveActiveListId(String? id) async {
     if (id == null) {
       settings.remove('activeListId');

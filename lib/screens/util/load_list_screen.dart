@@ -1,8 +1,11 @@
+import 'dart:math' as math;
+
 import 'package:animated_list_plus/animated_list_plus.dart';
 import 'package:animated_list_plus/transitions.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart' show ScrollCacheExtent;
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
@@ -13,7 +16,6 @@ import 'package:quizlone/routing/app_router.dart';
 import 'package:quizlone/services/smooth_scroll.dart';
 import 'package:quizlone/widgets/error_snackbar.dart';
 import 'package:quizlone/widgets/web_aware_back_button.dart';
-
 import '../../providers/core/core_providers.dart';
 import '../../providers/study/study_list_providers.dart';
 import '../../widgets/centered_view.dart';
@@ -48,6 +50,7 @@ extension _SortOptionExtension on _SortOption {
 @RoutePage()
 class LoadListScreen extends ConsumerStatefulWidget {
   const LoadListScreen({super.key});
+
   @override
   ConsumerState<LoadListScreen> createState() => _LoadListScreenState();
 }
@@ -95,6 +98,7 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
   Future<void> _handleBulkDelete() async {
     final t = Translations.of(context);
     final count = _selectedListIds.length;
+
     final confirm = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -115,6 +119,7 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
         ],
       ),
     );
+
     if (confirm == true && mounted) {
       try {
         await ref
@@ -155,6 +160,7 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
         ],
       ),
     );
+
     if (confirm == true && mounted) {
       try {
         await ref.read(databaseServiceProvider).deleteStudyList(list.id);
@@ -174,6 +180,7 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
     final t = Translations.of(context);
     final controller = TextEditingController();
     final formKey = GlobalKey<FormState>();
+
     await showDialog<void>(
       context: context,
       builder: (BuildContext dialogContext) {
@@ -233,6 +240,7 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
     final t = Translations.of(context);
     final controller = TextEditingController(text: group.name);
     final formKey = GlobalKey<FormState>();
+
     await showDialog<void>(
       context: context,
       builder: (BuildContext dialogContext) {
@@ -287,13 +295,93 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
 
   /// Displays a dialog to move selected lists to a target group or "Ungrouped".
   Future<void> _showMoveDialog(List<String> listIds) async {
+    final t = Translations.of(context);
+    final theme = Theme.of(context);
     final allGroups = ref.read(studyGroupsProvider).asData?.value ?? [];
+
     final String? destinationGroupId = await showDialog<String?>(
       context: context,
       builder: (context) {
-        return _MoveDialog(listIds: listIds, allGroups: allGroups);
+        final dialogScrollController = SmoothScrollController();
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 400),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: Text(
+                      t.loadListScreen.moveToGroupDialog.title(
+                        count: listIds.length,
+                      ),
+                      style: theme.textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Flexible(
+                    child: Scrollbar(
+                      controller: dialogScrollController,
+                      thumbVisibility: true,
+                      child: ListView(
+                        controller: dialogScrollController,
+                        shrinkWrap: true,
+                        children: [
+                          _buildMoveOption(
+                            context: context,
+                            title: t.loadListScreen.ungrouped,
+                            icon: Icons.folder_off_outlined,
+                            onTap: () => Navigator.pop(context, "ungrouped"),
+                          ),
+                          if (allGroups.isNotEmpty)
+                            const Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 24,
+                                vertical: 8,
+                              ),
+                              child: Divider(height: 1),
+                            ),
+                          ...allGroups.map(
+                            (group) => _buildMoveOption(
+                              context: context,
+                              title: group.name,
+                              icon: Icons.folder_outlined,
+                              onTap: () => Navigator.pop(context, group.id),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: Text(t.general.cancel),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
       },
     );
+
     if (destinationGroupId != null && mounted) {
       try {
         final db = ref.read(databaseServiceProvider);
@@ -313,11 +401,30 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
     }
   }
 
+  Widget _buildMoveOption({
+    required BuildContext context,
+    required String title,
+    required IconData icon,
+    required VoidCallback onTap,
+  }) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+      child: ListTile(
+        leading: Icon(icon, color: theme.colorScheme.onSurfaceVariant),
+        title: Text(title),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        onTap: onTap,
+      ),
+    );
+  }
+
   /// Displays a dialog to rename a study list, showing an error snackbar if the name already exists.
   Future<void> _showRenameDialog(BuildContext context, StudyList list) async {
     final t = Translations.of(context);
     final controller = TextEditingController(text: list.name);
     final formKey = GlobalKey<FormState>();
+
     final didFail = await showDialog<bool>(
       context: context,
       builder: (BuildContext dialogContext) {
@@ -359,6 +466,7 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
         );
       },
     );
+
     if (didFail == true && context.mounted) {
       showErrorSnackBar(
         context,
@@ -408,6 +516,7 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
         ],
       );
     }
+
     return AppBar(
       leading: const WebAwareBackButton(fallback: StartRoute()),
       title: Text(t.loadListScreen.title),
@@ -649,6 +758,7 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
         ),
       ),
     );
+
     return fade ? card.animate().fadeIn(duration: 300.ms) : card;
   }
 
@@ -662,6 +772,7 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
     final bool isUngrouped = groupId == null;
     final String uniqueKey = groupId ?? 'ungrouped';
     final bool isExpanded = _expandedGroupIds.contains(uniqueKey);
+
     return RepaintBoundary(
       child: Card(
         margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
@@ -772,74 +883,175 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
     );
   }
 
+  /// Returns the latest non-null date from an iterable of dates.
+  /// Used to derive a representative sort key for a group based on its lists.
+  DateTime _latestDate(Iterable<DateTime?> dates) {
+    DateTime latest = DateTime(1970);
+    for (final d in dates) {
+      if (d != null && d.isAfter(latest)) latest = d;
+    }
+    return latest;
+  }
+
+  /// Sorts a list of study lists according to the active sort option and direction.
+  /// Returns the input unchanged when sorting is set to "none".
+  List<StudyList> _sortLists(List<StudyList> lists) {
+    if (_currentSort == _SortOption.none) return lists;
+
+    final sorted = List<StudyList>.from(lists);
+    sorted.sort((a, b) {
+      switch (_currentSort) {
+        case _SortOption.name:
+          return a.name.toLowerCase().compareTo(b.name.toLowerCase());
+        case _SortOption.lastOpened:
+          return (a.lastOpenedAt ?? DateTime(1970)).compareTo(
+            b.lastOpenedAt ?? DateTime(1970),
+          );
+        case _SortOption.createdAt:
+          return a.createdAt.compareTo(b.createdAt);
+        case _SortOption.listLength:
+          return a.terms.length.compareTo(b.terms.length);
+        case _SortOption.none:
+          return 0;
+      }
+    });
+
+    if (!_sortAscending) {
+      return sorted.reversed.toList();
+    }
+    return sorted;
+  }
+
+  /// Compares two groups according to the active sort option and direction.
+  /// For list-derived metrics (last opened, created, length) the group's sort
+  /// key is derived from the most recent / longest of its contained lists.
+  int _compareGroups(
+    StudyGroup a,
+    StudyGroup b,
+    List<StudyList> aLists,
+    List<StudyList> bLists,
+  ) {
+    if (_currentSort == _SortOption.none ||
+        _currentSort == _SortOption.name) {
+      final result = a.name.toLowerCase().compareTo(b.name.toLowerCase());
+      return _sortAscending ? result : -result;
+    }
+
+    int result;
+    switch (_currentSort) {
+      case _SortOption.lastOpened:
+        final aVal = _latestDate(aLists.map((l) => l.lastOpenedAt));
+        final bVal = _latestDate(bLists.map((l) => l.lastOpenedAt));
+        result = aVal.compareTo(bVal);
+      case _SortOption.createdAt:
+        final aVal = _latestDate(aLists.map((l) => l.createdAt));
+        final bVal = _latestDate(bLists.map((l) => l.createdAt));
+        result = aVal.compareTo(bVal);
+      case _SortOption.listLength:
+        final aVal = aLists.isEmpty
+            ? 0
+            : aLists.map((l) => l.terms.length).reduce(math.max);
+        final bVal = bLists.isEmpty
+            ? 0
+            : bLists.map((l) => l.terms.length).reduce(math.max);
+        result = aVal.compareTo(bVal);
+      case _SortOption.none:
+      case _SortOption.name:
+        result = 0; // Unreachable; handled above.
+    }
+    return _sortAscending ? result : -result;
+  }
+
   List<StudyList> _processLists(List<StudyList> allLists) {
     List<StudyList> result = List.from(allLists);
+
     final query = _searchController.text.trim().toLowerCase();
     if (query.isNotEmpty) {
       result = result
           .where((l) => l.name.toLowerCase().contains(query))
           .toList();
     }
-    if (_currentSort != _SortOption.none) {
-      result.sort((a, b) {
-        switch (_currentSort) {
-          case _SortOption.name:
-            return a.name.toLowerCase().compareTo(b.name.toLowerCase());
-          case _SortOption.lastOpened:
-            return (a.lastOpenedAt ?? DateTime(1970)).compareTo(
-              b.lastOpenedAt ?? DateTime(1970),
-            );
-          case _SortOption.createdAt:
-            return a.createdAt.compareTo(b.createdAt);
-          case _SortOption.listLength:
-            return a.terms.length.compareTo(b.terms.length);
-          case _SortOption.none:
-            return 0;
-        }
-      });
-      if (!_sortAscending) result = result.reversed.toList();
-    }
-    return result;
+
+    return _sortLists(result);
   }
 
+  /// Renders the grouped view. Groups are sorted according to the active sort
+  /// option, and the study lists inside each group are sorted as well.
   Widget _buildGroupedView(
     List<StudyList> allLists,
     List<StudyGroup> groups,
     Translations t,
   ) {
     final grouped = allLists.groupListsBy((l) => l.groupId);
-    final sortedGroups = List.from(groups)
-      ..sort((a, b) => a.name.compareTo(b.name));
-    return Scrollbar(
+
+    final sortedGroups = List<StudyGroup>.from(groups)
+      ..sort(
+        (a, b) => _compareGroups(
+          a,
+          b,
+          grouped[a.id] ?? const [],
+          grouped[b.id] ?? const [],
+        ),
+      );
+
+    final scrollbar = Scrollbar(
       controller: _listScrollController,
       thumbVisibility: true,
       interactive: true,
-      child: SmoothSingleChildScrollView(
+      child: ListView(
         controller: _listScrollController,
         padding: const EdgeInsets.symmetric(horizontal: 8),
         physics: const AlwaysScrollableScrollPhysics(),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            if (grouped[null]?.isNotEmpty ?? false)
-              _buildGroupTile(
-                t.loadListScreen.ungrouped,
-                null,
-                grouped[null]!,
-                t,
-              ).animate().fadeIn(duration: 300.ms),
-            ...sortedGroups.map((group) {
-              final groupLists = grouped[group.id] ?? [];
-              return _buildGroupTile(
-                group.name,
-                group.id,
-                groupLists,
-                t,
-              ).animate().fadeIn(duration: 300.ms);
-            }),
-          ],
-        ),
+        scrollCacheExtent: const ScrollCacheExtent.pixels(1000),
+        children: [
+          if (grouped[null]?.isNotEmpty ?? false)
+            _buildGroupTile(
+              t.loadListScreen.ungrouped,
+              null,
+              _sortLists(grouped[null]!),
+              t,
+            ).animate().fadeIn(duration: 300.ms),
+          ...sortedGroups.map((group) {
+            final groupLists = _sortLists(grouped[group.id] ?? []);
+            return _buildGroupTile(
+              group.name,
+              group.id,
+              groupLists,
+              t,
+            ).animate().fadeIn(duration: 300.ms);
+          }),
+        ],
       ),
+    );
+
+    // When a sort option is active, show a small indicator above the groups
+    // so the user knows the grouped view is being sorted.
+    if (_currentSort == _SortOption.none) {
+      return scrollbar;
+    }
+
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: Row(
+            children: [
+              Text(
+                t.loadListScreen.sortLabel,
+                style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(width: 4),
+              Text(
+                "${_currentSort.getDisplayName(t)} (${_sortAscending ? t.loadListScreen.ascending : t.loadListScreen.descending})",
+                style: Theme.of(context).textTheme.labelSmall,
+              ),
+            ],
+          ),
+        ),
+        Expanded(child: scrollbar),
+      ],
     );
   }
 
@@ -863,6 +1075,7 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
         ),
       );
     }
+
     return Column(
       children: [
         Padding(
@@ -911,9 +1124,9 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
   @override
   Widget build(BuildContext context) {
     final t = Translations.of(context);
+    // The grouped view is used for the default view AND for every sort option.
+    // Only an active search query switches to the flat view.
     final isSearching = _searchController.text.isNotEmpty;
-    final isSorting = _currentSort != _SortOption.none;
-    final isFlatMode = isSearching || isSorting;
 
     return Scaffold(
       appBar: _buildAppBar(context, t),
@@ -927,6 +1140,7 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
                   builder: (context, ref, child) {
                     final listsAsync = ref.watch(studyListsProvider);
                     final groupsAsync = ref.watch(studyGroupsProvider);
+
                     return listsAsync.when(
                       data: (allLists) {
                         return groupsAsync.when(
@@ -952,7 +1166,8 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
                                 ),
                               );
                             }
-                            if (isFlatMode) {
+
+                            if (isSearching) {
                               return _buildFlatView(_processLists(allLists), t);
                             } else {
                               return _buildGroupedView(allLists, groups, t);
@@ -981,125 +1196,6 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _MoveDialog extends StatefulWidget {
-  const _MoveDialog({required this.listIds, required this.allGroups});
-  final List<String> listIds;
-  final List<StudyGroup> allGroups;
-
-  @override
-  State<_MoveDialog> createState() => _MoveDialogState();
-}
-
-class _MoveDialogState extends State<_MoveDialog> {
-  final _scrollController = SmoothScrollController();
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final t = Translations.of(context);
-    final theme = Theme.of(context);
-
-    return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 400),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Text(
-                  t.loadListScreen.moveToGroupDialog.title(
-                    count: widget.listIds.length,
-                  ),
-                  style: theme.textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              Flexible(
-                child: Scrollbar(
-                  controller: _scrollController,
-                  thumbVisibility: true,
-                  child: SmoothSingleChildScrollView(
-                    controller: _scrollController,
-                    child: Column(
-                      children: [
-                        _buildMoveOption(
-                          context: context,
-                          title: t.loadListScreen.ungrouped,
-                          icon: Icons.folder_off_outlined,
-                          onTap: () => Navigator.pop(context, "ungrouped"),
-                        ),
-                        if (widget.allGroups.isNotEmpty)
-                          const Padding(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 24,
-                              vertical: 8,
-                            ),
-                            child: Divider(height: 1),
-                          ),
-                        ...widget.allGroups.map(
-                          (group) => _buildMoveOption(
-                            context: context,
-                            title: group.name,
-                            icon: Icons.folder_outlined,
-                            onTap: () => Navigator.pop(context, group.id),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 8),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: Text(t.general.cancel),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildMoveOption({
-    required BuildContext context,
-    required String title,
-    required IconData icon,
-    required VoidCallback onTap,
-  }) {
-    final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
-      child: ListTile(
-        leading: Icon(icon, color: theme.colorScheme.onSurfaceVariant),
-        title: Text(title),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        onTap: onTap,
       ),
     );
   }
