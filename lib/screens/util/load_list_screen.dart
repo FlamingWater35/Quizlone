@@ -3,7 +3,6 @@ import 'package:animated_list_plus/transitions.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart' show ScrollCacheExtent;
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
@@ -323,33 +322,34 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
                     child: Scrollbar(
                       controller: dialogScrollController,
                       thumbVisibility: true,
-                      child: ListView(
+                      child: SmoothSingleChildScrollView(
                         controller: dialogScrollController,
-                        shrinkWrap: true,
-                        children: [
-                          _buildMoveOption(
-                            context: context,
-                            title: t.loadListScreen.ungrouped,
-                            icon: Icons.folder_off_outlined,
-                            onTap: () => Navigator.pop(context, "ungrouped"),
-                          ),
-                          if (allGroups.isNotEmpty)
-                            const Padding(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 24,
-                                vertical: 8,
-                              ),
-                              child: Divider(height: 1),
-                            ),
-                          ...allGroups.map(
-                            (group) => _buildMoveOption(
+                        child: Column(
+                          children: [
+                            _buildMoveOption(
                               context: context,
-                              title: group.name,
-                              icon: Icons.folder_outlined,
-                              onTap: () => Navigator.pop(context, group.id),
+                              title: t.loadListScreen.ungrouped,
+                              icon: Icons.folder_off_outlined,
+                              onTap: () => Navigator.pop(context, "ungrouped"),
                             ),
-                          ),
-                        ],
+                            if (allGroups.isNotEmpty)
+                              const Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 24,
+                                  vertical: 8,
+                                ),
+                                child: Divider(height: 1),
+                              ),
+                            ...allGroups.map(
+                              (group) => _buildMoveOption(
+                                context: context,
+                                title: group.name,
+                                icon: Icons.folder_outlined,
+                                onTap: () => Navigator.pop(context, group.id),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -911,29 +911,31 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
       controller: _listScrollController,
       thumbVisibility: true,
       interactive: true,
-      child: ListView(
+      child: SmoothSingleChildScrollView(
         controller: _listScrollController,
         padding: const EdgeInsets.symmetric(horizontal: 8),
         physics: const AlwaysScrollableScrollPhysics(),
-        scrollCacheExtent: const ScrollCacheExtent.pixels(1000),
-        children: [
-          if (grouped[null]?.isNotEmpty ?? false)
-            _buildGroupTile(
-              t.loadListScreen.ungrouped,
-              null,
-              grouped[null]!,
-              t,
-            ).animate().fadeIn(duration: 300.ms),
-          ...sortedGroups.map((group) {
-            final groupLists = grouped[group.id] ?? [];
-            return _buildGroupTile(
-              group.name,
-              group.id,
-              groupLists,
-              t,
-            ).animate().fadeIn(duration: 300.ms);
-          }),
-        ],
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            if (grouped[null]?.isNotEmpty ?? false)
+              _buildGroupTile(
+                t.loadListScreen.ungrouped,
+                null,
+                grouped[null]!,
+                t,
+              ).animate().fadeIn(duration: 300.ms),
+            ...sortedGroups.map((group) {
+              final groupLists = grouped[group.id] ?? [];
+              return _buildGroupTile(
+                group.name,
+                group.id,
+                groupLists,
+                t,
+              ).animate().fadeIn(duration: 300.ms);
+            }),
+          ],
+        ),
       ),
     );
   }

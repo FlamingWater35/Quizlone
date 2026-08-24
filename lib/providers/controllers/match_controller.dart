@@ -8,6 +8,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../i18n/generated/translations.g.dart';
 import '../../models/match_record.dart';
 import '../../models/term.dart';
+import '../../services/database_service.dart';
 import '../core/core_providers.dart';
 import '../study/study_list_providers.dart';
 
@@ -92,6 +93,10 @@ class MatchController extends _$MatchController {
   Timer? _timer;
 
   /// Handles card selection logic, checking for matches, incorrect pairs, and game completion.
+  ///
+  /// **Fix:** State is now updated *immediately* on the final match so the UI
+  /// stays responsive. The database write (which triggers a cloud sync) is
+  /// fired in the background and never blocks the widget tree.
   void selectItem(MatchItem item) async {
     final currentState = state.value;
     if (currentState == null ||
@@ -113,12 +118,11 @@ class MatchController extends _$MatchController {
         final newMatched = {...currentState.matchedPairIds, item.pairId};
         final isNowComplete =
             newMatched.length == (currentState.items.length / 2);
-        MatchRecord? newRecord;
 
+        MatchRecord? newRecord;
         if (isNowComplete) {
           _stopwatch.stop();
           _timer?.cancel();
-
           final listId = ref.read(activeStudyListIdProvider);
           if (listId != null) {
             newRecord = MatchRecord(
@@ -126,18 +130,10 @@ class MatchController extends _$MatchController {
               timeInTenths: _stopwatch.elapsedMilliseconds ~/ 100,
               createdAt: DateTime.now(),
             );
-
-            try {
-              final db = ref.read(databaseServiceProvider);
-              await db.saveMatchRecord(newRecord);
-              await db.pruneMatchRecords(listId);
-            } catch (e, s) {
-              _log.severe("Error saving or pruning match records", e, s);
-              // Fallback: Game completes successfully for the user, but record is lost locally.
-            }
           }
         }
 
+        // ---- Update state IMMEDIATELY so the UI never freezes ----
         state = AsyncData(
           currentState.copyWith(
             selectedItem: () => null,
@@ -146,6 +142,15 @@ class MatchController extends _$MatchController {
             finalRecord: newRecord,
           ),
         );
+
+        // ---- Persist in the background (fire-and-forget) ----
+        if (isNowComplete && newRecord != null) {
+          final listId = ref.read(activeStudyListIdProvider);
+          if (listId != null) {
+            final db = ref.read(databaseServiceProvider);
+            _persistMatchRecord(db, newRecord, listId);
+          }
+        }
       } else {
         // Briefly highlight incorrect pair before resetting selection.
         state = AsyncData(
@@ -154,13 +159,28 @@ class MatchController extends _$MatchController {
             incorrectPair: {currentSelection.uniqueId, item.uniqueId},
           ),
         );
-
         Future.delayed(const Duration(milliseconds: 500), () {
           if (ref.mounted && state.hasValue) {
             state = AsyncData(state.value!.copyWith(incorrectPair: {}));
           }
         });
       }
+    }
+  }
+
+  /// Fire-and-forget helper that saves a match record and prunes old entries
+  /// without blocking the UI thread.
+  Future<void> _persistMatchRecord(
+    DatabaseService db,
+    MatchRecord record,
+    String listId,
+  ) async {
+    try {
+      await db.saveMatchRecord(record);
+      await db.pruneMatchRecords(listId);
+    } catch (e, s) {
+      _log.severe("Error saving or pruning match records", e, s);
+      // Fallback: Game completes successfully for the user, but record is lost locally.
     }
   }
 

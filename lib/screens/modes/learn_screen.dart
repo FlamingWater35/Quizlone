@@ -330,7 +330,7 @@ class _LearnViewState extends ConsumerState<_LearnView>
                   state.termsToLearnThisCycle.length;
 
         return CenteredView(
-          child: SingleChildScrollView(
+          child: SmoothSingleChildScrollView(
             controller: _scrollController,
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -371,7 +371,7 @@ class _LearnViewState extends ConsumerState<_LearnView>
                           child: Scrollbar(
                             controller: _questionScrollController,
                             thumbVisibility: true,
-                            child: SingleChildScrollView(
+                            child: SmoothSingleChildScrollView(
                               controller: _questionScrollController,
                               child: Container(
                                 width: double.infinity,

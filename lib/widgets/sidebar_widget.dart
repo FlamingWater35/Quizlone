@@ -275,115 +275,117 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
     final syncError = ref.watch(syncHealthProvider);
 
     return Drawer(
-      child: ListView(
+      child: SmoothSingleChildScrollView(
         controller: _scrollController,
-        padding: EdgeInsets.zero,
-        children: <Widget>[
-          DrawerHeader(
-            decoration: BoxDecoration(color: colorScheme.primary),
-            child: Text(
-              t.appName,
-              style: theme.textTheme.headlineMedium?.copyWith(
-                color: colorScheme.onPrimary,
-              ),
-            ),
-          ),
-          ListTile(
-            leading: const Icon(Icons.settings_outlined),
-            title: Text(t.drawer.settings),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            onTap: () {
-              Navigator.pop(context);
-              AppNavigator.pushSettings(context);
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.gamepad_outlined),
-            title: Text(t.drawer.controls),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            onTap: () {
-              Navigator.pop(context);
-              AppNavigator.pushControls(context);
-            },
-          ),
-          const Divider(indent: 16, endIndent: 16),
-          ListTile(
-            leading: const Icon(Icons.info_outline),
-            title: Text(t.drawer.about),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            onTap: () {
-              Navigator.pop(context);
-              AppNavigator.pushAbout(context);
-            },
-          ),
-          const Divider(indent: 16, endIndent: 16),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(8, 0, 8, 16),
-            child: authState.when(
-              data: (user) {
-                if (user == null) {
-                  return _buildLoginForm(t);
-                }
-                return _buildUserInfo(user, t);
-              },
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (err, stack) => Text(
-                'Error: ${err.toString()}',
-                style: TextStyle(color: colorScheme.error),
-              ),
-            ),
-          ),
-
-          if (syncError != null)
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16.0,
-                vertical: 8.0,
-              ),
-              child: Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: colorScheme.errorContainer,
-                  borderRadius: BorderRadius.circular(8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            DrawerHeader(
+              decoration: BoxDecoration(color: colorScheme.primary),
+              child: Text(
+                t.appName,
+                style: theme.textTheme.headlineMedium?.copyWith(
+                  color: colorScheme.onPrimary,
                 ),
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.sync_problem,
-                          color: colorScheme.error,
-                          size: 20,
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            syncError,
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: colorScheme.onErrorContainer,
-                              fontWeight: FontWeight.bold,
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.settings_outlined),
+              title: Text(t.drawer.settings),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              onTap: () {
+                Navigator.pop(context);
+                AppNavigator.pushSettings(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.gamepad_outlined),
+              title: Text(t.drawer.controls),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              onTap: () {
+                Navigator.pop(context);
+                AppNavigator.pushControls(context);
+              },
+            ),
+            const Divider(indent: 16, endIndent: 16),
+            ListTile(
+              leading: const Icon(Icons.info_outline),
+              title: Text(t.drawer.about),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              onTap: () {
+                Navigator.pop(context);
+                AppNavigator.pushAbout(context);
+              },
+            ),
+            const Divider(indent: 16, endIndent: 16),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(8, 0, 8, 16),
+              child: authState.when(
+                data: (user) {
+                  if (user == null) {
+                    return _buildLoginForm(t);
+                  }
+                  return _buildUserInfo(user, t);
+                },
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (err, stack) => Text(
+                  'Error: ${err.toString()}',
+                  style: TextStyle(color: colorScheme.error),
+                ),
+              ),
+            ),
+
+            if (syncError != null)
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                  vertical: 8.0,
+                ),
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: colorScheme.errorContainer,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.sync_problem,
+                            color: colorScheme.error,
+                            size: 20,
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              syncError,
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: colorScheme.onErrorContainer,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                    TextButton(
-                      onPressed: () => ref
-                          .read(authControllerProvider.notifier)
-                          .resetCircuitAndSync(),
-                      child: Text(t.drawer.retrySync),
-                    ),
-                  ],
+                        ],
+                      ),
+                      TextButton(
+                        onPressed: () => ref
+                            .read(authControllerProvider.notifier)
+                            .resetCircuitAndSync(),
+                        child: Text(t.drawer.retrySync),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }

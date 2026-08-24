@@ -85,48 +85,53 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         child: Scrollbar(
                           controller: dialogScrollController,
                           thumbVisibility: true,
-                          child: ListView(
+                          child: SmoothSingleChildScrollView(
                             controller: dialogScrollController,
-                            shrinkWrap: true,
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            children: AppLanguage.values.map((lang) {
-                              final isSelected = lang == currentLanguage;
-                              return Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 4.0,
-                                ),
-                                child: Card(
-                                  margin: EdgeInsets.zero,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 16),
+                            child: Column(
+                              children:
+                                  AppLanguage.values.map((lang) {
+                                final isSelected = lang == currentLanguage;
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 4.0,
                                   ),
-                                  child: ListTile(
+                                  child: Card(
+                                    margin: EdgeInsets.zero,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(12),
                                     ),
-                                    title: Text(
-                                      lang.getDisplayName(t),
-                                      style: TextStyle(
-                                        fontWeight: isSelected
-                                            ? FontWeight.bold
-                                            : FontWeight.normal,
+                                    child: ListTile(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12),
                                       ),
+                                      title: Text(
+                                        lang.getDisplayName(t),
+                                        style: TextStyle(
+                                          fontWeight: isSelected
+                                              ? FontWeight.bold
+                                              : FontWeight.normal,
+                                        ),
+                                      ),
+                                      trailing: isSelected
+                                          ? Icon(
+                                              Icons.check_circle,
+                                              color:
+                                                  theme.colorScheme.primary,
+                                            )
+                                          : null,
+                                      onTap: () {
+                                        languageNotifier.setLanguage(lang);
+                                        Navigator.of(context).pop();
+                                        dialogScrollController.dispose();
+                                      },
                                     ),
-                                    trailing: isSelected
-                                        ? Icon(
-                                            Icons.check_circle,
-                                            color: theme.colorScheme.primary,
-                                          )
-                                        : null,
-                                    onTap: () {
-                                      languageNotifier.setLanguage(lang);
-                                      Navigator.of(context).pop();
-                                      dialogScrollController.dispose();
-                                    },
                                   ),
-                                ),
-                              );
-                            }).toList(),
+                                );
+                              }).toList(),
+                            ),
                           ),
                         ),
                       ),
@@ -191,11 +196,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           params: SaveFileDialogParams(data: bytes, fileName: fileName),
         );
       } else {
-        savedPath = await FilePicker.saveFile(
+        savedPath = (await FilePicker.saveFile(
           dialogTitle: t.settingsScreen.exportDialog.saveFileTitle,
           fileName: fileName,
           bytes: bytes,
-        );
+        ))?.path;
       }
 
       if (savedPath != null && context.mounted) {
@@ -247,8 +252,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           type: FileType.custom,
           allowedExtensions: ['json'],
         );
-        if (result != null) {
-          final platformFile = result.files.single;
+        if (result.isNotEmpty) {
+          final platformFile = result.single;
           fileBytes = await platformFile.readAsBytes();
         }
       } else if (Platform.isAndroid || Platform.isIOS) {
@@ -263,8 +268,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           type: FileType.custom,
           allowedExtensions: ['json'],
         );
-        if (result != null) {
-          filePath = result.files.single.path;
+        if (result.isNotEmpty) {
+          filePath = result.single.path;
         }
       }
 
@@ -429,168 +434,171 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       ),
       body: SafeArea(
         child: CenteredView(
-          child: ListView(
+          child: SmoothSingleChildScrollView(
             controller: _scrollController,
             padding: const EdgeInsets.all(16.0),
-            children: [
-              _SettingsHeader(title: t.settingsScreen.appearance),
-              Card(
-                clipBehavior: Clip.antiAlias,
-                child: RadioGroup<ThemeMode>(
-                  groupValue: currentTheme,
-                  onChanged: (value) => themeNotifier.setTheme(value!),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _SettingsHeader(title: t.settingsScreen.appearance),
+                Card(
+                  clipBehavior: Clip.antiAlias,
+                  child: RadioGroup<ThemeMode>(
+                    groupValue: currentTheme,
+                    onChanged: (value) => themeNotifier.setTheme(value!),
+                    child: Column(
+                      children: [
+                        RadioListTile<ThemeMode>(
+                          title: Text(t.settingsScreen.systemDefault),
+                          value: ThemeMode.system,
+                        ),
+                        RadioListTile<ThemeMode>(
+                          title: Text(t.settingsScreen.light),
+                          value: ThemeMode.light,
+                        ),
+                        RadioListTile<ThemeMode>(
+                          title: Text(t.settingsScreen.dark),
+                          value: ThemeMode.dark,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                _SettingsHeader(title: t.settingsScreen.language),
+                Card(
+                  clipBehavior: Clip.antiAlias,
+                  child: ListTile(
+                    leading: const Icon(Icons.translate_outlined),
+                    title: Text(t.settingsScreen.language),
+                    subtitle: Text(currentLanguage.getDisplayName(t)),
+                    trailing: const Icon(
+                      Icons.arrow_forward_ios_rounded,
+                      size: 16,
+                    ),
+                    onTap: () => _showLanguageMenu(context, ref),
+                  ),
+                ),
+                _SettingsHeader(title: t.settingsScreen.uiScaling),
+                Card(
+                  clipBehavior: Clip.antiAlias,
                   child: Column(
                     children: [
-                      RadioListTile<ThemeMode>(
-                        title: Text(t.settingsScreen.systemDefault),
-                        value: ThemeMode.system,
+                      ListTile(
+                        leading: const Icon(Icons.format_size_outlined),
+                        title: Text(t.settingsScreen.uiScaling),
+                        subtitle: Text(t.settingsScreen.uiScalingSubtitle),
                       ),
-                      RadioListTile<ThemeMode>(
-                        title: Text(t.settingsScreen.light),
-                        value: ThemeMode.light,
-                      ),
-                      RadioListTile<ThemeMode>(
-                        title: Text(t.settingsScreen.dark),
-                        value: ThemeMode.dark,
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 8.0),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Slider(
+                                value: uiScale,
+                                min: 0.8,
+                                max: 1.5,
+                                divisions: 7,
+                                label: "${(uiScale * 100).toStringAsFixed(0)}%",
+                                onChanged: (value) {
+                                  uiScaleNotifier.setScale(value);
+                                },
+                              ),
+                            ),
+                            SizedBox(
+                              width: 60,
+                              child: Text(
+                                "${(uiScale * 100).toStringAsFixed(0)}%",
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            OutlinedButton(
+                              onPressed: uiScale == 1.0
+                                  ? null
+                                  : () => uiScaleNotifier.setScale(1.0),
+                              child: Text(t.general.reset),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
                 ),
-              ),
-              _SettingsHeader(title: t.settingsScreen.language),
-              Card(
-                clipBehavior: Clip.antiAlias,
-                child: ListTile(
-                  leading: const Icon(Icons.translate_outlined),
-                  title: Text(t.settingsScreen.language),
-                  subtitle: Text(currentLanguage.getDisplayName(t)),
-                  trailing: const Icon(
-                    Icons.arrow_forward_ios_rounded,
-                    size: 16,
-                  ),
-                  onTap: () => _showLanguageMenu(context, ref),
-                ),
-              ),
-              _SettingsHeader(title: t.settingsScreen.uiScaling),
-              Card(
-                clipBehavior: Clip.antiAlias,
-                child: Column(
-                  children: [
-                    ListTile(
-                      leading: const Icon(Icons.format_size_outlined),
-                      title: Text(t.settingsScreen.uiScaling),
-                      subtitle: Text(t.settingsScreen.uiScalingSubtitle),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 8.0),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Slider(
-                              value: uiScale,
-                              min: 0.8,
-                              max: 1.5,
-                              divisions: 7,
-                              label: "${(uiScale * 100).toStringAsFixed(0)}%",
-                              onChanged: (value) {
-                                uiScaleNotifier.setScale(value);
-                              },
-                            ),
-                          ),
-                          SizedBox(
-                            width: 60,
-                            child: Text(
-                              "${(uiScale * 100).toStringAsFixed(0)}%",
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          OutlinedButton(
-                            onPressed: uiScale == 1.0
-                                ? null
-                                : () => uiScaleNotifier.setScale(1.0),
-                            child: Text(t.general.reset),
-                          ),
-                        ],
+                if (!kIsWeb &&
+                    (Platform.isAndroid ||
+                        Platform.isWindows ||
+                        Platform.isMacOS ||
+                        Platform.isLinux)) ...[
+                  _SettingsHeader(title: t.settingsScreen.update),
+                  const _UpdaterCard(),
+                ],
+                _SettingsHeader(title: t.settingsScreen.dataManagement),
+                Card(
+                  clipBehavior: Clip.antiAlias,
+                  child: Column(
+                    children: [
+                      ListTile(
+                        leading: const Icon(Icons.file_download_outlined),
+                        title: Text(t.settingsScreen.exportData),
+                        subtitle: Text(t.settingsScreen.exportDataSubtitle),
+                        onTap: () => _exportData(context, ref),
                       ),
-                    ),
-                  ],
+                      ListTile(
+                        leading: const Icon(Icons.file_upload_outlined),
+                        title: Text(t.settingsScreen.importData),
+                        subtitle: Text(t.settingsScreen.importDataSubtitle),
+                        onTap: () => _importData(context, ref),
+                      ),
+                      const Divider(indent: 16, endIndent: 16),
+                      ListTile(
+                        leading: Icon(
+                          Icons.delete_forever_outlined,
+                          color: colorScheme.error,
+                        ),
+                        title: Text(
+                          t.settingsScreen.deleteAllData,
+                          style: TextStyle(color: colorScheme.error),
+                        ),
+                        onTap: () => _deleteAllData(context, ref),
+                      ),
+                      const SizedBox(width: 8),
+                    ],
+                  ),
                 ),
-              ),
-              if (!kIsWeb &&
-                  (Platform.isAndroid ||
-                      Platform.isWindows ||
-                      Platform.isMacOS ||
-                      Platform.isLinux)) ...[
-                _SettingsHeader(title: t.settingsScreen.update),
-                const _UpdaterCard(),
-              ],
-              _SettingsHeader(title: t.settingsScreen.dataManagement),
-              Card(
-                clipBehavior: Clip.antiAlias,
-                child: Column(
-                  children: [
-                    ListTile(
-                      leading: const Icon(Icons.file_download_outlined),
-                      title: Text(t.settingsScreen.exportData),
-                      subtitle: Text(t.settingsScreen.exportDataSubtitle),
-                      onTap: () => _exportData(context, ref),
-                    ),
-                    ListTile(
-                      leading: const Icon(Icons.file_upload_outlined),
-                      title: Text(t.settingsScreen.importData),
-                      subtitle: Text(t.settingsScreen.importDataSubtitle),
-                      onTap: () => _importData(context, ref),
-                    ),
-                    const Divider(indent: 16, endIndent: 16),
-                    ListTile(
+                if (ref.watch(authControllerProvider).value != null) ...[
+                  _SettingsHeader(title: t.settingsScreen.accountManagement),
+                  Card(
+                    clipBehavior: Clip.antiAlias,
+                    child: ListTile(
                       leading: Icon(
-                        Icons.delete_forever_outlined,
+                        Icons.person_remove_outlined,
                         color: colorScheme.error,
                       ),
                       title: Text(
-                        t.settingsScreen.deleteAllData,
+                        t.settingsScreen.deleteAccount,
                         style: TextStyle(color: colorScheme.error),
                       ),
-                      onTap: () => _deleteAllData(context, ref),
+                      subtitle: Text(t.settingsScreen.deleteAccountSubtitle),
+                      onTap: () => _confirmDeleteAccount(context, ref),
                     ),
-                    const SizedBox(width: 8),
-                  ],
-                ),
-              ),
-              if (ref.watch(authControllerProvider).value != null) ...[
-                _SettingsHeader(title: t.settingsScreen.accountManagement),
-                Card(
-                  clipBehavior: Clip.antiAlias,
-                  child: ListTile(
-                    leading: Icon(
-                      Icons.person_remove_outlined,
-                      color: colorScheme.error,
-                    ),
-                    title: Text(
-                      t.settingsScreen.deleteAccount,
-                      style: TextStyle(color: colorScheme.error),
-                    ),
-                    subtitle: Text(t.settingsScreen.deleteAccountSubtitle),
-                    onTap: () => _confirmDeleteAccount(context, ref),
                   ),
-                ),
-              ],
-              if (showExperimental) ...[
-                _SettingsHeader(title: t.settingsScreen.experimental),
-                Card(
-                  clipBehavior: Clip.antiAlias,
-                  child: SwitchListTile(
-                    title: Text(t.settingsScreen.smoothScrolling),
-                    subtitle: Text(t.settingsScreen.smoothScrollingSubtitle),
-                    secondary: const Icon(Icons.mouse_outlined),
-                    value: smoothScrollEnabled,
-                    onChanged: (val) =>
-                        ref.read(smoothScrollProvider.notifier).toggle(val),
+                ],
+                if (showExperimental) ...[
+                  _SettingsHeader(title: t.settingsScreen.experimental),
+                  Card(
+                    clipBehavior: Clip.antiAlias,
+                    child: SwitchListTile(
+                      title: Text(t.settingsScreen.smoothScrolling),
+                      subtitle: Text(t.settingsScreen.smoothScrollingSubtitle),
+                      secondary: const Icon(Icons.mouse_outlined),
+                      value: smoothScrollEnabled,
+                      onChanged: (val) =>
+                          ref.read(smoothScrollProvider.notifier).toggle(val),
+                    ),
                   ),
-                ),
+                ],
               ],
-            ],
+            ),
           ),
         ),
       ),

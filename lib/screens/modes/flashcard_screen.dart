@@ -310,7 +310,7 @@ class _FlashcardViewState extends ConsumerState<_FlashcardView>
               : (state.currentIndex + 1) / state.displayTerms.length;
 
           return CenteredView(
-            child: SingleChildScrollView(
+            child: SmoothSingleChildScrollView(
               controller: _scrollController,
               padding: const EdgeInsets.all(16.0),
               child: Column(

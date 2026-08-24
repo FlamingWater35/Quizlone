@@ -57,7 +57,7 @@ class _NarrowLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
+    return SmoothSingleChildScrollView(
       controller: controller,
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -75,7 +75,7 @@ class _WideLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
+    return SmoothSingleChildScrollView(
       controller: controller,
       child: const Padding(
         padding: EdgeInsets.all(24.0),

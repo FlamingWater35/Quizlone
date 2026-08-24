@@ -406,7 +406,7 @@ class _TestViewState extends ConsumerState<_TestView> {
           child: Column(
             children: [
               Expanded(
-                child: ListView.builder(
+                child: SmoothListView.builder(
                   controller: _scrollController,
                   padding: const EdgeInsets.all(16.0),
                   itemCount: state.questions.length,

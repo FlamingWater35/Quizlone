@@ -197,7 +197,7 @@ class _MatchLeaderboardScreenState extends ConsumerState<MatchLeaderboardScreen>
                             );
                           }
 
-                          return ListView.builder(
+                          return SmoothListView.builder(
                             controller: _scrollController,
                             padding: const EdgeInsets.symmetric(
                               horizontal: 10.0,

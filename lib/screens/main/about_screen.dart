@@ -78,7 +78,7 @@ class _AboutScreenState extends State<AboutScreen>
       ),
       body: SafeArea(
         child: CenteredView(
-          child: SingleChildScrollView(
+          child: SmoothSingleChildScrollView(
             controller: _scrollController,
             padding: const EdgeInsets.all(24.0),
             child: Column(

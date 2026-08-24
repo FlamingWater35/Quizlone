@@ -109,7 +109,7 @@ class _MCGameViewState extends ConsumerState<_MCGameView> {
         final rows = (options.length / 2).ceil();
 
         return CenteredView(
-          child: SingleChildScrollView(
+          child: SmoothSingleChildScrollView(
             controller: scrollController,
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -150,7 +150,7 @@ class _MCGameViewState extends ConsumerState<_MCGameView> {
                     child: Scrollbar(
                       controller: _questionScrollController,
                       thumbVisibility: true,
-                      child: SingleChildScrollView(
+                      child: SmoothSingleChildScrollView(
                         controller: _questionScrollController,
                         padding: const EdgeInsets.symmetric(horizontal: 24),
                         child: Container(
@@ -318,7 +318,7 @@ class _OptionButtonState extends State<_OptionButton> {
           child: Scrollbar(
             controller: _scrollController,
             thumbVisibility: true,
-            child: SingleChildScrollView(
+            child: SmoothSingleChildScrollView(
               controller: _scrollController,
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: Container(

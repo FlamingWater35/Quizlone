@@ -101,7 +101,7 @@ class _FlashcardWidgetState extends State<FlashcardWidget>
               thumbVisibility: true,
               thickness: 6.0,
               radius: const Radius.circular(10),
-              child: SingleChildScrollView(
+              child: SmoothSingleChildScrollView(
                 controller: scrollController,
                 physics: const AlwaysScrollableScrollPhysics(),
                 child: Container(

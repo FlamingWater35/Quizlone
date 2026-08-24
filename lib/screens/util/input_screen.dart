@@ -85,35 +85,36 @@ class _InputScreenState extends ConsumerState<InputScreen> {
                     child: Scrollbar(
                       controller: dialogScrollController,
                       thumbVisibility: true,
-                      child: ListView(
+                      child: SmoothSingleChildScrollView(
                         controller: dialogScrollController,
-                        shrinkWrap: true,
-                        children: [
-                          _buildDialogOption(
-                            context: context,
-                            title: t.loadListScreen.ungrouped,
-                            icon: Icons.folder_off_outlined,
-                            isSelected: formState.selectedGroupId == null,
-                            onTap: () => Navigator.pop(context, "ungrouped"),
-                          ),
-                          if (groups.isNotEmpty)
-                            const Padding(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 24,
-                                vertical: 8,
-                              ),
-                              child: Divider(height: 1),
-                            ),
-                          ...groups.map(
-                            (group) => _buildDialogOption(
+                        child: Column(
+                          children: [
+                            _buildDialogOption(
                               context: context,
-                              title: group.name,
-                              icon: Icons.folder_outlined,
-                              isSelected: formState.selectedGroupId == group.id,
-                              onTap: () => Navigator.pop(context, group.id),
+                              title: t.loadListScreen.ungrouped,
+                              icon: Icons.folder_off_outlined,
+                              isSelected: formState.selectedGroupId == null,
+                              onTap: () => Navigator.pop(context, "ungrouped"),
                             ),
-                          ),
-                        ],
+                            if (groups.isNotEmpty)
+                              const Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 24,
+                                  vertical: 8,
+                                ),
+                                child: Divider(height: 1),
+                              ),
+                            ...groups.map(
+                              (group) => _buildDialogOption(
+                                context: context,
+                                title: group.name,
+                                icon: Icons.folder_outlined,
+                                isSelected: formState.selectedGroupId == group.id,
+                                onTap: () => Navigator.pop(context, group.id),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -206,7 +207,7 @@ class _InputScreenState extends ConsumerState<InputScreen> {
       ),
       body: SafeArea(
         child: CenteredView(
-          child: SingleChildScrollView(
+          child: SmoothSingleChildScrollView(
             controller: _scrollController,
             padding: const EdgeInsets.all(20.0),
             child: Column(

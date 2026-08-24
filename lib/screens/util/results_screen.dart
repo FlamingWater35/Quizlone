@@ -169,9 +169,8 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
                     thumbVisibility: true,
                     thickness: 6,
                     radius: const Radius.circular(10),
-                    child: ListView.builder(
+                    child: SmoothListView.builder(
                       controller: dialogScrollController,
-                      shrinkWrap: true,
                       padding: const EdgeInsets.only(
                         right: 13,
                         left: 2,
@@ -365,7 +364,7 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
             final bool isPerfectScore = score == total && total > 0;
 
             return CenteredView(
-              child: SingleChildScrollView(
+              child: SmoothSingleChildScrollView(
                 controller: _scrollController,
                 padding: const EdgeInsets.all(24.0),
                 child: Column(
