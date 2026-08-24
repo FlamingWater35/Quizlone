@@ -47,8 +47,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   void _showLanguageMenu(BuildContext context, WidgetRef ref) {
     final languageNotifier = ref.read(appLanguageProvider.notifier);
     final currentLanguage = ref.read(appLanguageProvider);
-    final t = Translations.of(context);
-    final theme = Theme.of(context);
 
     showGeneralDialog(
       context: context,
@@ -56,91 +54,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
       transitionDuration: const Duration(milliseconds: 250),
       pageBuilder: (context, animation, secondaryAnimation) {
-        final dialogScrollController = SmoothScrollController();
-        return SafeArea(
-          child: Align(
-            alignment: Alignment.centerRight,
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 500),
-              child: Dialog(
-                insetPadding: const EdgeInsets.all(20),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16.0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 24.0,
-                          vertical: 8.0,
-                        ),
-                        child: Text(
-                          t.settingsScreen.languageDialogTitle,
-                          style: theme.textTheme.titleLarge,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Flexible(
-                        child: Scrollbar(
-                          controller: dialogScrollController,
-                          thumbVisibility: true,
-                          child: SmoothSingleChildScrollView(
-                            controller: dialogScrollController,
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 16),
-                            child: Column(
-                              children:
-                                  AppLanguage.values.map((lang) {
-                                final isSelected = lang == currentLanguage;
-                                return Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 4.0,
-                                  ),
-                                  child: Card(
-                                    margin: EdgeInsets.zero,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: ListTile(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(12),
-                                      ),
-                                      title: Text(
-                                        lang.getDisplayName(t),
-                                        style: TextStyle(
-                                          fontWeight: isSelected
-                                              ? FontWeight.bold
-                                              : FontWeight.normal,
-                                        ),
-                                      ),
-                                      trailing: isSelected
-                                          ? Icon(
-                                              Icons.check_circle,
-                                              color:
-                                                  theme.colorScheme.primary,
-                                            )
-                                          : null,
-                                      onTap: () {
-                                        languageNotifier.setLanguage(lang);
-                                        Navigator.of(context).pop();
-                                        dialogScrollController.dispose();
-                                      },
-                                    ),
-                                  ),
-                                );
-                              }).toList(),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
+        return _LanguageDialog(
+          currentLanguage: currentLanguage,
+          notifier: languageNotifier,
         );
       },
       transitionBuilder: (context, animation, secondaryAnimation, child) {
@@ -587,13 +503,130 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   _SettingsHeader(title: t.settingsScreen.experimental),
                   Card(
                     clipBehavior: Clip.antiAlias,
-                    child: SwitchListTile(
-                      title: Text(t.settingsScreen.smoothScrolling),
-                      subtitle: Text(t.settingsScreen.smoothScrollingSubtitle),
-                      secondary: const Icon(Icons.mouse_outlined),
-                      value: smoothScrollEnabled,
-                      onChanged: (val) =>
-                          ref.read(smoothScrollProvider.notifier).toggle(val),
+                    child: Column(
+                      children: [
+                        SwitchListTile(
+                          title: Text(t.settingsScreen.smoothScrolling),
+                          subtitle: Text(
+                            t.settingsScreen.smoothScrollingSubtitle,
+                          ),
+                          secondary: const Icon(Icons.mouse_outlined),
+                          value: smoothScrollEnabled,
+                          onChanged: (val) => ref
+                              .read(smoothScrollProvider.notifier)
+                              .toggle(val),
+                        ),
+                        if (smoothScrollEnabled) ...[
+                          const Divider(indent: 16, endIndent: 16),
+                          ListTile(
+                            leading: const Icon(Icons.speed_outlined),
+                            title: Text(t.settingsScreen.scrollSpeed),
+                            subtitle: Text(
+                              t.settingsScreen.scrollSpeedSubtitle,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(
+                              16.0,
+                              0,
+                              16.0,
+                              8.0,
+                            ),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Slider(
+                                    value: ref.watch(scrollSpeedProvider),
+                                    min: 0.5,
+                                    max: 2.0,
+                                    divisions: 15,
+                                    label:
+                                        "${ref.watch(scrollSpeedProvider).toStringAsFixed(1)}x",
+                                    onChanged: (value) => ref
+                                        .read(scrollSpeedProvider.notifier)
+                                        .set(value),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 50,
+                                  child: Text(
+                                    "${ref.watch(scrollSpeedProvider).toStringAsFixed(1)}x",
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                OutlinedButton(
+                                  onPressed: ref.watch(scrollSpeedProvider) ==
+                                          1.1
+                                      ? null
+                                      : () => ref
+                                          .read(
+                                            scrollSpeedProvider.notifier,
+                                          )
+                                          .set(1.1),
+                                  child: Text(t.general.reset),
+                                ),
+                              ],
+                            ),
+                          ),
+                          ListTile(
+                            leading: const Icon(Icons.timer_outlined),
+                            title: Text(t.settingsScreen.scrollDuration),
+                            subtitle: Text(
+                              t.settingsScreen.scrollDurationSubtitle,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(
+                              16.0,
+                              0,
+                              16.0,
+                              8.0,
+                            ),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Slider(
+                                    value: ref
+                                            .watch(scrollDurationProvider)
+                                            .toDouble(),
+                                    min: 400,
+                                    max: 3000,
+                                    divisions: 13,
+                                    label:
+                                        "${ref.watch(scrollDurationProvider)}ms",
+                                    onChanged: (value) => ref
+                                        .read(
+                                          scrollDurationProvider.notifier,
+                                        )
+                                        .set(value.round()),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 55,
+                                  child: Text(
+                                    "${ref.watch(scrollDurationProvider)}ms",
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                OutlinedButton(
+                                  onPressed:
+                                      ref.watch(scrollDurationProvider) == 1400
+                                          ? null
+                                          : () => ref
+                                              .read(
+                                                scrollDurationProvider
+                                                    .notifier,
+                                              )
+                                              .set(1400),
+                                  child: Text(t.general.reset),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ],
                     ),
                   ),
                 ],
@@ -619,6 +652,112 @@ class _SettingsHeader extends StatelessWidget {
         title.toUpperCase(),
         style: Theme.of(context).textTheme.labelLarge?.copyWith(
           color: Theme.of(context).colorScheme.primary,
+        ),
+      ),
+    );
+  }
+}
+
+class _LanguageDialog extends StatefulWidget {
+  const _LanguageDialog({required this.currentLanguage, required this.notifier});
+  final AppLanguage currentLanguage;
+  final AppLanguageNotifier notifier;
+
+  @override
+  State<_LanguageDialog> createState() => _LanguageDialogState();
+}
+
+class _LanguageDialogState extends State<_LanguageDialog> {
+  final _scrollController = SmoothScrollController();
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final t = Translations.of(context);
+    final theme = Theme.of(context);
+
+    return SafeArea(
+      child: Align(
+        alignment: Alignment.centerRight,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 500),
+          child: Dialog(
+            insetPadding: const EdgeInsets.all(20),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24.0,
+                      vertical: 8.0,
+                    ),
+                    child: Text(
+                      t.settingsScreen.languageDialogTitle,
+                      style: theme.textTheme.titleLarge,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Flexible(
+                    child: Scrollbar(
+                      controller: _scrollController,
+                      thumbVisibility: true,
+                      child: SmoothSingleChildScrollView(
+                        controller: _scrollController,
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Column(
+                          children: AppLanguage.values.map((lang) {
+                            final isSelected = lang == widget.currentLanguage;
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 4.0,
+                              ),
+                              child: Card(
+                                margin: EdgeInsets.zero,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: ListTile(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  title: Text(
+                                    lang.getDisplayName(t),
+                                    style: TextStyle(
+                                      fontWeight: isSelected
+                                          ? FontWeight.bold
+                                          : FontWeight.normal,
+                                    ),
+                                  ),
+                                  trailing: isSelected
+                                      ? Icon(
+                                          Icons.check_circle,
+                                          color: theme.colorScheme.primary,
+                                        )
+                                      : null,
+                                  onTap: () {
+                                    widget.notifier.setLanguage(lang);
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
       ),
     );

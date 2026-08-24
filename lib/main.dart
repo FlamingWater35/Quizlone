@@ -214,7 +214,9 @@ class _MyAppState extends ConsumerState<MyApp> {
 
     // Watch global providers to ensure they stay alive and react to state changes.
     ref.watch(authControllerProvider);
-    ref.watch(smoothScrollProvider);
+    final smoothScrollEnabled = ref.watch(smoothScrollProvider);
+    final scrollSpeedValue = ref.watch(scrollSpeedProvider);
+    final scrollDurationValue = ref.watch(scrollDurationProvider);
 
     if (!kIsWeb && Platform.isAndroid) {
       ref.watch(updaterControllerProvider);
@@ -243,59 +245,64 @@ class _MyAppState extends ConsumerState<MyApp> {
       );
     }
 
-    return MaterialApp.router(
-      title: t.appName,
-      locale: TranslationProvider.of(context).flutterLocale,
-      supportedLocales: AppLocaleUtils.supportedLocales,
-      localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: seedColor,
-          brightness: Brightness.light,
-        ),
-        useMaterial3: true,
-        snackBarTheme: buildSnackBarTheme(
-          ColorScheme.fromSeed(
-            seedColor: seedColor,
-            brightness: Brightness.dark,
-          ),
-        ),
+    return SmoothScrollScope(
+      notifier: SmoothScrollData(
+        enabled: smoothScrollEnabled,
+        speed: scrollSpeedValue,
+        durationMs: scrollDurationValue,
       ),
-      darkTheme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: seedColor,
-          brightness: Brightness.dark,
-        ),
-        useMaterial3: true,
-        snackBarTheme: buildSnackBarTheme(
-          ColorScheme.fromSeed(
+      child: MaterialApp.router(
+        title: t.appName,
+        locale: TranslationProvider.of(context).flutterLocale,
+        supportedLocales: AppLocaleUtils.supportedLocales,
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(
             seedColor: seedColor,
             brightness: Brightness.light,
           ),
+          useMaterial3: true,
+          snackBarTheme: buildSnackBarTheme(
+            ColorScheme.fromSeed(
+              seedColor: seedColor,
+              brightness: Brightness.dark,
+            ),
+          ),
         ),
-      ),
-      themeMode: themeMode,
-      builder: (context, child) {
-        // Applies global UI scaling factor defined in user settings.
-        return AppScaler(scale: uiScale, child: child!);
-      },
-      debugShowCheckedModeBanner: false,
-      routerConfig: _appRouter.config(
-        deepLinkBuilder: (deepLink) {
-          // Reconstructs navigation stack for web deep links to prevent blank screens.
-          if (kIsWeb && deepLink.path != '/') {
-            final activeListId = ref.read(activeStudyListIdProvider);
-            return DeepLinkResolver.resolve(
-              deepLink.path,
-              activeListId: activeListId,
-            );
-          }
-          return deepLink;
+        darkTheme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: seedColor,
+            brightness: Brightness.dark,
+          ),
+          useMaterial3: true,
+          snackBarTheme: buildSnackBarTheme(
+            ColorScheme.fromSeed(
+              seedColor: seedColor,
+              brightness: Brightness.light,
+            ),
+          ),
+        ),
+        themeMode: themeMode,
+        builder: (context, child) {
+          return AppScaler(scale: uiScale, child: child!);
         },
+        debugShowCheckedModeBanner: false,
+        routerConfig: _appRouter.config(
+          deepLinkBuilder: (deepLink) {
+            if (kIsWeb && deepLink.path != '/') {
+              final activeListId = ref.read(activeStudyListIdProvider);
+              return DeepLinkResolver.resolve(
+                deepLink.path,
+                activeListId: activeListId,
+              );
+            }
+            return deepLink;
+          },
+        ),
       ),
     );
   }

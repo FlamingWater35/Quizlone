@@ -327,7 +327,11 @@
     "deleteAccountSubtitle": "Poista tilisi ja kaikki pilvidatat pysyvästi",
     "experimental": "Kokeellinen",
     "smoothScrolling": "Pehmeä vieritys",
-    "smoothScrollingSubtitle": "Ottaa käyttöön mukautetun fysiikan osoittimen/hiiren vieritykselle.",
+    "smoothScrollingSubtitle": "Ottaa käyttöön silkkinpehmeän osoittimen/hiiren vierityksen.",
+    "scrollSpeed": "Vierityksen nopeus",
+    "scrollSpeedSubtitle": "Kuinka nopeasti osoitinscrollaus tuntuu.",
+    "scrollDuration": "Vierityksen kesto",
+    "scrollDurationSubtitle": "Kuinka kauan pehmeä vieritysanimaatio kestää.",
     "deleteAccountDialog": {
       "title": "Poistetaanko tili?",
       "content": "Tämä toiminto on pysyvä. Tilisi ja kaikki pilveen tallennetut tiedot poistetaan. Tätä ei voi peruuttaa.",

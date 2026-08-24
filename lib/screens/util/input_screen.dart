@@ -52,89 +52,12 @@ class _InputScreenState extends ConsumerState<InputScreen> {
     List<StudyGroup> groups,
     StudyListFormNotifier formNotifier,
   ) async {
-    final t = Translations.of(context);
-    final theme = Theme.of(context);
-
     final String? selectedId = await showDialog<String?>(
       context: context,
       builder: (context) {
-        final dialogScrollController = SmoothScrollController();
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 400),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: Text(
-                      t.inputScreen.assignToGroup,
-                      style: theme.textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Flexible(
-                    child: Scrollbar(
-                      controller: dialogScrollController,
-                      thumbVisibility: true,
-                      child: SmoothSingleChildScrollView(
-                        controller: dialogScrollController,
-                        child: Column(
-                          children: [
-                            _buildDialogOption(
-                              context: context,
-                              title: t.loadListScreen.ungrouped,
-                              icon: Icons.folder_off_outlined,
-                              isSelected: formState.selectedGroupId == null,
-                              onTap: () => Navigator.pop(context, "ungrouped"),
-                            ),
-                            if (groups.isNotEmpty)
-                              const Padding(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 24,
-                                  vertical: 8,
-                                ),
-                                child: Divider(height: 1),
-                              ),
-                            ...groups.map(
-                              (group) => _buildDialogOption(
-                                context: context,
-                                title: group.name,
-                                icon: Icons.folder_outlined,
-                                isSelected: formState.selectedGroupId == group.id,
-                                onTap: () => Navigator.pop(context, group.id),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: Text(t.general.cancel),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+        return _GroupSelectionDialog(
+          formState: formState,
+          groups: groups,
         );
       },
     );
@@ -142,44 +65,6 @@ class _InputScreenState extends ConsumerState<InputScreen> {
     if (selectedId != null && mounted) {
       formNotifier.setGroupId(selectedId == "ungrouped" ? null : selectedId);
     }
-  }
-
-  Widget _buildDialogOption({
-    required BuildContext context,
-    required String title,
-    required IconData icon,
-    required bool isSelected,
-    required VoidCallback onTap,
-  }) {
-    final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
-      child: ListTile(
-        leading: Icon(
-          icon,
-          color: isSelected
-              ? theme.colorScheme.primary
-              : theme.colorScheme.onSurfaceVariant,
-        ),
-        title: Text(
-          title,
-          style: TextStyle(
-            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-            color: isSelected
-                ? theme.colorScheme.primary
-                : theme.colorScheme.onSurface,
-          ),
-        ),
-        trailing: isSelected
-            ? Icon(Icons.check_circle, color: theme.colorScheme.primary)
-            : null,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        tileColor: isSelected
-            ? theme.colorScheme.primaryContainer.withAlpha(40)
-            : null,
-        onTap: onTap,
-      ),
-    );
   }
 
   @override
@@ -373,6 +258,148 @@ class _InputScreenState extends ConsumerState<InputScreen> {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _GroupSelectionDialog extends StatefulWidget {
+  const _GroupSelectionDialog({required this.formState, required this.groups});
+  final StudyListFormState formState;
+  final List<StudyGroup> groups;
+
+  @override
+  State<_GroupSelectionDialog> createState() => _GroupSelectionDialogState();
+}
+
+class _GroupSelectionDialogState extends State<_GroupSelectionDialog> {
+  final _scrollController = SmoothScrollController();
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final t = Translations.of(context);
+    final theme = Theme.of(context);
+
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 400),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Text(
+                  t.inputScreen.assignToGroup,
+                  style: theme.textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Flexible(
+                child: Scrollbar(
+                  controller: _scrollController,
+                  thumbVisibility: true,
+                  child: SmoothSingleChildScrollView(
+                    controller: _scrollController,
+                    child: Column(
+                      children: [
+                        _buildDialogOption(
+                          context: context,
+                          title: t.loadListScreen.ungrouped,
+                          icon: Icons.folder_off_outlined,
+                          isSelected:
+                              widget.formState.selectedGroupId == null,
+                          onTap: () => Navigator.pop(context, "ungrouped"),
+                        ),
+                        if (widget.groups.isNotEmpty)
+                          const Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 24,
+                              vertical: 8,
+                            ),
+                            child: Divider(height: 1),
+                          ),
+                        ...widget.groups.map(
+                          (group) => _buildDialogOption(
+                            context: context,
+                            title: group.name,
+                            icon: Icons.folder_outlined,
+                            isSelected:
+                                widget.formState.selectedGroupId == group.id,
+                            onTap: () =>
+                                Navigator.pop(context, group.id),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: Text(t.general.cancel),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDialogOption({
+    required BuildContext context,
+    required String title,
+    required IconData icon,
+    required bool isSelected,
+    required VoidCallback onTap,
+  }) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+      child: ListTile(
+        leading: Icon(
+          icon,
+          color: isSelected
+              ? theme.colorScheme.primary
+              : theme.colorScheme.onSurfaceVariant,
+        ),
+        title: Text(
+          title,
+          style: TextStyle(
+            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+            color: isSelected
+                ? theme.colorScheme.primary
+                : theme.colorScheme.onSurface,
+          ),
+        ),
+        trailing: isSelected
+            ? Icon(Icons.check_circle, color: theme.colorScheme.primary)
+            : null,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        tileColor: isSelected
+            ? theme.colorScheme.primaryContainer.withAlpha(40)
+            : null,
+        onTap: onTap,
       ),
     );
   }

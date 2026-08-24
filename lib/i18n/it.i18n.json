@@ -327,7 +327,11 @@
     "deleteAccountSubtitle": "Elimina permanentemente il tuo account e tutti i dati nel cloud",
     "experimental": "Sperimentale",
     "smoothScrolling": "Scorrimento fluido",
-    "smoothScrollingSubtitle": "Abilita la fisica personalizzata per lo scorrimento del puntatore/mouse.",
+    "smoothScrollingSubtitle": "Abilita scorrimento setoso con puntatore/mouse.",
+    "scrollSpeed": "Velocità di scorrimento",
+    "scrollSpeedSubtitle": "Quanto è veloce lo scorrimento del puntatore.",
+    "scrollDuration": "Durata dello scorrimento",
+    "scrollDurationSubtitle": "Quanto dura l'animazione di scorrimento fluido.",
     "deleteAccountDialog": {
       "title": "Eliminare l'account?",
       "content": "Questa azione è permanente. Il tuo account e tutti i dati memorizzati nel cloud verranno eliminati. Questo non può essere annullato.",

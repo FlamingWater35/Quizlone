@@ -327,7 +327,11 @@
     "deleteAccountSubtitle": "永久删除您的账户和所有云端数据",
     "experimental": "实验性",
     "smoothScrolling": "平滑滚动",
-    "smoothScrollingSubtitle": "为指针/鼠标滚动启用自定义物理效果。",
+    "smoothScrollingSubtitle": "为指针/鼠标启用丝滑滚动。",
+    "scrollSpeed": "滚动速度",
+    "scrollSpeedSubtitle": "指针滚动的手感速度。",
+    "scrollDuration": "滚动时长",
+    "scrollDurationSubtitle": "平滑滚动动画的持续时间。",
     "deleteAccountDialog": {
       "title": "删除账户？",
       "content": "此操作是永久性的。您的账户和存储在云端的所有数据都将被删除。这无法撤消。",

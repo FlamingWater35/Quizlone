@@ -327,7 +327,11 @@
     "deleteAccountSubtitle": "アカウントとすべてのクラウドデータを完全に削除する",
     "experimental": "実験的",
     "smoothScrolling": "スムーズスクロール",
-    "smoothScrollingSubtitle": "ポインター/マウスのスクロールにカスタム物理演算を有効にします。",
+    "smoothScrollingSubtitle": "ポインター/マウスにシルクースクロールを有効にします。",
+    "scrollSpeed": "スクロール速度",
+    "scrollSpeedSubtitle": "ポインタースクロールの速さ感。",
+    "scrollDuration": "スクロール時間",
+    "scrollDurationSubtitle": "スムーズスクロールアニメーションの長さ。",
     "deleteAccountDialog": {
       "title": "アカウントを削除しますか？",
       "content": "この操作は元に戻せません。あなたのアカウントとクラウドに保存されているすべてのデータが削除されます。",

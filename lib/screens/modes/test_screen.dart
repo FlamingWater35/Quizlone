@@ -120,6 +120,7 @@ class _TestViewState extends ConsumerState<_TestView> {
     for (var controller in _writtenAnswerControllers.values) {
       controller.dispose();
     }
+    _writtenAnswerControllers.clear();
     _scrollController.dispose();
     super.dispose();
   }
@@ -351,7 +352,7 @@ class _TestViewState extends ConsumerState<_TestView> {
       if (wasSubmitted && !isSubmittedNow) {
         if (mounted) {
           for (var controller in _writtenAnswerControllers.values) {
-            controller.clear();
+            controller.dispose();
           }
           _writtenAnswerControllers.clear();
           if (_scrollController.hasClients) {

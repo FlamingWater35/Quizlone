@@ -148,16 +148,27 @@ class _NarrowLayout extends StatelessWidget {
   }
 }
 
-class _WideLayout extends StatelessWidget {
+class _WideLayout extends StatefulWidget {
   const _WideLayout({required this.list, required this.controller});
 
   final ScrollController controller;
   final StudyList list;
 
   @override
-  Widget build(BuildContext context) {
-    final actionScrollController = SmoothScrollController();
+  State<_WideLayout> createState() => _WideLayoutState();
+}
 
+class _WideLayoutState extends State<_WideLayout> {
+  final _actionScrollController = SmoothScrollController();
+
+  @override
+  void dispose() {
+    _actionScrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(24.0),
       child: Row(
@@ -166,16 +177,16 @@ class _WideLayout extends StatelessWidget {
           Expanded(
             flex: 2,
             child: SmoothSingleChildScrollView(
-              controller: actionScrollController,
+              controller: _actionScrollController,
               padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: _ActionPanel(list: list, isWide: true),
+              child: _ActionPanel(list: widget.list, isWide: true),
             ),
           ),
           const SizedBox(width: 24),
           Expanded(
             flex: 3,
             child: SmoothSingleChildScrollView(
-              controller: controller,
+              controller: widget.controller,
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: const _OptionsPanel(),
             ),

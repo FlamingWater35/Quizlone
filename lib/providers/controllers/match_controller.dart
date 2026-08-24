@@ -97,7 +97,7 @@ class MatchController extends _$MatchController {
   /// **Fix:** State is now updated *immediately* on the final match so the UI
   /// stays responsive. The database write (which triggers a cloud sync) is
   /// fired in the background and never blocks the widget tree.
-  void selectItem(MatchItem item) async {
+  Future<void> selectItem(MatchItem item) async {
     final currentState = state.value;
     if (currentState == null ||
         currentState.isComplete ||
@@ -153,15 +153,19 @@ class MatchController extends _$MatchController {
         }
       } else {
         // Briefly highlight incorrect pair before resetting selection.
+        final incorrectIds = {currentSelection.uniqueId, item.uniqueId};
         state = AsyncData(
           currentState.copyWith(
             selectedItem: () => null,
-            incorrectPair: {currentSelection.uniqueId, item.uniqueId},
+            incorrectPair: incorrectIds,
           ),
         );
         Future.delayed(const Duration(milliseconds: 500), () {
-          if (ref.mounted && state.hasValue) {
-            state = AsyncData(state.value!.copyWith(incorrectPair: {}));
+          if (!ref.mounted || !state.hasValue) return;
+          final current = state.value!;
+          // Only clear if the same pair is still highlighted
+          if (current.incorrectPair.containsAll(incorrectIds)) {
+            state = AsyncData(current.copyWith(incorrectPair: {}));
           }
         });
       }

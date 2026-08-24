@@ -324,7 +324,11 @@
     "deleteAllData": "Delete All Data",
     "experimental": "Experimental",
     "smoothScrolling": "Smooth Scrolling",
-    "smoothScrollingSubtitle": "Enables custom physics for pointer/mouse scrolling.",
+    "smoothScrollingSubtitle": "Enables silky-smooth pointer/mouse scrolling.",
+    "scrollSpeed": "Scroll Speed",
+    "scrollSpeedSubtitle": "How fast pointer scrolling feels.",
+    "scrollDuration": "Scroll Duration",
+    "scrollDurationSubtitle": "How long the smooth scroll animation lasts.",
     "exportDialog": {
       "title": "Export Data",
       "content": "How would you like to export your data?",

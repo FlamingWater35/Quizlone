@@ -287,90 +287,11 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
 
   /// Displays a dialog to move selected lists to a target group or "Ungrouped".
   Future<void> _showMoveDialog(List<String> listIds) async {
-    final t = Translations.of(context);
-    final theme = Theme.of(context);
     final allGroups = ref.read(studyGroupsProvider).asData?.value ?? [];
     final String? destinationGroupId = await showDialog<String?>(
       context: context,
       builder: (context) {
-        final dialogScrollController = SmoothScrollController();
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 400),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: Text(
-                      t.loadListScreen.moveToGroupDialog.title(
-                        count: listIds.length,
-                      ),
-                      style: theme.textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Flexible(
-                    child: Scrollbar(
-                      controller: dialogScrollController,
-                      thumbVisibility: true,
-                      child: SmoothSingleChildScrollView(
-                        controller: dialogScrollController,
-                        child: Column(
-                          children: [
-                            _buildMoveOption(
-                              context: context,
-                              title: t.loadListScreen.ungrouped,
-                              icon: Icons.folder_off_outlined,
-                              onTap: () => Navigator.pop(context, "ungrouped"),
-                            ),
-                            if (allGroups.isNotEmpty)
-                              const Padding(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 24,
-                                  vertical: 8,
-                                ),
-                                child: Divider(height: 1),
-                              ),
-                            ...allGroups.map(
-                              (group) => _buildMoveOption(
-                                context: context,
-                                title: group.name,
-                                icon: Icons.folder_outlined,
-                                onTap: () => Navigator.pop(context, group.id),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: Text(t.general.cancel),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
+        return _MoveDialog(listIds: listIds, allGroups: allGroups);
       },
     );
     if (destinationGroupId != null && mounted) {
@@ -390,24 +311,6 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
         }
       }
     }
-  }
-
-  Widget _buildMoveOption({
-    required BuildContext context,
-    required String title,
-    required IconData icon,
-    required VoidCallback onTap,
-  }) {
-    final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
-      child: ListTile(
-        leading: Icon(icon, color: theme.colorScheme.onSurfaceVariant),
-        title: Text(title),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        onTap: onTap,
-      ),
-    );
   }
 
   /// Displays a dialog to rename a study list, showing an error snackbar if the name already exists.
@@ -1078,6 +981,125 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _MoveDialog extends StatefulWidget {
+  const _MoveDialog({required this.listIds, required this.allGroups});
+  final List<String> listIds;
+  final List<StudyGroup> allGroups;
+
+  @override
+  State<_MoveDialog> createState() => _MoveDialogState();
+}
+
+class _MoveDialogState extends State<_MoveDialog> {
+  final _scrollController = SmoothScrollController();
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final t = Translations.of(context);
+    final theme = Theme.of(context);
+
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 400),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Text(
+                  t.loadListScreen.moveToGroupDialog.title(
+                    count: widget.listIds.length,
+                  ),
+                  style: theme.textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Flexible(
+                child: Scrollbar(
+                  controller: _scrollController,
+                  thumbVisibility: true,
+                  child: SmoothSingleChildScrollView(
+                    controller: _scrollController,
+                    child: Column(
+                      children: [
+                        _buildMoveOption(
+                          context: context,
+                          title: t.loadListScreen.ungrouped,
+                          icon: Icons.folder_off_outlined,
+                          onTap: () => Navigator.pop(context, "ungrouped"),
+                        ),
+                        if (widget.allGroups.isNotEmpty)
+                          const Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 24,
+                              vertical: 8,
+                            ),
+                            child: Divider(height: 1),
+                          ),
+                        ...widget.allGroups.map(
+                          (group) => _buildMoveOption(
+                            context: context,
+                            title: group.name,
+                            icon: Icons.folder_outlined,
+                            onTap: () => Navigator.pop(context, group.id),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: Text(t.general.cancel),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMoveOption({
+    required BuildContext context,
+    required String title,
+    required IconData icon,
+    required VoidCallback onTap,
+  }) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+      child: ListTile(
+        leading: Icon(icon, color: theme.colorScheme.onSurfaceVariant),
+        title: Text(title),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        onTap: onTap,
       ),
     );
   }

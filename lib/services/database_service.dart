@@ -35,6 +35,8 @@ class DatabaseService {
   static late Box _settingsBox;
   static const String _settingsBoxName = 'settingsBox';
   static const String _smoothScrollKey = 'smoothScrollEnabled';
+  static const String _scrollSpeedKey = 'scrollSpeed';
+  static const String _scrollDurationKey = 'scrollDuration';
 
   static late Box<StudyGroup> _studyGroupBox;
   static const String _studyGroupBoxName = 'studyGroupsBox';
@@ -529,6 +531,44 @@ class DatabaseService {
     } catch (e, s) {
       _log.severe("Failed to read smooth scroll setting", e, s);
       return false;
+    }
+  }
+
+  /// Saves the silky_scroll pointer scroll speed multiplier.
+  Future<void> saveScrollSpeed(double value) async {
+    try {
+      await _settingsBox.put(_scrollSpeedKey, value);
+    } catch (e, s) {
+      _log.severe("Failed to save scroll speed", e, s);
+    }
+  }
+
+  /// Returns the silky_scroll pointer scroll speed (default 1.1).
+  double getScrollSpeed() {
+    try {
+      return _settingsBox.get(_scrollSpeedKey, defaultValue: 1.1);
+    } catch (e, s) {
+      _log.severe("Failed to read scroll speed", e, s);
+      return 1.1;
+    }
+  }
+
+  /// Saves the silky_scroll scroll animation duration in milliseconds.
+  Future<void> saveScrollDuration(int value) async {
+    try {
+      await _settingsBox.put(_scrollDurationKey, value);
+    } catch (e, s) {
+      _log.severe("Failed to save scroll duration", e, s);
+    }
+  }
+
+  /// Returns the silky_scroll scroll duration in ms (default 1400).
+  int getScrollDuration() {
+    try {
+      return _settingsBox.get(_scrollDurationKey, defaultValue: 1400);
+    } catch (e, s) {
+      _log.severe("Failed to read scroll duration", e, s);
+      return 1400;
     }
   }
 

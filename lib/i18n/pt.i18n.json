@@ -327,7 +327,11 @@
     "deleteAccountSubtitle": "Excluir permanentemente sua conta e todos os dados na nuvem",
     "experimental": "Experimental",
     "smoothScrolling": "Rolagem suave",
-    "smoothScrollingSubtitle": "Ativa física personalizada para rolagem com ponteiro/mouse.",
+    "smoothScrollingSubtitle": "Ativa rolagem sedosa com ponteiro/mouse.",
+    "scrollSpeed": "Velocidade de rolagem",
+    "scrollSpeedSubtitle": "O quão rápido a rolagem com ponteiro parece.",
+    "scrollDuration": "Duração da rolagem",
+    "scrollDurationSubtitle": "Quanto tempo a animação de rolagem suave dura.",
     "deleteAccountDialog": {
       "title": "Excluir conta?",
       "content": "Esta ação é permanente. Sua conta e todos os dados armazenados na nuvem serão excluídos. Isso não pode ser desfeito.",

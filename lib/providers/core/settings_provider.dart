@@ -278,3 +278,37 @@ class SmoothScrollNotifier extends _$SmoothScrollNotifier {
     return enabled;
   }
 }
+
+@riverpod
+class ScrollSpeedNotifier extends _$ScrollSpeedNotifier {
+  Future<void> set(double value) async {
+    _log.fine("[ScrollSpeedNotifier] Setting speed to $value");
+    await ref.read(databaseServiceProvider).saveScrollSpeed(value);
+    if (!ref.mounted) return;
+    state = value;
+  }
+
+  @override
+  double build() {
+    final speed = ref.watch(databaseServiceProvider).getScrollSpeed();
+    _log.fine("[ScrollSpeedNotifier] Initializing with speed: $speed");
+    return speed;
+  }
+}
+
+@riverpod
+class ScrollDurationNotifier extends _$ScrollDurationNotifier {
+  Future<void> set(int value) async {
+    _log.fine("[ScrollDurationNotifier] Setting duration to $value");
+    await ref.read(databaseServiceProvider).saveScrollDuration(value);
+    if (!ref.mounted) return;
+    state = value;
+  }
+
+  @override
+  int build() {
+    final duration = ref.watch(databaseServiceProvider).getScrollDuration();
+    _log.fine("[ScrollDurationNotifier] Initializing with duration: $duration");
+    return duration;
+  }
+}

@@ -35,6 +35,7 @@ class _MatchLeaderboardScreenState extends ConsumerState<MatchLeaderboardScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   final GlobalKey _newRecordKey = GlobalKey();
+  bool _hasAnimated = false;
   final ScrollController _scrollController = SmoothScrollController();
 
   @override
@@ -164,7 +165,10 @@ class _MatchLeaderboardScreenState extends ConsumerState<MatchLeaderboardScreen>
                     Expanded(
                       child: recordsAsync.when(
                         data: (records) {
-                          _animationController.forward(from: 0.0);
+                          if (!_hasAnimated) {
+                            _animationController.forward(from: 0.0);
+                            _hasAnimated = true;
+                          }
                           final newRecord = widget.newRecord;
                           final topRecordsFromDb = List.of(records);
 

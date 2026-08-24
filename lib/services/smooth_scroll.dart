@@ -26,6 +26,69 @@ class SmoothScrollController extends ScrollController {
 }
 
 // ---------------------------------------------------------------------------
+// Reactive scope – avoids full-app rebuilds on toggle
+// ---------------------------------------------------------------------------
+
+/// Holds the smooth-scroll enabled flag plus tuning parameters.
+/// Widgets that call [SmoothScrollScope.of] rebuild only when these values change.
+class SmoothScrollData extends ChangeNotifier {
+  SmoothScrollData({
+    required bool enabled,
+    required double speed,
+    required int durationMs,
+  })  : _enabled = enabled,
+        _speed = speed,
+        _durationMs = durationMs;
+
+  bool _enabled;
+  double _speed;
+  int _durationMs;
+
+  bool get enabled => _enabled;
+  double get speed => _speed;
+  Duration get duration => Duration(milliseconds: _durationMs);
+
+  set enabled(bool value) {
+    if (_enabled != value) {
+      _enabled = value;
+      notifyListeners();
+    }
+  }
+
+  set speed(double value) {
+    if (_speed != value) {
+      _speed = value;
+      notifyListeners();
+    }
+  }
+
+  set durationMs(int value) {
+    if (_durationMs != value) {
+      _durationMs = value;
+      notifyListeners();
+    }
+  }
+}
+
+class SmoothScrollScope extends InheritedNotifier<SmoothScrollData> {
+  const SmoothScrollScope({
+    super.key,
+    required super.notifier,
+    required super.child,
+  });
+
+  static SmoothScrollData _of(BuildContext context) {
+    return context
+        .dependOnInheritedWidgetOfExactType<SmoothScrollScope>()!
+        .notifier!;
+  }
+
+  static bool enabled(BuildContext context) => _of(context).enabled;
+  static double speed(BuildContext context) => _of(context).speed;
+  static Duration duration(BuildContext context) => _of(context).duration;
+}
+
+// ---------------------------------------------------------------------------
 // Conditional wrapper widgets
 // ---------------------------------------------------------------------------
 
@@ -42,6 +105,9 @@ class SmoothSingleChildScrollView extends StatelessWidget {
     this.primary,
     this.child,
     this.scrollDirection = Axis.vertical,
+    this.scrollSpeed = 1.1,
+    this.silkyDuration = const Duration(milliseconds: 1400),
+    this.silkyCurve = Curves.easeOutQuad,
   });
 
   final ScrollController? controller;
@@ -51,16 +117,22 @@ class SmoothSingleChildScrollView extends StatelessWidget {
   final bool? primary;
   final Widget? child;
   final Axis scrollDirection;
+  final double scrollSpeed;
+  final Duration silkyDuration;
+  final Curve silkyCurve;
 
   @override
   Widget build(BuildContext context) {
-    if (smoothScrollEnabledGlobally) {
+    if (SmoothScrollScope.enabled(context)) {
       return SilkySingleChildScrollView(
         controller: controller,
         padding: padding,
         physics: physics ?? const ScrollPhysics(),
         reverse: reverse,
         scrollDirection: scrollDirection,
+        scrollSpeed: SmoothScrollScope.speed(context),
+        silkyScrollDuration: SmoothScrollScope.duration(context),
+        animationCurve: silkyCurve,
         child: child,
       );
     }
@@ -91,6 +163,9 @@ class SmoothListView extends StatelessWidget {
     this.shrinkWrap = false,
     this.cacheExtent,
     this.semanticChildCount,
+    this.scrollSpeed = 1.1,
+    this.silkyDuration = const Duration(milliseconds: 1400),
+    this.silkyCurve = Curves.easeOutQuad,
   })  : separatorBuilder = null,
         addAutomaticKeepAlives = true,
         addRepaintBoundaries = true,
@@ -109,6 +184,9 @@ class SmoothListView extends StatelessWidget {
     this.shrinkWrap = false,
     this.cacheExtent,
     this.semanticChildCount,
+    this.scrollSpeed = 1.1,
+    this.silkyDuration = const Duration(milliseconds: 1400),
+    this.silkyCurve = Curves.easeOutQuad,
   })  : addAutomaticKeepAlives = true,
         addRepaintBoundaries = true,
         addSemanticIndexes = true;
@@ -126,10 +204,13 @@ class SmoothListView extends StatelessWidget {
   final bool addSemanticIndexes;
   final double? cacheExtent;
   final int? semanticChildCount;
+  final double scrollSpeed;
+  final Duration silkyDuration;
+  final Curve silkyCurve;
 
   @override
   Widget build(BuildContext context) {
-    if (smoothScrollEnabledGlobally) {
+    if (SmoothScrollScope.enabled(context)) {
       if (separatorBuilder != null) {
         return SilkyListView.separated(
           controller: controller,
@@ -143,6 +224,9 @@ class SmoothListView extends StatelessWidget {
           addAutomaticKeepAlives: addAutomaticKeepAlives,
           addRepaintBoundaries: addRepaintBoundaries,
           addSemanticIndexes: addSemanticIndexes,
+          scrollSpeed: SmoothScrollScope.speed(context),
+          silkyScrollDuration: SmoothScrollScope.duration(context),
+          animationCurve: silkyCurve,
         );
       }
       return SilkyListView.builder(
@@ -157,6 +241,9 @@ class SmoothListView extends StatelessWidget {
         addRepaintBoundaries: addRepaintBoundaries,
         addSemanticIndexes: addSemanticIndexes,
         cacheExtent: cacheExtent,
+        scrollSpeed: SmoothScrollScope.speed(context),
+        silkyScrollDuration: SmoothScrollScope.duration(context),
+        animationCurve: silkyCurve,
       );
     }
 

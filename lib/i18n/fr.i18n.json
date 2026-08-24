@@ -327,7 +327,11 @@
     "deleteAccountSubtitle": "Supprimer définitivement votre compte et toutes les données cloud",
     "experimental": "Expérimental",
     "smoothScrolling": "Défilement fluide",
-    "smoothScrollingSubtitle": "Active une physique personnalisée pour le défilement du pointeur/souris.",
+    "smoothScrollingSubtitle": "Active un défilement soyeux au pointeur/souris.",
+    "scrollSpeed": "Vitesse de défilement",
+    "scrollSpeedSubtitle": "La rapidité du défilement au pointeur.",
+    "scrollDuration": "Durée du défilement",
+    "scrollDurationSubtitle": "La durée de l'animation de défilement fluide.",
     "deleteAccountDialog": {
       "title": "Supprimer le compte ?",
       "content": "Cette action est permanente. Votre compte et toutes les données stockées dans le cloud seront supprimés. Cela ne peut pas être annulé.",

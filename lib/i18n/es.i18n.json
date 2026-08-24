@@ -327,7 +327,11 @@
     "deleteAccountSubtitle": "Eliminar permanentemente tu cuenta y todos los datos en la nube",
     "experimental": "Experimental",
     "smoothScrolling": "Desplazamiento suave",
-    "smoothScrollingSubtitle": "Activa físicas personalizadas para el desplazamiento con puntero/ratón.",
+    "smoothScrollingSubtitle": "Activa desplazamiento sedoso con puntero/ratón.",
+    "scrollSpeed": "Velocidad de desplazamiento",
+    "scrollSpeedSubtitle": "Qué tan rápido se siente el desplazamiento con el puntero.",
+    "scrollDuration": "Duración del desplazamiento",
+    "scrollDurationSubtitle": "Cuánto dura la animación de desplazamiento suave.",
     "deleteAccountDialog": {
       "title": "¿Eliminar cuenta?",
       "content": "Esta acción es permanente. Tu cuenta y todos los datos almacenados en la nube serán eliminados. Esto no se puede deshacer.",
