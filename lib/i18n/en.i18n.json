@@ -324,7 +324,7 @@
     "deleteAllData": "Delete All Data",
     "experimental": "Experimental",
     "smoothScrolling": "Smooth Scrolling",
-    "smoothScrollingSubtitle": "Enables silky-smooth pointer/mouse scrolling.",
+    "smoothScrollingSubtitle": "Enables smooth pointer/mouse scrolling.",
     "scrollSpeed": "Scroll Speed",
     "scrollSpeedSubtitle": "How fast pointer scrolling feels.",
     "scrollDuration": "Scroll Duration",

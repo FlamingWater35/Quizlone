@@ -327,7 +327,7 @@
     "deleteAccountSubtitle": "Poista tilisi ja kaikki pilvidatat pysyvästi",
     "experimental": "Kokeellinen",
     "smoothScrolling": "Pehmeä vieritys",
-    "smoothScrollingSubtitle": "Ottaa käyttöön silkkinpehmeän osoittimen/hiiren vierityksen.",
+    "smoothScrollingSubtitle": "Ottaa käyttöön pehmeän osoittimen/hiiren vierityksen.",
     "scrollSpeed": "Vierityksen nopeus",
     "scrollSpeedSubtitle": "Kuinka nopeasti osoitinscrollaus tuntuu.",
     "scrollDuration": "Vierityksen kesto",

@@ -327,7 +327,7 @@
     "deleteAccountSubtitle": "アカウントとすべてのクラウドデータを完全に削除する",
     "experimental": "実験的",
     "smoothScrolling": "スムーズスクロール",
-    "smoothScrollingSubtitle": "ポインター/マウスにシルクースクロールを有効にします。",
+    "smoothScrollingSubtitle": "ポインター/マウスにスムーズスクロールを有効にします。",
     "scrollSpeed": "スクロール速度",
     "scrollSpeedSubtitle": "ポインタースクロールの速さ感。",
     "scrollDuration": "スクロール時間",

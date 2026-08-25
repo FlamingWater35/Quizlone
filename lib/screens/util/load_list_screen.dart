@@ -574,7 +574,7 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
                       _sortAscending = !_sortAscending;
                     } else {
                       _currentSort = option;
-                      _sortAscending = option == _SortOption.name;
+                      _sortAscending = option == _SortOption.name || option == _SortOption.none;
                     }
                   });
                 },

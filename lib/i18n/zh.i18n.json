@@ -327,7 +327,7 @@
     "deleteAccountSubtitle": "永久删除您的账户和所有云端数据",
     "experimental": "实验性",
     "smoothScrolling": "平滑滚动",
-    "smoothScrollingSubtitle": "为指针/鼠标启用丝滑滚动。",
+    "smoothScrollingSubtitle": "为指针/鼠标启用平滑滚动。",
     "scrollSpeed": "滚动速度",
     "scrollSpeedSubtitle": "指针滚动的手感速度。",
     "scrollDuration": "滚动时长",
