@@ -149,7 +149,6 @@
     },
     "sortLabel": "Ordenar:",
     "sortOptions": {
-      "none": "Nenhum",
       "name": "Nome",
       "lastOpened": "Último Aberto",
       "createdAt": "Criado",

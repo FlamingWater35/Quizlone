@@ -149,7 +149,6 @@
     },
     "sortLabel": "並べ替え：",
     "sortOptions": {
-      "none": "なし",
       "name": "名前",
       "lastOpened": "最終開封日",
       "createdAt": "作成日",

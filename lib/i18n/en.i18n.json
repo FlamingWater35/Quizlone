@@ -149,7 +149,6 @@
     },
     "sortLabel": "Sort:",
     "sortOptions": {
-      "none": "None",
       "name": "Name",
       "lastOpened": "Last Opened",
       "createdAt": "Created",

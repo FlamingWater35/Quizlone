@@ -149,7 +149,6 @@
     },
     "sortLabel": "Järjestä:",
     "sortOptions": {
-      "none": "Ei mitään",
       "name": "Nimi",
       "lastOpened": "Viimeksi avattu",
       "createdAt": "Luotu",

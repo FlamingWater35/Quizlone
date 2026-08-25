@@ -28,13 +28,11 @@ enum _ListItemMenuAction { rename, move, delete }
 
 enum _GroupMenuAction { rename, delete }
 
-enum _SortOption { none, name, lastOpened, createdAt, listLength }
+enum _SortOption { name, lastOpened, createdAt, listLength }
 
 extension _SortOptionExtension on _SortOption {
   String getDisplayName(Translations t) {
     switch (this) {
-      case _SortOption.none:
-        return t.loadListScreen.sortOptions.none;
       case _SortOption.name:
         return t.loadListScreen.sortOptions.name;
       case _SortOption.lastOpened:
@@ -56,13 +54,13 @@ class LoadListScreen extends ConsumerStatefulWidget {
 }
 
 class _LoadListScreenState extends ConsumerState<LoadListScreen> {
-  _SortOption _currentSort = _SortOption.none;
+  _SortOption _currentSort = _SortOption.createdAt;
   final Set<String> _expandedGroupIds = {};
   bool _isSelectMode = false;
   final _listScrollController = SmoothScrollController();
   final _searchController = TextEditingController();
   final Set<String> _selectedListIds = {};
-  bool _sortAscending = true;
+  bool _sortAscending = false;
 
   @override
   void dispose() {
@@ -75,6 +73,25 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
   void initState() {
     super.initState();
     _searchController.addListener(() => setState(() {}));
+    _loadPersistedSort();
+  }
+
+  /// Restores the previously chosen sort option and direction from settings.
+  void _loadPersistedSort() {
+    final db = ref.read(databaseServiceProvider);
+    final savedOption = db.getLoadListSortOption();
+    _currentSort = _SortOption.values.firstWhere(
+      (o) => o.name == savedOption,
+      orElse: () => _SortOption.createdAt,
+    );
+    _sortAscending = db.getLoadListSortAscending();
+  }
+
+  /// Writes the current sort choice to settings so it survives reboots.
+  void _persistSort() {
+    final db = ref.read(databaseServiceProvider);
+    db.saveLoadListSortOption(_currentSort.name);
+    db.saveLoadListSortAscending(_sortAscending);
   }
 
   void _toggleSelectMode() {
@@ -560,23 +577,20 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
                 ),
               PopupMenuButton<_SortOption>(
                 icon: Icon(
-                  _currentSort == _SortOption.none
-                      ? Icons.sort
-                      : Icons.filter_list,
-                  color: _currentSort != _SortOption.none
-                      ? Theme.of(context).colorScheme.primary
-                      : null,
+                  Icons.filter_list,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
                 tooltip: t.loadListScreen.sortLabel,
                 onSelected: (option) {
                   setState(() {
-                    if (_currentSort == option && option != _SortOption.none) {
+                    if (_currentSort == option) {
                       _sortAscending = !_sortAscending;
                     } else {
                       _currentSort = option;
-                      _sortAscending = option == _SortOption.name || option == _SortOption.none;
+                      _sortAscending = option == _SortOption.name;
                     }
                   });
+                  _persistSort();
                 },
                 itemBuilder: (context) {
                   return _SortOption.values.map((option) {
@@ -587,7 +601,7 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
                       child: Row(
                         children: [
                           Text(option.getDisplayName(t)),
-                          if (isSelected && option != _SortOption.none) ...[
+                          if (isSelected) ...[
                             const SizedBox(width: 8),
                             Icon(
                               _sortAscending
@@ -894,10 +908,7 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
   }
 
   /// Sorts a list of study lists according to the active sort option and direction.
-  /// Returns the input unchanged when sorting is set to "none".
   List<StudyList> _sortLists(List<StudyList> lists) {
-    if (_currentSort == _SortOption.none) return lists;
-
     final sorted = List<StudyList>.from(lists);
     sorted.sort((a, b) {
       switch (_currentSort) {
@@ -911,8 +922,6 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
           return a.createdAt.compareTo(b.createdAt);
         case _SortOption.listLength:
           return a.terms.length.compareTo(b.terms.length);
-        case _SortOption.none:
-          return 0;
       }
     });
 
@@ -931,8 +940,7 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
     List<StudyList> aLists,
     List<StudyList> bLists,
   ) {
-    if (_currentSort == _SortOption.none ||
-        _currentSort == _SortOption.name) {
+    if (_currentSort == _SortOption.name) {
       final result = a.name.toLowerCase().compareTo(b.name.toLowerCase());
       return _sortAscending ? result : -result;
     }
@@ -955,7 +963,6 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
             ? 0
             : bLists.map((l) => l.terms.length).reduce(math.max);
         result = aVal.compareTo(bVal);
-      case _SortOption.none:
       case _SortOption.name:
         result = 0; // Unreachable; handled above.
     }
@@ -1024,12 +1031,8 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
       ),
     );
 
-    // When a sort option is active, show a small indicator above the groups
-    // so the user knows the grouped view is being sorted.
-    if (_currentSort == _SortOption.none) {
-      return scrollbar;
-    }
-
+    // A sort option is always active, so always show the indicator above
+    // the groups so the user knows how the grouped view is ordered.
     return Column(
       children: [
         Padding(
@@ -1089,11 +1092,10 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
                 ).textTheme.labelMedium?.copyWith(fontWeight: FontWeight.bold),
               ),
               const Spacer(),
-              if (_currentSort != _SortOption.none)
-                Text(
-                  "${_currentSort.getDisplayName(t)} (${_sortAscending ? t.loadListScreen.ascending : t.loadListScreen.descending})",
-                  style: Theme.of(context).textTheme.labelSmall,
-                ),
+              Text(
+                "${_currentSort.getDisplayName(t)} (${_sortAscending ? t.loadListScreen.ascending : t.loadListScreen.descending})",
+                style: Theme.of(context).textTheme.labelSmall,
+              ),
             ],
           ),
         ),

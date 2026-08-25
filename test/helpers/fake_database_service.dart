@@ -342,6 +342,24 @@ class FakeDatabaseService implements DatabaseService {
       settings['flashcardAnimationsDisabled'] as bool? ?? false;
 
   @override
+  Future<void> saveLoadListSortOption(String option) async {
+    settings['loadListSortOption'] = option;
+  }
+
+  @override
+  String getLoadListSortOption() =>
+      settings['loadListSortOption'] as String? ?? 'createdAt';
+
+  @override
+  Future<void> saveLoadListSortAscending(bool ascending) async {
+    settings['loadListSortAscending'] = ascending;
+  }
+
+  @override
+  bool getLoadListSortAscending() =>
+      settings['loadListSortAscending'] as bool? ?? false;
+
+  @override
   Future<void> saveActiveListId(String? id) async {
     if (id == null) {
       settings.remove('activeListId');

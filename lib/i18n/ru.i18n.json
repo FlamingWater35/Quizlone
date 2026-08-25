@@ -161,7 +161,6 @@
     },
     "sortLabel": "Сортировка:",
     "sortOptions": {
-      "none": "Нет",
       "name": "Имя",
       "lastOpened": "Последнее открытие",
       "createdAt": "Создан",

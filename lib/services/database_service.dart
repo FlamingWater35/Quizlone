@@ -37,6 +37,8 @@ class DatabaseService {
   static const String _smoothScrollKey = 'smoothScrollEnabled';
   static const String _scrollSpeedKey = 'scrollSpeed';
   static const String _scrollDurationKey = 'scrollDuration';
+  static const String _loadListSortOptionKey = 'loadListSortOption';
+  static const String _loadListSortAscendingKey = 'loadListSortAscending';
   static const String _flashcardAnimationsDisabledKey =
       'flashcardAnimationsDisabled';
 
@@ -592,6 +594,50 @@ class DatabaseService {
       );
     } catch (e, s) {
       _log.severe("Failed to read flashcard animations setting", e, s);
+      return false;
+    }
+  }
+
+  /// Saves the chosen sort option name for the load list screen.
+  Future<void> saveLoadListSortOption(String option) async {
+    try {
+      await _settingsBox.put(_loadListSortOptionKey, option);
+    } catch (e, s) {
+      _log.severe("Failed to save load list sort option", e, s);
+    }
+  }
+
+  /// Returns the saved sort option name (defaults to "createdAt").
+  String getLoadListSortOption() {
+    try {
+      return _settingsBox.get(
+        _loadListSortOptionKey,
+        defaultValue: 'createdAt',
+      );
+    } catch (e, s) {
+      _log.severe("Failed to read load list sort option", e, s);
+      return 'createdAt';
+    }
+  }
+
+  /// Saves the sort direction for the load list screen.
+  Future<void> saveLoadListSortAscending(bool ascending) async {
+    try {
+      await _settingsBox.put(_loadListSortAscendingKey, ascending);
+    } catch (e, s) {
+      _log.severe("Failed to save load list sort direction", e, s);
+    }
+  }
+
+  /// Returns the saved sort direction (defaults to false = descending).
+  bool getLoadListSortAscending() {
+    try {
+      return _settingsBox.get(
+        _loadListSortAscendingKey,
+        defaultValue: false,
+      );
+    } catch (e, s) {
+      _log.severe("Failed to read load list sort direction", e, s);
       return false;
     }
   }

@@ -149,7 +149,6 @@
     },
     "sortLabel": "排序：",
     "sortOptions": {
-      "none": "无",
       "name": "名称",
       "lastOpened": "最后打开",
       "createdAt": "创建时间",

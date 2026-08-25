@@ -149,7 +149,6 @@
     },
     "sortLabel": "Sortera:",
     "sortOptions": {
-      "none": "Ingen",
       "name": "Namn",
       "lastOpened": "Senast Öppnad",
       "createdAt": "Skapad",
