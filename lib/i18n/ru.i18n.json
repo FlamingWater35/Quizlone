@@ -180,6 +180,7 @@
     "askForDef": "Показать термин, спросить определение",
     "studyLength": "Длина изучения:",
     "testFormat": "Формат теста",
+    "testOptions": "Настройки теста",
     "writtenAnswer": "Письменный ответ",
     "multipleChoice": "Множественный выбор",
     "requireOnlyOneAnswer": "Принимать один ответ через запятую",

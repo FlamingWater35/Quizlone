@@ -168,6 +168,7 @@
     "askForDef": "Begriff anzeigen, nach Definition fragen",
     "studyLength": "Lernlänge:",
     "testFormat": "Testformat",
+    "testOptions": "Test-Optionen",
     "writtenAnswer": "Schriftliche Antwort",
     "multipleChoice": "Multiple Choice",
     "requireOnlyOneAnswer": "Akzeptiere eine kommagetrennte Antwort",
@@ -373,7 +374,7 @@
   },
   "controlsScreen": {
     "title": "Steuerung",
-    "gesturesTitle": "Gestenssteuerung (Karteikarten)",
+    "gesturesTitle": "Gestensteuerung (Karteikarten)",
     "keyboardTitle": "Tastatur (Karteikarten)",
     "nextCard": "Nächste Karte",
     "previousCard": "Vorherige Karte",

@@ -168,6 +168,7 @@
     "askForDef": "显示术语，询问定义",
     "studyLength": "学习长度：",
     "testFormat": "测试格式",
+    "testOptions": "测试选项",
     "writtenAnswer": "书面回答",
     "multipleChoice": "多项选择",
     "requireOnlyOneAnswer": "接受一个逗号分隔的答案",

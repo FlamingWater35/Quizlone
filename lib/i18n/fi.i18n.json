@@ -160,7 +160,7 @@
     "noActiveList": "Aktiivista opiskelulistaa ei löytynyt tai listaa ei voitu ladata.",
     "debugActiveId": "Debug: Nykyinen aktiivinen ID on $id",
     "returnToWelcome": "Palaa alkunäkymään",
-    "flashcardOptions": "Flashcard-valinnat",
+    "flashcardOptions": "Muistikortti-valinnat",
     "showTermFirst": "Näytä termi ensin",
     "showDefFirst": "Näytä määritelmä ensin",
     "studyOptions": "Opi & Testaa -valinnat",
@@ -168,16 +168,17 @@
     "askForDef": "Näytä termi, kysy määritelmä",
     "studyLength": "Opiskelun pituus:",
     "testFormat": "Testin muoto",
+    "testOptions": "Testi-valinnat",
     "writtenAnswer": "Kirjallinen vastaus",
     "multipleChoice": "Monivalinta",
     "requireOnlyOneAnswer": "Hyväksy yksi pilkuilla erotettu vastaus",
     "requireOnlyOneAnswerSubtitle": "Jos oikea vastaus on 'a, b', 'a' hyväksytään",
     "ignoreBrackets": "Ohita hakasulkeissa oleva teksti",
     "ignoreBracketsSubtitle": "Ohittaa [] sisällä olevan tekstin vastauksia tarkistaessa (esim. ääntämisvihjeet)",
-    "flashcards": "Flashcardit",
+    "flashcards": "Muistikortit",
     "learn": "Opi",
     "test": "Testaa",
-    "match": "Pari",
+    "match": "Yhdistä",
     "backToWelcome": "Takaisin alkunäkymään",
     "errors": {
       "saveSettingFailed": "Asetuksen tallennus epäonnistui: $error"
@@ -199,15 +200,15 @@
     }
   },
   "flashcardScreen": {
-    "title": "Flashcardit",
-    "noCards": "Ei flashcardeja näytettäväksi.",
+    "title": "Muistikortit",
+    "noCards": "Ei muistikortteja näytettäväksi.",
     "noTerms": "Ei termejä opiskeltavaksi.",
     "shuffle": "Sekoita",
     "restart": "Käynnistä uudelleen"
   },
   "learnScreen": {
     "title": "Opi",
-    "restartSession": "Käynnistä opetussessio uudelleen",
+    "restartSession": "Käynnistä opiskelusessio uudelleen",
     "backToOptions": "Takaisin valintoihin",
     "preparing": "Valmistellaan seuraavaa kysymystä...",
     "answerHint": "Kirjoita vastauksesi tähän...",
@@ -237,9 +238,9 @@
     }
   },
   "matchScreen": {
-    "title": "Pari",
+    "title": "Yhdistä",
     "congratulations": "Onnittelut!",
-    "timeCompleted": "Suoritit ajassa $time sekuntia!",
+    "timeCompleted": "Suoritit $time sekunnissa!",
     "playAgain": "Pelaa uudelleen",
     "backToOptions": "Takaisin valintoihin",
     "leaderboard": {
@@ -250,7 +251,7 @@
       "rankOver100": ">100"
     },
     "errors": {
-      "noTerms": "Ei termejä Pari-tilaan.",
+      "noTerms": "Ei termejä Yhdistä-tilaan.",
       "notEnoughTerms": "Tarvitaan vähintään yksi termi/määritelmä -pari pelataksesi."
     }
   },
@@ -277,7 +278,7 @@
     "noAnswer": "(Ei vastausta)",
     "congratulations": "Onnittelut! Sait kaiken oikein!",
     "retryTest": "Yritä testi uudelleen",
-    "reviewFlashcards": "Kerrata flashcardeilla",
+    "reviewFlashcards": "Kertaa muistikorteilla",
     "backToWelcome": "Takaisin alkunäkymään",
     "history": {
       "title": "Testihistoria",
@@ -292,8 +293,8 @@
     "uiScaling": "Käyttöliittymän skaalaus",
     "uiScalingSubtitle": "Säädä tekstin ja käyttöliittymäelementtien kokoa",
     "study": "Opiskelu",
-    "disableFlashcardAnimations": "Poista flashcard-animaatiot käytöstä",
-    "disableFlashcardAnimationsSubtitle": "Poistaa kortin kääntö- ja siirtymäanimaatiot Flashcard-tilassa.",
+    "disableFlashcardAnimations": "Poista muistikorttianimaatiot käytöstä",
+    "disableFlashcardAnimationsSubtitle": "Poistaa kortin kääntö- ja siirtymäanimaatiot muistikorttitilassa.",
     "systemDefault": "Järjestelmän oletus",
     "light": "Vaalea",
     "dark": "Tumma",
@@ -373,8 +374,8 @@
   },
   "controlsScreen": {
     "title": "Ohjaus",
-    "gesturesTitle": "Liikkeet (Flashcardit)",
-    "keyboardTitle": "Näppäimistö (Flashcardit)",
+    "gesturesTitle": "Liikkeet (Muistikortit)",
+    "keyboardTitle": "Näppäimistö (Muistikortit)",
     "nextCard": "Seuraava kortti",
     "previousCard": "Edellinen kortti",
     "flipCard": "Käännä kortti",

@@ -168,6 +168,7 @@
     "askForDef": "Mostrar Término, Preguntar Definición",
     "studyLength": "Duración del Estudio:",
     "testFormat": "Formato de Prueba",
+    "testOptions": "Opciones de Prueba",
     "writtenAnswer": "Respuesta Escrita",
     "multipleChoice": "Opción Múltiple",
     "requireOnlyOneAnswer": "Aceptar una respuesta separada por comas",

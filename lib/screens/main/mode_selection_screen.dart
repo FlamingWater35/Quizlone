@@ -439,15 +439,11 @@ class _OptionsPanelState extends ConsumerState<_OptionsPanel> {
             ),
             SwitchListTile(
               title: Text(t.modeSelectionScreen.ignoreBrackets),
-              subtitle: Text(
-                t.modeSelectionScreen.ignoreBracketsSubtitle,
-              ),
+              subtitle: Text(t.modeSelectionScreen.ignoreBracketsSubtitle),
               value: ignoreBrackets,
               onChanged: (value) {
                 _handleSettingChange(
-                  () => ref
-                      .read(ignoreBracketsProvider.notifier)
-                      .set(value),
+                  () => ref.read(ignoreBracketsProvider.notifier).set(value),
                 );
               },
               shape: RoundedRectangleBorder(
@@ -496,7 +492,7 @@ class _OptionsPanelState extends ConsumerState<_OptionsPanel> {
         ),
         const SizedBox(height: 8),
         _SettingsCard(
-          title: "${t.modeSelectionScreen.test} Options",
+          title: t.modeSelectionScreen.testOptions,
           children: [
             IntrinsicHeight(
               child: Row(

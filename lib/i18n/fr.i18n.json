@@ -168,6 +168,7 @@
     "askForDef": "Montrer le Terme, Demander la Définition",
     "studyLength": "Durée de l'étude :",
     "testFormat": "Format du Test",
+    "testOptions": "Options de Test",
     "writtenAnswer": "Réponse Écrite",
     "multipleChoice": "Choix Multiple",
     "requireOnlyOneAnswer": "Accepter une réponse séparée par des virgules",

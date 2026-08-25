@@ -168,6 +168,7 @@
     "askForDef": "Show Term, Ask for Definition",
     "studyLength": "Study Length:",
     "testFormat": "Test Format",
+    "testOptions": "Test Options",
     "writtenAnswer": "Written Answer",
     "multipleChoice": "Multiple Choice",
     "requireOnlyOneAnswer": "Accept one comma-separated answer",
