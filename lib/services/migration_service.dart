@@ -1,6 +1,7 @@
 import 'package:hive_ce/hive.dart';
 import 'package:logging/logging.dart';
 import 'package:quizlone/models/match_record.dart';
+import 'package:quizlone/models/settings_app_data.dart';
 
 import '../models/study_list.dart';
 
@@ -138,4 +139,34 @@ Future<void> _migrateV1215() async {
   } catch (e, s) {
     _log.severe("Error during migration '$_migrationKeyV1215'", e, s);
   }
+}
+
+/// Converts legacy MatchRecord studyListId strings (names) to UUIDs using the provided study lists.
+/// This is critical for cloud sync and imports, where data might bypass local startup migrations.
+List<MatchRecord> normalizeMatchRecords(List<MatchRecord> records, List<StudyList> lists) {
+  final nameToIdMap = <String, String>{};
+  for (var list in lists) {
+    if (list.name.isNotEmpty) {
+      nameToIdMap[list.name] = list.id;
+    }
+  }
+
+  return records.map((record) {
+    if (nameToIdMap.containsKey(record.studyListId)) {
+      return MatchRecord(
+        studyListId: nameToIdMap[record.studyListId]!,
+        timeInTenths: record.timeInTenths,
+        createdAt: record.createdAt,
+      );
+    }
+    return record;
+  }).toList();
+}
+
+/// Normalizes an AppData object to ensure all legacy data conforms to the current schema.
+AppData normalizeAppData(AppData data, List<StudyList> localLists) {
+  final combinedLists = [...localLists, ...data.studyLists];
+  final normalizedRecords = normalizeMatchRecords(data.matchRecords, combinedLists);
+
+  return data.copyWith(matchRecords: normalizedRecords);
 }

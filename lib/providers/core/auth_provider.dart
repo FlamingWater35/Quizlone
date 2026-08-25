@@ -15,6 +15,7 @@ import '/models/study_list.dart';
 import '/providers/core/core_providers.dart';
 import '/providers/study/study_list_providers.dart';
 import '../../models/match_record.dart';
+import '../../services/migration_service.dart';
 import 'connectivity_provider.dart';
 
 part 'auth_provider.g.dart';
@@ -313,13 +314,17 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
       final cloudResponse = await cloudSyncService.getCloudData();
       if (!ref.mounted) return;
 
-      final cloudData = cloudResponse.data;
+      var cloudData = cloudResponse.data;
       final cloudTimestamp = cloudResponse.timestamp;
 
       final localLists = await dbService.getAllStudyLists();
       final localRecords = await dbService.getAllMatchRecords();
       final localGroups = await dbService.getAllStudyGroups();
       final localTimestamp = dbService.getLastSyncTimestamp();
+
+      if (cloudData != null) {
+        cloudData = normalizeAppData(cloudData, localLists);
+      }
 
       final hasLocalData =
           localLists.isNotEmpty ||

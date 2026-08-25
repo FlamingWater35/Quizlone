@@ -23,18 +23,21 @@ class StudyList {
       _$StudyListFromJson(json);
 
   @HiveField(10, defaultValue: false)
+  @JsonKey(defaultValue: false)
   bool allowAnswerSubstring = false;
 
   @HiveField(2)
   DateTime createdAt;
 
   @HiveField(4)
+  @JsonKey(defaultValue: true)
   bool flashcardShowTermFirst = true;
 
   @HiveField(11)
   String? groupId;
 
   @HiveField(12, defaultValue: true)
+  @JsonKey(defaultValue: true)
   bool ignoreBrackets = true;
 
   @HiveField(9)
@@ -50,6 +53,7 @@ class StudyList {
   String name;
 
   @HiveField(5)
+  @JsonKey(defaultValue: true)
   bool studyShowDefinitionAskTerm = true;
 
   @HiveField(1)

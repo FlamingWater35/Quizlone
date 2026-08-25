@@ -133,28 +133,31 @@ class DatabaseService {
   /// Critical for resolving sync conflicts and ensuring cross-device consistency.
   Future<void> applyCloudData(AppData data) async {
     try {
+      final localLists = await getAllStudyLists();
+      final normalizedData = normalizeAppData(data, localLists);
+
       final oldListKeys = _studyListBox.keys.toSet();
       final oldGroupKeys = _studyGroupBox.keys.toSet();
       final oldTestKeys = _testRecordsBox.keys.toSet();
 
-      if (data.studyGroups.isNotEmpty) {
-        final groupMap = {for (var g in data.studyGroups) g.id: g};
+      if (normalizedData.studyGroups.isNotEmpty) {
+        final groupMap = {for (var g in normalizedData.studyGroups) g.id: g};
         await _studyGroupBox.putAll(groupMap);
         oldGroupKeys.removeAll(groupMap.keys);
       }
-      if (data.studyLists.isNotEmpty) {
-        final listMap = {for (var l in data.studyLists) l.id: l};
+      if (normalizedData.studyLists.isNotEmpty) {
+        final listMap = {for (var l in normalizedData.studyLists) l.id: l};
         await _studyListBox.putAll(listMap);
         oldListKeys.removeAll(listMap.keys);
       }
-      if (data.testRecords.isNotEmpty) {
-        final testMap = {for (var t in data.testRecords) t.id: t};
+      if (normalizedData.testRecords.isNotEmpty) {
+        final testMap = {for (var t in normalizedData.testRecords) t.id: t};
         await _testRecordsBox.putAll(testMap);
         oldTestKeys.removeAll(testMap.keys);
       }
 
       await _matchRecordsBox.clear();
-      await _matchRecordsBox.addAll(data.matchRecords);
+      await _matchRecordsBox.addAll(normalizedData.matchRecords);
 
       if (oldGroupKeys.isNotEmpty) await _studyGroupBox.deleteAll(oldGroupKeys);
       if (oldListKeys.isNotEmpty) await _studyListBox.deleteAll(oldListKeys);
