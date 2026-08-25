@@ -173,6 +173,8 @@
     "multipleChoice": "Choix Multiple",
     "requireOnlyOneAnswer": "Accepter une réponse séparée par des virgules",
     "requireOnlyOneAnswerSubtitle": "Si la bonne réponse est 'a, b', 'a' est accepté",
+    "ignoreBrackets": "Ignorer le texte entre crochets",
+    "ignoreBracketsSubtitle": "Ignore le texte dans [] lors de la validation des réponses (ex. astuces de prononciation)",
     "flashcards": "Flashcards",
     "learn": "Apprendre",
     "test": "Tester",

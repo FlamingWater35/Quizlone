@@ -173,6 +173,8 @@
     "multipleChoice": "Multiple Choice",
     "requireOnlyOneAnswer": "Akzeptiere eine kommagetrennte Antwort",
     "requireOnlyOneAnswerSubtitle": "Wenn richtige Antwort 'a, b' ist, wird 'a' akzeptiert",
+    "ignoreBrackets": "Text in Klammern ignorieren",
+    "ignoreBracketsSubtitle": "Ignoriert Text in [] bei der Antwortvalidierung (z.B. Aussprachehinweise)",
     "flashcards": "Karteikarten",
     "learn": "Lernen",
     "test": "Testen",

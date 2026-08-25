@@ -148,17 +148,29 @@ class TestController extends _$TestController {
     if (activeListId == null) return;
 
     final allowSubstring = ref.read(allowAnswerSubstringProvider);
+    final ignoreBrackets = ref.read(ignoreBracketsProvider);
+
+    String processAnswer(String ans) {
+      if (ignoreBrackets) {
+        ans = ans.replaceAll(RegExp(r'\[[\s\S]*?\]'), '').trim();
+      }
+      return ans;
+    }
+
     List<TestQuestion> gradedQuestions = [];
     List<TestAnswerRecord> answerRecords = [];
 
     for (var q in currentState.questions) {
       bool correct = false;
-      final userAnswer = q.userAnswerText?.trim() ?? "";
-      final correctAnswer = q.correctAnswerText.trim();
+      final rawUserAnswer = q.userAnswerText?.trim() ?? "";
+      final rawCorrectAnswer = q.correctAnswerText.trim();
+
+      final userAnswer = processAnswer(rawUserAnswer).toLowerCase();
+      final correctAnswer = processAnswer(rawCorrectAnswer).toLowerCase();
 
       if (userAnswer.isNotEmpty) {
-        final uaLower = userAnswer.toLowerCase();
-        final caLower = correctAnswer.toLowerCase();
+        final uaLower = userAnswer;
+        final caLower = correctAnswer;
 
         // Supports comma-separated accepted answers for flexible grading.
         if (allowSubstring && caLower.contains(',')) {

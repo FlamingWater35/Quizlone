@@ -34,6 +34,9 @@ class StudyList {
   @HiveField(11)
   String? groupId;
 
+  @HiveField(12, defaultValue: true)
+  bool ignoreBrackets = true;
+
   @HiveField(9)
   String id;
 
@@ -85,6 +88,7 @@ class StudyList {
     TestFormat? testFormat,
     bool? allowAnswerSubstring,
     String? groupId,
+    bool? ignoreBrackets,
   }) {
     final newList =
         StudyList(
@@ -103,7 +107,8 @@ class StudyList {
           ..testFormat = testFormat ?? this.testFormat
           ..allowAnswerSubstring =
               allowAnswerSubstring ?? this.allowAnswerSubstring
-          ..groupId = groupId ?? this.groupId;
+          ..groupId = groupId ?? this.groupId
+          ..ignoreBrackets = ignoreBrackets ?? this.ignoreBrackets;
     return newList;
   }
 }

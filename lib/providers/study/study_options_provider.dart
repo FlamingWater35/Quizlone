@@ -256,6 +256,55 @@ class StudyLength extends _$StudyLength {
 }
 
 @riverpod
+class IgnoreBrackets extends _$IgnoreBrackets {
+  Future<void> set(bool isEnabled) async {
+    final activeList = ref.read(activeStudyListProvider).asData?.value;
+    final dbService = ref.read(databaseServiceProvider);
+    if (activeList != null) {
+      final previousState = state;
+      state = isEnabled;
+      activeList.ignoreBrackets = isEnabled;
+      try {
+        await _updateListOptionInHive(dbService, activeList);
+      } catch (e, s) {
+        if (!ref.mounted) return;
+        state = previousState;
+        _log.severe(
+          "[IgnoreBrackets] Error during save for ${activeList.name}",
+          e,
+          s,
+        );
+        rethrow;
+      }
+    } else {
+      state = isEnabled;
+    }
+  }
+
+  @override
+  bool build() {
+    final activeListAsyncValue = ref.watch(activeStudyListProvider);
+    return activeListAsyncValue.when(
+      data: (activeList) {
+        if (activeList != null) {
+          return activeList.ignoreBrackets;
+        }
+        return true;
+      },
+      loading: () => stateOrNull ?? true,
+      error: (err, stack) {
+        _log.warning(
+          "[IgnoreBrackets] Error in activeStudyListProvider. Defaulting to true.",
+          err,
+          stack,
+        );
+        return true;
+      },
+    );
+  }
+}
+
+@riverpod
 class AllowAnswerSubstring extends _$AllowAnswerSubstring {
   Future<void> set(bool isEnabled) async {
     final activeList = ref.read(activeStudyListProvider).asData?.value;

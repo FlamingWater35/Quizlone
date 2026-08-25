@@ -157,9 +157,18 @@ class LearnController extends _$LearnController {
     }
 
     final questionState = currentVal.currentQuestion!;
-    final userAnswer = questionState.userAnswer.trim().toLowerCase();
-    final correctAnswer = questionState.expectedAnswer.trim().toLowerCase();
     final allowSubstring = ref.read(allowAnswerSubstringProvider);
+    final ignoreBrackets = ref.read(ignoreBracketsProvider);
+
+    String processAnswer(String ans) {
+      if (ignoreBrackets) {
+        ans = ans.replaceAll(RegExp(r'\[[\s\S]*?\]'), '').trim();
+      }
+      return ans;
+    }
+
+    final userAnswer = processAnswer(questionState.userAnswer.trim().toLowerCase());
+    final correctAnswer = processAnswer(questionState.expectedAnswer.trim().toLowerCase());
 
     bool isCorrect;
     if (allowSubstring && correctAnswer.contains(',')) {

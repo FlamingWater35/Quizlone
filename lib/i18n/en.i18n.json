@@ -173,6 +173,8 @@
     "multipleChoice": "Multiple Choice",
     "requireOnlyOneAnswer": "Accept one comma-separated answer",
     "requireOnlyOneAnswerSubtitle": "If correct answer is 'a, b', 'a' is accepted",
+    "ignoreBrackets": "Ignore bracketed text",
+    "ignoreBracketsSubtitle": "Ignores text inside [] when validating answers (e.g. speaking tips)",
     "flashcards": "Flashcards",
     "learn": "Learn",
     "test": "Test",

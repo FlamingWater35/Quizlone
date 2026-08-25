@@ -185,6 +185,8 @@
     "multipleChoice": "Множественный выбор",
     "requireOnlyOneAnswer": "Принимать один ответ через запятую",
     "requireOnlyOneAnswerSubtitle": "Если правильный ответ 'a, b', 'a' принимается",
+    "ignoreBrackets": "Игнорировать текст в скобках",
+    "ignoreBracketsSubtitle": "Игнорирует текст в [] при проверке ответов (например, подсказки по произношению)",
     "flashcards": "Карточки",
     "learn": "Изучать",
     "test": "Тест",

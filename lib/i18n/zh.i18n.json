@@ -173,6 +173,8 @@
     "multipleChoice": "多项选择",
     "requireOnlyOneAnswer": "接受一个逗号分隔的答案",
     "requireOnlyOneAnswerSubtitle": "如果正确答案是 'a, b'，则 'a' 被接受",
+    "ignoreBrackets": "忽略括号内的文本",
+    "ignoreBracketsSubtitle": "在验证答案时忽略 [] 内的文本（例如发音提示）",
     "flashcards": "闪卡",
     "learn": "学习",
     "test": "测试",

@@ -173,6 +173,8 @@
     "multipleChoice": "多肢選択",
     "requireOnlyOneAnswer": "カンマ区切りの1つの回答を受け入れる",
     "requireOnlyOneAnswerSubtitle": "正しい答えが 'a, b' の場合、'a' が受け入れられます",
+    "ignoreBrackets": "括弧内のテキストを無視",
+    "ignoreBracketsSubtitle": "回答の検証時に [] 内のテキストを無視します（例：発音のコツ）",
     "flashcards": "フラッシュカード",
     "learn": "学習",
     "test": "テスト",

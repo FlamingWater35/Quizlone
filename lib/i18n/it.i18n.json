@@ -173,6 +173,8 @@
     "multipleChoice": "Scelta Multipla",
     "requireOnlyOneAnswer": "Accetta una risposta separata da virgole",
     "requireOnlyOneAnswerSubtitle": "Se la risposta corretta è 'a, b', 'a' è accettata",
+    "ignoreBrackets": "Ignora testo tra parentesi quadre",
+    "ignoreBracketsSubtitle": "Ignora il testo tra [] durante la convalida delle risposte (es. suggerimenti di pronuncia)",
     "flashcards": "Flashcard",
     "learn": "Studia",
     "test": "Test",

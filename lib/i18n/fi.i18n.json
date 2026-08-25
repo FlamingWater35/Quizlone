@@ -173,6 +173,8 @@
     "multipleChoice": "Monivalinta",
     "requireOnlyOneAnswer": "Hyväksy yksi pilkuilla erotettu vastaus",
     "requireOnlyOneAnswerSubtitle": "Jos oikea vastaus on 'a, b', 'a' hyväksytään",
+    "ignoreBrackets": "Ohita hakasulkeissa oleva teksti",
+    "ignoreBracketsSubtitle": "Ohittaa [] sisällä olevan tekstin vastauksia tarkistaessa (esim. ääntämisvihjeet)",
     "flashcards": "Flashcardit",
     "learn": "Opi",
     "test": "Testaa",

@@ -173,6 +173,8 @@
     "multipleChoice": "Flerval",
     "requireOnlyOneAnswer": "Acceptera ett kommaavseparat svar",
     "requireOnlyOneAnswerSubtitle": "Om rätt svar är 'a, b', accepteras 'a'",
+    "ignoreBrackets": "Ignorera text inom klamrar",
+    "ignoreBracketsSubtitle": "Ignorerar text inom [] vid validering av svar (t.ex. uttaltips)",
     "flashcards": "Flashcards",
     "learn": "Lära",
     "test": "Testa",

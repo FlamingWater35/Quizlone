@@ -339,6 +339,7 @@ class _OptionsPanelState extends ConsumerState<_OptionsPanel> {
     final fcStartWith = ref.watch(flashcardStartWithProvider);
     final studyAskWith = ref.watch(studyAskWithProvider);
     final allowSubstring = ref.watch(allowAnswerSubstringProvider);
+    final ignoreBrackets = ref.watch(ignoreBracketsProvider);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -419,6 +420,25 @@ class _OptionsPanelState extends ConsumerState<_OptionsPanel> {
                 _handleSettingChange(
                   () => ref
                       .read(allowAnswerSubstringProvider.notifier)
+                      .set(value),
+                );
+              },
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.0),
+              ),
+              contentPadding: const EdgeInsets.only(left: 16, right: 8),
+              dense: true,
+            ),
+            SwitchListTile(
+              title: Text(t.modeSelectionScreen.ignoreBrackets),
+              subtitle: Text(
+                t.modeSelectionScreen.ignoreBracketsSubtitle,
+              ),
+              value: ignoreBrackets,
+              onChanged: (value) {
+                _handleSettingChange(
+                  () => ref
+                      .read(ignoreBracketsProvider.notifier)
                       .set(value),
                 );
               },

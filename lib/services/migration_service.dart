@@ -12,6 +12,7 @@ Future<void> runMigrations() async {
   await _migrateV112();
   await _migrateV1117();
   await _migrateV124();
+  await _migrateV1215();
 }
 
 const _migrationKeyV112 = 'migration_v1.1.2_add_allow_substring';
@@ -112,5 +113,29 @@ Future<void> _migrateV124() async {
     );
   } catch (e, s) {
     _log.severe("Error during migration '$_migrationKeyV1118'", e, s);
+  }
+}
+
+const _migrationKeyV1215 = 'migration_v1.2.15_add_ignore_brackets';
+
+/// Migrates existing StudyList objects to include the new `ignoreBrackets` field.
+/// Re-saving forces Hive to apply the new default values for missing fields.
+Future<void> _migrateV1215() async {
+  final settingsBox = Hive.box('settingsBox');
+  if (settingsBox.get(_migrationKeyV1215) == true) return;
+  _log.info("Running migration: '$_migrationKeyV1215'...");
+  try {
+    final studyListBox = Hive.box<StudyList>('studyListsBox');
+    final Map<dynamic, StudyList> allLists = Map.from(studyListBox.toMap());
+    if (allLists.isNotEmpty) {
+      for (var entry in allLists.entries) {
+        await studyListBox.put(entry.key, entry.value);
+      }
+      _log.info("Successfully migrated ${allLists.length} study lists.");
+    }
+    await settingsBox.put(_migrationKeyV1215, true);
+    _log.info("Migration '$_migrationKeyV1215' completed and flag set.");
+  } catch (e, s) {
+    _log.severe("Error during migration '$_migrationKeyV1215'", e, s);
   }
 }
