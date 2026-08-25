@@ -312,3 +312,26 @@ class ScrollDurationNotifier extends _$ScrollDurationNotifier {
     return duration;
   }
 }
+
+@riverpod
+class DisableFlashcardAnimations extends _$DisableFlashcardAnimations {
+  Future<void> toggle(bool disabled) async {
+    _log.fine("[DisableFlashcardAnimations] Setting disabled to $disabled");
+    await ref
+        .read(databaseServiceProvider)
+        .saveFlashcardAnimationsDisabled(disabled);
+    if (!ref.mounted) return;
+    state = disabled;
+  }
+
+  @override
+  bool build() {
+    final disabled = ref
+        .watch(databaseServiceProvider)
+        .getFlashcardAnimationsDisabled();
+    _log.fine(
+      "[DisableFlashcardAnimations] Initializing with disabled: $disabled",
+    );
+    return disabled;
+  }
+}

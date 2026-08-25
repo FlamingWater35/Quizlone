@@ -176,19 +176,27 @@ class _WideLayoutState extends State<_WideLayout> {
         children: [
           Expanded(
             flex: 2,
-            child: SmoothSingleChildScrollView(
+            child: Scrollbar(
               controller: _actionScrollController,
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: _ActionPanel(list: widget.list, isWide: true),
+              thumbVisibility: true,
+              child: SmoothSingleChildScrollView(
+                controller: _actionScrollController,
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: _ActionPanel(list: widget.list, isWide: true),
+              ),
             ),
           ),
           const SizedBox(width: 24),
           Expanded(
             flex: 3,
-            child: SmoothSingleChildScrollView(
+            child: Scrollbar(
               controller: widget.controller,
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: const _OptionsPanel(),
+              thumbVisibility: true,
+              child: SmoothSingleChildScrollView(
+                controller: widget.controller,
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: const _OptionsPanel(),
+              ),
             ),
           ),
         ],

@@ -37,6 +37,8 @@ class DatabaseService {
   static const String _smoothScrollKey = 'smoothScrollEnabled';
   static const String _scrollSpeedKey = 'scrollSpeed';
   static const String _scrollDurationKey = 'scrollDuration';
+  static const String _flashcardAnimationsDisabledKey =
+      'flashcardAnimationsDisabled';
 
   static late Box<StudyGroup> _studyGroupBox;
   static const String _studyGroupBoxName = 'studyGroupsBox';
@@ -569,6 +571,28 @@ class DatabaseService {
     } catch (e, s) {
       _log.severe("Failed to read scroll duration", e, s);
       return 1400;
+    }
+  }
+
+  /// Persists whether flashcard flip/transition animations are disabled.
+  Future<void> saveFlashcardAnimationsDisabled(bool disabled) async {
+    try {
+      await _settingsBox.put(_flashcardAnimationsDisabledKey, disabled);
+    } catch (e, s) {
+      _log.severe("Failed to save flashcard animations setting", e, s);
+    }
+  }
+
+  /// Returns true when the user has disabled flashcard animations.
+  bool getFlashcardAnimationsDisabled() {
+    try {
+      return _settingsBox.get(
+        _flashcardAnimationsDisabledKey,
+        defaultValue: false,
+      );
+    } catch (e, s) {
+      _log.severe("Failed to read flashcard animations setting", e, s);
+      return false;
     }
   }
 

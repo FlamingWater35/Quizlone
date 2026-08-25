@@ -89,6 +89,11 @@ const int maxMatchPairs = 10;
 
 @riverpod
 class MatchController extends _$MatchController {
+  static const int _mismatchPenaltyMs = 1000;
+
+  /// Accumulated time penalty (in ms) for clicked wrong pairs.
+  int _penaltyMs = 0;
+
   final Stopwatch _stopwatch = Stopwatch();
   Timer? _timer;
 
@@ -127,7 +132,8 @@ class MatchController extends _$MatchController {
           if (listId != null) {
             newRecord = MatchRecord(
               studyListId: listId,
-              timeInTenths: _stopwatch.elapsedMilliseconds ~/ 100,
+              timeInTenths:
+                  (_stopwatch.elapsedMilliseconds + _penaltyMs) ~/ 100,
               createdAt: DateTime.now(),
             );
           }
@@ -152,7 +158,9 @@ class MatchController extends _$MatchController {
           }
         }
       } else {
-        // Briefly highlight incorrect pair before resetting selection.
+        // Briefly highlight incorrect pair before resetting selection,
+        // and apply a +1 second time penalty for the mistake.
+        _penaltyMs += _mismatchPenaltyMs;
         final incorrectIds = {currentSelection.uniqueId, item.uniqueId};
         state = AsyncData(
           currentState.copyWith(
@@ -198,6 +206,7 @@ class MatchController extends _$MatchController {
   void _initializeAndStartTimer() {
     final timerNotifier = ref.read(matchTimerProvider.notifier);
     timerNotifier.set("0.0");
+    _penaltyMs = 0;
     _stopwatch
       ..reset()
       ..start();
@@ -205,8 +214,9 @@ class MatchController extends _$MatchController {
     _timer?.cancel();
     _timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
       if (ref.mounted && state.value?.isComplete == false) {
-        final timeString = (_stopwatch.elapsedMilliseconds / 1000)
-            .toStringAsFixed(1);
+        final timeString =
+            ((_stopwatch.elapsedMilliseconds + _penaltyMs) / 1000)
+                .toStringAsFixed(1);
         ref.read(matchTimerProvider.notifier).set(timeString);
       } else {
         timer.cancel();

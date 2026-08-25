@@ -333,6 +333,15 @@ class FakeDatabaseService implements DatabaseService {
   int getScrollDuration() => settings['scrollDuration'] as int? ?? 1400;
 
   @override
+  Future<void> saveFlashcardAnimationsDisabled(bool disabled) async {
+    settings['flashcardAnimationsDisabled'] = disabled;
+  }
+
+  @override
+  bool getFlashcardAnimationsDisabled() =>
+      settings['flashcardAnimationsDisabled'] as bool? ?? false;
+
+  @override
   Future<void> saveActiveListId(String? id) async {
     if (id == null) {
       settings.remove('activeListId');

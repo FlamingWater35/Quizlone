@@ -12,6 +12,7 @@ import 'package:quizlone/services/smooth_scroll.dart';
 import 'package:quizlone/widgets/web_aware_back_button.dart';
 
 import '../../providers/controllers/flashcard_controller.dart';
+import '../../providers/core/settings_provider.dart';
 import '../../providers/study/study_list_providers.dart';
 import '../../widgets/centered_view.dart';
 import '../../widgets/flashcard_widget.dart';
@@ -162,6 +163,7 @@ class _FlashcardViewState extends ConsumerState<_FlashcardView>
     BuildContext context,
     FlashcardController notifier,
     FlashcardScreenState state,
+    bool disableAnimations,
   ) {
     final t = Translations.of(context);
     final bool canGoPrev = state.currentIndex > 0;
@@ -202,6 +204,10 @@ class _FlashcardViewState extends ConsumerState<_FlashcardView>
               icon: const Icon(Icons.shuffle),
               tooltip: t.flashcardScreen.shuffle,
               onPressed: () async {
+                if (disableAnimations) {
+                  notifier.shuffleCards();
+                  return;
+                }
                 await _shuffleController.forward(from: 0.0);
                 if (mounted) {
                   notifier.shuffleCards();
@@ -214,6 +220,10 @@ class _FlashcardViewState extends ConsumerState<_FlashcardView>
               icon: const Icon(Icons.restart_alt),
               tooltip: t.flashcardScreen.restart,
               onPressed: () async {
+                if (disableAnimations) {
+                  notifier.restart();
+                  return;
+                }
                 await _restartController.forward(from: 0.0);
                 if (mounted) {
                   notifier.restart();
@@ -231,6 +241,7 @@ class _FlashcardViewState extends ConsumerState<_FlashcardView>
   Widget build(BuildContext context) {
     final flashcardStateAsync = ref.watch(flashcardControllerProvider);
     final flashcardNotifier = ref.read(flashcardControllerProvider.notifier);
+    final disableAnimations = ref.watch(disableFlashcardAnimationsProvider);
     final t = Translations.of(context);
 
     // Track direction of index change to animate slide transition correctly.
@@ -376,7 +387,9 @@ class _FlashcardViewState extends ConsumerState<_FlashcardView>
                         );
                       },
                       child: AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 400),
+                        duration: disableAnimations
+                            ? Duration.zero
+                            : const Duration(milliseconds: 400),
                         transitionBuilder:
                             (Widget child, Animation<double> animation) {
                               final curvedAnimation = CurvedAnimation(
@@ -412,12 +425,13 @@ class _FlashcardViewState extends ConsumerState<_FlashcardView>
                           onTap: flashcardNotifier.flipCard,
                           startSide: state.startSide,
                           height: 300,
+                          disableAnimations: disableAnimations,
                         ),
                       ),
                     ),
                   ),
                   const SizedBox(height: 24),
-                  _buildNavigationControls(context, flashcardNotifier, state),
+                  _buildNavigationControls(context, flashcardNotifier, state, disableAnimations),
                 ],
               ),
             ),

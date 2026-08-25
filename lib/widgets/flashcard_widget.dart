@@ -12,8 +12,10 @@ class FlashcardWidget extends StatefulWidget {
     required this.onTap,
     required this.startSide,
     this.height = 300.0,
+    this.disableAnimations = false,
   });
 
+  final bool disableAnimations;
   final double height;
   final bool isFlipped;
   final VoidCallback onTap;
@@ -35,7 +37,9 @@ class _FlashcardWidgetState extends State<FlashcardWidget>
   void didUpdateWidget(FlashcardWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.isFlipped != oldWidget.isFlipped) {
-      if (widget.isFlipped) {
+      if (widget.disableAnimations) {
+        _controller.value = widget.isFlipped ? 1.0 : 0.0;
+      } else if (widget.isFlipped) {
         _controller.forward();
       } else {
         _controller.reverse();

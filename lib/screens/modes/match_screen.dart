@@ -114,14 +114,27 @@ class _TimerDisplay extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final timeString = ref.watch(matchTimerProvider);
+    // Turn the timer red while a wrong pair is highlighted (penalty feedback).
+    final isPenalized = ref.watch(
+      matchControllerProvider.select(
+        (state) => state.value?.incorrectPair.isNotEmpty ?? false,
+      ),
+    );
+    final theme = Theme.of(context);
+    final penaltyColor = isPenalized ? theme.colorScheme.error : null;
     return Padding(
       padding: const EdgeInsets.all(12.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.timer_outlined, size: 20),
+          Icon(Icons.timer_outlined, size: 20, color: penaltyColor),
           const SizedBox(width: 8),
-          Text(timeString, style: Theme.of(context).textTheme.titleLarge),
+          Text(
+            timeString,
+            style: theme.textTheme.titleLarge?.copyWith(
+              color: penaltyColor,
+            ),
+          ),
         ],
       ),
     );

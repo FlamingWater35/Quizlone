@@ -334,6 +334,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     final uiScale = ref.watch(uiScaleProvider);
     final uiScaleNotifier = ref.read(uiScaleProvider.notifier);
     final smoothScrollEnabled = ref.watch(smoothScrollProvider);
+    final disableFlashcardAnimations = ref.watch(
+      disableFlashcardAnimationsProvider,
+    );
     final colorScheme = Theme.of(context).colorScheme;
     final t = Translations.of(context);
 
@@ -438,6 +441,21 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         ),
                       ),
                     ],
+                  ),
+                ),
+                _SettingsHeader(title: t.settingsScreen.study),
+                Card(
+                  clipBehavior: Clip.antiAlias,
+                  child: SwitchListTile(
+                    title: Text(t.settingsScreen.disableFlashcardAnimations),
+                    subtitle: Text(
+                      t.settingsScreen.disableFlashcardAnimationsSubtitle,
+                    ),
+                    secondary: const Icon(Icons.animation),
+                    value: disableFlashcardAnimations,
+                    onChanged: (val) => ref
+                        .read(disableFlashcardAnimationsProvider.notifier)
+                        .toggle(val),
                   ),
                 ),
                 if (!kIsWeb &&
