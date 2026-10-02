@@ -16,7 +16,8 @@
     "all": "Tutti",
     "loading": "Caricamento...",
     "genericError": "Errore: $error",
-    "reset": "Ripristina"
+    "reset": "Ripristina",
+    "ok": "OK"
   },
   "drawer": {
     "settings": "Impostazioni",
@@ -292,6 +293,9 @@
     "languageDialogTitle": "Seleziona Lingua",
     "uiScaling": "Scala UI",
     "uiScalingSubtitle": "Regola la dimensione del testo e degli elementi dell'interfaccia",
+    "themeColor": "Colore del Tema",
+    "themeColorSubtitle": "Scegli il colore in evidenza usato in tutta l'app",
+    "themeColorDialog": "Scegli un Colore",
     "study": "Studio",
     "disableFlashcardAnimations": "Disattiva animazioni flashcard",
     "disableFlashcardAnimationsSubtitle": "Disattiva le animazioni di rotazione e transizione in modalità Flashcard.",

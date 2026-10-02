@@ -16,7 +16,8 @@
     "all": "Все",
     "loading": "Загрузка...",
     "genericError": "Ошибка: $error",
-    "reset": "Сбросить"
+    "reset": "Сбросить",
+    "ok": "ОК"
   },
   "drawer": {
     "settings": "Настройки",
@@ -306,6 +307,9 @@
     "languageDialogTitle": "Выберите язык",
     "uiScaling": "Масштаб интерфейса",
     "uiScalingSubtitle": "Настройте размер текста и элементов интерфейса",
+    "themeColor": "Цвет темы",
+    "themeColorSubtitle": "Выберите цвет акцента, используемый во всём приложении",
+    "themeColorDialog": "Выберите цвет",
     "study": "Изучение",
     "disableFlashcardAnimations": "Отключить анимации карточек",
     "disableFlashcardAnimationsSubtitle": "Отключает анимации переворота и переходов в режиме карточек.",

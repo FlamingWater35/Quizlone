@@ -16,7 +16,8 @@
     "all": "Alla",
     "loading": "Laddar...",
     "genericError": "Fel: $error",
-    "reset": "Återställ"
+    "reset": "Återställ",
+    "ok": "OK"
   },
   "drawer": {
     "settings": "Inställningar",
@@ -292,6 +293,9 @@
     "languageDialogTitle": "Välj Språk",
     "uiScaling": "UI-skalning",
     "uiScalingSubtitle": "Justera storleken på text och gränssnittselement",
+    "themeColor": "Temafärg",
+    "themeColorSubtitle": "Välj den accentfärg som används i hela appen",
+    "themeColorDialog": "Välj en färg",
     "study": "Studier",
     "disableFlashcardAnimations": "Inaktivera flashcard-animationer",
     "disableFlashcardAnimationsSubtitle": "Stänger av kortvändnings- och övergångsanimationer i Flashcard-läget.",

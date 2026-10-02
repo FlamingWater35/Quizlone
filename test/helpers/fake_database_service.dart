@@ -292,6 +292,14 @@ class FakeDatabaseService implements DatabaseService {
   @override
   String getTheme() => settings['theme'] as String? ?? 'system';
 
+  int? _seedColor;
+
+  @override
+  int? getSeedColor() => _seedColor;
+
+  @override
+  Future<void> saveSeedColor(int? argb) async => _seedColor = argb;
+
   @override
   Future<void> saveLanguage(String langCode) async {
     settings['language'] = langCode;

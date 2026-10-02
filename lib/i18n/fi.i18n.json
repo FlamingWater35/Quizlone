@@ -16,7 +16,8 @@
     "all": "Kaikki",
     "loading": "Ladataan...",
     "genericError": "Virhe: $error",
-    "reset": "Nollaa"
+    "reset": "Nollaa",
+    "ok": "OK"
   },
   "drawer": {
     "settings": "Asetukset",
@@ -292,6 +293,9 @@
     "languageDialogTitle": "Valitse kieli",
     "uiScaling": "Käyttöliittymän skaalaus",
     "uiScalingSubtitle": "Säädä tekstin ja käyttöliittymäelementtien kokoa",
+    "themeColor": "Teeman väri",
+    "themeColorSubtitle": "Valitse sovelluksessa käytettävä korostusväri",
+    "themeColorDialog": "Valitse väri",
     "study": "Opiskelu",
     "disableFlashcardAnimations": "Poista muistikorttianimaatiot käytöstä",
     "disableFlashcardAnimationsSubtitle": "Poistaa kortin kääntö- ja siirtymäanimaatiot muistikorttitilassa.",

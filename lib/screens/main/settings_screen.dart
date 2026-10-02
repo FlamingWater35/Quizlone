@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:auto_route/auto_route.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:file_saver/file_saver.dart';
+import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_file_dialog/flutter_file_dialog.dart';
@@ -27,6 +28,20 @@ import '../../providers/study/study_list_providers.dart';
 import '../../widgets/centered_view.dart';
 import '../modes/match_leaderboard_screen.dart';
 
+/// Top-level settings destinations. The visible set is dynamic:
+/// "Update" only exists on Android/desktop, "Account" only while signed in.
+enum _SettingsSection {
+  appearance(Icons.palette_outlined),
+  study(Icons.school_outlined),
+  update(Icons.system_update_outlined),
+  data(Icons.storage_outlined),
+  account(Icons.person_outline);
+
+  const _SettingsSection(this.icon);
+
+  final IconData icon;
+}
+
 @RoutePage()
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -36,13 +51,627 @@ class SettingsScreen extends ConsumerStatefulWidget {
 }
 
 class _SettingsScreenState extends ConsumerState<SettingsScreen> {
+  /// Above this width a persistent sidebar (NavigationRail) is shown;
+  /// below it the screen falls back to a scrollable chip bar.
+  static const double _wideBreakpoint = 680;
+
   final _scrollController = SmoothScrollController();
+  int _selectedIndex = 0;
 
   @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
   }
+
+  // -------------------------------------------------------------------
+  // Navigation
+  // -------------------------------------------------------------------
+
+  List<_SettingsSection> _availableSections({
+    required bool isSignedIn,
+    required bool showUpdates,
+  }) {
+    return [
+      _SettingsSection.appearance,
+      _SettingsSection.study,
+      if (showUpdates) _SettingsSection.update,
+      _SettingsSection.data,
+      if (isSignedIn) _SettingsSection.account,
+    ];
+  }
+
+  String _sectionLabel(_SettingsSection section, Translations t) {
+    return switch (section) {
+      _SettingsSection.appearance => t.settingsScreen.appearance,
+      _SettingsSection.study => t.settingsScreen.study,
+      _SettingsSection.update => t.settingsScreen.update,
+      _SettingsSection.data => t.settingsScreen.dataManagement,
+      _SettingsSection.account => t.settingsScreen.accountManagement,
+    };
+  }
+
+  void _selectSection(int index) {
+    setState(() => _selectedIndex = index);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && _scrollController.hasClients) {
+        _scrollController.jumpTo(0);
+      }
+    });
+  }
+
+  // -------------------------------------------------------------------
+  // Theme color picker (live preview, rollback on cancel)
+  // -------------------------------------------------------------------
+
+  Future<void> _showColorPickerDialog() async {
+    final t = Translations.of(context);
+    final theme = Theme.of(context);
+    final notifier = ref.read(seedColorProvider.notifier);
+    final int? original = ref.read(seedColorProvider);
+    Color selected = original == null ? defaultSeedColor : Color(original);
+
+    void applySeedColor(Color color) {
+      if (color.toARGB32() == defaultSeedColor.toARGB32()) {
+        notifier.set(null);
+      } else {
+        notifier.set(color.toARGB32());
+      }
+    }
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) {
+        return StatefulBuilder(
+          builder: (dialogContext, setDialogState) {
+            return AlertDialog(
+              title: Text(t.settingsScreen.themeColorDialog),
+              content: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 460),
+                child: SingleChildScrollView(
+                  child: ColorPicker(
+                    color: selected,
+                    onColorChanged: (color) {
+                      setDialogState(() => selected = color);
+                      applySeedColor(color); // Live preview.
+                    },
+                    pickersEnabled: const <ColorPickerType, bool>{
+                      ColorPickerType.primary: true,
+                      ColorPickerType.accent: true,
+                      ColorPickerType.bw: false,
+                      ColorPickerType.custom: false,
+                      ColorPickerType.wheel: true,
+                    },
+                    enableShadesSelection: true,
+                    heading: Text(
+                      t.settingsScreen.themeColor,
+                      style: theme.textTheme.titleMedium,
+                    ),
+                    subheading: Text(
+                      t.settingsScreen.themeColorSubtitle,
+                      style: theme.textTheme.bodySmall,
+                    ),
+                    width: 36,
+                    height: 36,
+                    spacing: 6,
+                    runSpacing: 6,
+                  ),
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(dialogContext, false),
+                  child: Text(t.general.cancel),
+                ),
+                FilledButton(
+                  onPressed: () => Navigator.pop(dialogContext, true),
+                  child: Text(t.general.ok),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+
+    // Barrier dismiss or Cancel → roll the live preview back.
+    if (confirmed != true) {
+      await notifier.set(original);
+    }
+  }
+
+  // -------------------------------------------------------------------
+  // Layout
+  // -------------------------------------------------------------------
+
+  @override
+  Widget build(BuildContext context) {
+    final t = Translations.of(context);
+    final isSignedIn = ref.watch(authControllerProvider).value != null;
+    final bool showUpdates = !kIsWeb &&
+        (Platform.isAndroid ||
+            Platform.isWindows ||
+            Platform.isMacOS ||
+            Platform.isLinux);
+    final bool showExperimental =
+        kIsWeb ||
+        (!kIsWeb &&
+            (Platform.isWindows || Platform.isMacOS || Platform.isLinux));
+
+    final sections = _availableSections(
+      isSignedIn: isSignedIn,
+      showUpdates: showUpdates,
+    );
+    // Clamp in case the section list shrank (e.g. user signed out).
+    final selectedIndex = _selectedIndex.clamp(0, sections.length - 1);
+    final content = _animatedSection(
+      sections,
+      selectedIndex,
+      t,
+      showExperimental,
+    );
+
+    return Scaffold(
+      appBar: AppBar(
+        leading: const WebAwareBackButton(fallback: StartRoute()),
+        title: Text(t.settingsScreen.title),
+        centerTitle: true,
+      ),
+      body: SafeArea(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final bool isWide = constraints.maxWidth >= _wideBreakpoint;
+            return isWide
+                ? _wideLayout(sections, selectedIndex, t, content)
+                : _narrowLayout(sections, selectedIndex, t, content);
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _wideLayout(
+    List<_SettingsSection> sections,
+    int selectedIndex,
+    Translations t,
+    Widget content,
+  ) {
+    return Row(
+      children: [
+        NavigationRail(
+          selectedIndex: selectedIndex,
+          onDestinationSelected: _selectSection,
+          labelType: NavigationRailLabelType.all,
+          groupAlignment: -1.0,
+          destinations: [
+            for (final section in sections)
+              NavigationRailDestination(
+                icon: Icon(section.icon),
+                label: Text(_sectionLabel(section, t)),
+              ),
+          ],
+        ),
+        const VerticalDivider(thickness: 1, width: 1),
+        Expanded(child: content),
+      ],
+    );
+  }
+
+  Widget _narrowLayout(
+    List<_SettingsSection> sections,
+    int selectedIndex,
+    Translations t,
+    Widget content,
+  ) {
+    return Column(
+      children: [
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          child: Row(
+            children: [
+              for (int i = 0; i < sections.length; i++)
+                Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: ChoiceChip(
+                    avatar: Icon(sections[i].icon, size: 18),
+                    label: Text(_sectionLabel(sections[i], t)),
+                    selected: i == selectedIndex,
+                    onSelected: (_) => _selectSection(i),
+                  ),
+                ),
+            ],
+          ),
+        ),
+        const Divider(height: 1),
+        Expanded(child: content),
+      ],
+    );
+  }
+
+  Widget _animatedSection(
+    List<_SettingsSection> sections,
+    int selectedIndex,
+    Translations t,
+    bool showExperimental,
+  ) {
+    final section = sections[selectedIndex];
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 250),
+      switchInCurve: Curves.easeOutCubic,
+      switchOutCurve: Curves.easeInCubic,
+      transitionBuilder: (child, animation) =>
+          FadeTransition(opacity: animation, child: child),
+      child: CenteredView(
+        key: ValueKey(section),
+        child: SmoothSingleChildScrollView(
+          controller: _scrollController,
+          padding: const EdgeInsets.all(16.0),
+          child: _sectionContent(section, t, showExperimental),
+        ),
+      ),
+    );
+  }
+
+  Widget _sectionContent(
+    _SettingsSection section,
+    Translations t,
+    bool showExperimental,
+  ) {
+    return switch (section) {
+      _SettingsSection.appearance => _appearanceContent(t),
+      _SettingsSection.study =>
+        _studyContent(t, showExperimental: showExperimental),
+      _SettingsSection.update => _updateContent(t),
+      _SettingsSection.data => _dataContent(t),
+      _SettingsSection.account => _accountContent(t),
+    };
+  }
+
+  // -------------------------------------------------------------------
+  // Section content
+  // -------------------------------------------------------------------
+
+  Widget _appearanceContent(Translations t) {
+    final theme = Theme.of(context);
+    final currentTheme = ref.watch(appThemeProvider);
+    final themeNotifier = ref.read(appThemeProvider.notifier);
+    final currentLanguage = ref.watch(appLanguageProvider);
+    final uiScale = ref.watch(uiScaleProvider);
+    final uiScaleNotifier = ref.read(uiScaleProvider.notifier);
+    final seedArgb = ref.watch(seedColorProvider);
+    final seedNotifier = ref.read(seedColorProvider.notifier);
+    final activeSeedColor =
+        seedArgb == null ? defaultSeedColor : Color(seedArgb);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _SettingsHeader(title: t.settingsScreen.appearance),
+        Card(
+          clipBehavior: Clip.antiAlias,
+          child: RadioGroup<ThemeMode>(
+            groupValue: currentTheme,
+            onChanged: (value) => themeNotifier.setTheme(value!),
+            child: Column(
+              children: [
+                RadioListTile<ThemeMode>(
+                  title: Text(t.settingsScreen.systemDefault),
+                  value: ThemeMode.system,
+                ),
+                RadioListTile<ThemeMode>(
+                  title: Text(t.settingsScreen.light),
+                  value: ThemeMode.light,
+                ),
+                RadioListTile<ThemeMode>(
+                  title: Text(t.settingsScreen.dark),
+                  value: ThemeMode.dark,
+                ),
+              ],
+            ),
+          ),
+        ),
+        Card(
+          clipBehavior: Clip.antiAlias,
+          child: ListTile(
+            leading: const Icon(Icons.palette_outlined),
+            title: Text(t.settingsScreen.themeColor),
+            subtitle: Text(t.settingsScreen.themeColorSubtitle),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 26,
+                  height: 26,
+                  decoration: BoxDecoration(
+                    color: activeSeedColor,
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: theme.colorScheme.outlineVariant,
+                      width: 2,
+                    ),
+                  ),
+                ),
+                if (seedArgb != null)
+                  IconButton(
+                    icon: const Icon(Icons.restart_alt),
+                    tooltip: t.general.reset,
+                    onPressed: () => seedNotifier.set(null),
+                  ),
+              ],
+            ),
+            onTap: _showColorPickerDialog,
+          ),
+        ),
+        Card(
+          clipBehavior: Clip.antiAlias,
+          child: ListTile(
+            leading: const Icon(Icons.translate_outlined),
+            title: Text(t.settingsScreen.language),
+            subtitle: Text(currentLanguage.getDisplayName(t)),
+            trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 16),
+            onTap: () => _showLanguageMenu(context, ref),
+          ),
+        ),
+        Card(
+          clipBehavior: Clip.antiAlias,
+          child: Column(
+            children: [
+              ListTile(
+                leading: const Icon(Icons.format_size_outlined),
+                title: Text(t.settingsScreen.uiScaling),
+                subtitle: Text(t.settingsScreen.uiScalingSubtitle),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 8.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Slider(
+                        value: uiScale,
+                        min: 0.8,
+                        max: 1.5,
+                        divisions: 7,
+                        label: "${(uiScale * 100).toStringAsFixed(0)}%",
+                        onChanged: (value) => uiScaleNotifier.setScale(value),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 60,
+                      child: Text(
+                        "${(uiScale * 100).toStringAsFixed(0)}%",
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    OutlinedButton(
+                      onPressed: uiScale == 1.0
+                          ? null
+                          : () => uiScaleNotifier.setScale(1.0),
+                      child: Text(t.general.reset),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _studyContent(Translations t, {required bool showExperimental}) {
+    final disableFlashcardAnimations =
+        ref.watch(disableFlashcardAnimationsProvider);
+    final smoothScrollEnabled = ref.watch(smoothScrollProvider);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _SettingsHeader(title: t.settingsScreen.study),
+        Card(
+          clipBehavior: Clip.antiAlias,
+          child: SwitchListTile(
+            title: Text(t.settingsScreen.disableFlashcardAnimations),
+            subtitle: Text(t.settingsScreen.disableFlashcardAnimationsSubtitle),
+            secondary: const Icon(Icons.animation),
+            value: disableFlashcardAnimations,
+            onChanged: (val) => ref
+                .read(disableFlashcardAnimationsProvider.notifier)
+                .toggle(val),
+          ),
+        ),
+        if (showExperimental) ...[
+          _SettingsHeader(title: t.settingsScreen.experimental),
+          Card(
+            clipBehavior: Clip.antiAlias,
+            child: Column(
+              children: [
+                SwitchListTile(
+                  title: Text(t.settingsScreen.smoothScrolling),
+                  subtitle: Text(t.settingsScreen.smoothScrollingSubtitle),
+                  secondary: const Icon(Icons.mouse_outlined),
+                  value: smoothScrollEnabled,
+                  onChanged: (val) =>
+                      ref.read(smoothScrollProvider.notifier).toggle(val),
+                ),
+                if (smoothScrollEnabled) ...[
+                  const Divider(indent: 16, endIndent: 16),
+                  ListTile(
+                    leading: const Icon(Icons.speed_outlined),
+                    title: Text(t.settingsScreen.scrollSpeed),
+                    subtitle: Text(t.settingsScreen.scrollSpeedSubtitle),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 8.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Slider(
+                            value: ref.watch(scrollSpeedProvider),
+                            min: 0.5,
+                            max: 2.0,
+                            divisions: 15,
+                            label:
+                                "${ref.watch(scrollSpeedProvider).toStringAsFixed(1)}x",
+                            onChanged: (value) => ref
+                                .read(scrollSpeedProvider.notifier)
+                                .set(value),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 50,
+                          child: Text(
+                            "${ref.watch(scrollSpeedProvider).toStringAsFixed(1)}x",
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        OutlinedButton(
+                          onPressed: ref.watch(scrollSpeedProvider) == 1.1
+                              ? null
+                              : () => ref
+                                  .read(scrollSpeedProvider.notifier)
+                                  .set(1.1),
+                          child: Text(t.general.reset),
+                        ),
+                      ],
+                    ),
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.timer_outlined),
+                    title: Text(t.settingsScreen.scrollDuration),
+                    subtitle: Text(t.settingsScreen.scrollDurationSubtitle),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 8.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Slider(
+                            value:
+                                ref.watch(scrollDurationProvider).toDouble(),
+                            min: 400,
+                            max: 3000,
+                            divisions: 13,
+                            label: "${ref.watch(scrollDurationProvider)}ms",
+                            onChanged: (value) => ref
+                                .read(scrollDurationProvider.notifier)
+                                .set(value.round()),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 55,
+                          child: Text(
+                            "${ref.watch(scrollDurationProvider)}ms",
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        OutlinedButton(
+                          onPressed: ref.watch(scrollDurationProvider) == 1400
+                              ? null
+                              : () => ref
+                                  .read(scrollDurationProvider.notifier)
+                                  .set(1400),
+                          child: Text(t.general.reset),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  Widget _updateContent(Translations t) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _SettingsHeader(title: t.settingsScreen.update),
+        const _UpdaterCard(),
+      ],
+    );
+  }
+
+  Widget _dataContent(Translations t) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _SettingsHeader(title: t.settingsScreen.dataManagement),
+        Card(
+          clipBehavior: Clip.antiAlias,
+          child: Column(
+            children: [
+              ListTile(
+                leading: const Icon(Icons.file_download_outlined),
+                title: Text(t.settingsScreen.exportData),
+                subtitle: Text(t.settingsScreen.exportDataSubtitle),
+                onTap: () => _exportData(context, ref),
+              ),
+              ListTile(
+                leading: const Icon(Icons.file_upload_outlined),
+                title: Text(t.settingsScreen.importData),
+                subtitle: Text(t.settingsScreen.importDataSubtitle),
+                onTap: () => _importData(context, ref),
+              ),
+              const Divider(indent: 16, endIndent: 16),
+              ListTile(
+                leading: Icon(
+                  Icons.delete_forever_outlined,
+                  color: colorScheme.error,
+                ),
+                title: Text(
+                  t.settingsScreen.deleteAllData,
+                  style: TextStyle(color: colorScheme.error),
+                ),
+                onTap: () => _deleteAllData(context, ref),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _accountContent(Translations t) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _SettingsHeader(title: t.settingsScreen.accountManagement),
+        Card(
+          clipBehavior: Clip.antiAlias,
+          child: ListTile(
+            leading: Icon(
+              Icons.person_remove_outlined,
+              color: colorScheme.error,
+            ),
+            title: Text(
+              t.settingsScreen.deleteAccount,
+              style: TextStyle(color: colorScheme.error),
+            ),
+            subtitle: Text(t.settingsScreen.deleteAccountSubtitle),
+            onTap: () => _confirmDeleteAccount(context, ref),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // -------------------------------------------------------------------
+  // Kept unchanged from the previous file:
+  //   - _showLanguageMenu(...)
+  //   - _exportData(...)
+  //   - _importData(...)
+  //   - _deleteAllData(...)
+  //   - _confirmDeleteAccount(...)
+  // -------------------------------------------------------------------
 
   void _showLanguageMenu(BuildContext context, WidgetRef ref) {
     final languageNotifier = ref.read(appLanguageProvider.notifier);
@@ -324,336 +953,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         }
       }
     }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final currentTheme = ref.watch(appThemeProvider);
-    final themeNotifier = ref.read(appThemeProvider.notifier);
-    final currentLanguage = ref.watch(appLanguageProvider);
-    final uiScale = ref.watch(uiScaleProvider);
-    final uiScaleNotifier = ref.read(uiScaleProvider.notifier);
-    final smoothScrollEnabled = ref.watch(smoothScrollProvider);
-    final disableFlashcardAnimations = ref.watch(
-      disableFlashcardAnimationsProvider,
-    );
-    final colorScheme = Theme.of(context).colorScheme;
-    final t = Translations.of(context);
-
-    final bool showExperimental =
-        kIsWeb ||
-        (!kIsWeb &&
-            (Platform.isWindows || Platform.isMacOS || Platform.isLinux));
-
-    return Scaffold(
-      appBar: AppBar(
-        leading: const WebAwareBackButton(fallback: StartRoute()),
-        title: Text(t.settingsScreen.title),
-        centerTitle: true,
-      ),
-      body: SafeArea(
-        child: CenteredView(
-          child: SmoothSingleChildScrollView(
-            controller: _scrollController,
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                _SettingsHeader(title: t.settingsScreen.appearance),
-                Card(
-                  clipBehavior: Clip.antiAlias,
-                  child: RadioGroup<ThemeMode>(
-                    groupValue: currentTheme,
-                    onChanged: (value) => themeNotifier.setTheme(value!),
-                    child: Column(
-                      children: [
-                        RadioListTile<ThemeMode>(
-                          title: Text(t.settingsScreen.systemDefault),
-                          value: ThemeMode.system,
-                        ),
-                        RadioListTile<ThemeMode>(
-                          title: Text(t.settingsScreen.light),
-                          value: ThemeMode.light,
-                        ),
-                        RadioListTile<ThemeMode>(
-                          title: Text(t.settingsScreen.dark),
-                          value: ThemeMode.dark,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                _SettingsHeader(title: t.settingsScreen.language),
-                Card(
-                  clipBehavior: Clip.antiAlias,
-                  child: ListTile(
-                    leading: const Icon(Icons.translate_outlined),
-                    title: Text(t.settingsScreen.language),
-                    subtitle: Text(currentLanguage.getDisplayName(t)),
-                    trailing: const Icon(
-                      Icons.arrow_forward_ios_rounded,
-                      size: 16,
-                    ),
-                    onTap: () => _showLanguageMenu(context, ref),
-                  ),
-                ),
-                _SettingsHeader(title: t.settingsScreen.uiScaling),
-                Card(
-                  clipBehavior: Clip.antiAlias,
-                  child: Column(
-                    children: [
-                      ListTile(
-                        leading: const Icon(Icons.format_size_outlined),
-                        title: Text(t.settingsScreen.uiScaling),
-                        subtitle: Text(t.settingsScreen.uiScalingSubtitle),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 8.0),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Slider(
-                                value: uiScale,
-                                min: 0.8,
-                                max: 1.5,
-                                divisions: 7,
-                                label: "${(uiScale * 100).toStringAsFixed(0)}%",
-                                onChanged: (value) {
-                                  uiScaleNotifier.setScale(value);
-                                },
-                              ),
-                            ),
-                            SizedBox(
-                              width: 60,
-                              child: Text(
-                                "${(uiScale * 100).toStringAsFixed(0)}%",
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            OutlinedButton(
-                              onPressed: uiScale == 1.0
-                                  ? null
-                                  : () => uiScaleNotifier.setScale(1.0),
-                              child: Text(t.general.reset),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                _SettingsHeader(title: t.settingsScreen.study),
-                Card(
-                  clipBehavior: Clip.antiAlias,
-                  child: SwitchListTile(
-                    title: Text(t.settingsScreen.disableFlashcardAnimations),
-                    subtitle: Text(
-                      t.settingsScreen.disableFlashcardAnimationsSubtitle,
-                    ),
-                    secondary: const Icon(Icons.animation),
-                    value: disableFlashcardAnimations,
-                    onChanged: (val) => ref
-                        .read(disableFlashcardAnimationsProvider.notifier)
-                        .toggle(val),
-                  ),
-                ),
-                if (!kIsWeb &&
-                    (Platform.isAndroid ||
-                        Platform.isWindows ||
-                        Platform.isMacOS ||
-                        Platform.isLinux)) ...[
-                  _SettingsHeader(title: t.settingsScreen.update),
-                  const _UpdaterCard(),
-                ],
-                _SettingsHeader(title: t.settingsScreen.dataManagement),
-                Card(
-                  clipBehavior: Clip.antiAlias,
-                  child: Column(
-                    children: [
-                      ListTile(
-                        leading: const Icon(Icons.file_download_outlined),
-                        title: Text(t.settingsScreen.exportData),
-                        subtitle: Text(t.settingsScreen.exportDataSubtitle),
-                        onTap: () => _exportData(context, ref),
-                      ),
-                      ListTile(
-                        leading: const Icon(Icons.file_upload_outlined),
-                        title: Text(t.settingsScreen.importData),
-                        subtitle: Text(t.settingsScreen.importDataSubtitle),
-                        onTap: () => _importData(context, ref),
-                      ),
-                      const Divider(indent: 16, endIndent: 16),
-                      ListTile(
-                        leading: Icon(
-                          Icons.delete_forever_outlined,
-                          color: colorScheme.error,
-                        ),
-                        title: Text(
-                          t.settingsScreen.deleteAllData,
-                          style: TextStyle(color: colorScheme.error),
-                        ),
-                        onTap: () => _deleteAllData(context, ref),
-                      ),
-                      const SizedBox(width: 8),
-                    ],
-                  ),
-                ),
-                if (ref.watch(authControllerProvider).value != null) ...[
-                  _SettingsHeader(title: t.settingsScreen.accountManagement),
-                  Card(
-                    clipBehavior: Clip.antiAlias,
-                    child: ListTile(
-                      leading: Icon(
-                        Icons.person_remove_outlined,
-                        color: colorScheme.error,
-                      ),
-                      title: Text(
-                        t.settingsScreen.deleteAccount,
-                        style: TextStyle(color: colorScheme.error),
-                      ),
-                      subtitle: Text(t.settingsScreen.deleteAccountSubtitle),
-                      onTap: () => _confirmDeleteAccount(context, ref),
-                    ),
-                  ),
-                ],
-                if (showExperimental) ...[
-                  _SettingsHeader(title: t.settingsScreen.experimental),
-                  Card(
-                    clipBehavior: Clip.antiAlias,
-                    child: Column(
-                      children: [
-                        SwitchListTile(
-                          title: Text(t.settingsScreen.smoothScrolling),
-                          subtitle: Text(
-                            t.settingsScreen.smoothScrollingSubtitle,
-                          ),
-                          secondary: const Icon(Icons.mouse_outlined),
-                          value: smoothScrollEnabled,
-                          onChanged: (val) => ref
-                              .read(smoothScrollProvider.notifier)
-                              .toggle(val),
-                        ),
-                        if (smoothScrollEnabled) ...[
-                          const Divider(indent: 16, endIndent: 16),
-                          ListTile(
-                            leading: const Icon(Icons.speed_outlined),
-                            title: Text(t.settingsScreen.scrollSpeed),
-                            subtitle: Text(
-                              t.settingsScreen.scrollSpeedSubtitle,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(
-                              16.0,
-                              0,
-                              16.0,
-                              8.0,
-                            ),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Slider(
-                                    value: ref.watch(scrollSpeedProvider),
-                                    min: 0.5,
-                                    max: 2.0,
-                                    divisions: 15,
-                                    label:
-                                        "${ref.watch(scrollSpeedProvider).toStringAsFixed(1)}x",
-                                    onChanged: (value) => ref
-                                        .read(scrollSpeedProvider.notifier)
-                                        .set(value),
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 50,
-                                  child: Text(
-                                    "${ref.watch(scrollSpeedProvider).toStringAsFixed(1)}x",
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                                const SizedBox(width: 8),
-                                OutlinedButton(
-                                  onPressed: ref.watch(scrollSpeedProvider) ==
-                                          1.1
-                                      ? null
-                                      : () => ref
-                                          .read(
-                                            scrollSpeedProvider.notifier,
-                                          )
-                                          .set(1.1),
-                                  child: Text(t.general.reset),
-                                ),
-                              ],
-                            ),
-                          ),
-                          ListTile(
-                            leading: const Icon(Icons.timer_outlined),
-                            title: Text(t.settingsScreen.scrollDuration),
-                            subtitle: Text(
-                              t.settingsScreen.scrollDurationSubtitle,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(
-                              16.0,
-                              0,
-                              16.0,
-                              8.0,
-                            ),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Slider(
-                                    value: ref
-                                            .watch(scrollDurationProvider)
-                                            .toDouble(),
-                                    min: 400,
-                                    max: 3000,
-                                    divisions: 13,
-                                    label:
-                                        "${ref.watch(scrollDurationProvider)}ms",
-                                    onChanged: (value) => ref
-                                        .read(
-                                          scrollDurationProvider.notifier,
-                                        )
-                                        .set(value.round()),
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 55,
-                                  child: Text(
-                                    "${ref.watch(scrollDurationProvider)}ms",
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                                const SizedBox(width: 8),
-                                OutlinedButton(
-                                  onPressed:
-                                      ref.watch(scrollDurationProvider) == 1400
-                                          ? null
-                                          : () => ref
-                                              .read(
-                                                scrollDurationProvider
-                                                    .notifier,
-                                              )
-                                              .set(1400),
-                                  child: Text(t.general.reset),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ],
-                    ),
-                  ),
-                ],
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
   }
 }
 

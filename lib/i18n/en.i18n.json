@@ -16,7 +16,8 @@
     "all": "All",
     "loading": "Loading...",
     "genericError": "Error: $error",
-    "reset": "Reset"
+    "reset": "Reset",
+    "ok": "OK"
   },
   "drawer": {
     "settings": "Settings",
@@ -292,6 +293,9 @@
     "languageDialogTitle": "Select Language",
     "uiScaling": "UI Scaling",
     "uiScalingSubtitle": "Adjust the size of text and interface elements",
+    "themeColor": "Theme Color",
+    "themeColorSubtitle": "Pick the accent color used throughout the app",
+    "themeColorDialog": "Pick a Color",
     "study": "Study",
     "disableFlashcardAnimations": "Disable flashcard animations",
     "disableFlashcardAnimationsSubtitle": "Turns off card flip and transition animations in Flashcard mode.",

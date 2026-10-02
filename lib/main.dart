@@ -224,14 +224,16 @@ class _MyAppState extends ConsumerState<MyApp> {
 
     final themeMode = ref.watch(appThemeProvider);
     final uiScale = ref.watch(uiScaleProvider);
-    const seedColor = Colors.deepPurple;
+    final seedArgb = ref.watch(seedColorProvider);
 
-    // Material 3's default tonal palette is deliberately muted, which makes
-    // container roles (primary/secondary/error) hard to tell apart on dimmed
-    // screens. The `vibrant` variant keeps the same purple hue family while
-    // raising chroma, and the dark-mode lift below separates the containers
-    // from the near-black surface so state colors stay readable at low
-    // brightness.
+    // Falls back to the app default when the user has not picked a custom
+    // theme color in Settings → Appearance → Theme Color.
+    final Color seedColor =
+        seedArgb == null ? defaultSeedColor : Color(seedArgb);
+
+    // The `vibrant` variant raises chroma for any seed color so container
+    // roles stay distinguishable at low brightness; the dark-mode lift below
+    // separates containers from the near-black surface.
     ColorScheme buildColorScheme(Brightness brightness) {
       final scheme = ColorScheme.fromSeed(
         seedColor: seedColor,

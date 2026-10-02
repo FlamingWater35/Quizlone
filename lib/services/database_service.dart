@@ -41,6 +41,7 @@ class DatabaseService {
   static const String _loadListSortAscendingKey = 'loadListSortAscending';
   static const String _flashcardAnimationsDisabledKey =
       'flashcardAnimationsDisabled';
+  static const String _seedColorKey = 'seedColor';
 
   static late Box<StudyGroup> _studyGroupBox;
   static const String _studyGroupBoxName = 'studyGroupsBox';
@@ -481,6 +482,30 @@ class DatabaseService {
     } catch (e, s) {
       _log.severe("Failed to read theme", e, s);
       return 'system';
+    }
+  }
+
+  /// Persists a custom theme seed color as an ARGB integer.
+  /// Passing null restores the app default.
+  Future<void> saveSeedColor(int? argb) async {
+    try {
+      if (argb == null) {
+        await _settingsBox.delete(_seedColorKey);
+      } else {
+        await _settingsBox.put(_seedColorKey, argb);
+      }
+    } catch (e, s) {
+      _log.severe("Failed to save seed color", e, s);
+    }
+  }
+
+  /// Retrieves the stored theme seed color ARGB value (null = default).
+  int? getSeedColor() {
+    try {
+      return _settingsBox.get(_seedColorKey);
+    } catch (e, s) {
+      _log.severe("Failed to read seed color", e, s);
+      return null;
     }
   }
 

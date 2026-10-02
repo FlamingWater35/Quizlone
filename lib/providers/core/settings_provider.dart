@@ -93,6 +93,28 @@ class AppTheme extends _$AppTheme {
   }
 }
 
+/// Default theme seed color used when the user has not picked a custom one.
+const Color defaultSeedColor = Colors.deepPurple;
+
+@riverpod
+class SeedColorNotifier extends _$SeedColorNotifier {
+  /// Persists a custom theme seed color as an ARGB integer.
+  /// Passing `null` restores the default seed color.
+  Future<void> set(int? argb) async {
+    _log.fine("[SeedColorNotifier] Setting seed color to $argb");
+    await ref.read(databaseServiceProvider).saveSeedColor(argb);
+    if (!ref.mounted) return;
+    state = argb;
+  }
+
+  @override
+  int? build() {
+    final argb = ref.watch(databaseServiceProvider).getSeedColor();
+    _log.fine("[SeedColorNotifier] Initializing with seed color: $argb");
+    return argb;
+  }
+}
+
 enum AppLanguage { system, en, fi, ru, es, fr, de, pt, it, zh, ja, sv }
 
 extension AppLanguageExtension on AppLanguage {

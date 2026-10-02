@@ -16,7 +16,8 @@
     "all": "Alle",
     "loading": "Lädt...",
     "genericError": "Fehler: $error",
-    "reset": "Zurücksetzen"
+    "reset": "Zurücksetzen",
+    "ok": "OK"
   },
   "drawer": {
     "settings": "Einstellungen",
@@ -292,6 +293,9 @@
     "languageDialogTitle": "Sprache auswählen",
     "uiScaling": "UI-Skalierung",
     "uiScalingSubtitle": "Größe von Text und Benutzeroberflächenelementen anpassen",
+    "themeColor": "Designfarbe",
+    "themeColorSubtitle": "Wählen Sie die Akzentfarbe für die gesamte App",
+    "themeColorDialog": "Farbe auswählen",
     "study": "Lernen",
     "disableFlashcardAnimations": "Karteikarten-Animationen deaktivieren",
     "disableFlashcardAnimationsSubtitle": "Schaltet Karten-Flip- und Übergangsanimationen im Karteikarten-Modus aus.",

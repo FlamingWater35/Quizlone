@@ -16,7 +16,8 @@
     "all": "Todo",
     "loading": "Cargando...",
     "genericError": "Error: $error",
-    "reset": "Reiniciar"
+    "reset": "Reiniciar",
+    "ok": "Aceptar"
   },
   "drawer": {
     "settings": "Configuración",
@@ -292,6 +293,9 @@
     "languageDialogTitle": "Seleccionar Idioma",
     "uiScaling": "Escalado de IU",
     "uiScalingSubtitle": "Ajusta el tamaño del texto y los elementos de la interfaz",
+    "themeColor": "Color del Tema",
+    "themeColorSubtitle": "Elige el color de acento usado en toda la aplicación",
+    "themeColorDialog": "Elegir un Color",
     "study": "Estudio",
     "disableFlashcardAnimations": "Desactivar animaciones de tarjetas",
     "disableFlashcardAnimationsSubtitle": "Desactiva las animaciones de volteo y transición en el modo Tarjetas.",

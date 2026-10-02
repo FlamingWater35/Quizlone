@@ -16,7 +16,8 @@
     "all": "全部",
     "loading": "加载中...",
     "genericError": "错误：$error",
-    "reset": "重置"
+    "reset": "重置",
+    "ok": "确定"
   },
   "drawer": {
     "settings": "设置",
@@ -292,6 +293,9 @@
     "languageDialogTitle": "选择语言",
     "uiScaling": "界面缩放",
     "uiScalingSubtitle": "调整文本和界面元素的大小",
+    "themeColor": "主题颜色",
+    "themeColorSubtitle": "选择在整个应用中使用的强调色",
+    "themeColorDialog": "选择颜色",
     "study": "学习",
     "disableFlashcardAnimations": "禁用闪卡动画",
     "disableFlashcardAnimationsSubtitle": "关闭闪卡模式中的翻卡和过渡动画。",

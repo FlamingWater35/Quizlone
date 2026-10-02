@@ -16,7 +16,8 @@
     "all": "すべて",
     "loading": "読み込み中...",
     "genericError": "エラー: $error",
-    "reset": "リセット"
+    "reset": "リセット",
+    "ok": "OK"
   },
   "drawer": {
     "settings": "設定",
@@ -292,6 +293,9 @@
     "languageDialogTitle": "言語を選択",
     "uiScaling": "UI スケーリング",
     "uiScalingSubtitle": "テキストとインターフェース要素のサイズを調整",
+    "themeColor": "テーマカラー",
+    "themeColorSubtitle": "アプリ全体で使用されるアクセントカラーを選択",
+    "themeColorDialog": "色を選択",
     "study": "学習",
     "disableFlashcardAnimations": "フラッシュカードのアニメーションを無効化",
     "disableFlashcardAnimationsSubtitle": "フラッシュカードモードでカードの反転と遷移のアニメーションをオフにします。",
