@@ -296,14 +296,18 @@ class _TestViewState extends ConsumerState<_TestView> {
     }
 
     return Card(
-      elevation: 0,
+      elevation: 2, // Lifted from 0
       margin: const EdgeInsets.symmetric(vertical: 4.0),
       color: tileColor ?? colorScheme.surfaceContainerHighest.withAlpha(40),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
         side: isSelected && !isSubmitted
             ? BorderSide(color: colorScheme.primary, width: 1.5)
-            : BorderSide.none,
+            : BorderSide(
+                color: colorScheme.outlineVariant.withAlpha(
+                  colorScheme.brightness == Brightness.dark ? 80 : 50,
+                ),
+              ),
       ),
       clipBehavior: Clip.antiAlias,
       child: InkWell(

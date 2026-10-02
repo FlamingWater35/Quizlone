@@ -196,10 +196,16 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
 
                         return Card(
                           margin: const EdgeInsets.symmetric(vertical: 6),
-                          elevation: 0,
+                          elevation: 2, // Lifted from 0
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
-                            side: BorderSide(color: colorScheme.outlineVariant),
+                            side: BorderSide(
+                              color: colorScheme.outlineVariant.withAlpha(
+                                colorScheme.brightness == Brightness.dark
+                                    ? 80
+                                    : 50,
+                              ),
+                            ),
                           ),
                           child: InkWell(
                             borderRadius: BorderRadius.circular(12),

@@ -637,12 +637,16 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
     final card = RepaintBoundary(
       child: Card(
         margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-        elevation: isSelected ? 2 : 0,
+        elevation: isSelected ? 4 : 2, // 2 matches the global theme
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
           side: isSelected
               ? BorderSide(color: colorScheme.primary, width: 2)
-              : BorderSide.none,
+              : BorderSide(
+                  color: colorScheme.outlineVariant.withAlpha(
+                    colorScheme.brightness == Brightness.dark ? 80 : 50,
+                  ),
+                ),
         ),
         color: isSelected
             ? colorScheme.primaryContainer.withAlpha(80)
@@ -790,12 +794,16 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
     return RepaintBoundary(
       child: Card(
         margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
-        elevation: 0,
+        elevation: 2, // Lifted from 0
         color: Theme.of(context).colorScheme.surface,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
           side: BorderSide(
-            color: Theme.of(context).colorScheme.outlineVariant,
+            color: Theme.of(context).colorScheme.outlineVariant.withAlpha(
+                  Theme.of(context).colorScheme.brightness == Brightness.dark
+                      ? 80
+                      : 50,
+                ),
             width: 1,
           ),
         ),

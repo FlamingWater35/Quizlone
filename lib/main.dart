@@ -231,30 +231,28 @@ class _MyAppState extends ConsumerState<MyApp> {
     final Color seedColor =
         seedArgb == null ? defaultSeedColor : Color(seedArgb);
 
-    // The `vibrant` variant raises chroma for any seed color so container
-    // roles stay distinguishable at low brightness; the dark-mode lift below
-    // separates containers from the near-black surface.
     ColorScheme buildColorScheme(Brightness brightness) {
-      final scheme = ColorScheme.fromSeed(
+      return ColorScheme.fromSeed(
         seedColor: seedColor,
         brightness: brightness,
-        dynamicSchemeVariant: DynamicSchemeVariant.vibrant,
       );
-      if (brightness != Brightness.dark) return scheme;
-      return scheme.copyWith(
-        primaryContainer:
-            Color.lerp(scheme.primaryContainer, Colors.white, 0.08)!,
-        secondaryContainer:
-            Color.lerp(scheme.secondaryContainer, Colors.white, 0.08)!,
-        tertiaryContainer:
-            Color.lerp(scheme.tertiaryContainer, Colors.white, 0.08)!,
-        errorContainer:
-            Color.lerp(scheme.errorContainer, Colors.white, 0.08)!,
-        surfaceContainerHighest: Color.lerp(
-          scheme.surfaceContainerHighest,
-          Colors.white,
-          0.05,
-        )!,
+    }
+
+    // Applies a subtle shadow and a soft border to all Cards so they stand out
+    // against the surface background, especially at low brightness.
+    CardThemeData buildCardTheme(ColorScheme colorScheme) {
+      return CardThemeData(
+        elevation: 2.0,
+        shadowColor: Colors.black.withAlpha(40),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
+          side: BorderSide(
+            color: colorScheme.outlineVariant.withAlpha(
+              colorScheme.brightness == Brightness.dark ? 80 : 50,
+            ),
+          ),
+        ),
+        clipBehavior: Clip.antiAlias,
       );
     }
 
@@ -295,11 +293,13 @@ class _MyAppState extends ConsumerState<MyApp> {
         theme: ThemeData(
           colorScheme: buildColorScheme(Brightness.light),
           useMaterial3: true,
+          cardTheme: buildCardTheme(buildColorScheme(Brightness.light)),
           snackBarTheme: buildSnackBarTheme(buildColorScheme(Brightness.dark)),
         ),
         darkTheme: ThemeData(
           colorScheme: buildColorScheme(Brightness.dark),
           useMaterial3: true,
+          cardTheme: buildCardTheme(buildColorScheme(Brightness.dark)),
           snackBarTheme: buildSnackBarTheme(buildColorScheme(Brightness.light)),
         ),
         themeMode: themeMode,
