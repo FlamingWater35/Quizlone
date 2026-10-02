@@ -83,6 +83,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   /// the scroll listener.
   List<_SettingsSection> _visibleSections = const [_SettingsSection.appearance];
 
+  /// True while a programmatic jump is animating, so the scroll-spy doesn't
+  /// briefly select every intermediate section the page scrolls past.
+  bool _isJumpingToSection = false;
+
+  /// Identifies the newest jump; a completion callback from a superseded
+  /// jump must not re-arm the scroll-spy while a later one is still running.
+  int _jumpGeneration = 0;
+
   // --- Color picker preview throttling -----------------------------------
   DateTime _lastPreviewWrite = DateTime.fromMillisecondsSinceEpoch(0);
   Color? _pendingPreview;
@@ -147,17 +155,30 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 viewportBox.localToGlobal(Offset.zero).dy)
             .clamp(0.0, _scrollController.position.maxScrollExtent);
 
-    setState(() => _activeSection = section);
-    _scrollController.animateTo(
-      target,
-      duration: const Duration(milliseconds: 500),
-      curve: Curves.easeInOutCubic,
-    );
+    final generation = ++_jumpGeneration;
+    setState(() {
+      _activeSection = section;
+      _isJumpingToSection = true;
+    });
+    _scrollController
+        .animateTo(
+          target,
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.easeInOutCubic,
+        )
+        .whenComplete(() {
+          // Ignore completions from a jump that a newer jump superseded.
+          if (!mounted || generation != _jumpGeneration) return;
+          _isJumpingToSection = false;
+          // Re-sync in case the user interrupted the animation part-way.
+          _updateActiveSection();
+        });
   }
 
   /// Scroll-spy: keeps the rail highlight in sync with the section that is
   /// currently at the top of the viewport while the user scrolls manually.
   void _updateActiveSection() {
+    if (_isJumpingToSection) return;
     final viewportBox =
         _viewportKey.currentContext?.findRenderObject() as RenderBox?;
     if (viewportBox == null) return;
@@ -1090,73 +1111,78 @@ class _LanguageDialogState extends State<_LanguageDialog> {
           constraints: const BoxConstraints(maxWidth: 500),
           child: Dialog(
             insetPadding: const EdgeInsets.all(20),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24.0,
-                      vertical: 8.0,
+            // Without IntrinsicWidth the vertical scroll view fills all
+            // available width, so the dialog would always render at the
+            // maxWidth cap instead of hugging the widest language option.
+            child: IntrinsicWidth(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24.0,
+                        vertical: 8.0,
+                      ),
+                      child: Text(
+                        t.settingsScreen.languageDialogTitle,
+                        style: theme.textTheme.titleLarge,
+                      ),
                     ),
-                    child: Text(
-                      t.settingsScreen.languageDialogTitle,
-                      style: theme.textTheme.titleLarge,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Flexible(
-                    child: Scrollbar(
-                      controller: _scrollController,
-                      thumbVisibility: true,
-                      child: SmoothSingleChildScrollView(
+                    const SizedBox(height: 8),
+                    Flexible(
+                      child: Scrollbar(
                         controller: _scrollController,
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Column(
-                          children: AppLanguage.values.map((lang) {
-                            final isSelected = lang == widget.currentLanguage;
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 4.0,
-                              ),
-                              child: Card(
-                                margin: EdgeInsets.zero,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
+                        thumbVisibility: true,
+                        child: SmoothSingleChildScrollView(
+                          controller: _scrollController,
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Column(
+                            children: AppLanguage.values.map((lang) {
+                              final isSelected = lang == widget.currentLanguage;
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 4.0,
                                 ),
-                                child: ListTile(
+                                child: Card(
+                                  margin: EdgeInsets.zero,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12),
                                   ),
-                                  title: Text(
-                                    lang.getDisplayName(t),
-                                    style: TextStyle(
-                                      fontWeight: isSelected
-                                          ? FontWeight.bold
-                                          : FontWeight.normal,
+                                  child: ListTile(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
                                     ),
+                                    title: Text(
+                                      lang.getDisplayName(t),
+                                      style: TextStyle(
+                                        fontWeight: isSelected
+                                            ? FontWeight.bold
+                                            : FontWeight.normal,
+                                      ),
+                                    ),
+                                    trailing: isSelected
+                                        ? Icon(
+                                            Icons.check_circle,
+                                            color: theme.colorScheme.primary,
+                                          )
+                                        : null,
+                                    onTap: () {
+                                      widget.notifier.setLanguage(lang);
+                                      Navigator.of(context).pop();
+                                    },
                                   ),
-                                  trailing: isSelected
-                                      ? Icon(
-                                          Icons.check_circle,
-                                          color: theme.colorScheme.primary,
-                                        )
-                                      : null,
-                                  onTap: () {
-                                    widget.notifier.setLanguage(lang);
-                                    Navigator.of(context).pop();
-                                  },
                                 ),
-                              ),
-                            );
-                          }).toList(),
+                              );
+                            }).toList(),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
