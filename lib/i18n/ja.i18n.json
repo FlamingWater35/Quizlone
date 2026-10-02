@@ -163,7 +163,7 @@
     "flashcardOptions": "フラッシュカード オプション",
     "showTermFirst": "用語を先に表示",
     "showDefFirst": "定義を先に表示",
-    "studyOptions": "学習とテスト オプション",
+    "studyOptions": "学習・テスト・多肢選択 オプション",
     "askForTerm": "定義を表示し、用語を質問",
     "askForDef": "用語を表示し、定義を質問",
     "studyLength": "学習の長さ：",

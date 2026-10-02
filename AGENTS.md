@@ -13,7 +13,7 @@ dart run slang
 
 - `build_runner` generates `.g.dart` files (Hive adapters, Riverpod providers, auto_route router, json_serializable)
 - `slang` generates translation files from `lib/i18n/*.i18n.json` → `lib/i18n/generated/`
-- Generated files are checked into version control — do not hand-edit them
+- Generated files are gitignored (`.gitignore` matches `*.g.dart`) — never hand-edit them, and always run codegen after a fresh clone or when they're missing
 - CI runs both commands before every build; you must too
 
 ## Running the App

@@ -217,7 +217,7 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
                                     width: 50,
                                     height: 50,
                                     decoration: BoxDecoration(
-                                      color: scoreColor.withAlpha(25),
+                                      color: scoreColor.withAlpha(50),
                                       shape: BoxShape.circle,
                                     ),
                                     alignment: Alignment.center,
@@ -401,12 +401,12 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
                       const SizedBox(height: 16),
                       ...incorrectAnswers.map((item) {
                         return Card(
-                          color: colorScheme.error.withAlpha(15),
+                          color: colorScheme.error.withAlpha(40),
                           shadowColor: Colors.transparent,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                             side: BorderSide(
-                              color: colorScheme.error.withAlpha(40),
+                              color: colorScheme.error.withAlpha(70),
                             ),
                           ),
                           margin: const EdgeInsets.symmetric(vertical: 6.0),

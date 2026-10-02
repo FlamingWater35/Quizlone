@@ -417,7 +417,7 @@ class _LearnViewState extends ConsumerState<_LearnView>
                                       color: _getFeedbackColor(
                                         context,
                                         questionState.feedbackType,
-                                      ).withAlpha(15),
+                                      ).withAlpha(40),
                                       borderRadius: BorderRadius.circular(12),
                                     ),
                                     child: Row(

@@ -226,6 +226,36 @@ class _MyAppState extends ConsumerState<MyApp> {
     final uiScale = ref.watch(uiScaleProvider);
     const seedColor = Colors.deepPurple;
 
+    // Material 3's default tonal palette is deliberately muted, which makes
+    // container roles (primary/secondary/error) hard to tell apart on dimmed
+    // screens. The `vibrant` variant keeps the same purple hue family while
+    // raising chroma, and the dark-mode lift below separates the containers
+    // from the near-black surface so state colors stay readable at low
+    // brightness.
+    ColorScheme buildColorScheme(Brightness brightness) {
+      final scheme = ColorScheme.fromSeed(
+        seedColor: seedColor,
+        brightness: brightness,
+        dynamicSchemeVariant: DynamicSchemeVariant.vibrant,
+      );
+      if (brightness != Brightness.dark) return scheme;
+      return scheme.copyWith(
+        primaryContainer:
+            Color.lerp(scheme.primaryContainer, Colors.white, 0.08)!,
+        secondaryContainer:
+            Color.lerp(scheme.secondaryContainer, Colors.white, 0.08)!,
+        tertiaryContainer:
+            Color.lerp(scheme.tertiaryContainer, Colors.white, 0.08)!,
+        errorContainer:
+            Color.lerp(scheme.errorContainer, Colors.white, 0.08)!,
+        surfaceContainerHighest: Color.lerp(
+          scheme.surfaceContainerHighest,
+          Colors.white,
+          0.05,
+        )!,
+      );
+    }
+
     // Generates consistent Snackbar styling across both light and dark themes.
     SnackBarThemeData buildSnackBarTheme(ColorScheme colorScheme) {
       return SnackBarThemeData(
@@ -261,30 +291,14 @@ class _MyAppState extends ConsumerState<MyApp> {
           GlobalCupertinoLocalizations.delegate,
         ],
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: seedColor,
-            brightness: Brightness.light,
-          ),
+          colorScheme: buildColorScheme(Brightness.light),
           useMaterial3: true,
-          snackBarTheme: buildSnackBarTheme(
-            ColorScheme.fromSeed(
-              seedColor: seedColor,
-              brightness: Brightness.dark,
-            ),
-          ),
+          snackBarTheme: buildSnackBarTheme(buildColorScheme(Brightness.dark)),
         ),
         darkTheme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: seedColor,
-            brightness: Brightness.dark,
-          ),
+          colorScheme: buildColorScheme(Brightness.dark),
           useMaterial3: true,
-          snackBarTheme: buildSnackBarTheme(
-            ColorScheme.fromSeed(
-              seedColor: seedColor,
-              brightness: Brightness.light,
-            ),
-          ),
+          snackBarTheme: buildSnackBarTheme(buildColorScheme(Brightness.light)),
         ),
         themeMode: themeMode,
         builder: (context, child) {

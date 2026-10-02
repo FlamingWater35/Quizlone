@@ -397,7 +397,7 @@ class _GroupSelectionDialogState extends State<_GroupSelectionDialog> {
             : null,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         tileColor: isSelected
-            ? theme.colorScheme.primaryContainer.withAlpha(40)
+            ? theme.colorScheme.primaryContainer.withAlpha(80)
             : null,
         onTap: onTap,
       ),

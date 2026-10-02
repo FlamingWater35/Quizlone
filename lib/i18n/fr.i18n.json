@@ -163,7 +163,7 @@
     "flashcardOptions": "Options des Flashcards",
     "showTermFirst": "Montrer le Terme en Premier",
     "showDefFirst": "Montrer la Définition en Premier",
-    "studyOptions": "Options d'Apprentissage et de Test",
+    "studyOptions": "Options d'Apprentissage, de Test et de Choix Multiple",
     "askForTerm": "Montrer la Définition, Demander le Terme",
     "askForDef": "Montrer le Terme, Demander la Définition",
     "studyLength": "Durée de l'étude :",

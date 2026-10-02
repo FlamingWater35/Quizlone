@@ -278,7 +278,7 @@ class _OptionButtonState extends State<_OptionButton> {
 
     if (widget.state.isAnswerProcessed) {
       if (widget.text == question.correctAnswer) {
-        cardColor = Colors.green.withAlpha(50);
+        cardColor = Colors.green.withAlpha(70);
         textColor = Colors.green;
         borderSide = const BorderSide(color: Colors.green, width: 2);
       } else if (widget.text == widget.state.selectedAnswer &&

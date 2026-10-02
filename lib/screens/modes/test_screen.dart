@@ -278,11 +278,11 @@ class _TestViewState extends ConsumerState<_TestView> {
 
     if (isSubmitted) {
       if (isCorrectAnswer) {
-        tileColor = colorScheme.primary.withAlpha(20);
+        tileColor = colorScheme.primary.withAlpha(50);
         textColor = colorScheme.primary;
         resultIcon = Icon(Icons.check_circle, color: textColor);
       } else if (isSelected && !isCorrectAnswer) {
-        tileColor = colorScheme.error.withAlpha(20);
+        tileColor = colorScheme.error.withAlpha(50);
         textColor = colorScheme.error;
         resultIcon = Icon(Icons.cancel, color: textColor);
       } else {

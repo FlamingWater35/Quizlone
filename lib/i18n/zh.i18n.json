@@ -163,7 +163,7 @@
     "flashcardOptions": "闪卡选项",
     "showTermFirst": "先显示术语",
     "showDefFirst": "先显示定义",
-    "studyOptions": "学习和测试选项",
+    "studyOptions": "学习、测试和多项选择选项",
     "askForTerm": "显示定义，询问术语",
     "askForDef": "显示术语，询问定义",
     "studyLength": "学习长度：",

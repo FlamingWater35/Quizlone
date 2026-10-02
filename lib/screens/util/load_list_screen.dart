@@ -645,7 +645,7 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
               : BorderSide.none,
         ),
         color: isSelected
-            ? colorScheme.primaryContainer.withAlpha(50)
+            ? colorScheme.primaryContainer.withAlpha(80)
             : colorScheme.surfaceContainerLow,
         clipBehavior: Clip.antiAlias,
         child: InkWell(
