@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
@@ -28,8 +29,7 @@ import '../../providers/study/study_list_providers.dart';
 import '../../widgets/centered_view.dart';
 import '../modes/match_leaderboard_screen.dart';
 
-/// Top-level settings destinations. The visible set is dynamic:
-/// "Update" only exists on Android/desktop, "Account" only while signed in.
+/// Top-level settings destinations shown in the sidebar.
 enum _SettingsSection {
   appearance(Icons.palette_outlined),
   study(Icons.school_outlined),
@@ -51,15 +51,52 @@ class SettingsScreen extends ConsumerStatefulWidget {
 }
 
 class _SettingsScreenState extends ConsumerState<SettingsScreen> {
-  /// Above this width a persistent sidebar (NavigationRail) is shown;
-  /// below it the screen falls back to a scrollable chip bar.
-  static const double _wideBreakpoint = 680;
+  /// Same breakpoint calculation as ModeSelectionScreen: below this width
+  /// the sidebar is hidden and settings render as a plain continuous page.
+  static const double _breakpoint = 650.0;
+
+  /// A section counts as "active" once its header crosses this line
+  /// (pixels below the top of the scroll viewport).
+  static const double _activeSectionThreshold = 8.0;
+
+  /// Minimum delay between live theme updates while dragging in the color
+  /// picker. Caps full-app rebuilds at ~8/s so fast pointer drags don't lag.
+  /// Increase to update less often, decrease for snappier (but heavier)
+  /// previews.
+  static const int _colorPreviewIntervalMs = 120;
 
   final _scrollController = SmoothScrollController();
-  int _selectedIndex = 0;
+
+  /// Anchor points used both to jump to a section and to detect which
+  /// section is currently visible.
+  final Map<_SettingsSection, GlobalKey> _sectionKeys = {
+    for (final section in _SettingsSection.values) section: GlobalKey(),
+  };
+
+  /// Marks the scroll viewport so section offsets can be measured relative
+  /// to it.
+  final GlobalKey _viewportKey = GlobalKey();
+
+  _SettingsSection _activeSection = _SettingsSection.appearance;
+
+  /// The sections currently on screen; refreshed on every build and read by
+  /// the scroll listener.
+  List<_SettingsSection> _visibleSections = const [_SettingsSection.appearance];
+
+  // --- Color picker preview throttling -----------------------------------
+  DateTime _lastPreviewWrite = DateTime.fromMillisecondsSinceEpoch(0);
+  Color? _pendingPreview;
+  Timer? _previewTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_updateActiveSection);
+  }
 
   @override
   void dispose() {
+    _previewTimer?.cancel();
     _scrollController.dispose();
     super.dispose();
   }
@@ -91,18 +128,113 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     };
   }
 
-  void _selectSection(int index) {
-    setState(() => _selectedIndex = index);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted && _scrollController.hasClients) {
-        _scrollController.jumpTo(0);
+  /// Smoothly scrolls the continuous page so the chosen section's header
+  /// sits at the top of the viewport.
+  void _jumpToSection(_SettingsSection section) {
+    final sectionBox =
+        _sectionKeys[section]?.currentContext?.findRenderObject() as RenderBox?;
+    final viewportBox =
+        _viewportKey.currentContext?.findRenderObject() as RenderBox?;
+    if (sectionBox == null ||
+        viewportBox == null ||
+        !_scrollController.hasClients) {
+      return;
+    }
+
+    final target =
+        (_scrollController.offset +
+                sectionBox.localToGlobal(Offset.zero).dy -
+                viewportBox.localToGlobal(Offset.zero).dy)
+            .clamp(0.0, _scrollController.position.maxScrollExtent);
+
+    setState(() => _activeSection = section);
+    _scrollController.animateTo(
+      target,
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeInOutCubic,
+    );
+  }
+
+  /// Scroll-spy: keeps the rail highlight in sync with the section that is
+  /// currently at the top of the viewport while the user scrolls manually.
+  void _updateActiveSection() {
+    final viewportBox =
+        _viewportKey.currentContext?.findRenderObject() as RenderBox?;
+    if (viewportBox == null) return;
+    final viewportTop = viewportBox.localToGlobal(Offset.zero).dy;
+
+    // When the page cannot scroll any further, force the last section to be
+    // active even if its header never reaches the top.
+    final bool bottomPinned =
+        _scrollController.hasClients &&
+        _scrollController.offset >=
+            _scrollController.position.maxScrollExtent - 1;
+
+    _SettingsSection? active;
+    if (bottomPinned && _visibleSections.isNotEmpty) {
+      active = _visibleSections.last;
+    } else {
+      for (final section in _visibleSections) {
+        final box =
+            _sectionKeys[section]?.currentContext?.findRenderObject()
+                as RenderBox?;
+        if (box == null) continue;
+        final relativeTop = box.localToGlobal(Offset.zero).dy - viewportTop;
+        if (relativeTop <= _activeSectionThreshold) {
+          active = section;
+        } else {
+          break;
+        }
       }
-    });
+    }
+
+    final newActive = active;
+    if (newActive != null && newActive != _activeSection) {
+      setState(() => _activeSection = newActive);
+    }
   }
 
   // -------------------------------------------------------------------
-  // Theme color picker (live preview, rollback on cancel)
+  // Theme color picker (throttled live preview, rollback on cancel)
   // -------------------------------------------------------------------
+
+  void _writeSeedColor(Color color) {
+    final notifier = ref.read(seedColorProvider.notifier);
+    // flex_color_picker 3.x has no ColorTools.areColorsSame (added in 4.x),
+    // so compare the ARGB values directly.
+    if (color.toARGB32() == defaultSeedColor.toARGB32()) {
+      notifier.set(null);
+    } else {
+      notifier.set(color.toARGB32());
+    }
+  }
+
+  /// Applies the picked color to the live theme at most once every
+  /// `_colorPreviewIntervalMs`, so dragging across the wheel doesn't trigger
+  /// a full app rebuild per pixel of movement.
+  void _previewSeedColor(Color color) {
+    _pendingPreview = color;
+    final waitMs =
+        _colorPreviewIntervalMs -
+        DateTime.now().difference(_lastPreviewWrite).inMilliseconds;
+    if (waitMs <= 0) {
+      _flushPreview();
+    } else {
+      // Trailing update guarantees the final color under the cursor is the
+      // one that gets applied.
+      _previewTimer ??= Timer(Duration(milliseconds: waitMs), _flushPreview);
+    }
+  }
+
+  void _flushPreview() {
+    _previewTimer?.cancel();
+    _previewTimer = null;
+    final color = _pendingPreview;
+    if (color == null || !mounted) return;
+    _pendingPreview = null;
+    _lastPreviewWrite = DateTime.now();
+    _writeSeedColor(color);
+  }
 
   Future<void> _showColorPickerDialog() async {
     final t = Translations.of(context);
@@ -111,13 +243,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     final int? original = ref.read(seedColorProvider);
     Color selected = original == null ? defaultSeedColor : Color(original);
 
-    void applySeedColor(Color color) {
-      if (color.toARGB32() == defaultSeedColor.toARGB32()) {
-        notifier.set(null);
-      } else {
-        notifier.set(color.toARGB32());
-      }
-    }
+    // Reset the throttle so the very first pick applies immediately.
+    _lastPreviewWrite = DateTime.fromMillisecondsSinceEpoch(0);
 
     final confirmed = await showDialog<bool>(
       context: context,
@@ -133,7 +260,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     color: selected,
                     onColorChanged: (color) {
                       setDialogState(() => selected = color);
-                      applySeedColor(color); // Live preview.
+                      _previewSeedColor(color);
                     },
                     pickersEnabled: const <ColorPickerType, bool>{
                       ColorPickerType.primary: true,
@@ -174,9 +301,16 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       },
     );
 
-    // Barrier dismiss or Cancel → roll the live preview back.
-    if (confirmed != true) {
-      await notifier.set(original);
+    if (confirmed == true) {
+      _flushPreview(); // Ensure the exact final color is persisted.
+    } else {
+      // Cancel / barrier dismiss: drop any pending preview and roll back.
+      _previewTimer?.cancel();
+      _previewTimer = null;
+      _pendingPreview = null;
+      if (mounted) {
+        await notifier.set(original);
+      }
     }
   }
 
@@ -188,7 +322,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   Widget build(BuildContext context) {
     final t = Translations.of(context);
     final isSignedIn = ref.watch(authControllerProvider).value != null;
-    final bool showUpdates = !kIsWeb &&
+    final bool showUpdates =
+        !kIsWeb &&
         (Platform.isAndroid ||
             Platform.isWindows ||
             Platform.isMacOS ||
@@ -202,13 +337,42 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       isSignedIn: isSignedIn,
       showUpdates: showUpdates,
     );
-    // Clamp in case the section list shrank (e.g. user signed out).
-    final selectedIndex = _selectedIndex.clamp(0, sections.length - 1);
-    final content = _animatedSection(
-      sections,
-      selectedIndex,
-      t,
-      showExperimental,
+    _visibleSections = sections;
+
+    // One continuous page; the sidebar only jumps the scroll position.
+    final content = CenteredView(
+      key: _viewportKey,
+      child: SmoothSingleChildScrollView(
+        controller: _scrollController,
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            KeyedSubtree(
+              key: _sectionKeys[_SettingsSection.appearance],
+              child: _appearanceContent(t),
+            ),
+            KeyedSubtree(
+              key: _sectionKeys[_SettingsSection.study],
+              child: _studyContent(t, showExperimental: showExperimental),
+            ),
+            if (showUpdates)
+              KeyedSubtree(
+                key: _sectionKeys[_SettingsSection.update],
+                child: _updateContent(t),
+              ),
+            KeyedSubtree(
+              key: _sectionKeys[_SettingsSection.data],
+              child: _dataContent(t),
+            ),
+            if (isSignedIn)
+              KeyedSubtree(
+                key: _sectionKeys[_SettingsSection.account],
+                child: _accountContent(t),
+              ),
+          ],
+        ),
+      ),
     );
 
     return Scaffold(
@@ -220,112 +384,38 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
-            final bool isWide = constraints.maxWidth >= _wideBreakpoint;
-            return isWide
-                ? _wideLayout(sections, selectedIndex, t, content)
-                : _narrowLayout(sections, selectedIndex, t, content);
+            // Same breakpoint logic as ModeSelectionScreen.
+            final bool isWide = constraints.maxWidth >= _breakpoint;
+            if (!isWide) return content;
+
+            final selectedIndex = sections.contains(_activeSection)
+                ? sections.indexOf(_activeSection)
+                : 0;
+
+            return Row(
+              children: [
+                NavigationRail(
+                  selectedIndex: selectedIndex,
+                  onDestinationSelected: (index) =>
+                      _jumpToSection(sections[index]),
+                  labelType: NavigationRailLabelType.all,
+                  groupAlignment: -1.0,
+                  destinations: [
+                    for (final section in sections)
+                      NavigationRailDestination(
+                        icon: Icon(section.icon),
+                        label: Text(_sectionLabel(section, t)),
+                      ),
+                  ],
+                ),
+                const VerticalDivider(thickness: 1, width: 1),
+                Expanded(child: content),
+              ],
+            );
           },
         ),
       ),
     );
-  }
-
-  Widget _wideLayout(
-    List<_SettingsSection> sections,
-    int selectedIndex,
-    Translations t,
-    Widget content,
-  ) {
-    return Row(
-      children: [
-        NavigationRail(
-          selectedIndex: selectedIndex,
-          onDestinationSelected: _selectSection,
-          labelType: NavigationRailLabelType.all,
-          groupAlignment: -1.0,
-          destinations: [
-            for (final section in sections)
-              NavigationRailDestination(
-                icon: Icon(section.icon),
-                label: Text(_sectionLabel(section, t)),
-              ),
-          ],
-        ),
-        const VerticalDivider(thickness: 1, width: 1),
-        Expanded(child: content),
-      ],
-    );
-  }
-
-  Widget _narrowLayout(
-    List<_SettingsSection> sections,
-    int selectedIndex,
-    Translations t,
-    Widget content,
-  ) {
-    return Column(
-      children: [
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-          child: Row(
-            children: [
-              for (int i = 0; i < sections.length; i++)
-                Padding(
-                  padding: const EdgeInsets.only(right: 8),
-                  child: ChoiceChip(
-                    avatar: Icon(sections[i].icon, size: 18),
-                    label: Text(_sectionLabel(sections[i], t)),
-                    selected: i == selectedIndex,
-                    onSelected: (_) => _selectSection(i),
-                  ),
-                ),
-            ],
-          ),
-        ),
-        const Divider(height: 1),
-        Expanded(child: content),
-      ],
-    );
-  }
-
-  Widget _animatedSection(
-    List<_SettingsSection> sections,
-    int selectedIndex,
-    Translations t,
-    bool showExperimental,
-  ) {
-    final section = sections[selectedIndex];
-    return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 250),
-      switchInCurve: Curves.easeOutCubic,
-      switchOutCurve: Curves.easeInCubic,
-      transitionBuilder: (child, animation) =>
-          FadeTransition(opacity: animation, child: child),
-      child: CenteredView(
-        key: ValueKey(section),
-        child: SmoothSingleChildScrollView(
-          controller: _scrollController,
-          padding: const EdgeInsets.all(16.0),
-          child: _sectionContent(section, t, showExperimental),
-        ),
-      ),
-    );
-  }
-
-  Widget _sectionContent(
-    _SettingsSection section,
-    Translations t,
-    bool showExperimental,
-  ) {
-    return switch (section) {
-      _SettingsSection.appearance => _appearanceContent(t),
-      _SettingsSection.study =>
-        _studyContent(t, showExperimental: showExperimental),
-      _SettingsSection.update => _updateContent(t),
-      _SettingsSection.data => _dataContent(t),
-      _SettingsSection.account => _accountContent(t),
-    };
   }
 
   // -------------------------------------------------------------------
@@ -341,8 +431,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     final uiScaleNotifier = ref.read(uiScaleProvider.notifier);
     final seedArgb = ref.watch(seedColorProvider);
     final seedNotifier = ref.read(seedColorProvider.notifier);
-    final activeSeedColor =
-        seedArgb == null ? defaultSeedColor : Color(seedArgb);
+    final activeSeedColor = seedArgb == null
+        ? defaultSeedColor
+        : Color(seedArgb);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -461,8 +552,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   }
 
   Widget _studyContent(Translations t, {required bool showExperimental}) {
-    final disableFlashcardAnimations =
-        ref.watch(disableFlashcardAnimationsProvider);
+    final disableFlashcardAnimations = ref.watch(
+      disableFlashcardAnimationsProvider,
+    );
     final smoothScrollEnabled = ref.watch(smoothScrollProvider);
 
     return Column(
@@ -531,8 +623,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                           onPressed: ref.watch(scrollSpeedProvider) == 1.1
                               ? null
                               : () => ref
-                                  .read(scrollSpeedProvider.notifier)
-                                  .set(1.1),
+                                    .read(scrollSpeedProvider.notifier)
+                                    .set(1.1),
                           child: Text(t.general.reset),
                         ),
                       ],
@@ -549,8 +641,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       children: [
                         Expanded(
                           child: Slider(
-                            value:
-                                ref.watch(scrollDurationProvider).toDouble(),
+                            value: ref.watch(scrollDurationProvider).toDouble(),
                             min: 400,
                             max: 3000,
                             divisions: 13,
@@ -572,8 +663,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                           onPressed: ref.watch(scrollDurationProvider) == 1400
                               ? null
                               : () => ref
-                                  .read(scrollDurationProvider.notifier)
-                                  .set(1400),
+                                    .read(scrollDurationProvider.notifier)
+                                    .set(1400),
                           child: Text(t.general.reset),
                         ),
                       ],
@@ -663,15 +754,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       ],
     );
   }
-
-  // -------------------------------------------------------------------
-  // Kept unchanged from the previous file:
-  //   - _showLanguageMenu(...)
-  //   - _exportData(...)
-  //   - _importData(...)
-  //   - _deleteAllData(...)
-  //   - _confirmDeleteAccount(...)
-  // -------------------------------------------------------------------
 
   void _showLanguageMenu(BuildContext context, WidgetRef ref) {
     final languageNotifier = ref.read(appLanguageProvider.notifier);
@@ -976,7 +1058,10 @@ class _SettingsHeader extends StatelessWidget {
 }
 
 class _LanguageDialog extends StatefulWidget {
-  const _LanguageDialog({required this.currentLanguage, required this.notifier});
+  const _LanguageDialog({
+    required this.currentLanguage,
+    required this.notifier,
+  });
   final AppLanguage currentLanguage;
   final AppLanguageNotifier notifier;
 

@@ -43,7 +43,7 @@ dependencies:
   path: ^1.9.1
 
   # Theme customization
-  flex_color_picker: ^3.7.0
+  flex_color_picker: ^3.8.0
 
   # Animations
   flutter_animate: ^4.5.2
