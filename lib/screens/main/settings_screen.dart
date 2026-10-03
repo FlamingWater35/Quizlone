@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:collection/collection.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:file_saver/file_saver.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
@@ -44,7 +45,11 @@ enum _SettingsSection {
 
 @RoutePage()
 class SettingsScreen extends ConsumerStatefulWidget {
-  const SettingsScreen({super.key});
+  const SettingsScreen({super.key, this.initialSection});
+
+  /// Name of the section to scroll to right after opening the screen
+  /// (e.g. `update`). Used by the update prompt snackbar.
+  final String? initialSection;
 
   @override
   ConsumerState<SettingsScreen> createState() => _SettingsScreenState();
@@ -100,6 +105,20 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   void initState() {
     super.initState();
     _scrollController.addListener(_updateActiveSection);
+
+    // When opened with a target section (e.g. from the update snackbar),
+    // jump to it once the first frame has been laid out.
+    final initialSectionName = widget.initialSection;
+    if (initialSectionName != null) {
+      final target = _SettingsSection.values.firstWhereOrNull(
+        (section) => section.name == initialSectionName,
+      );
+      if (target != null) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) _jumpToSection(target);
+        });
+      }
+    }
   }
 
   @override
@@ -1242,6 +1261,8 @@ class _UpdaterCard extends ConsumerWidget {
               subtitle: Text(
                 Platform.isAndroid
                     ? t.settingsScreen.tapToInstall
+                    : Platform.isWindows
+                    ? t.settingsScreen.openReleasePage
                     : t.settingsScreen.clickToDownload,
               ),
               onTap: updaterNotifier.downloadUpdate,

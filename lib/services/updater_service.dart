@@ -22,6 +22,19 @@ const _githubApiUrl =
 class UpdaterService {
   final Dio _dio = Dio();
 
+  /// Base URL of the GitHub repository hosting the releases.
+  static const String githubRepoUrl =
+      'https://github.com/FlamingWater35/Quizlone';
+
+  /// URL that redirects to the latest GitHub release.
+  static const String latestReleaseUrl = '$githubRepoUrl/releases/latest';
+
+  /// Builds the GitHub release page URL for a specific update version.
+  /// Used on Windows, where users install updates manually from the release
+  /// page instead of via an in-app download.
+  Uri releasePageUrl(UpdateInfo info) =>
+      Uri.parse('$githubRepoUrl/releases/tag/v${info.version}');
+
   Future<UpdateInfo?> checkForUpdate() async {
     if (kIsWeb) return null;
 

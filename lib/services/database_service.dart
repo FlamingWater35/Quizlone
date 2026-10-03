@@ -42,6 +42,7 @@ class DatabaseService {
   static const String _flashcardAnimationsDisabledKey =
       'flashcardAnimationsDisabled';
   static const String _seedColorKey = 'seedColor';
+  static const String _skippedUpdateVersionKey = 'skippedUpdateVersion';
 
   static late Box<StudyGroup> _studyGroupBox;
   static const String _studyGroupBoxName = 'studyGroupsBox';
@@ -601,6 +602,31 @@ class DatabaseService {
     } catch (e, s) {
       _log.severe("Failed to read scroll duration", e, s);
       return 1400;
+    }
+  }
+
+  /// Persists the update version the user chose to skip prompts for.
+  /// Passing null clears the stored value.
+  Future<void> saveSkippedUpdateVersion(String? version) async {
+    try {
+      if (version == null) {
+        await _settingsBox.delete(_skippedUpdateVersionKey);
+      } else {
+        await _settingsBox.put(_skippedUpdateVersionKey, version);
+      }
+    } catch (e, s) {
+      _log.severe("Failed to save skipped update version", e, s);
+    }
+  }
+
+  /// Returns the update version the user asked not to be reminded about,
+  /// or null if no update has been skipped.
+  String? getSkippedUpdateVersion() {
+    try {
+      return _settingsBox.get(_skippedUpdateVersionKey);
+    } catch (e, s) {
+      _log.severe("Failed to read skipped update version", e, s);
+      return null;
     }
   }
 

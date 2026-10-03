@@ -25,9 +25,13 @@ class UpdateChecking extends UpdateState {
 }
 
 class UpdateAvailable extends UpdateState {
-  const UpdateAvailable(this.info);
+  const UpdateAvailable(this.info, {this.isAutomatic = false});
 
   final UpdateInfo info;
+
+  /// Whether this update was found by the startup auto-check rather than a
+  /// user-initiated check. Drives the one-time prompt snackbar.
+  final bool isAutomatic;
 }
 
 class UpdateNotAvailable extends UpdateState {
@@ -53,14 +57,14 @@ UpdaterService updaterService(Ref ref) {
 
 @riverpod
 class UpdaterController extends _$UpdaterController {
-  Future<void> checkForUpdate() async {
+  Future<void> checkForUpdate({bool automatic = false}) async {
     state = const UpdateChecking();
     final service = ref.read(updaterServiceProvider);
     try {
       final updateInfo = await service.checkForUpdate();
       if (!ref.mounted) return;
       if (updateInfo != null) {
-        state = UpdateAvailable(updateInfo);
+        state = UpdateAvailable(updateInfo, isAutomatic: automatic);
       } else {
         state = const UpdateNotAvailable();
       }
@@ -95,16 +99,26 @@ class UpdaterController extends _$UpdaterController {
       } catch (e) {
         if (ref.mounted) state = UpdateError(e.toString());
       }
+    } else if (Platform.isWindows) {
+      // On Windows we don't download the installer directly anymore.
+      // Open the GitHub release page in the default browser instead.
+      final service = ref.read(updaterServiceProvider);
+      await _launchUrlWithFallback(service.releasePageUrl(currentState.info));
     } else {
-      final url = Uri.parse(currentState.info.apkUrl);
-      if (await canLaunchUrl(url)) {
-        await launchUrl(url, mode: LaunchMode.externalApplication);
-      } else {
-        final fallbackUrl = Uri.parse(
-          'https://github.com/FlamingWater35/Quizlone/releases/latest',
-        );
-        await launchUrl(fallbackUrl, mode: LaunchMode.externalApplication);
-      }
+      await _launchUrlWithFallback(Uri.parse(currentState.info.apkUrl));
+    }
+  }
+
+  /// Opens [url] externally, falling back to the latest GitHub release page
+  /// if the URL can't be handled.
+  Future<void> _launchUrlWithFallback(Uri url) async {
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url, mode: LaunchMode.externalApplication);
+    } else {
+      await launchUrl(
+        Uri.parse(UpdaterService.latestReleaseUrl),
+        mode: LaunchMode.externalApplication,
+      );
     }
   }
 
@@ -116,7 +130,7 @@ class UpdaterController extends _$UpdaterController {
     if (!kIsWeb && (Platform.isAndroid || isDesktop)) {
       Future.delayed(const Duration(seconds: 3), () {
         if (ref.mounted && state is UpdateInitial) {
-          checkForUpdate();
+          checkForUpdate(automatic: true);
         }
       });
     }

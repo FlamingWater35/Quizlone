@@ -7,6 +7,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
+import 'package:quizlone/models/update_info.dart';
 import 'package:quizlone/providers/core/auth_provider.dart';
 import 'package:quizlone/providers/core/core_providers.dart';
 import 'package:quizlone/providers/study/study_list_providers.dart';
@@ -198,6 +199,8 @@ class MyApp extends ConsumerStatefulWidget {
 class _MyAppState extends ConsumerState<MyApp> {
   static final _appRouter = AppRouter();
   static final _log = Logger('MyApp');
+  static final GlobalKey<ScaffoldMessengerState> _scaffoldMessengerKey =
+      GlobalKey<ScaffoldMessengerState>();
 
   @override
   void initState() {
@@ -218,8 +221,22 @@ class _MyAppState extends ConsumerState<MyApp> {
     final scrollSpeedValue = ref.watch(scrollSpeedProvider);
     final scrollDurationValue = ref.watch(scrollDurationProvider);
 
-    if (!kIsWeb && Platform.isAndroid) {
+    // Keep the updater provider alive on every platform that supports the
+    // update flow so the startup auto-check runs everywhere and can prompt
+    // the user via snackbar when a new version is found.
+    final bool updaterEnabled =
+        !kIsWeb &&
+        (Platform.isAndroid ||
+            Platform.isWindows ||
+            Platform.isMacOS ||
+            Platform.isLinux);
+    if (updaterEnabled) {
       ref.watch(updaterControllerProvider);
+      ref.listen<UpdateState>(updaterControllerProvider, (previous, next) {
+        if (next is UpdateAvailable && next.isAutomatic) {
+          _maybeShowUpdateSnackbar(next.info);
+        }
+      });
     }
 
     final themeMode = ref.watch(appThemeProvider);
@@ -282,6 +299,7 @@ class _MyAppState extends ConsumerState<MyApp> {
         durationMs: scrollDurationValue,
       ),
       child: MaterialApp.router(
+        scaffoldMessengerKey: _scaffoldMessengerKey,
         title: t.appName,
         locale: TranslationProvider.of(context).flutterLocale,
         supportedLocales: AppLocaleUtils.supportedLocales,
@@ -317,6 +335,71 @@ class _MyAppState extends ConsumerState<MyApp> {
               );
             }
             return deepLink;
+          },
+        ),
+      ),
+    );
+  }
+
+  /// Shows a short-lived prompt when the startup auto-check finds an update.
+  /// Offers a jump to the Update section in Settings and an option to
+  /// suppress future prompts for the same version.
+  void _maybeShowUpdateSnackbar(UpdateInfo info) {
+    final skippedVersion = ref
+        .read(databaseServiceProvider)
+        .getSkippedUpdateVersion();
+    if (skippedVersion == info.version) return;
+
+    final messenger = _scaffoldMessengerKey.currentState;
+    if (messenger == null) return;
+
+    messenger.showSnackBar(
+      SnackBar(
+        duration: const Duration(seconds: 3),
+        content: Builder(
+          builder: (context) {
+            final colorScheme = Theme.of(context).colorScheme;
+            final buttonStyle = TextButton.styleFrom(
+              foregroundColor: colorScheme.inversePrimary,
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              minimumSize: const Size(0, 36),
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            );
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(t.settingsScreen.updateAvailable(version: info.version)),
+                const SizedBox(height: 4),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Flexible(
+                      child: TextButton(
+                        style: buttonStyle,
+                        onPressed: () {
+                          ref
+                              .read(databaseServiceProvider)
+                              .saveSkippedUpdateVersion(info.version);
+                          messenger.removeCurrentSnackBar();
+                        },
+                        child: Text(t.settingsScreen.dontShowAgain),
+                      ),
+                    ),
+                    TextButton(
+                      style: buttonStyle,
+                      onPressed: () {
+                        messenger.removeCurrentSnackBar();
+                        _appRouter.push(
+                          SettingsRoute(initialSection: 'update'),
+                        );
+                      },
+                      child: Text(t.settingsScreen.update),
+                    ),
+                  ],
+                ),
+              ],
+            );
           },
         ),
       ),

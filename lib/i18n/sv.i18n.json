@@ -321,6 +321,8 @@
     "updateAvailable": "Uppdatering Tillgänglig: v$version",
     "tapToInstall": "Tryck för att ladda ner och installera",
     "clickToDownload": "Klicka för att ladda ner den senaste versionen",
+    "openReleasePage": "Öppna release-sidan på GitHub",
+    "dontShowAgain": "Visa inte igen",
     "viewReleaseNotes": "Visa versionsfakta",
     "downloadingUpdate": "Laddar ner uppdatering...",
     "updateCheckFailed": "Uppdateringskontroll Misslyckades",

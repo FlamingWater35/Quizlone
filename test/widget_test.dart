@@ -29,6 +29,12 @@ void main() {
     );
     await tester.pumpAndSettle();
 
+    // The startup auto-check schedules its update check after 3 seconds on
+    // every supported platform (including desktop test hosts). Flush the
+    // timer so the test doesn't finish with it still pending.
+    await tester.pump(const Duration(seconds: 3));
+    await tester.pumpAndSettle();
+
     // Start screen content is visible.
     expect(find.text('Welcome!'), findsOneWidget);
     expect(find.text('Create New List'), findsOneWidget);

@@ -321,6 +321,8 @@
     "updateAvailable": "有可用更新：v$version",
     "tapToInstall": "点击下载并安装",
     "clickToDownload": "点击下载最新版本",
+    "openReleasePage": "在 GitHub 上打开发布页面",
+    "dontShowAgain": "不再显示",
     "viewReleaseNotes": "查看发行说明",
     "downloadingUpdate": "正在下载更新...",
     "updateCheckFailed": "更新检查失败",

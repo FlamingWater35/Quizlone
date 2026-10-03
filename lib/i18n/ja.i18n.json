@@ -321,6 +321,8 @@
     "updateAvailable": "利用可能な更新: v$version",
     "tapToInstall": "タップしてダウンロードとインストール",
     "clickToDownload": "クリックして最新バージョンをダウンロード",
+    "openReleasePage": "GitHubのリリースページを開く",
+    "dontShowAgain": "再表示しない",
     "viewReleaseNotes": "リリースノートを表示",
     "downloadingUpdate": "更新をダウンロード中...",
     "updateCheckFailed": "更新チェックに失敗しました",

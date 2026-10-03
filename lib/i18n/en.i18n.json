@@ -321,6 +321,8 @@
     "updateAvailable": "Update Available: v$version",
     "tapToInstall": "Tap to download and install",
     "clickToDownload": "Click to download latest version",
+    "openReleasePage": "Open release page on GitHub",
+    "dontShowAgain": "Don't show again",
     "viewReleaseNotes": "View release notes",
     "downloadingUpdate": "Downloading update...",
     "updateCheckFailed": "Update Check Failed",

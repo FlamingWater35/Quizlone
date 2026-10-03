@@ -86,7 +86,7 @@ class AppNavigator {
   }
 
   static void pushSettings(BuildContext context) {
-    context.router.push(const SettingsRoute());
+    context.router.push(SettingsRoute());
   }
 
   static void pushControls(BuildContext context) {

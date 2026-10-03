@@ -379,6 +379,18 @@ class FakeDatabaseService implements DatabaseService {
   @override
   String? getActiveListId() => settings['activeListId'] as String?;
 
+  // --- Skipped update version ---
+
+  String? _skippedUpdateVersion;
+
+  @override
+  String? getSkippedUpdateVersion() => _skippedUpdateVersion;
+
+  @override
+  Future<void> saveSkippedUpdateVersion(String? version) async {
+    _skippedUpdateVersion = version;
+  }
+
   // --- APK cleanup ---
 
   @override

@@ -321,6 +321,8 @@
     "updateAvailable": "Atualização Disponível: v$version",
     "tapToInstall": "Toque para baixar e instalar",
     "clickToDownload": "Clique para baixar a versão mais recente",
+    "openReleasePage": "Abrir página de lançamento no GitHub",
+    "dontShowAgain": "Não mostrar novamente",
     "viewReleaseNotes": "Ver notas da versão",
     "downloadingUpdate": "Baixando atualização...",
     "updateCheckFailed": "Falha na Verificação de Atualização",
