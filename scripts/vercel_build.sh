@@ -14,6 +14,10 @@ if [ ! -x "$FLUTTER_HOME/bin/flutter" ]; then
 fi
 export PATH="$FLUTTER_HOME/bin:$PATH"
 
+# Vercel extracts the tarball as a different uid than the build user (root);
+# without this the flutter tool's git checks exit 128 ("dubious ownership").
+git config --global --add safe.directory "$FLUTTER_HOME"
+
 flutter config --no-analytics >/dev/null 2>&1 || true
 flutter --version
 flutter precache --web
