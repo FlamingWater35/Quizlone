@@ -18,11 +18,40 @@ class SmoothScrollController extends ScrollController {
     super.debugLabel,
   });
 
+  /// Scroll offset to apply to the next newly created [ScrollPosition].
+  ///
+  /// Toggling smooth scrolling swaps the underlying scrollable widget type
+  /// (stock ↔ silky), which destroys the current position. The wrapper
+  /// widgets stash the old offset here right before the swap so the
+  /// replacement position is created at the right offset — in the same
+  /// frame, before anything is painted — instead of snapping to the top.
+  double? pendingRestoreOffset;
+
   /// Static accessor kept so that [SmoothScrollNotifier] and [main] can
   /// continue to read/write the flag without importing the top-level
   /// variable directly.
   static bool get enabledGlobally => smoothScrollEnabledGlobally;
   static set enabledGlobally(bool value) => smoothScrollEnabledGlobally = value;
+
+  @override
+  ScrollPosition createScrollPosition(
+    ScrollPhysics physics,
+    ScrollContext context,
+    ScrollPosition? oldPosition,
+  ) {
+    // Only consume the pending offset for a brand-new position. When
+    // [oldPosition] is present, the position keeps its existing pixels.
+    final restoreOffset = oldPosition == null ? pendingRestoreOffset : null;
+    pendingRestoreOffset = null;
+    return ScrollPositionWithSingleContext(
+      physics: physics,
+      context: context,
+      initialPixels: restoreOffset ?? initialScrollOffset,
+      keepScrollOffset: keepScrollOffset,
+      oldPosition: oldPosition,
+      debugLabel: debugLabel,
+    );
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -77,15 +106,70 @@ class SmoothScrollScope extends InheritedNotifier<SmoothScrollData> {
     required super.child,
   });
 
-  static SmoothScrollData _of(BuildContext context) {
+  /// Nearest scope data, or null when no scope is present (e.g. the fatal
+  /// startup-error UI, which is built outside the main app tree). The
+  /// wrappers then silently fall back to the stock scrollables.
+  static SmoothScrollData? _maybeOf(BuildContext context) {
     return context
-        .dependOnInheritedWidgetOfExactType<SmoothScrollScope>()!
-        .notifier!;
+        .dependOnInheritedWidgetOfExactType<SmoothScrollScope>()
+        ?.notifier;
   }
 
-  static bool enabled(BuildContext context) => _of(context).enabled;
-  static double speed(BuildContext context) => _of(context).speed;
-  static Duration duration(BuildContext context) => _of(context).duration;
+  static bool enabled(BuildContext context) =>
+      _maybeOf(context)?.enabled ?? false;
+  static double speed(BuildContext context) =>
+      _maybeOf(context)?.speed ?? 1.1;
+  static Duration duration(BuildContext context) =>
+      _maybeOf(context)?.duration ?? const Duration(milliseconds: 1400);
+}
+
+// ---------------------------------------------------------------------------
+// Scroll-offset preservation across smooth-scroll toggles
+// ---------------------------------------------------------------------------
+
+/// Toggling smooth scrolling swaps the underlying scrollable widget type
+/// (stock ↔ silky). That destroys the current [ScrollPosition], which would
+/// normally snap the view back to the top of the page.
+///
+/// This helper captures the offset right before the swap (in
+/// `didChangeDependencies`, while the old scrollable is still attached) and
+/// stashes it on the controller, where it is consumed during the creation of
+/// the replacement position — i.e. before the first frame paints, so there is
+/// no visible jump to the top. A post-frame check remains as a safety net
+/// (it's a no-op when the primary path already worked).
+class _ScrollOffsetPreserver {
+  bool? _lastEnabled;
+
+  /// Must be called from the host state's `didChangeDependencies`.
+  void didChangeDependencies(
+    BuildContext context,
+    ScrollController? controller,
+  ) {
+    final enabled = SmoothScrollScope.enabled(context);
+    final wasToggled = _lastEnabled != null && _lastEnabled != enabled;
+    _lastEnabled = enabled;
+    if (!wasToggled || controller == null || !controller.hasClients) {
+      return;
+    }
+    final pendingOffset = controller.offset;
+    if (controller is SmoothScrollController) {
+      // Primary path: the replacement scrollable picks this up while it
+      // creates its ScrollPosition during this same frame.
+      controller.pendingRestoreOffset = pendingOffset;
+    }
+    // Safety net: if the new position still isn't at the expected offset
+    // after layout, correct it. Skips when the primary path already worked.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!controller.hasClients) return;
+      final position = controller.position;
+      final target = pendingOffset
+          .clamp(position.minScrollExtent, position.maxScrollExtent)
+          .toDouble();
+      if (position.pixels != target) {
+        controller.jumpTo(target);
+      }
+    });
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -95,7 +179,7 @@ class SmoothScrollScope extends InheritedNotifier<SmoothScrollData> {
 /// A [SingleChildScrollView] that delegates to [SilkySingleChildScrollView]
 /// when smooth scrolling is enabled, and falls back to the stock widget
 /// otherwise.
-class SmoothSingleChildScrollView extends StatelessWidget {
+class SmoothSingleChildScrollView extends StatefulWidget {
   const SmoothSingleChildScrollView({
     super.key,
     this.controller,
@@ -122,35 +206,51 @@ class SmoothSingleChildScrollView extends StatelessWidget {
   final Curve silkyCurve;
 
   @override
+  State<SmoothSingleChildScrollView> createState() =>
+      _SmoothSingleChildScrollViewState();
+}
+
+class _SmoothSingleChildScrollViewState
+    extends State<SmoothSingleChildScrollView> {
+  final _ScrollOffsetPreserver _offsetPreserver = _ScrollOffsetPreserver();
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Preserves the scroll offset across the stock ↔ silky widget swap.
+    _offsetPreserver.didChangeDependencies(context, widget.controller);
+  }
+
+  @override
   Widget build(BuildContext context) {
     if (SmoothScrollScope.enabled(context)) {
       return SilkySingleChildScrollView(
-        controller: controller,
-        padding: padding,
-        physics: physics ?? const ScrollPhysics(),
-        reverse: reverse,
-        scrollDirection: scrollDirection,
+        controller: widget.controller,
+        padding: widget.padding,
+        physics: widget.physics ?? const ScrollPhysics(),
+        reverse: widget.reverse,
+        scrollDirection: widget.scrollDirection,
         scrollSpeed: SmoothScrollScope.speed(context),
         silkyScrollDuration: SmoothScrollScope.duration(context),
-        animationCurve: silkyCurve,
-        child: child,
+        animationCurve: widget.silkyCurve,
+        child: widget.child,
       );
     }
     return SingleChildScrollView(
-      controller: controller,
-      padding: padding,
-      physics: physics,
-      reverse: reverse,
-      primary: primary,
-      scrollDirection: scrollDirection,
-      child: child,
+      controller: widget.controller,
+      padding: widget.padding,
+      physics: widget.physics,
+      reverse: widget.reverse,
+      primary: widget.primary,
+      scrollDirection: widget.scrollDirection,
+      child: widget.child,
     );
   }
 }
 
 /// A [ListView.builder] / [ListView.separated] that delegates to the
 /// silky_scroll equivalents when smooth scrolling is enabled.
-class SmoothListView extends StatelessWidget {
+class SmoothListView extends StatefulWidget {
   /// Creates a builder-style list (the most common pattern in Quizlone).
   const SmoothListView.builder({
     super.key,
@@ -209,75 +309,88 @@ class SmoothListView extends StatelessWidget {
   final Curve silkyCurve;
 
   @override
+  State<SmoothListView> createState() => _SmoothListViewState();
+}
+
+class _SmoothListViewState extends State<SmoothListView> {
+  final _ScrollOffsetPreserver _offsetPreserver = _ScrollOffsetPreserver();
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Preserves the scroll offset across the stock ↔ silky widget swap.
+    _offsetPreserver.didChangeDependencies(context, widget.controller);
+  }
+
+  @override
   Widget build(BuildContext context) {
     if (SmoothScrollScope.enabled(context)) {
-      if (separatorBuilder != null) {
+      if (widget.separatorBuilder != null) {
         return SilkyListView.separated(
-          controller: controller,
-          padding: padding,
-          physics: physics ?? const ScrollPhysics(),
-          reverse: reverse,
-          shrinkWrap: shrinkWrap,
-          itemCount: itemCount,
-          separatorBuilder: separatorBuilder!,
-          itemBuilder: itemBuilder,
-          addAutomaticKeepAlives: addAutomaticKeepAlives,
-          addRepaintBoundaries: addRepaintBoundaries,
-          addSemanticIndexes: addSemanticIndexes,
+          controller: widget.controller,
+          padding: widget.padding,
+          physics: widget.physics ?? const ScrollPhysics(),
+          reverse: widget.reverse,
+          shrinkWrap: widget.shrinkWrap,
+          itemCount: widget.itemCount,
+          separatorBuilder: widget.separatorBuilder!,
+          itemBuilder: widget.itemBuilder,
+          addAutomaticKeepAlives: widget.addAutomaticKeepAlives,
+          addRepaintBoundaries: widget.addRepaintBoundaries,
+          addSemanticIndexes: widget.addSemanticIndexes,
           scrollSpeed: SmoothScrollScope.speed(context),
           silkyScrollDuration: SmoothScrollScope.duration(context),
-          animationCurve: silkyCurve,
+          animationCurve: widget.silkyCurve,
         );
       }
       return SilkyListView.builder(
-        controller: controller,
-        padding: padding,
-        physics: physics ?? const ScrollPhysics(),
-        reverse: reverse,
-        shrinkWrap: shrinkWrap,
-        itemCount: itemCount,
-        itemBuilder: itemBuilder,
-        addAutomaticKeepAlives: addAutomaticKeepAlives,
-        addRepaintBoundaries: addRepaintBoundaries,
-        addSemanticIndexes: addSemanticIndexes,
-        cacheExtent: cacheExtent,
+        controller: widget.controller,
+        padding: widget.padding,
+        physics: widget.physics ?? const ScrollPhysics(),
+        reverse: widget.reverse,
+        shrinkWrap: widget.shrinkWrap,
+        itemCount: widget.itemCount,
+        itemBuilder: widget.itemBuilder,
+        addAutomaticKeepAlives: widget.addAutomaticKeepAlives,
+        addRepaintBoundaries: widget.addRepaintBoundaries,
+        addSemanticIndexes: widget.addSemanticIndexes,
+        cacheExtent: widget.cacheExtent,
         scrollSpeed: SmoothScrollScope.speed(context),
         silkyScrollDuration: SmoothScrollScope.duration(context),
-        animationCurve: silkyCurve,
+        animationCurve: widget.silkyCurve,
       );
     }
-
-    if (separatorBuilder != null) {
+    if (widget.separatorBuilder != null) {
       return ListView.separated(
-        controller: controller,
-        padding: padding,
-        physics: physics,
-        reverse: reverse,
-        shrinkWrap: shrinkWrap,
-        itemCount: itemCount,
-        separatorBuilder: separatorBuilder!,
-        itemBuilder: itemBuilder,
-        addAutomaticKeepAlives: addAutomaticKeepAlives,
-        addRepaintBoundaries: addRepaintBoundaries,
-        addSemanticIndexes: addSemanticIndexes,
-        scrollCacheExtent: cacheExtent != null
-            ? ScrollCacheExtent.pixels(cacheExtent!)
+        controller: widget.controller,
+        padding: widget.padding,
+        physics: widget.physics,
+        reverse: widget.reverse,
+        shrinkWrap: widget.shrinkWrap,
+        itemCount: widget.itemCount,
+        separatorBuilder: widget.separatorBuilder!,
+        itemBuilder: widget.itemBuilder,
+        addAutomaticKeepAlives: widget.addAutomaticKeepAlives,
+        addRepaintBoundaries: widget.addRepaintBoundaries,
+        addSemanticIndexes: widget.addSemanticIndexes,
+        scrollCacheExtent: widget.cacheExtent != null
+            ? ScrollCacheExtent.pixels(widget.cacheExtent!)
             : null,
       );
     }
     return ListView.builder(
-      controller: controller,
-      padding: padding,
-      physics: physics,
-      reverse: reverse,
-      shrinkWrap: shrinkWrap,
-      itemCount: itemCount,
-      itemBuilder: itemBuilder,
-      addAutomaticKeepAlives: addAutomaticKeepAlives,
-      addRepaintBoundaries: addRepaintBoundaries,
-      addSemanticIndexes: addSemanticIndexes,
-      scrollCacheExtent: cacheExtent != null
-          ? ScrollCacheExtent.pixels(cacheExtent!)
+      controller: widget.controller,
+      padding: widget.padding,
+      physics: widget.physics,
+      reverse: widget.reverse,
+      shrinkWrap: widget.shrinkWrap,
+      itemCount: widget.itemCount,
+      itemBuilder: widget.itemBuilder,
+      addAutomaticKeepAlives: widget.addAutomaticKeepAlives,
+      addRepaintBoundaries: widget.addRepaintBoundaries,
+      addSemanticIndexes: widget.addSemanticIndexes,
+      scrollCacheExtent: widget.cacheExtent != null
+          ? ScrollCacheExtent.pixels(widget.cacheExtent!)
           : null,
     );
   }

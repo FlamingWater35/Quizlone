@@ -295,7 +295,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               title: Text(t.settingsScreen.themeColorDialog),
               content: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 460),
-                child: SingleChildScrollView(
+                child: SmoothSingleChildScrollView(
                   child: ColorPicker(
                     color: selected,
                     onColorChanged: (color) {
@@ -627,90 +627,105 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   onChanged: (val) =>
                       ref.read(smoothScrollProvider.notifier).toggle(val),
                 ),
-                if (smoothScrollEnabled) ...[
-                  const Divider(indent: 16, endIndent: 16),
-                  ListTile(
-                    leading: const Icon(Icons.speed_outlined),
-                    title: Text(t.settingsScreen.scrollSpeed),
-                    subtitle: Text(t.settingsScreen.scrollSpeedSubtitle),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 8.0),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Slider(
-                            value: ref.watch(scrollSpeedProvider),
-                            min: 0.5,
-                            max: 2.0,
-                            divisions: 15,
-                            label:
-                                "${ref.watch(scrollSpeedProvider).toStringAsFixed(1)}x",
-                            onChanged: (value) => ref
-                                .read(scrollSpeedProvider.notifier)
-                                .set(value),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 50,
-                          child: Text(
-                            "${ref.watch(scrollSpeedProvider).toStringAsFixed(1)}x",
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        OutlinedButton(
-                          onPressed: ref.watch(scrollSpeedProvider) == 1.1
-                              ? null
-                              : () => ref
+                // Animates the speed/duration options in and out instead of
+                // popping them into the layout. The cross-fade collapses to a
+                // zero-height placeholder when smooth scrolling is disabled.
+                AnimatedCrossFade(
+                  duration: const Duration(milliseconds: 300),
+                  sizeCurve: Curves.easeInOutCubic,
+                  crossFadeState: smoothScrollEnabled
+                      ? CrossFadeState.showSecond
+                      : CrossFadeState.showFirst,
+                  firstChild: const SizedBox(width: double.infinity),
+                  secondChild: Column(
+                    children: [
+                      const Divider(indent: 16, endIndent: 16),
+                      ListTile(
+                        leading: const Icon(Icons.speed_outlined),
+                        title: Text(t.settingsScreen.scrollSpeed),
+                        subtitle: Text(t.settingsScreen.scrollSpeedSubtitle),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 8.0),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Slider(
+                                value: ref.watch(scrollSpeedProvider),
+                                min: 0.5,
+                                max: 2.0,
+                                divisions: 15,
+                                label:
+                                    "${ref.watch(scrollSpeedProvider).toStringAsFixed(1)}x",
+                                onChanged: (value) => ref
                                     .read(scrollSpeedProvider.notifier)
-                                    .set(1.1),
-                          child: Text(t.general.reset),
+                                    .set(value),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 50,
+                              child: Text(
+                                "${ref.watch(scrollSpeedProvider).toStringAsFixed(1)}x",
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            OutlinedButton(
+                              onPressed: ref.watch(scrollSpeedProvider) == 1.1
+                                  ? null
+                                  : () => ref
+                                        .read(scrollSpeedProvider.notifier)
+                                        .set(1.1),
+                              child: Text(t.general.reset),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
-                  ListTile(
-                    leading: const Icon(Icons.timer_outlined),
-                    title: Text(t.settingsScreen.scrollDuration),
-                    subtitle: Text(t.settingsScreen.scrollDurationSubtitle),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 8.0),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Slider(
-                            value: ref.watch(scrollDurationProvider).toDouble(),
-                            min: 400,
-                            max: 3000,
-                            divisions: 13,
-                            label: "${ref.watch(scrollDurationProvider)}ms",
-                            onChanged: (value) => ref
-                                .read(scrollDurationProvider.notifier)
-                                .set(value.round()),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 55,
-                          child: Text(
-                            "${ref.watch(scrollDurationProvider)}ms",
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        OutlinedButton(
-                          onPressed: ref.watch(scrollDurationProvider) == 1400
-                              ? null
-                              : () => ref
+                      ),
+                      ListTile(
+                        leading: const Icon(Icons.timer_outlined),
+                        title: Text(t.settingsScreen.scrollDuration),
+                        subtitle: Text(t.settingsScreen.scrollDurationSubtitle),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 8.0),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Slider(
+                                value:
+                                    ref.watch(scrollDurationProvider).toDouble(),
+                                min: 400,
+                                max: 3000,
+                                divisions: 13,
+                                label: "${ref.watch(scrollDurationProvider)}ms",
+                                onChanged: (value) => ref
                                     .read(scrollDurationProvider.notifier)
-                                    .set(1400),
-                          child: Text(t.general.reset),
+                                    .set(value.round()),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 55,
+                              child: Text(
+                                "${ref.watch(scrollDurationProvider)}ms",
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            OutlinedButton(
+                              onPressed:
+                                  ref.watch(scrollDurationProvider) == 1400
+                                      ? null
+                                      : () => ref
+                                            .read(scrollDurationProvider.notifier)
+                                            .set(1400),
+                              child: Text(t.general.reset),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ],
             ),
           ),

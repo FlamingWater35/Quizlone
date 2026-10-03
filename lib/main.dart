@@ -104,7 +104,7 @@ Future<void> main() async {
                               ),
                               child: Scrollbar(
                                 thumbVisibility: true,
-                                child: SingleChildScrollView(
+                                child: SmoothSingleChildScrollView(
                                   primary: true,
                                   padding: const EdgeInsets.all(16.0),
                                   child: Text(
@@ -342,62 +342,94 @@ class _MyAppState extends ConsumerState<MyApp> {
   }
 
   /// Shows a short-lived prompt when the startup auto-check finds an update.
-  /// Offers a jump to the Update section in Settings and an option to
-  /// suppress future prompts for the same version.
+  /// Mirrors the tinted icon + text styling of the error snackbar, but in the
+  /// primary "info" tone. Offers a jump to the Update section in Settings and
+  /// an option to suppress future prompts for the same version.
   void _maybeShowUpdateSnackbar(UpdateInfo info) {
     final skippedVersion = ref
         .read(databaseServiceProvider)
         .getSkippedUpdateVersion();
     if (skippedVersion == info.version) return;
-
     final messenger = _scaffoldMessengerKey.currentState;
     if (messenger == null) return;
 
+    final theme = Theme.of(messenger.context);
+    final colorScheme = theme.colorScheme;
+    final Color backgroundColor = colorScheme.primaryContainer;
+    final Color contentColor = colorScheme.onPrimaryContainer;
+    final buttonStyle = TextButton.styleFrom(
+      foregroundColor: contentColor,
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      minimumSize: const Size(0, 36),
+      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+    );
+
     messenger.showSnackBar(
       SnackBar(
-        duration: const Duration(seconds: 3),
-        content: Builder(
-          builder: (context) {
-            final colorScheme = Theme.of(context).colorScheme;
-            final buttonStyle = TextButton.styleFrom(
-              foregroundColor: colorScheme.inversePrimary,
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              minimumSize: const Size(0, 36),
-              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        duration: const Duration(seconds: 6),
+        backgroundColor: backgroundColor,
+        content: LayoutBuilder(
+          builder: (context, constraints) {
+            final icon = Icon(
+              Icons.system_update_outlined,
+              color: contentColor,
             );
+            final message = Text(
+              t.settingsScreen.updateAvailable(version: info.version),
+              style: TextStyle(color: contentColor, fontSize: 15),
+            );
+            final buttons = Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Flexible(
+                  child: TextButton(
+                    style: buttonStyle,
+                    onPressed: () {
+                      ref
+                          .read(databaseServiceProvider)
+                          .saveSkippedUpdateVersion(info.version);
+                      messenger.removeCurrentSnackBar();
+                    },
+                    child: Text(t.settingsScreen.dontShowAgain),
+                  ),
+                ),
+                TextButton(
+                  style: buttonStyle,
+                  onPressed: () {
+                    messenger.removeCurrentSnackBar();
+                    _appRouter.push(SettingsRoute(initialSection: 'update'));
+                  },
+                  child: Text(t.settingsScreen.update),
+                ),
+              ],
+            );
+
+            // Inline on wide layouts; drop the buttons to a second,
+            // right-aligned row on narrow phones (this SDK's SnackBar has
+            // no multi-action `actions` slot that would do this for us).
+            if (constraints.maxWidth >= 400) {
+              return Row(
+                children: [
+                  icon,
+                  const SizedBox(width: 12),
+                  Expanded(child: message),
+                  buttons,
+                ],
+              );
+            }
             return Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(t.settingsScreen.updateAvailable(version: info.version)),
-                const SizedBox(height: 4),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Flexible(
-                      child: TextButton(
-                        style: buttonStyle,
-                        onPressed: () {
-                          ref
-                              .read(databaseServiceProvider)
-                              .saveSkippedUpdateVersion(info.version);
-                          messenger.removeCurrentSnackBar();
-                        },
-                        child: Text(t.settingsScreen.dontShowAgain),
-                      ),
-                    ),
-                    TextButton(
-                      style: buttonStyle,
-                      onPressed: () {
-                        messenger.removeCurrentSnackBar();
-                        _appRouter.push(
-                          SettingsRoute(initialSection: 'update'),
-                        );
-                      },
-                      child: Text(t.settingsScreen.update),
-                    ),
+                    icon,
+                    const SizedBox(width: 12),
+                    Expanded(child: message),
                   ],
                 ),
+                const SizedBox(height: 4),
+                Align(alignment: Alignment.centerRight, child: buttons),
               ],
             );
           },
