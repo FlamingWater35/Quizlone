@@ -18,24 +18,26 @@ void main() {
 
   setUp(() {
     fakeDb = FakeDatabaseService();
-    fakeDb.studyLists[listId] = listWithTerms(
-      'MC List',
-      [
-        term('Apple', 'A fruit'),
-        term('Banana', 'A yellow fruit'),
-        term('Cherry', 'A small red fruit'),
-        term('Durian', 'A smelly fruit'),
-      ],
-      id: listId,
-    );
+    fakeDb.studyLists[listId] = listWithTerms('MC List', [
+      term('Apple', 'A fruit'),
+      term('Banana', 'A yellow fruit'),
+      term('Cherry', 'A small red fruit'),
+      term('Durian', 'A smelly fruit'),
+    ], id: listId);
   });
 
   group('MultipleChoiceController', () {
     test('builds a question for every term', () async {
-      final container = createControllerContainer(db: fakeDb, activeListId: listId);
+      final container = createControllerContainer(
+        db: fakeDb,
+        activeListId: listId,
+      );
       addTearDown(container.dispose);
 
-      final state = await awaitProviderValue(container, multipleChoiceControllerProvider);
+      final state = await awaitProviderValue(
+        container,
+        multipleChoiceControllerProvider,
+      );
       expect(state.isLoading, isFalse);
       expect(state.errorMessage, isNull);
       expect(state.totalQuestions, 4);
@@ -44,43 +46,61 @@ void main() {
       expect(state.currentQuestion, isNotNull);
     });
 
-    test('asks for the term when studyAskWith is term (definition shown)', () async {
-      final container = createControllerContainer(
-        db: fakeDb,
-        activeListId: listId,
-        askWith: StudyQuestionType.term,
-      );
-      addTearDown(container.dispose);
+    test(
+      'asks for the term when studyAskWith is term (definition shown)',
+      () async {
+        final container = createControllerContainer(
+          db: fakeDb,
+          activeListId: listId,
+          askWith: StudyQuestionType.term,
+        );
+        addTearDown(container.dispose);
 
-      final state = await awaitProviderValue(container, multipleChoiceControllerProvider);
-      for (final q in state.questions) {
-        // askDefinition=true -> show the term, ask for the definition.
-        expect(q.questionText, q.term.termText);
-        expect(q.correctAnswer, q.term.definitionText);
-      }
-    });
+        final state = await awaitProviderValue(
+          container,
+          multipleChoiceControllerProvider,
+        );
+        for (final q in state.questions) {
+          // askDefinition=true -> show the term, ask for the definition.
+          expect(q.questionText, q.term.termText);
+          expect(q.correctAnswer, q.term.definitionText);
+        }
+      },
+    );
 
-    test('asks for the definition when studyAskWith is definition (term shown)', () async {
-      final container = createControllerContainer(
-        db: fakeDb,
-        activeListId: listId,
-        askWith: StudyQuestionType.definition,
-      );
-      addTearDown(container.dispose);
+    test(
+      'asks for the definition when studyAskWith is definition (term shown)',
+      () async {
+        final container = createControllerContainer(
+          db: fakeDb,
+          activeListId: listId,
+          askWith: StudyQuestionType.definition,
+        );
+        addTearDown(container.dispose);
 
-      final state = await awaitProviderValue(container, multipleChoiceControllerProvider);
-      for (final q in state.questions) {
-        // askDefinition=false -> show the definition, ask for the term.
-        expect(q.questionText, q.term.definitionText);
-        expect(q.correctAnswer, q.term.termText);
-      }
-    });
+        final state = await awaitProviderValue(
+          container,
+          multipleChoiceControllerProvider,
+        );
+        for (final q in state.questions) {
+          // askDefinition=false -> show the definition, ask for the term.
+          expect(q.questionText, q.term.definitionText);
+          expect(q.correctAnswer, q.term.termText);
+        }
+      },
+    );
 
     test('each question has four options including the correct one', () async {
-      final container = createControllerContainer(db: fakeDb, activeListId: listId);
+      final container = createControllerContainer(
+        db: fakeDb,
+        activeListId: listId,
+      );
       addTearDown(container.dispose);
 
-      final state = await awaitProviderValue(container, multipleChoiceControllerProvider);
+      final state = await awaitProviderValue(
+        container,
+        multipleChoiceControllerProvider,
+      );
       for (final q in state.questions) {
         expect(q.options, hasLength(4));
         expect(q.options, contains(q.correctAnswer));
@@ -88,23 +108,38 @@ void main() {
     });
 
     test('reports an error with fewer than 4 terms', () async {
-      fakeDb.studyLists[listId] = listWithTerms('Small', sampleTerms(3), id: listId);
-      final container = createControllerContainer(db: fakeDb, activeListId: listId);
+      fakeDb.studyLists[listId] = listWithTerms(
+        'Small',
+        sampleTerms(3),
+        id: listId,
+      );
+      final container = createControllerContainer(
+        db: fakeDb,
+        activeListId: listId,
+      );
       addTearDown(container.dispose);
 
-      final state = await awaitProviderValue(container, multipleChoiceControllerProvider);
+      final state = await awaitProviderValue(
+        container,
+        multipleChoiceControllerProvider,
+      );
       expect(state.errorMessage, isNotNull);
       expect(state.questions, isEmpty);
     });
 
     test('correct answers increase the score and advance after the delay', () {
       fakeAsync((async) async {
-        final container = createControllerContainer(db: fakeDb, activeListId: listId);
+        final container = createControllerContainer(
+          db: fakeDb,
+          activeListId: listId,
+        );
         addTearDown(container.dispose);
 
         await awaitProviderValue(container, multipleChoiceControllerProvider);
 
-        final notifier = container.read(multipleChoiceControllerProvider.notifier);
+        final notifier = container.read(
+          multipleChoiceControllerProvider.notifier,
+        );
         final correct = container
             .read(multipleChoiceControllerProvider)
             .value!
@@ -128,12 +163,17 @@ void main() {
 
     test('wrong answers keep the score and advance', () {
       fakeAsync((async) async {
-        final container = createControllerContainer(db: fakeDb, activeListId: listId);
+        final container = createControllerContainer(
+          db: fakeDb,
+          activeListId: listId,
+        );
         addTearDown(container.dispose);
 
         await awaitProviderValue(container, multipleChoiceControllerProvider);
 
-        final notifier = container.read(multipleChoiceControllerProvider.notifier);
+        final notifier = container.read(
+          multipleChoiceControllerProvider.notifier,
+        );
         final q = container
             .read(multipleChoiceControllerProvider)
             .value!
@@ -154,12 +194,17 @@ void main() {
 
     test('completing all questions ends the session', () {
       fakeAsync((async) async {
-        final container = createControllerContainer(db: fakeDb, activeListId: listId);
+        final container = createControllerContainer(
+          db: fakeDb,
+          activeListId: listId,
+        );
         addTearDown(container.dispose);
 
         await awaitProviderValue(container, multipleChoiceControllerProvider);
 
-        final notifier = container.read(multipleChoiceControllerProvider.notifier);
+        final notifier = container.read(
+          multipleChoiceControllerProvider.notifier,
+        );
         for (var i = 0; i < 4; i++) {
           final q = container
               .read(multipleChoiceControllerProvider)

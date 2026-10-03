@@ -481,24 +481,32 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         _SettingsHeader(title: t.settingsScreen.appearance),
         Card(
           clipBehavior: Clip.antiAlias,
-          child: RadioGroup<ThemeMode>(
-            groupValue: currentTheme,
-            onChanged: (value) => themeNotifier.setTheme(value!),
-            child: Column(
-              children: [
-                RadioListTile<ThemeMode>(
-                  title: Text(t.settingsScreen.systemDefault),
-                  value: ThemeMode.system,
-                ),
-                RadioListTile<ThemeMode>(
-                  title: Text(t.settingsScreen.light),
-                  value: ThemeMode.light,
-                ),
-                RadioListTile<ThemeMode>(
-                  title: Text(t.settingsScreen.dark),
-                  value: ThemeMode.dark,
-                ),
-              ],
+          child: MouseRegion(
+            // The RadioListTile rows don't pick up the pointer cursor from
+            // the component themes; enforce it across the whole card.
+            cursor: SystemMouseCursors.click,
+            child: RadioGroup<ThemeMode>(
+              groupValue: currentTheme,
+              onChanged: (value) => themeNotifier.setTheme(value!),
+              child: Column(
+                children: [
+                  RadioListTile<ThemeMode>(
+                    title: Text(t.settingsScreen.systemDefault),
+                    value: ThemeMode.system,
+                    mouseCursor: SystemMouseCursors.click,
+                  ),
+                  RadioListTile<ThemeMode>(
+                    title: Text(t.settingsScreen.light),
+                    value: ThemeMode.light,
+                    mouseCursor: SystemMouseCursors.click,
+                  ),
+                  RadioListTile<ThemeMode>(
+                    title: Text(t.settingsScreen.dark),
+                    value: ThemeMode.dark,
+                    mouseCursor: SystemMouseCursors.click,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -603,14 +611,19 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         _SettingsHeader(title: t.settingsScreen.study),
         Card(
           clipBehavior: Clip.antiAlias,
-          child: SwitchListTile(
-            title: Text(t.settingsScreen.disableFlashcardAnimations),
-            subtitle: Text(t.settingsScreen.disableFlashcardAnimationsSubtitle),
-            secondary: const Icon(Icons.animation),
-            value: disableFlashcardAnimations,
-            onChanged: (val) => ref
-                .read(disableFlashcardAnimationsProvider.notifier)
-                .toggle(val),
+          child: MouseRegion(
+            cursor: SystemMouseCursors.click,
+            child: SwitchListTile(
+              title: Text(t.settingsScreen.disableFlashcardAnimations),
+              subtitle: Text(
+                t.settingsScreen.disableFlashcardAnimationsSubtitle,
+              ),
+              secondary: const Icon(Icons.animation),
+              value: disableFlashcardAnimations,
+              onChanged: (val) => ref
+                  .read(disableFlashcardAnimationsProvider.notifier)
+                  .toggle(val),
+            ),
           ),
         ),
         if (showExperimental) ...[
@@ -619,13 +632,16 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             clipBehavior: Clip.antiAlias,
             child: Column(
               children: [
-                SwitchListTile(
-                  title: Text(t.settingsScreen.smoothScrolling),
-                  subtitle: Text(t.settingsScreen.smoothScrollingSubtitle),
-                  secondary: const Icon(Icons.mouse_outlined),
-                  value: smoothScrollEnabled,
-                  onChanged: (val) =>
-                      ref.read(smoothScrollProvider.notifier).toggle(val),
+                MouseRegion(
+                  cursor: SystemMouseCursors.click,
+                  child: SwitchListTile(
+                    title: Text(t.settingsScreen.smoothScrolling),
+                    subtitle: Text(t.settingsScreen.smoothScrollingSubtitle),
+                    secondary: const Icon(Icons.mouse_outlined),
+                    value: smoothScrollEnabled,
+                    onChanged: (val) =>
+                        ref.read(smoothScrollProvider.notifier).toggle(val),
+                  ),
                 ),
                 // Animates the speed/duration options in and out instead of
                 // popping them into the layout. The cross-fade collapses to a
@@ -692,8 +708,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                           children: [
                             Expanded(
                               child: Slider(
-                                value:
-                                    ref.watch(scrollDurationProvider).toDouble(),
+                                value: ref
+                                    .watch(scrollDurationProvider)
+                                    .toDouble(),
                                 min: 400,
                                 max: 3000,
                                 divisions: 13,
@@ -714,10 +731,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                             OutlinedButton(
                               onPressed:
                                   ref.watch(scrollDurationProvider) == 1400
-                                      ? null
-                                      : () => ref
-                                            .read(scrollDurationProvider.notifier)
-                                            .set(1400),
+                                  ? null
+                                  : () => ref
+                                        .read(scrollDurationProvider.notifier)
+                                        .set(1400),
                               child: Text(t.general.reset),
                             ),
                           ],
@@ -1291,15 +1308,18 @@ class _UpdaterCard extends ConsumerWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: ExpansionTile(
-                    title: Text(t.settingsScreen.viewReleaseNotes),
-                    childrenPadding: const EdgeInsets.all(8.0),
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: MarkdownBody(data: info.releaseNotes!),
-                      ),
-                    ],
+                  child: MouseRegion(
+                    cursor: SystemMouseCursors.click,
+                    child: ExpansionTile(
+                      title: Text(t.settingsScreen.viewReleaseNotes),
+                      childrenPadding: const EdgeInsets.all(8.0),
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: MarkdownBody(data: info.releaseNotes!),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

@@ -431,7 +431,12 @@ class _FlashcardViewState extends ConsumerState<_FlashcardView>
                     ),
                   ),
                   const SizedBox(height: 24),
-                  _buildNavigationControls(context, flashcardNotifier, state, disableAnimations),
+                  _buildNavigationControls(
+                    context,
+                    flashcardNotifier,
+                    state,
+                    disableAnimations,
+                  ),
                 ],
               ),
             ),

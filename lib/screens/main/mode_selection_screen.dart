@@ -668,6 +668,11 @@ class _CustomToggleButton<T> extends StatelessWidget {
         clipBehavior: Clip.antiAlias,
         child: InkWell(
           onTap: isDisabled ? null : () => onChanged(value),
+          // InkWell's implicit cursor doesn't surface on some desktop
+          // platforms; declare it explicitly.
+          mouseCursor: isDisabled
+              ? MouseCursor.defer
+              : SystemMouseCursors.click,
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
             child: Column(

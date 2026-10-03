@@ -55,10 +55,7 @@ class _InputScreenState extends ConsumerState<InputScreen> {
     final String? selectedId = await showDialog<String?>(
       context: context,
       builder: (context) {
-        return _GroupSelectionDialog(
-          formState: formState,
-          groups: groups,
-        );
+        return _GroupSelectionDialog(formState: formState, groups: groups);
       },
     );
 
@@ -138,6 +135,12 @@ class _InputScreenState extends ConsumerState<InputScreen> {
                               groups,
                               formNotifier,
                             ),
+                      // InkWell's implicit cursor doesn't surface on desktop
+                      // here; declare it explicitly, same as the
+                      // mode-selection toggles.
+                      mouseCursor: formState.isLoading
+                          ? MouseCursor.defer
+                          : SystemMouseCursors.click,
                       borderRadius: BorderRadius.circular(12),
                       child: Container(
                         padding: const EdgeInsets.symmetric(
@@ -318,8 +321,7 @@ class _GroupSelectionDialogState extends State<_GroupSelectionDialog> {
                           context: context,
                           title: t.loadListScreen.ungrouped,
                           icon: Icons.folder_off_outlined,
-                          isSelected:
-                              widget.formState.selectedGroupId == null,
+                          isSelected: widget.formState.selectedGroupId == null,
                           onTap: () => Navigator.pop(context, "ungrouped"),
                         ),
                         if (widget.groups.isNotEmpty)
@@ -337,8 +339,7 @@ class _GroupSelectionDialogState extends State<_GroupSelectionDialog> {
                             icon: Icons.folder_outlined,
                             isSelected:
                                 widget.formState.selectedGroupId == group.id,
-                            onTap: () =>
-                                Navigator.pop(context, group.id),
+                            onTap: () => Navigator.pop(context, group.id),
                           ),
                         ),
                       ],

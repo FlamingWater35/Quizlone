@@ -24,7 +24,10 @@ void main() {
     });
 
     test('mode routes build the full stack when an active list exists', () {
-      final link = DeepLinkResolver.resolve('/flashcards', activeListId: 'list-1');
+      final link = DeepLinkResolver.resolve(
+        '/flashcards',
+        activeListId: 'list-1',
+      );
       final routes = routesOf(link);
       expect(routes, hasLength(3));
       expect(routes[0].runtimeType, StartRoute);
@@ -41,7 +44,10 @@ void main() {
     });
 
     test('path prefixes are matched', () {
-      final link = DeepLinkResolver.resolve('/learn/extra', activeListId: 'list-1');
+      final link = DeepLinkResolver.resolve(
+        '/learn/extra',
+        activeListId: 'list-1',
+      );
       final routes = routesOf(link);
       expect(routes[2].runtimeType, LearnRoute);
     });

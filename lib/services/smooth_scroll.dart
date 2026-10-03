@@ -65,9 +65,9 @@ class SmoothScrollData extends ChangeNotifier {
     required bool enabled,
     required double speed,
     required int durationMs,
-  })  : _enabled = enabled,
-        _speed = speed,
-        _durationMs = durationMs;
+  }) : _enabled = enabled,
+       _speed = speed,
+       _durationMs = durationMs;
 
   bool _enabled;
   double _speed;
@@ -117,8 +117,7 @@ class SmoothScrollScope extends InheritedNotifier<SmoothScrollData> {
 
   static bool enabled(BuildContext context) =>
       _maybeOf(context)?.enabled ?? false;
-  static double speed(BuildContext context) =>
-      _maybeOf(context)?.speed ?? 1.1;
+  static double speed(BuildContext context) => _maybeOf(context)?.speed ?? 1.1;
   static Duration duration(BuildContext context) =>
       _maybeOf(context)?.duration ?? const Duration(milliseconds: 1400);
 }
@@ -266,10 +265,10 @@ class SmoothListView extends StatefulWidget {
     this.scrollSpeed = 1.1,
     this.silkyDuration = const Duration(milliseconds: 1400),
     this.silkyCurve = Curves.easeOutQuad,
-  })  : separatorBuilder = null,
-        addAutomaticKeepAlives = true,
-        addRepaintBoundaries = true,
-        addSemanticIndexes = true;
+  }) : separatorBuilder = null,
+       addAutomaticKeepAlives = true,
+       addRepaintBoundaries = true,
+       addSemanticIndexes = true;
 
   /// Creates a separated builder-style list.
   const SmoothListView.separated({
@@ -287,9 +286,9 @@ class SmoothListView extends StatefulWidget {
     this.scrollSpeed = 1.1,
     this.silkyDuration = const Duration(milliseconds: 1400),
     this.silkyCurve = Curves.easeOutQuad,
-  })  : addAutomaticKeepAlives = true,
-        addRepaintBoundaries = true,
-        addSemanticIndexes = true;
+  }) : addAutomaticKeepAlives = true,
+       addRepaintBoundaries = true,
+       addSemanticIndexes = true;
 
   final ScrollController? controller;
   final EdgeInsetsGeometry? padding;

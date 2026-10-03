@@ -245,14 +245,12 @@ class _MyAppState extends ConsumerState<MyApp> {
 
     // Falls back to the app default when the user has not picked a custom
     // theme color in Settings → Appearance → Theme Color.
-    final Color seedColor =
-        seedArgb == null ? defaultSeedColor : Color(seedArgb);
+    final Color seedColor = seedArgb == null
+        ? defaultSeedColor
+        : Color(seedArgb);
 
     ColorScheme buildColorScheme(Brightness brightness) {
-      return ColorScheme.fromSeed(
-        seedColor: seedColor,
-        brightness: brightness,
-      );
+      return ColorScheme.fromSeed(seedColor: seedColor, brightness: brightness);
     }
 
     // Applies a subtle shadow and a soft border to all Cards so they stand out
@@ -292,6 +290,23 @@ class _MyAppState extends ConsumerState<MyApp> {
       );
     }
 
+    // Desktop builds (notably Windows) do not always pick up the implicit
+    // click-cursor defaults for interactive widgets, so every interactive
+    // component theme declares the pointer cursor explicitly. Disabled
+    // controls fall back to the normal arrow.
+    WidgetStateProperty<MouseCursor?> buildInteractiveCursor() {
+      return WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.disabled)) {
+          return SystemMouseCursors.basic;
+        }
+        return SystemMouseCursors.click;
+      });
+    }
+
+    ButtonStyle buildInteractiveButtonStyle() {
+      return ButtonStyle(mouseCursor: buildInteractiveCursor());
+    }
+
     return SmoothScrollScope(
       notifier: SmoothScrollData(
         enabled: smoothScrollEnabled,
@@ -313,12 +328,58 @@ class _MyAppState extends ConsumerState<MyApp> {
           useMaterial3: true,
           cardTheme: buildCardTheme(buildColorScheme(Brightness.light)),
           snackBarTheme: buildSnackBarTheme(buildColorScheme(Brightness.dark)),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: buildInteractiveButtonStyle(),
+          ),
+          filledButtonTheme: FilledButtonThemeData(
+            style: buildInteractiveButtonStyle(),
+          ),
+          outlinedButtonTheme: OutlinedButtonThemeData(
+            style: buildInteractiveButtonStyle(),
+          ),
+          textButtonTheme: TextButtonThemeData(
+            style: buildInteractiveButtonStyle(),
+          ),
+          iconButtonTheme: IconButtonThemeData(
+            style: buildInteractiveButtonStyle(),
+          ),
+          listTileTheme: ListTileThemeData(
+            mouseCursor: buildInteractiveCursor(),
+          ),
+          switchTheme: SwitchThemeData(mouseCursor: buildInteractiveCursor()),
+          checkboxTheme: CheckboxThemeData(
+            mouseCursor: buildInteractiveCursor(),
+          ),
+          radioTheme: RadioThemeData(mouseCursor: buildInteractiveCursor()),
         ),
         darkTheme: ThemeData(
           colorScheme: buildColorScheme(Brightness.dark),
           useMaterial3: true,
           cardTheme: buildCardTheme(buildColorScheme(Brightness.dark)),
           snackBarTheme: buildSnackBarTheme(buildColorScheme(Brightness.light)),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: buildInteractiveButtonStyle(),
+          ),
+          filledButtonTheme: FilledButtonThemeData(
+            style: buildInteractiveButtonStyle(),
+          ),
+          outlinedButtonTheme: OutlinedButtonThemeData(
+            style: buildInteractiveButtonStyle(),
+          ),
+          textButtonTheme: TextButtonThemeData(
+            style: buildInteractiveButtonStyle(),
+          ),
+          iconButtonTheme: IconButtonThemeData(
+            style: buildInteractiveButtonStyle(),
+          ),
+          listTileTheme: ListTileThemeData(
+            mouseCursor: buildInteractiveCursor(),
+          ),
+          switchTheme: SwitchThemeData(mouseCursor: buildInteractiveCursor()),
+          checkboxTheme: CheckboxThemeData(
+            mouseCursor: buildInteractiveCursor(),
+          ),
+          radioTheme: RadioThemeData(mouseCursor: buildInteractiveCursor()),
         ),
         themeMode: themeMode,
         builder: (context, child) {

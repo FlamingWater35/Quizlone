@@ -143,7 +143,10 @@ Future<void> _migrateV1215() async {
 
 /// Converts legacy MatchRecord studyListId strings (names) to UUIDs using the provided study lists.
 /// This is critical for cloud sync and imports, where data might bypass local startup migrations.
-List<MatchRecord> normalizeMatchRecords(List<MatchRecord> records, List<StudyList> lists) {
+List<MatchRecord> normalizeMatchRecords(
+  List<MatchRecord> records,
+  List<StudyList> lists,
+) {
   final nameToIdMap = <String, String>{};
   for (var list in lists) {
     if (list.name.isNotEmpty) {
@@ -166,7 +169,10 @@ List<MatchRecord> normalizeMatchRecords(List<MatchRecord> records, List<StudyLis
 /// Normalizes an AppData object to ensure all legacy data conforms to the current schema.
 AppData normalizeAppData(AppData data, List<StudyList> localLists) {
   final combinedLists = [...localLists, ...data.studyLists];
-  final normalizedRecords = normalizeMatchRecords(data.matchRecords, combinedLists);
+  final normalizedRecords = normalizeMatchRecords(
+    data.matchRecords,
+    combinedLists,
+  );
 
   return data.copyWith(matchRecords: normalizedRecords);
 }

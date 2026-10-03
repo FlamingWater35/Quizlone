@@ -143,38 +143,44 @@ class _FlashcardWidgetState extends State<FlashcardWidget>
         ? widget.term.definitionText
         : widget.term.termText;
 
-    return GestureDetector(
-      onTap: widget.onTap,
-      child: AnimatedBuilder(
-        animation: _animation,
-        builder: (context, child) {
-          final double rotationValue = _animation.value * pi;
-          final bool isUnder = rotationValue > (pi / 2);
+    return MouseRegion(
+      // GestureDetector does not advertise a cursor on its own. Without this
+      // the card keeps the arrow cursor on desktop even though tapping
+      // flips it.
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: AnimatedBuilder(
+          animation: _animation,
+          builder: (context, child) {
+            final double rotationValue = _animation.value * pi;
+            final bool isUnder = rotationValue > (pi / 2);
 
-          return Transform(
-            transform: Matrix4.identity()
-              ..setEntry(3, 2, 0.001)
-              ..rotateY(rotationValue),
-            alignment: Alignment.center,
-            child: isUnder
-                ? Transform(
-                    transform: Matrix4.rotationY(pi),
-                    alignment: Alignment.center,
-                    child: _buildFace(
-                      backText,
-                      Theme.of(context).colorScheme.secondaryContainer,
-                      Theme.of(context).colorScheme.onSecondaryContainer,
-                      _backScrollController,
+            return Transform(
+              transform: Matrix4.identity()
+                ..setEntry(3, 2, 0.001)
+                ..rotateY(rotationValue),
+              alignment: Alignment.center,
+              child: isUnder
+                  ? Transform(
+                      transform: Matrix4.rotationY(pi),
+                      alignment: Alignment.center,
+                      child: _buildFace(
+                        backText,
+                        Theme.of(context).colorScheme.secondaryContainer,
+                        Theme.of(context).colorScheme.onSecondaryContainer,
+                        _backScrollController,
+                      ),
+                    )
+                  : _buildFace(
+                      frontText,
+                      Theme.of(context).colorScheme.primaryContainer,
+                      Theme.of(context).colorScheme.onPrimaryContainer,
+                      _frontScrollController,
                     ),
-                  )
-                : _buildFace(
-                    frontText,
-                    Theme.of(context).colorScheme.primaryContainer,
-                    Theme.of(context).colorScheme.onPrimaryContainer,
-                    _frontScrollController,
-                  ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

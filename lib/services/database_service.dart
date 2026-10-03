@@ -686,10 +686,7 @@ class DatabaseService {
   /// Returns the saved sort direction (defaults to false = descending).
   bool getLoadListSortAscending() {
     try {
-      return _settingsBox.get(
-        _loadListSortAscendingKey,
-        defaultValue: false,
-      );
+      return _settingsBox.get(_loadListSortAscendingKey, defaultValue: false);
     } catch (e, s) {
       _log.severe("Failed to read load list sort direction", e, s);
       return false;

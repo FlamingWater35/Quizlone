@@ -5,10 +5,12 @@ void showErrorSnackBar(BuildContext context, {required String message}) {
   final colorScheme = theme.colorScheme;
   final isDarkMode = theme.brightness == Brightness.dark;
 
-  final Color backgroundColor =
-      isDarkMode ? Colors.red.shade900 : colorScheme.errorContainer;
-  final Color contentColor =
-      isDarkMode ? Colors.red.shade100 : colorScheme.onErrorContainer;
+  final Color backgroundColor = isDarkMode
+      ? Colors.red.shade900
+      : colorScheme.errorContainer;
+  final Color contentColor = isDarkMode
+      ? Colors.red.shade100
+      : colorScheme.onErrorContainer;
 
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(

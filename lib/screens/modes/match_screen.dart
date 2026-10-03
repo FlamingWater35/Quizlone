@@ -131,9 +131,7 @@ class _TimerDisplay extends ConsumerWidget {
           const SizedBox(width: 8),
           Text(
             timeString,
-            style: theme.textTheme.titleLarge?.copyWith(
-              color: penaltyColor,
-            ),
+            style: theme.textTheme.titleLarge?.copyWith(color: penaltyColor),
           ),
         ],
       ),
@@ -280,6 +278,7 @@ class _MatchCard extends StatelessWidget {
           clipBehavior: Clip.antiAlias,
           child: InkWell(
             onTap: onTap,
+            mouseCursor: SystemMouseCursors.click,
             child: Center(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),

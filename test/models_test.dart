@@ -81,20 +81,21 @@ void main() {
     });
 
     test('JSON round-trip preserves all fields', () {
-      final list = StudyList(
-        id: 'list-1',
-        name: 'My List',
-        terms: [term('q', 'a'), term('q2', 'a2')],
-        createdAt: DateTime(2024, 1, 2),
-      )
-        ..flashcardShowTermFirst = false
-        ..studyShowDefinitionAskTerm = false
-        ..testStudyLength = 5
-        ..testFormat = TestFormat.mc
-        ..allowAnswerSubstring = true
-        ..groupId = 'group-1'
-        ..lastOpenedAt = DateTime(2024, 5, 6)
-        ..lastUsedAt = DateTime(2024, 3, 4);
+      final list =
+          StudyList(
+              id: 'list-1',
+              name: 'My List',
+              terms: [term('q', 'a'), term('q2', 'a2')],
+              createdAt: DateTime(2024, 1, 2),
+            )
+            ..flashcardShowTermFirst = false
+            ..studyShowDefinitionAskTerm = false
+            ..testStudyLength = 5
+            ..testFormat = TestFormat.mc
+            ..allowAnswerSubstring = true
+            ..groupId = 'group-1'
+            ..lastOpenedAt = DateTime(2024, 5, 6)
+            ..lastUsedAt = DateTime(2024, 3, 4);
 
       final restored = StudyList.fromJson(list.toJson());
       expect(restored.id, 'list-1');
@@ -120,8 +121,11 @@ void main() {
       final list = StudyList(name: 'A');
       final before = list.lastUsedAt;
       list.updateLastUsed();
-      expect(list.lastUsedAt.isAfter(before) ||
-          list.lastUsedAt.isAtSameMomentAs(before), isTrue);
+      expect(
+        list.lastUsedAt.isAfter(before) ||
+            list.lastUsedAt.isAtSameMomentAs(before),
+        isTrue,
+      );
     });
   });
 
@@ -244,13 +248,18 @@ void main() {
   group('AppData', () {
     test('JSON round-trip preserves all collections', () {
       final data = AppData(
-        studyLists: [listWithTerms('L', [term('a', 'b')], id: 'l1')],
-        matchRecords: [
-          MatchRecord(studyListId: 'l1', timeInTenths: 5),
+        studyLists: [
+          listWithTerms('L', [term('a', 'b')], id: 'l1'),
         ],
+        matchRecords: [MatchRecord(studyListId: 'l1', timeInTenths: 5)],
         studyGroups: [StudyGroup(name: 'G', id: 'g1')],
         testRecords: [
-          TestRecord(studyListId: 'l1', score: 1, totalQuestions: 1, answers: []),
+          TestRecord(
+            studyListId: 'l1',
+            score: 1,
+            totalQuestions: 1,
+            answers: [],
+          ),
         ],
         lastUpdatedBy: 'instance-1',
       );
@@ -263,10 +272,7 @@ void main() {
     });
 
     test('missing collections default to empty lists', () {
-      final restored = AppData.fromJson({
-        'studyLists': [],
-        'matchRecords': [],
-      });
+      final restored = AppData.fromJson({'studyLists': [], 'matchRecords': []});
       expect(restored.studyGroups, isEmpty);
       expect(restored.testRecords, isEmpty);
       expect(restored.lastUpdatedBy, isNull);
@@ -303,7 +309,10 @@ void main() {
 
   group('Enums', () {
     test('testFormat values include written and mc', () {
-      expect(TestFormat.values, containsAll([TestFormat.written, TestFormat.mc]));
+      expect(
+        TestFormat.values,
+        containsAll([TestFormat.written, TestFormat.mc]),
+      );
     });
 
     test('studyQuestionType values include term and definition', () {

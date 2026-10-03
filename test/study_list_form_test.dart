@@ -17,7 +17,9 @@ void main() {
   });
 
   ProviderContainer createContainer() {
-    return ProviderContainer(overrides: [FakeDatabaseService.asOverride(fakeDb)]);
+    return ProviderContainer(
+      overrides: [FakeDatabaseService.asOverride(fakeDb)],
+    );
   }
 
   group('StudyListFormNotifier', () {
@@ -108,49 +110,55 @@ void main() {
       expect(container.read(studyListFormProvider).errorMessage, isNotNull);
     });
 
-    test('saveListAndContinue persists a valid list and sets it active', () async {
-      final container = createContainer();
-      addTearDown(container.dispose);
+    test(
+      'saveListAndContinue persists a valid list and sets it active',
+      () async {
+        final container = createContainer();
+        addTearDown(container.dispose);
 
-      final notifier = container.read(studyListFormProvider.notifier);
-      notifier.setListName('  My List  ');
-      notifier.setGroupId('g1');
-      notifier.setRawTerms('Hello\nWorld\nTerm 2\nDefinition 2');
-      final saved = await notifier.saveListAndContinue();
+        final notifier = container.read(studyListFormProvider.notifier);
+        notifier.setListName('  My List  ');
+        notifier.setGroupId('g1');
+        notifier.setRawTerms('Hello\nWorld\nTerm 2\nDefinition 2');
+        final saved = await notifier.saveListAndContinue();
 
-      expect(saved, isTrue);
-      expect(container.read(studyListFormProvider).errorMessage, isNull);
+        expect(saved, isTrue);
+        expect(container.read(studyListFormProvider).errorMessage, isNull);
 
-      expect(fakeDb.studyLists, hasLength(1));
-      final savedList = fakeDb.studyLists.values.single;
-      expect(savedList.name, 'My List'); // trimmed
-      expect(savedList.terms, hasLength(2));
-      expect(savedList.terms[0].termText, 'Hello');
-      expect(savedList.terms[0].definitionText, 'World');
-      expect(savedList.terms[1].termText, 'Term 2');
-      expect(savedList.groupId, 'g1');
+        expect(fakeDb.studyLists, hasLength(1));
+        final savedList = fakeDb.studyLists.values.single;
+        expect(savedList.name, 'My List'); // trimmed
+        expect(savedList.terms, hasLength(2));
+        expect(savedList.terms[0].termText, 'Hello');
+        expect(savedList.terms[0].definitionText, 'World');
+        expect(savedList.terms[1].termText, 'Term 2');
+        expect(savedList.groupId, 'g1');
 
-      // The saved list becomes the active list.
-      expect(fakeDb.getActiveListId(), savedList.id);
-      expect(container.read(activeStudyListIdProvider), savedList.id);
-    });
+        // The saved list becomes the active list.
+        expect(fakeDb.getActiveListId(), savedList.id);
+        expect(container.read(activeStudyListIdProvider), savedList.id);
+      },
+    );
 
-    test('saveListAndContinue surfaces a DB failure as an error message', () async {
-      final container = createContainer();
-      addTearDown(container.dispose);
+    test(
+      'saveListAndContinue surfaces a DB failure as an error message',
+      () async {
+        final container = createContainer();
+        addTearDown(container.dispose);
 
-      fakeDb.failOnWrite = true;
-      final notifier = container.read(studyListFormProvider.notifier);
-      notifier.setListName('My List');
-      notifier.setRawTerms('a\nb');
-      final saved = await notifier.saveListAndContinue();
+        fakeDb.failOnWrite = true;
+        final notifier = container.read(studyListFormProvider.notifier);
+        notifier.setListName('My List');
+        notifier.setRawTerms('a\nb');
+        final saved = await notifier.saveListAndContinue();
 
-      expect(saved, isFalse);
-      final state = container.read(studyListFormProvider);
-      expect(state.errorMessage, isNotNull);
-      expect(state.errorMessage, contains('Simulated DB failure'));
-      expect(state.isLoading, isFalse);
-    });
+        expect(saved, isFalse);
+        final state = container.read(studyListFormProvider);
+        expect(state.errorMessage, isNotNull);
+        expect(state.errorMessage, contains('Simulated DB failure'));
+        expect(state.isLoading, isFalse);
+      },
+    );
 
     test('saveListAndContinue ignores empty lines between pairs', () async {
       final container = createContainer();

@@ -37,7 +37,10 @@ ProviderContainer createControllerContainer({
 /// provider while its (async) build is still in flight. Holding a real
 /// subscription (until [ProviderContainer.dispose]) avoids that race and keeps
 /// the provider alive so later notifier calls operate on the same instance.
-Future<T> awaitProviderValue<T>(ProviderContainer container, Object provider) async {
+Future<T> awaitProviderValue<T>(
+  ProviderContainer container,
+  Object provider,
+) async {
   container.listen(provider as dynamic, (_, _) {});
   // Keep a live subscription (see doc comment) and await the provider's future.
   return await container.read((provider as dynamic).future) as T;

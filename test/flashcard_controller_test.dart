@@ -26,10 +26,16 @@ void main() {
 
   group('FlashcardController', () {
     test('builds state with all terms and defaults', () async {
-      final container = createControllerContainer(db: fakeDb, activeListId: listId);
+      final container = createControllerContainer(
+        db: fakeDb,
+        activeListId: listId,
+      );
       addTearDown(container.dispose);
 
-      final state = await awaitProviderValue(container, flashcardControllerProvider);
+      final state = await awaitProviderValue(
+        container,
+        flashcardControllerProvider,
+      );
       expect(state.isLoading, isFalse);
       expect(state.errorMessage, isNull);
       expect(state.originalTerms, hasLength(3));
@@ -41,59 +47,101 @@ void main() {
 
     test('reports an error when no terms are available', () async {
       fakeDb.studyLists[listId]!.terms.clear();
-      final container = createControllerContainer(db: fakeDb, activeListId: listId);
+      final container = createControllerContainer(
+        db: fakeDb,
+        activeListId: listId,
+      );
       addTearDown(container.dispose);
 
-      final state = await awaitProviderValue(container, flashcardControllerProvider);
+      final state = await awaitProviderValue(
+        container,
+        flashcardControllerProvider,
+      );
       expect(state.errorMessage, isNotNull);
       expect(state.displayTerms, isEmpty);
     });
 
     test('reports an error when the active list is missing', () async {
-      final container = createControllerContainer(db: fakeDb, activeListId: 'missing');
+      final container = createControllerContainer(
+        db: fakeDb,
+        activeListId: 'missing',
+      );
       addTearDown(container.dispose);
 
-      final state = await awaitProviderValue(container, flashcardControllerProvider);
+      final state = await awaitProviderValue(
+        container,
+        flashcardControllerProvider,
+      );
       expect(state.errorMessage, isNotNull);
     });
 
     test('flipCard toggles the flip state', () async {
-      final container = createControllerContainer(db: fakeDb, activeListId: listId);
+      final container = createControllerContainer(
+        db: fakeDb,
+        activeListId: listId,
+      );
       addTearDown(container.dispose);
 
       await awaitProviderValue(container, flashcardControllerProvider);
       final notifier = container.read(flashcardControllerProvider.notifier);
 
       notifier.flipCard();
-      expect(container.read(flashcardControllerProvider).value!.isFlipped, isTrue);
+      expect(
+        container.read(flashcardControllerProvider).value!.isFlipped,
+        isTrue,
+      );
       notifier.flipCard();
-      expect(container.read(flashcardControllerProvider).value!.isFlipped, isFalse);
+      expect(
+        container.read(flashcardControllerProvider).value!.isFlipped,
+        isFalse,
+      );
     });
 
     test('nextCard and previousCard move through the deck', () async {
-      final container = createControllerContainer(db: fakeDb, activeListId: listId);
+      final container = createControllerContainer(
+        db: fakeDb,
+        activeListId: listId,
+      );
       addTearDown(container.dispose);
 
       await awaitProviderValue(container, flashcardControllerProvider);
       final notifier = container.read(flashcardControllerProvider.notifier);
 
       notifier.nextCard();
-      expect(container.read(flashcardControllerProvider).value!.currentIndex, 1);
+      expect(
+        container.read(flashcardControllerProvider).value!.currentIndex,
+        1,
+      );
       notifier.nextCard();
-      expect(container.read(flashcardControllerProvider).value!.currentIndex, 2);
+      expect(
+        container.read(flashcardControllerProvider).value!.currentIndex,
+        2,
+      );
       // Clamped at the end.
       notifier.nextCard();
-      expect(container.read(flashcardControllerProvider).value!.currentIndex, 2);
+      expect(
+        container.read(flashcardControllerProvider).value!.currentIndex,
+        2,
+      );
 
       notifier.previousCard();
-      expect(container.read(flashcardControllerProvider).value!.currentIndex, 1);
+      expect(
+        container.read(flashcardControllerProvider).value!.currentIndex,
+        1,
+      );
       notifier.previousCard();
       notifier.previousCard();
-      expect(container.read(flashcardControllerProvider).value!.currentIndex, 0);
+      expect(
+        container.read(flashcardControllerProvider).value!.currentIndex,
+        0,
+      );
     });
 
     test('shuffleCards reorders the deck and resets progress', () async {
-      final container = createControllerContainer(db: fakeDb, activeListId: listId);
+      final container = createControllerContainer(
+        db: fakeDb,
+        activeListId: listId,
+      );
       addTearDown(container.dispose);
 
       await awaitProviderValue(container, flashcardControllerProvider);
@@ -107,16 +155,24 @@ void main() {
       expect(state.isFlipped, isFalse);
       expect(state.displayTerms, hasLength(3));
       // Same set, possibly different order.
-      expect(
-        state.displayTerms.map((t) => t.termText).toSet(),
-        {'Term 0', 'Term 1', 'Term 2'},
-      );
+      expect(state.displayTerms.map((t) => t.termText).toSet(), {
+        'Term 0',
+        'Term 1',
+        'Term 2',
+      });
       // Original set is preserved for restarts.
-      expect(state.originalTerms.map((t) => t.termText).toSet(), {'Term 0', 'Term 1', 'Term 2'});
+      expect(state.originalTerms.map((t) => t.termText).toSet(), {
+        'Term 0',
+        'Term 1',
+        'Term 2',
+      });
     });
 
     test('restart resets to the first card and unflips', () async {
-      final container = createControllerContainer(db: fakeDb, activeListId: listId);
+      final container = createControllerContainer(
+        db: fakeDb,
+        activeListId: listId,
+      );
       addTearDown(container.dispose);
 
       await awaitProviderValue(container, flashcardControllerProvider);
@@ -132,7 +188,10 @@ void main() {
     });
 
     test('currentCard and currentProgress reflect position', () async {
-      final container = createControllerContainer(db: fakeDb, activeListId: listId);
+      final container = createControllerContainer(
+        db: fakeDb,
+        activeListId: listId,
+      );
       addTearDown(container.dispose);
 
       await awaitProviderValue(container, flashcardControllerProvider);
@@ -149,7 +208,10 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final state = await awaitProviderValue(container, flashcardControllerProvider);
+      final state = await awaitProviderValue(
+        container,
+        flashcardControllerProvider,
+      );
       expect(state.startSide, FlashcardStartSide.definition);
     });
   });

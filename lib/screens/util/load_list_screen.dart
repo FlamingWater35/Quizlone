@@ -649,6 +649,7 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
             : colorScheme.surfaceContainerLow,
         clipBehavior: Clip.antiAlias,
         child: InkWell(
+          mouseCursor: SystemMouseCursors.click,
           onTap: () {
             if (_isSelectMode) {
               _onListSelected(list.id, !isSelected);
@@ -796,105 +797,110 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
           borderRadius: BorderRadius.circular(12),
           side: BorderSide(
             color: Theme.of(context).colorScheme.outlineVariant.withAlpha(
-                  Theme.of(context).colorScheme.brightness == Brightness.dark
-                      ? 80
-                      : 50,
-                ),
+              Theme.of(context).colorScheme.brightness == Brightness.dark
+                  ? 80
+                  : 50,
+            ),
             width: 1,
           ),
         ),
         clipBehavior: Clip.antiAlias,
-        child: Theme(
-          data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
-          child: ExpansionTile(
-            key: PageStorageKey(uniqueKey),
-            initiallyExpanded: isExpanded,
-            maintainState: true,
-            onExpansionChanged: (expanded) {
-              setState(() {
-                if (expanded) {
-                  _expandedGroupIds.add(uniqueKey);
-                } else {
-                  _expandedGroupIds.remove(uniqueKey);
-                }
-              });
-            },
-            controlAffinity: ListTileControlAffinity.leading,
-            title: Row(
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 2,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primaryContainer,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    lists.length.toString(),
-                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+        child: MouseRegion(
+          // ExpansionTile headers don't advertise a pointer cursor on
+          // desktop; enforce it across the whole tile.
+          cursor: SystemMouseCursors.click,
+          child: Theme(
+            data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+            child: ExpansionTile(
+              key: PageStorageKey(uniqueKey),
+              initiallyExpanded: isExpanded,
+              maintainState: true,
+              onExpansionChanged: (expanded) {
+                setState(() {
+                  if (expanded) {
+                    _expandedGroupIds.add(uniqueKey);
+                  } else {
+                    _expandedGroupIds.remove(uniqueKey);
+                  }
+                });
+              },
+              controlAffinity: ListTileControlAffinity.leading,
+              title: Row(
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
                     ),
                   ),
-                ),
-                const Spacer(),
-                if (!isUngrouped && !_isSelectMode)
-                  PopupMenuButton<_GroupMenuAction>(
-                    onSelected: (action) async {
-                      final group = ref
-                          .read(studyGroupsProvider)
-                          .value!
-                          .firstWhere((g) => g.id == groupId);
-                      if (action == _GroupMenuAction.rename) {
-                        _showRenameGroupDialog(group);
-                      } else if (action == _GroupMenuAction.delete) {
-                        // Note: _handleGroupDelete logic omitted for brevity, follows same try/catch pattern as _handleSingleDelete
-                      }
-                    },
-                    itemBuilder: (context) => [
-                      PopupMenuItem(
-                        value: _GroupMenuAction.rename,
-                        child: Row(
-                          children: [
-                            const Icon(Icons.edit_outlined, size: 20),
-                            const SizedBox(width: 12),
-                            Text(t.startScreen.renameListDialog.rename),
-                          ],
-                        ),
+                  const SizedBox(width: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 2,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primaryContainer,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      lists.length.toString(),
+                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        color: Theme.of(context).colorScheme.onPrimaryContainer,
                       ),
-                      PopupMenuItem(
-                        value: _GroupMenuAction.delete,
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.delete_outline,
-                              color: Theme.of(context).colorScheme.error,
-                              size: 20,
-                            ),
-                            const SizedBox(width: 12),
-                            Text(
-                              t.general.delete,
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.error,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-              ],
+                  const Spacer(),
+                  if (!isUngrouped && !_isSelectMode)
+                    PopupMenuButton<_GroupMenuAction>(
+                      onSelected: (action) async {
+                        final group = ref
+                            .read(studyGroupsProvider)
+                            .value!
+                            .firstWhere((g) => g.id == groupId);
+                        if (action == _GroupMenuAction.rename) {
+                          _showRenameGroupDialog(group);
+                        } else if (action == _GroupMenuAction.delete) {
+                          // Note: _handleGroupDelete logic omitted for brevity, follows same try/catch pattern as _handleSingleDelete
+                        }
+                      },
+                      itemBuilder: (context) => [
+                        PopupMenuItem(
+                          value: _GroupMenuAction.rename,
+                          child: Row(
+                            children: [
+                              const Icon(Icons.edit_outlined, size: 20),
+                              const SizedBox(width: 12),
+                              Text(t.startScreen.renameListDialog.rename),
+                            ],
+                          ),
+                        ),
+                        PopupMenuItem(
+                          value: _GroupMenuAction.delete,
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.delete_outline,
+                                color: Theme.of(context).colorScheme.error,
+                                size: 20,
+                              ),
+                              const SizedBox(width: 12),
+                              Text(
+                                t.general.delete,
+                                style: TextStyle(
+                                  color: Theme.of(context).colorScheme.error,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                ],
+              ),
+              children: lists.map((list) => _buildListTile(list, t)).toList(),
             ),
-            children: lists.map((list) => _buildListTile(list, t)).toList(),
           ),
         ),
       ),
@@ -1048,9 +1054,9 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
             children: [
               Text(
                 t.loadListScreen.sortLabel,
-                style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.labelMedium?.copyWith(fontWeight: FontWeight.bold),
               ),
               const SizedBox(width: 4),
               Text(

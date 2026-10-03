@@ -295,6 +295,9 @@ class _OptionButtonState extends State<_OptionButton> {
       color: Colors.transparent,
       child: InkWell(
         onTap: widget.state.isAnswerProcessed ? null : widget.onTap,
+        mouseCursor: widget.state.isAnswerProcessed
+            ? MouseCursor.defer
+            : SystemMouseCursors.click,
         borderRadius: BorderRadius.circular(12),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 300),

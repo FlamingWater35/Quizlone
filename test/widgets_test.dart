@@ -7,15 +7,21 @@ void main() {
   group('AppScaler', () {
     testWidgets('returns the child unchanged at scale 1.0', (tester) async {
       const child = Text('hello');
-      await tester.pumpWidget(const MaterialApp(home: AppScaler(scale: 1.0, child: child)));
+      await tester.pumpWidget(
+        const MaterialApp(home: AppScaler(scale: 1.0, child: child)),
+      );
 
       expect(find.text('hello'), findsOneWidget);
       expect(find.byType(FittedBox), findsNothing);
     });
 
-    testWidgets('wraps the child in a FittedBox at other scales', (tester) async {
+    testWidgets('wraps the child in a FittedBox at other scales', (
+      tester,
+    ) async {
       const child = Text('hello');
-      await tester.pumpWidget(const MaterialApp(home: AppScaler(scale: 1.5, child: child)));
+      await tester.pumpWidget(
+        const MaterialApp(home: AppScaler(scale: 1.5, child: child)),
+      );
 
       expect(find.text('hello'), findsOneWidget);
       expect(find.byType(FittedBox), findsOneWidget);
@@ -43,7 +49,9 @@ void main() {
       await tester.pump();
     }
 
-    testWidgets('shows a snackbar with the error message and icon', (tester) async {
+    testWidgets('shows a snackbar with the error message and icon', (
+      tester,
+    ) async {
       await pumpSnackbar(tester);
 
       expect(find.text('Something failed'), findsOneWidget);
@@ -58,7 +66,8 @@ void main() {
           home: Builder(
             builder: (context) => Scaffold(
               body: ElevatedButton(
-                onPressed: () => showErrorSnackBar(context, message: 'Dark error'),
+                onPressed: () =>
+                    showErrorSnackBar(context, message: 'Dark error'),
                 child: const Text('trigger'),
               ),
             ),

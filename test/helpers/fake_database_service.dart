@@ -66,7 +66,8 @@ class FakeDatabaseService implements DatabaseService {
   Future<bool> renameStudyList(String id, String newName) async {
     if (failOnWrite) return false;
     if (studyLists.values.any(
-      (list) => list.name.toLowerCase() == newName.toLowerCase() && list.id != id,
+      (list) =>
+          list.name.toLowerCase() == newName.toLowerCase() && list.id != id,
     )) {
       return false;
     }
@@ -112,16 +113,16 @@ class FakeDatabaseService implements DatabaseService {
   @override
   Future<void> saveMatchRecord(MatchRecord record) async {
     if (failOnWrite) throw StateError('Simulated DB failure');
-    matchRecords[record.studyListId + record.createdAt.toIso8601String()] = record;
+    matchRecords[record.studyListId + record.createdAt.toIso8601String()] =
+        record;
     await triggerCloudUpload();
   }
 
   @override
   Future<List<MatchRecord>> getRecordsForList(String studyListId) async {
-    final records = matchRecords.values
-        .where((r) => r.studyListId == studyListId)
-        .toList()
-      ..sort((a, b) => a.timeInTenths.compareTo(b.timeInTenths));
+    final records =
+        matchRecords.values.where((r) => r.studyListId == studyListId).toList()
+          ..sort((a, b) => a.timeInTenths.compareTo(b.timeInTenths));
     return records;
   }
 
@@ -138,10 +139,13 @@ class FakeDatabaseService implements DatabaseService {
   @override
   Future<void> pruneMatchRecords(String studyListId) async {
     pruneCalls[studyListId] = (pruneCalls[studyListId] ?? 0) + 1;
-    final records = matchRecords.entries
-        .where((e) => e.value.studyListId == studyListId)
-        .toList()
-      ..sort((a, b) => a.value.timeInTenths.compareTo(b.value.timeInTenths));
+    final records =
+        matchRecords.entries
+            .where((e) => e.value.studyListId == studyListId)
+            .toList()
+          ..sort(
+            (a, b) => a.value.timeInTenths.compareTo(b.value.timeInTenths),
+          );
     if (records.length > 100) {
       for (final entry in records.sublist(100)) {
         matchRecords.remove(entry.key);
@@ -160,10 +164,9 @@ class FakeDatabaseService implements DatabaseService {
 
   @override
   Future<List<TestRecord>> getTestRecordsForList(String studyListId) async {
-    final records = testRecords.values
-        .where((r) => r.studyListId == studyListId)
-        .toList()
-      ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    final records =
+        testRecords.values.where((r) => r.studyListId == studyListId).toList()
+          ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
     return records;
   }
 

@@ -18,23 +18,25 @@ void main() {
 
   setUp(() {
     fakeDb = FakeDatabaseService();
-    fakeDb.studyLists[listId] = listWithTerms(
-      'Learn List',
-      [
-        term('Apple', 'A fruit'),
-        term('Banana', 'A yellow fruit'),
-        term('Cherry', 'A small red fruit'),
-      ],
-      id: listId,
-    );
+    fakeDb.studyLists[listId] = listWithTerms('Learn List', [
+      term('Apple', 'A fruit'),
+      term('Banana', 'A yellow fruit'),
+      term('Cherry', 'A small red fruit'),
+    ], id: listId);
   });
 
   group('LearnController', () {
     test('builds the first cycle with the first question', () async {
-      final container = createControllerContainer(db: fakeDb, activeListId: listId);
+      final container = createControllerContainer(
+        db: fakeDb,
+        activeListId: listId,
+      );
       addTearDown(container.dispose);
 
-      final state = await awaitProviderValue(container, learnControllerProvider);
+      final state = await awaitProviderValue(
+        container,
+        learnControllerProvider,
+      );
       expect(state.isLoading, isFalse);
       expect(state.errorMessage, isNull);
       expect(state.isSessionComplete, isFalse);
@@ -53,7 +55,10 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final state = await awaitProviderValue(container, learnControllerProvider);
+      final state = await awaitProviderValue(
+        container,
+        learnControllerProvider,
+      );
       final q = state.currentQuestion!;
       expect(q.expectedAnswer, q.term.termText);
       expect(q.questionText, q.term.definitionText);
@@ -67,7 +72,10 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final state = await awaitProviderValue(container, learnControllerProvider);
+      final state = await awaitProviderValue(
+        container,
+        learnControllerProvider,
+      );
       final q = state.currentQuestion!;
       expect(q.expectedAnswer, q.term.definitionText);
       expect(q.questionText, q.term.termText);
@@ -75,29 +83,45 @@ void main() {
 
     test('reports an error when there are no terms', () async {
       fakeDb.studyLists[listId]!.terms.clear();
-      final container = createControllerContainer(db: fakeDb, activeListId: listId);
+      final container = createControllerContainer(
+        db: fakeDb,
+        activeListId: listId,
+      );
       addTearDown(container.dispose);
 
-      final state = await awaitProviderValue(container, learnControllerProvider);
+      final state = await awaitProviderValue(
+        container,
+        learnControllerProvider,
+      );
       expect(state.errorMessage, isNotNull);
     });
 
     test('updateUserAnswer updates the typed answer', () async {
-      final container = createControllerContainer(db: fakeDb, activeListId: listId);
+      final container = createControllerContainer(
+        db: fakeDb,
+        activeListId: listId,
+      );
       addTearDown(container.dispose);
 
       await awaitProviderValue(container, learnControllerProvider);
       final notifier = container.read(learnControllerProvider.notifier);
       notifier.updateUserAnswer('Apple');
       expect(
-        container.read(learnControllerProvider).value!.currentQuestion!.userAnswer,
+        container
+            .read(learnControllerProvider)
+            .value!
+            .currentQuestion!
+            .userAnswer,
         'Apple',
       );
     });
 
     test('submitAnswer marks correct answers and advances after the delay', () {
       fakeAsync((async) async {
-        final container = createControllerContainer(db: fakeDb, activeListId: listId);
+        final container = createControllerContainer(
+          db: fakeDb,
+          activeListId: listId,
+        );
         addTearDown(container.dispose);
 
         await awaitProviderValue(container, learnControllerProvider);
@@ -126,7 +150,10 @@ void main() {
 
     test('submitAnswer marks wrong answers and tracks them for retry', () {
       fakeAsync((async) async {
-        final container = createControllerContainer(db: fakeDb, activeListId: listId);
+        final container = createControllerContainer(
+          db: fakeDb,
+          activeListId: listId,
+        );
         addTearDown(container.dispose);
 
         await awaitProviderValue(container, learnControllerProvider);
@@ -137,7 +164,10 @@ void main() {
         async.flushMicrotasks();
 
         var state = container.read(learnControllerProvider).value!;
-        expect(state.currentQuestion!.feedbackType, LearnFeedbackType.incorrect);
+        expect(
+          state.currentQuestion!.feedbackType,
+          LearnFeedbackType.incorrect,
+        );
         expect(state.termsIncorrectThisCycle, hasLength(1));
 
         async.elapse(const Duration(milliseconds: 2000));
@@ -147,7 +177,10 @@ void main() {
     });
 
     test('showHint reveals the first character', () async {
-      final container = createControllerContainer(db: fakeDb, activeListId: listId);
+      final container = createControllerContainer(
+        db: fakeDb,
+        activeListId: listId,
+      );
       addTearDown(container.dispose);
 
       await awaitProviderValue(container, learnControllerProvider);
@@ -162,7 +195,10 @@ void main() {
 
     test('skipQuestionAndShowAnswer marks skipped and advances', () {
       fakeAsync((async) async {
-        final container = createControllerContainer(db: fakeDb, activeListId: listId);
+        final container = createControllerContainer(
+          db: fakeDb,
+          activeListId: listId,
+        );
         addTearDown(container.dispose);
 
         await awaitProviderValue(container, learnControllerProvider);
@@ -184,7 +220,10 @@ void main() {
 
     test('answering everything correctly completes the session', () {
       fakeAsync((async) async {
-        final container = createControllerContainer(db: fakeDb, activeListId: listId);
+        final container = createControllerContainer(
+          db: fakeDb,
+          activeListId: listId,
+        );
         addTearDown(container.dispose);
 
         await awaitProviderValue(container, learnControllerProvider);

@@ -19,7 +19,9 @@ void main() {
   });
 
   ProviderContainer createContainer() {
-    return ProviderContainer(overrides: [FakeDatabaseService.asOverride(fakeDb)]);
+    return ProviderContainer(
+      overrides: [FakeDatabaseService.asOverride(fakeDb)],
+    );
   }
 
   group('AppLanguageExtension', () {

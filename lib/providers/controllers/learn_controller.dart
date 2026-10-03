@@ -167,8 +167,12 @@ class LearnController extends _$LearnController {
       return ans;
     }
 
-    final userAnswer = processAnswer(questionState.userAnswer.trim().toLowerCase());
-    final correctAnswer = processAnswer(questionState.expectedAnswer.trim().toLowerCase());
+    final userAnswer = processAnswer(
+      questionState.userAnswer.trim().toLowerCase(),
+    );
+    final correctAnswer = processAnswer(
+      questionState.expectedAnswer.trim().toLowerCase(),
+    );
 
     bool isCorrect;
     if (allowSubstring && correctAnswer.contains(',')) {
