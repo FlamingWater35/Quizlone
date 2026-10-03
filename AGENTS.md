@@ -45,6 +45,48 @@ Tests do not need Supabase credentials — they use `FakeDatabaseService` (in-me
 - `test/helpers/controller_harness.dart` — `createControllerContainer()` builds a `ProviderContainer` with all providers overridden
 - `test/helpers/test_data.dart` — shared fixtures
 
+## Web Debug + Browser Testing
+
+`run_build.py` option 2 runs codegen, then serves a debug build:
+
+```bash
+python scripts/run_build.py   # choose 2
+```
+
+That runs `flutter run -d web-server --web-port=8080 --dart-define-from-file=secrets.json`. It's interactive (`r` hot reload, `R` restart, `q` quit), so run it in your own terminal when iterating on code. For automated checks, start the same command headless instead:
+
+```powershell
+Start-Process -FilePath cmd -ArgumentList "/c","flutter run -d web-server --web-port=8080 --dart-define-from-file=secrets.json" -RedirectStandardOutput webdebug.log -RedirectStandardError webdebug.err.log -NoNewWindow -PassThru
+```
+
+Wait for `lib\main.dart is being served at http://localhost:8080` in `webdebug.log` (~30 s for the first compile). A background session has no stdin, so there's no hot reload — restart the server after code changes.
+
+### Driving the browser (Playwright)
+
+Open http://localhost:8080 in Zen for manual checks. For automation, Zen can't be driven by Playwright (channels are chrome/firefox/webkit/msedge only), and this machine has no Chrome/Edge, so the default `playwright-cli open` fails. Use Playwright's bundled Firefox:
+
+```powershell
+npx --yes --package @playwright/cli playwright-cli install-browser firefox   # once
+npx --yes --package @playwright/cli playwright-cli open http://localhost:8080 --browser firefox
+npx --yes --package @playwright/cli playwright-cli screenshot
+npx --yes --package @playwright/cli playwright-cli close
+```
+
+Notes:
+
+- Install the browser via `playwright-cli install-browser firefox`, NOT `npx playwright install firefox` — the two fetch different builds and mismatched versions fail to launch
+- The Playwright skill's `.sh` wrapper needs bash/WSL (not installed here) — call the CLI via `npx` directly as above
+- Flutter CanvasKit renders into a `<canvas>`, so `snapshot` returns almost nothing and the "Enable accessibility" placeholder is off-viewport. Interact by CSS-pixel coordinates (1280×720 default viewport), then verify with `screenshot`:
+
+  ```powershell
+  playwright-cli mousemove 640 405
+  playwright-cli mousedown
+  playwright-cli mouseup
+  ```
+
+- Health check: `playwright-cli console` should report 0 errors; a good startup log shows Supabase init, Hive boxes opening, `MigrationService` runs, and `MyApp: Building MyApp widget`
+- Artifacts (console logs, snapshots, screenshots) land in `.playwright-cli/` — gitignored, don't commit
+
 ## Project Structure
 
 ```
@@ -88,7 +130,7 @@ pip install -r scripts/requirements.txt   # py7zr, colorama
 python scripts/run_build.py               # interactive menu
 ```
 
-Option 3 runs the full release process: clean → pub get → codegen → build all platforms → package → copy web to `docs/`.
+Option 2 runs codegen + a web debug server (see **Web Debug + Browser Testing**). Option 3 runs the full release process: clean → pub get → codegen → build all platforms → package → copy web to `docs/`.
 
 ## i18n
 
@@ -101,7 +143,7 @@ Option 3 runs the full release process: clean → pub get → codegen → build 
 ## Gotchas
 
 - **`docs/` is a build artifact** — contains compiled web output for GitHub Pages. Do not hand-edit files in it.
-- **`secrets.json` is not gitignored** — contains local dev Supabase credentials. Never commit real keys.
+- **`secrets.json` is gitignored** (`/secrets.json`) — contains local dev Supabase credentials. Never commit real keys.
 - **New Hive model** → register adapter in `DatabaseService.init()` AND update `hive_registrar.g.dart` (generated)
 - **New database method** → update `FakeDatabaseService` in `test/helpers/fake_database_service.dart` too
 - **New route** → add to `app_router.dart` routes list AND `DeepLinkResolver._entries` for web deep linking support
