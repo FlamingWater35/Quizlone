@@ -1,5 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:quizlone/models/enums/enums.dart';
+import 'package:quizlone/models/study_defaults.dart';
 import 'package:quizlone/providers/core/settings_provider.dart';
 import 'package:quizlone/providers/study/study_list_providers.dart';
 
@@ -171,6 +173,45 @@ void main() {
 
       expect(saved, isTrue);
       expect(fakeDb.studyLists.values.single.terms, hasLength(2));
+    });
+  });
+
+  group('study defaults seeding', () {
+    test('a new form starts from the stored StudyDefaults', () async {
+      await fakeDb.saveStudyDefaults(
+        const StudyDefaults(
+          flashcardStartSide: FlashcardStartSide.definition,
+          askWith: StudyQuestionType.term,
+          testFormat: TestFormat.mc,
+          studyLength: 5,
+          ignoreBrackets: false,
+          allowAnswerSubstring: true,
+        ),
+      );
+
+      final container = createContainer();
+      addTearDown(container.dispose);
+
+      final list = container.read(studyListFormProvider).studyList;
+      expect(list.flashcardShowTermFirst, isFalse);
+      expect(list.studyShowDefinitionAskTerm, isFalse);
+      expect(list.testFormat, TestFormat.mc);
+      expect(list.testStudyLength, 5);
+      expect(list.ignoreBrackets, isFalse);
+      expect(list.allowAnswerSubstring, isTrue);
+    });
+
+    test('falls back to the model defaults when none are stored', () {
+      final container = createContainer();
+      addTearDown(container.dispose);
+
+      final list = container.read(studyListFormProvider).studyList;
+      expect(list.flashcardShowTermFirst, isTrue);
+      expect(list.studyShowDefinitionAskTerm, isTrue);
+      expect(list.testFormat, TestFormat.written);
+      expect(list.testStudyLength, isNull);
+      expect(list.ignoreBrackets, isTrue);
+      expect(list.allowAnswerSubstring, isFalse);
     });
   });
 }

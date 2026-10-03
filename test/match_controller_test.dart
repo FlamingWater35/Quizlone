@@ -265,5 +265,67 @@ void main() {
         isNull,
       );
     });
+
+    test('honours the configured number of pairs', () async {
+      fakeDb.studyLists[listId] = listWithTerms(
+        'Big',
+        sampleTerms(15),
+        id: listId,
+      );
+      fakeDb.settings['matchPairs'] = 4;
+
+      final container = createControllerContainer(
+        db: fakeDb,
+        activeListId: listId,
+      );
+      addTearDown(container.dispose);
+
+      final state = await awaitProviderValue(
+        container,
+        matchControllerProvider,
+      );
+      expect(state.items, hasLength(8));
+      expect(state.items.map((i) => i.pairId).toSet(), hasLength(4));
+    });
+
+    test('penalty off still completes a game normally', () async {
+      fakeDb.settings['matchPenaltyEnabled'] = false;
+
+      final container = createControllerContainer(
+        db: fakeDb,
+        activeListId: listId,
+      );
+      addTearDown(container.dispose);
+
+      final state = await awaitProviderValue(
+        container,
+        matchControllerProvider,
+      );
+      final notifier = container.read(matchControllerProvider.notifier);
+
+      // One deliberate mismatch first — must not add a penalty.
+      final firstPair = state.items[0].pairId;
+      final wrong = state.items.firstWhere((i) => i.pairId != firstPair);
+      notifier.selectItem(state.items.firstWhere((i) => i.pairId == firstPair));
+      notifier.selectItem(wrong);
+      expect(
+        container.read(matchControllerProvider).value!.incorrectPair,
+        isNotEmpty,
+      );
+      await Future<void>.delayed(const Duration(milliseconds: 600));
+
+      final current = container.read(matchControllerProvider).value!;
+      for (final pair in current.items.map((i) => i.pairId).toSet()) {
+        final pairItems = current.items.where((i) => i.pairId == pair).toList();
+        notifier.selectItem(pairItems[0]);
+        notifier.selectItem(pairItems[1]);
+      }
+      await Future<void>.delayed(const Duration(milliseconds: 20));
+      await pumpEventQueue();
+
+      final done = container.read(matchControllerProvider).value!;
+      expect(done.isComplete, isTrue);
+      expect(done.finalRecord, isNotNull);
+    });
   });
 }

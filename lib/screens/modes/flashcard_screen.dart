@@ -241,7 +241,7 @@ class _FlashcardViewState extends ConsumerState<_FlashcardView>
   Widget build(BuildContext context) {
     final flashcardStateAsync = ref.watch(flashcardControllerProvider);
     final flashcardNotifier = ref.read(flashcardControllerProvider.notifier);
-    final disableAnimations = ref.watch(disableFlashcardAnimationsProvider);
+    final disableAnimations = ref.watch(reduceMotionProvider);
     final t = Translations.of(context);
 
     // Track direction of index change to animate slide transition correctly.

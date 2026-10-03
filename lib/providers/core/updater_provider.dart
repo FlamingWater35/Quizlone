@@ -128,11 +128,18 @@ class UpdaterController extends _$UpdaterController {
         !kIsWeb && (Platform.isWindows || Platform.isMacOS || Platform.isLinux);
 
     if (!kIsWeb && (Platform.isAndroid || isDesktop)) {
-      Future.delayed(const Duration(seconds: 3), () {
-        if (ref.mounted && state is UpdateInitial) {
-          checkForUpdate(automatic: true);
-        }
-      });
+      final autoCheckEnabled =
+          ref.read(databaseServiceProvider).getAutoUpdateCheckEnabled();
+      if (autoCheckEnabled) {
+        Future.delayed(const Duration(seconds: 3), () {
+          // Re-check: the user may have flipped the setting during the delay.
+          final stillEnabled =
+              ref.read(databaseServiceProvider).getAutoUpdateCheckEnabled();
+          if (ref.mounted && stillEnabled && state is UpdateInitial) {
+            checkForUpdate(automatic: true);
+          }
+        });
+      }
     }
     return const UpdateInitial();
   }

@@ -10,6 +10,7 @@ import '../../models/match_record.dart';
 import '../../models/term.dart';
 import '../../services/database_service.dart';
 import '../core/core_providers.dart';
+import '../core/settings_provider.dart';
 import '../study/study_list_providers.dart';
 
 part 'match_controller.g.dart';
@@ -159,8 +160,10 @@ class MatchController extends _$MatchController {
         }
       } else {
         // Briefly highlight incorrect pair before resetting selection,
-        // and apply a +1 second time penalty for the mistake.
-        _penaltyMs += _mismatchPenaltyMs;
+        // and (optionally) apply a +1 second time penalty for the mistake.
+        if (ref.read(matchPenaltyEnabledProvider)) {
+          _penaltyMs += _mismatchPenaltyMs;
+        }
         final incorrectIds = {currentSelection.uniqueId, item.uniqueId};
         state = AsyncData(
           currentState.copyWith(
@@ -253,8 +256,9 @@ class MatchController extends _$MatchController {
     }
 
     termsForMatchSet.shuffle(Random());
-    if (termsForMatchSet.length > maxMatchPairs) {
-      termsForMatchSet = termsForMatchSet.sublist(0, maxMatchPairs);
+    final pairs = ref.read(matchPairsProvider).clamp(4, maxMatchPairs);
+    if (termsForMatchSet.length > pairs) {
+      termsForMatchSet = termsForMatchSet.sublist(0, pairs);
     }
 
     final List<MatchItem> items = [];

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -11,6 +12,7 @@ import 'package:quizlone/services/migration_service.dart';
 
 import '../models/match_record.dart';
 import '../models/settings_app_data.dart';
+import '../models/study_defaults.dart';
 import '../models/study_group.dart';
 import '../models/study_list.dart';
 import '../models/term.dart';
@@ -43,6 +45,17 @@ class DatabaseService {
       'flashcardAnimationsDisabled';
   static const String _seedColorKey = 'seedColor';
   static const String _skippedUpdateVersionKey = 'skippedUpdateVersion';
+  static const String _studyDefaultsKey = 'studyDefaults';
+  static const String _autoAdvanceEnabledKey = 'autoAdvanceEnabled';
+  static const String _autoAdvanceDelayMsKey = 'autoAdvanceDelayMs';
+  static const String _gradingIgnorePunctuationKey =
+      'gradingIgnorePunctuation';
+  static const String _gradingAccentInsensitiveKey = 'gradingAccentInsensitive';
+  static const String _autoSyncEnabledKey = 'autoSyncEnabled';
+  static const String _matchPairsKey = 'matchPairs';
+  static const String _matchPenaltyEnabledKey = 'matchPenaltyEnabled';
+  static const String _autoUpdateCheckEnabledKey = 'autoUpdateCheckEnabled';
+  static const String _systemTextScaleEnabledKey = 'systemTextScaleEnabled';
 
   static late Box<StudyGroup> _studyGroupBox;
   static const String _studyGroupBoxName = 'studyGroupsBox';
@@ -119,6 +132,10 @@ class DatabaseService {
   /// Ensures local changes are backed up without blocking the UI thread.
   Future<void> triggerCloudUpload() async {
     try {
+      if (!getAutoSyncEnabled()) {
+        _log.info("Auto-sync disabled: skipping cloud upload trigger.");
+        return;
+      }
       final connectivityResult = await Connectivity().checkConnectivity();
       if (connectivityResult.contains(ConnectivityResult.none)) {
         _log.info("Offline mode: Skipping cloud upload trigger.");
@@ -602,6 +619,200 @@ class DatabaseService {
     } catch (e, s) {
       _log.severe("Failed to read scroll duration", e, s);
       return 1400;
+    }
+  }
+
+  // --- Study defaults -------------------------------------------------------
+
+  Future<void> saveStudyDefaults(StudyDefaults defaults) async {
+    try {
+      await _settingsBox.put(_studyDefaultsKey, jsonEncode(defaults.toJson()));
+    } catch (e, s) {
+      _log.severe("Failed to save study defaults", e, s);
+    }
+  }
+
+  StudyDefaults getStudyDefaults() {
+    try {
+      final raw = _settingsBox.get(_studyDefaultsKey);
+      if (raw is String && raw.isNotEmpty) {
+        final decoded = jsonDecode(raw);
+        if (decoded is Map<String, dynamic>) {
+          return StudyDefaults.fromJson(decoded);
+        }
+      }
+      return const StudyDefaults();
+    } catch (e, s) {
+      _log.severe("Failed to read study defaults", e, s);
+      return const StudyDefaults();
+    }
+  }
+
+  // --- Auto-advance ---------------------------------------------------------
+
+  Future<void> saveAutoAdvanceEnabled(bool enabled) async {
+    try {
+      await _settingsBox.put(_autoAdvanceEnabledKey, enabled);
+    } catch (e, s) {
+      _log.severe("Failed to save auto-advance enabled", e, s);
+    }
+  }
+
+  bool getAutoAdvanceEnabled() {
+    try {
+      return _settingsBox.get(_autoAdvanceEnabledKey, defaultValue: true);
+    } catch (e, s) {
+      _log.severe("Failed to read auto-advance enabled", e, s);
+      return true;
+    }
+  }
+
+  Future<void> saveAutoAdvanceDelayMs(int ms) async {
+    try {
+      await _settingsBox.put(_autoAdvanceDelayMsKey, ms);
+    } catch (e, s) {
+      _log.severe("Failed to save auto-advance delay", e, s);
+    }
+  }
+
+  int getAutoAdvanceDelayMs() {
+    try {
+      return _settingsBox.get(_autoAdvanceDelayMsKey, defaultValue: 1500);
+    } catch (e, s) {
+      _log.severe("Failed to read auto-advance delay", e, s);
+      return 1500;
+    }
+  }
+
+  // --- Grading strictness ---------------------------------------------------
+
+  Future<void> saveGradingIgnorePunctuation(bool enabled) async {
+    try {
+      await _settingsBox.put(_gradingIgnorePunctuationKey, enabled);
+    } catch (e, s) {
+      _log.severe("Failed to save grading ignore punctuation", e, s);
+    }
+  }
+
+  bool getGradingIgnorePunctuation() {
+    try {
+      return _settingsBox.get(
+        _gradingIgnorePunctuationKey,
+        defaultValue: false,
+      );
+    } catch (e, s) {
+      _log.severe("Failed to read grading ignore punctuation", e, s);
+      return false;
+    }
+  }
+
+  Future<void> saveGradingAccentInsensitive(bool enabled) async {
+    try {
+      await _settingsBox.put(_gradingAccentInsensitiveKey, enabled);
+    } catch (e, s) {
+      _log.severe("Failed to save grading accent insensitive", e, s);
+    }
+  }
+
+  bool getGradingAccentInsensitive() {
+    try {
+      return _settingsBox.get(_gradingAccentInsensitiveKey, defaultValue: false);
+    } catch (e, s) {
+      _log.severe("Failed to read grading accent insensitive", e, s);
+      return false;
+    }
+  }
+
+  // --- Cloud sync -----------------------------------------------------------
+
+  Future<void> saveAutoSyncEnabled(bool enabled) async {
+    try {
+      await _settingsBox.put(_autoSyncEnabledKey, enabled);
+    } catch (e, s) {
+      _log.severe("Failed to save auto-sync enabled", e, s);
+    }
+  }
+
+  bool getAutoSyncEnabled() {
+    try {
+      return _settingsBox.get(_autoSyncEnabledKey, defaultValue: true);
+    } catch (e, s) {
+      _log.severe("Failed to read auto-sync enabled", e, s);
+      return true;
+    }
+  }
+
+  // --- Match game -----------------------------------------------------------
+
+  Future<void> saveMatchPairs(int pairs) async {
+    try {
+      await _settingsBox.put(_matchPairsKey, pairs);
+    } catch (e, s) {
+      _log.severe("Failed to save match pairs", e, s);
+    }
+  }
+
+  int getMatchPairs() {
+    try {
+      return _settingsBox.get(_matchPairsKey, defaultValue: 10);
+    } catch (e, s) {
+      _log.severe("Failed to read match pairs", e, s);
+      return 10;
+    }
+  }
+
+  Future<void> saveMatchPenaltyEnabled(bool enabled) async {
+    try {
+      await _settingsBox.put(_matchPenaltyEnabledKey, enabled);
+    } catch (e, s) {
+      _log.severe("Failed to save match penalty enabled", e, s);
+    }
+  }
+
+  bool getMatchPenaltyEnabled() {
+    try {
+      return _settingsBox.get(_matchPenaltyEnabledKey, defaultValue: true);
+    } catch (e, s) {
+      _log.severe("Failed to read match penalty enabled", e, s);
+      return true;
+    }
+  }
+
+  // --- Update behavior ------------------------------------------------------
+
+  Future<void> saveAutoUpdateCheckEnabled(bool enabled) async {
+    try {
+      await _settingsBox.put(_autoUpdateCheckEnabledKey, enabled);
+    } catch (e, s) {
+      _log.severe("Failed to save auto update check", e, s);
+    }
+  }
+
+  bool getAutoUpdateCheckEnabled() {
+    try {
+      return _settingsBox.get(_autoUpdateCheckEnabledKey, defaultValue: true);
+    } catch (e, s) {
+      _log.severe("Failed to read auto update check", e, s);
+      return true;
+    }
+  }
+
+  // --- Accessibility: system text scale -------------------------------------
+
+  Future<void> saveSystemTextScaleEnabled(bool enabled) async {
+    try {
+      await _settingsBox.put(_systemTextScaleEnabledKey, enabled);
+    } catch (e, s) {
+      _log.severe("Failed to save system text scale", e, s);
+    }
+  }
+
+  bool getSystemTextScaleEnabled() {
+    try {
+      return _settingsBox.get(_systemTextScaleEnabledKey, defaultValue: true);
+    } catch (e, s) {
+      _log.severe("Failed to read system text scale", e, s);
+      return true;
     }
   }
 

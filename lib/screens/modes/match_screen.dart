@@ -10,6 +10,7 @@ import 'package:quizlone/routing/app_router.dart';
 import 'package:quizlone/widgets/web_aware_back_button.dart';
 
 import '../../providers/controllers/match_controller.dart';
+import '../../providers/core/settings_provider.dart';
 import '../../providers/study/study_list_providers.dart';
 import '../../widgets/centered_view.dart';
 import 'match_leaderboard_screen.dart';
@@ -228,7 +229,7 @@ class _MatchView extends ConsumerWidget {
   }
 }
 
-class _MatchCard extends StatelessWidget {
+class _MatchCard extends ConsumerWidget {
   const _MatchCard({
     required this.item,
     required this.isSelected,
@@ -244,9 +245,10 @@ class _MatchCard extends StatelessWidget {
   final VoidCallback onTap;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final reduceMotion = ref.watch(reduceMotionProvider);
     Color cardColor = colorScheme.surfaceContainerHighest;
     Color textColor = colorScheme.onSurfaceVariant;
     Border? border;
@@ -261,7 +263,9 @@ class _MatchCard extends StatelessWidget {
     }
 
     return AnimatedOpacity(
-      duration: const Duration(milliseconds: 300),
+      duration: reduceMotion
+          ? Duration.zero
+          : const Duration(milliseconds: 300),
       opacity: isMatched ? 0.0 : 1.0,
       child: IgnorePointer(
         ignoring: isMatched,

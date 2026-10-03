@@ -14,6 +14,7 @@ import 'package:quizlone/services/smooth_scroll.dart';
 import 'package:quizlone/widgets/error_snackbar.dart';
 import 'package:quizlone/widgets/web_aware_back_button.dart';
 import '../../providers/core/core_providers.dart';
+import '../../providers/core/settings_provider.dart';
 import '../../providers/study/study_list_providers.dart';
 import '../../widgets/centered_view.dart';
 
@@ -627,7 +628,12 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
   }
 
   /// Renders a single study list item. Wrapped in RepaintBoundary to optimize scrolling performance.
-  Widget _buildListTile(StudyList list, Translations t, {bool fade = false}) {
+  Widget _buildListTile(
+    StudyList list,
+    Translations t, {
+    bool fade = false,
+    bool reduce = false,
+  }) {
     final colorScheme = Theme.of(context).colorScheme;
     final isSelected = _selectedListIds.contains(list.id);
     final card = RepaintBoundary(
@@ -774,7 +780,7 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
       ),
     );
 
-    return fade ? card.animate().fadeIn(duration: 300.ms) : card;
+    return fade && !reduce ? card.animate().fadeIn(duration: 300.ms) : card;
   }
 
   /// Renders an expandable group header containing its child study lists.
@@ -998,6 +1004,7 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
     List<StudyList> allLists,
     List<StudyGroup> groups,
     Translations t,
+    bool reduce,
   ) {
     final grouped = allLists.groupListsBy((l) => l.groupId);
 
@@ -1013,20 +1020,25 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
 
     final tiles = <Widget>[
       if (grouped[null]?.isNotEmpty ?? false)
-        _buildGroupTile(
-          t.loadListScreen.ungrouped,
-          null,
-          _sortLists(grouped[null]!),
-          t,
-        ).animate().fadeIn(duration: 300.ms),
+        reduce
+            ? _buildGroupTile(
+                t.loadListScreen.ungrouped,
+                null,
+                _sortLists(grouped[null]!),
+                t,
+              )
+            : _buildGroupTile(
+                t.loadListScreen.ungrouped,
+                null,
+                _sortLists(grouped[null]!),
+                t,
+              ).animate().fadeIn(duration: 300.ms),
       ...sortedGroups.map((group) {
         final groupLists = _sortLists(grouped[group.id] ?? []);
-        return _buildGroupTile(
-          group.name,
-          group.id,
-          groupLists,
-          t,
-        ).animate().fadeIn(duration: 300.ms);
+        final tile = _buildGroupTile(group.name, group.id, groupLists, t);
+        return reduce
+            ? tile
+            : tile.animate().fadeIn(duration: 300.ms);
       }),
     ];
 
@@ -1071,7 +1083,11 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
     );
   }
 
-  Widget _buildFlatView(List<StudyList> processedLists, Translations t) {
+  Widget _buildFlatView(
+    List<StudyList> processedLists,
+    Translations t,
+    bool reduce,
+  ) {
     if (processedLists.isEmpty) {
       return Center(
         child: Column(
@@ -1122,8 +1138,12 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 8),
               physics: const AlwaysScrollableScrollPhysics(),
               itemCount: processedLists.length,
-              itemBuilder: (context, index) =>
-                  _buildListTile(processedLists[index], t, fade: true),
+              itemBuilder: (context, index) => _buildListTile(
+                processedLists[index],
+                t,
+                fade: true,
+                reduce: reduce,
+              ),
             ),
           ),
         ),
@@ -1134,6 +1154,7 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
   @override
   Widget build(BuildContext context) {
     final t = Translations.of(context);
+    final reduce = ref.watch(reduceMotionProvider);
     // The grouped view is used for the default view AND for every sort option.
     // Only an active search query switches to the flat view.
     final isSearching = _searchController.text.isNotEmpty;
@@ -1178,9 +1199,18 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
                             }
 
                             if (isSearching) {
-                              return _buildFlatView(_processLists(allLists), t);
+                              return _buildFlatView(
+                                _processLists(allLists),
+                                t,
+                                reduce,
+                              );
                             } else {
-                              return _buildGroupedView(allLists, groups, t);
+                              return _buildGroupedView(
+                                allLists,
+                                groups,
+                                t,
+                                reduce,
+                              );
                             }
                           },
                           loading: () =>

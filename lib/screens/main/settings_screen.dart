@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
@@ -10,6 +9,7 @@ import 'package:file_saver/file_saver.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,6 +21,7 @@ import 'package:quizlone/services/smooth_scroll.dart';
 import 'package:quizlone/widgets/error_snackbar.dart';
 import 'package:quizlone/widgets/web_aware_back_button.dart';
 
+import '../../models/enums/enums.dart';
 import '../../models/settings_app_data.dart';
 import '../../models/study_list.dart';
 import '../../providers/core/core_providers.dart';
@@ -592,6 +593,18 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   ],
                 ),
               ),
+              const Divider(indent: 16, endIndent: 16),
+              MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: SwitchListTile(
+                  title: Text(t.settingsScreen.useSystemTextScale),
+                  subtitle: Text(t.settingsScreen.useSystemTextScaleSubtitle),
+                  secondary: const Icon(Icons.text_fields_outlined),
+                  value: ref.watch(systemTextScaleProvider),
+                  onChanged: (val) =>
+                      ref.read(systemTextScaleProvider.notifier).toggle(val),
+                ),
+              ),
             ],
           ),
         ),
@@ -600,9 +613,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   }
 
   Widget _studyContent(Translations t, {required bool showExperimental}) {
-    final disableFlashcardAnimations = ref.watch(
-      disableFlashcardAnimationsProvider,
-    );
+    final reduceMotion = ref.watch(reduceMotionProvider);
     final smoothScrollEnabled = ref.watch(smoothScrollProvider);
 
     return Column(
@@ -613,17 +624,178 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           clipBehavior: Clip.antiAlias,
           child: MouseRegion(
             cursor: SystemMouseCursors.click,
-            child: SwitchListTile(
-              title: Text(t.settingsScreen.disableFlashcardAnimations),
-              subtitle: Text(
-                t.settingsScreen.disableFlashcardAnimationsSubtitle,
-              ),
-              secondary: const Icon(Icons.animation),
-              value: disableFlashcardAnimations,
-              onChanged: (val) => ref
-                  .read(disableFlashcardAnimationsProvider.notifier)
-                  .toggle(val),
+            child: ListTile(
+              leading: const Icon(Icons.tune),
+              title: Text(t.settingsScreen.studyDefaultsTitle),
+              subtitle: Text(t.settingsScreen.studyDefaultsSubtitle),
+              trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 16),
+              onTap: () => _showStudyDefaultsDialog(context, ref),
             ),
+          ),
+        ),
+        Card(
+          clipBehavior: Clip.antiAlias,
+          child: MouseRegion(
+            cursor: SystemMouseCursors.click,
+            child: SwitchListTile(
+              title: Text(t.settingsScreen.reduceMotion),
+              subtitle: Text(t.settingsScreen.reduceMotionSubtitle),
+              secondary: const Icon(Icons.motion_photos_off_outlined),
+              value: reduceMotion,
+              onChanged: (val) =>
+                  ref.read(reduceMotionProvider.notifier).toggle(val),
+            ),
+          ),
+        ),
+        Card(
+          clipBehavior: Clip.antiAlias,
+          child: Column(
+            children: [
+              MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: SwitchListTile(
+                  title: Text(t.settingsScreen.autoAdvance),
+                  subtitle: Text(t.settingsScreen.autoAdvanceSubtitle),
+                  secondary: const Icon(Icons.skip_next_outlined),
+                  value: ref.watch(autoAdvanceEnabledProvider),
+                  onChanged: (val) =>
+                      ref.read(autoAdvanceEnabledProvider.notifier).toggle(val),
+                ),
+              ),
+              AnimatedCrossFade(
+                duration: const Duration(milliseconds: 300),
+                sizeCurve: Curves.easeInOutCubic,
+                crossFadeState: ref.watch(autoAdvanceEnabledProvider)
+                    ? CrossFadeState.showSecond
+                    : CrossFadeState.showFirst,
+                firstChild: const SizedBox(width: double.infinity),
+                secondChild: Padding(
+                  padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 8.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Slider(
+                          value: ref.watch(autoAdvanceDelayMsProvider).toDouble(),
+                          min: 500,
+                          max: 3000,
+                          divisions: 10,
+                          label: "${ref.watch(autoAdvanceDelayMsProvider)}ms",
+                          onChanged: (value) => ref
+                              .read(autoAdvanceDelayMsProvider.notifier)
+                              .set(value.round()),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 55,
+                        child: Text(
+                          "${ref.watch(autoAdvanceDelayMsProvider)}ms",
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      OutlinedButton(
+                        onPressed: ref.watch(autoAdvanceDelayMsProvider) == 1500
+                            ? null
+                            : () => ref
+                                  .read(autoAdvanceDelayMsProvider.notifier)
+                                  .set(1500),
+                        child: Text(t.general.reset),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        _SettingsHeader(title: t.settingsScreen.grading),
+        Card(
+          clipBehavior: Clip.antiAlias,
+          child: Column(
+            children: [
+              MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: SwitchListTile(
+                  title: Text(t.settingsScreen.ignorePunctuation),
+                  subtitle: Text(t.settingsScreen.ignorePunctuationSubtitle),
+                  secondary: const Icon(Icons.format_clear),
+                  value: ref.watch(gradingIgnorePunctuationProvider),
+                  onChanged: (val) => ref
+                      .read(gradingIgnorePunctuationProvider.notifier)
+                      .toggle(val),
+                ),
+              ),
+              MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: SwitchListTile(
+                  title: Text(t.settingsScreen.ignoreAccents),
+                  subtitle: Text(t.settingsScreen.ignoreAccentsSubtitle),
+                  secondary: const Icon(Icons.translate_outlined),
+                  value: ref.watch(gradingAccentInsensitiveProvider),
+                  onChanged: (val) => ref
+                      .read(gradingAccentInsensitiveProvider.notifier)
+                      .toggle(val),
+                ),
+              ),
+            ],
+          ),
+        ),
+        _SettingsHeader(title: t.settingsScreen.matchGame),
+        Card(
+          clipBehavior: Clip.antiAlias,
+          child: Column(
+            children: [
+              ListTile(
+                leading: const Icon(Icons.grid_view_outlined),
+                title: Text(t.settingsScreen.matchPairs),
+                subtitle: Text(t.settingsScreen.matchPairsSubtitle),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 8.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Slider(
+                        value: ref.watch(matchPairsProvider).toDouble(),
+                        min: 4,
+                        max: 10,
+                        divisions: 6,
+                        label: "${ref.watch(matchPairsProvider)}",
+                        onChanged: (value) =>
+                            ref.read(matchPairsProvider.notifier).set(value.round()),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 30,
+                      child: Text(
+                        "${ref.watch(matchPairsProvider)}",
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    OutlinedButton(
+                      onPressed: ref.watch(matchPairsProvider) == 10
+                          ? null
+                          : () => ref.read(matchPairsProvider.notifier).set(10),
+                      child: Text(t.general.reset),
+                    ),
+                  ],
+                ),
+              ),
+              const Divider(indent: 16, endIndent: 16),
+              MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: SwitchListTile(
+                  title: Text(t.settingsScreen.matchPenalty),
+                  subtitle: Text(t.settingsScreen.matchPenaltySubtitle),
+                  secondary: const Icon(Icons.timer_outlined),
+                  value: ref.watch(matchPenaltyEnabledProvider),
+                  onChanged: (val) => ref
+                      .read(matchPenaltyEnabledProvider.notifier)
+                      .toggle(val),
+                ),
+              ),
+            ],
           ),
         ),
         if (showExperimental) ...[
@@ -756,6 +928,20 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         _SettingsHeader(title: t.settingsScreen.update),
+        Card(
+          clipBehavior: Clip.antiAlias,
+          child: MouseRegion(
+            cursor: SystemMouseCursors.click,
+            child: SwitchListTile(
+              title: Text(t.settingsScreen.autoUpdateCheck),
+              subtitle: Text(t.settingsScreen.autoUpdateCheckSubtitle),
+              secondary: const Icon(Icons.autorenew),
+              value: ref.watch(autoUpdateCheckEnabledProvider),
+              onChanged: (val) =>
+                  ref.read(autoUpdateCheckEnabledProvider.notifier).toggle(val),
+            ),
+          ),
+        ),
         const _UpdaterCard(),
       ],
     );
@@ -810,6 +996,33 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         _SettingsHeader(title: t.settingsScreen.accountManagement),
         Card(
           clipBehavior: Clip.antiAlias,
+          child: Column(
+            children: [
+              MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: SwitchListTile(
+                  title: Text(t.settingsScreen.autoSync),
+                  subtitle: Text(t.settingsScreen.autoSyncSubtitle),
+                  secondary: const Icon(Icons.cloud_sync_outlined),
+                  value: ref.watch(autoSyncEnabledProvider),
+                  onChanged: (val) =>
+                      ref.read(autoSyncEnabledProvider.notifier).toggle(val),
+                ),
+              ),
+              const Divider(indent: 16, endIndent: 16),
+              ListTile(
+                leading: const Icon(Icons.sync),
+                title: Text(t.settingsScreen.syncNow),
+                subtitle: Text(t.settingsScreen.syncNowSubtitle),
+                onTap: () => ref
+                    .read(authControllerProvider.notifier)
+                    .resetCircuitAndSync(),
+              ),
+            ],
+          ),
+        ),
+        Card(
+          clipBehavior: Clip.antiAlias,
           child: ListTile(
             leading: Icon(
               Icons.person_remove_outlined,
@@ -824,6 +1037,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ),
         ),
       ],
+    );
+  }
+
+  void _showStudyDefaultsDialog(BuildContext context, WidgetRef ref) {
+    showDialog<void>(
+      context: context,
+      builder: (_) => const _StudyDefaultsDialog(),
     );
   }
 
@@ -1346,6 +1566,204 @@ class _UpdaterCard extends ConsumerWidget {
           onTap: updaterNotifier.checkForUpdate,
         ),
       },
+    );
+  }
+}
+
+class _StudyDefaultsDialog extends ConsumerWidget {
+  const _StudyDefaultsDialog();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final t = Translations.of(context);
+    final defaults = ref.watch(studyDefaultsProvider);
+    final notifier = ref.read(studyDefaultsProvider.notifier);
+
+    Future<void> confirmApplyToAll() async {
+      final n = await notifier.applyToAllLists();
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            t.settingsScreen.studyDefaultsDialog.applyToAllDone(count: n),
+          ),
+        ),
+      );
+    }
+
+    return AlertDialog(
+      title: Text(t.settingsScreen.studyDefaultsDialog.title),
+      content: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 480),
+        child: SmoothSingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _dialogRadioRow<FlashcardStartSide>(
+                label: t.modeSelectionScreen.showTermFirst,
+                value: FlashcardStartSide.term,
+                groupValue: defaults.flashcardStartSide,
+                onChanged: (v) =>
+                    notifier.update(defaults.copyWith(flashcardStartSide: v)),
+              ),
+              _dialogRadioRow<FlashcardStartSide>(
+                label: t.modeSelectionScreen.showDefFirst,
+                value: FlashcardStartSide.definition,
+                groupValue: defaults.flashcardStartSide,
+                onChanged: (v) =>
+                    notifier.update(defaults.copyWith(flashcardStartSide: v)),
+              ),
+              const Divider(height: 24),
+              _dialogRadioRow<StudyQuestionType>(
+                label: t.modeSelectionScreen.askForTerm,
+                value: StudyQuestionType.definition,
+                groupValue: defaults.askWith,
+                onChanged: (v) => notifier.update(defaults.copyWith(askWith: v)),
+              ),
+              _dialogRadioRow<StudyQuestionType>(
+                label: t.modeSelectionScreen.askForDef,
+                value: StudyQuestionType.term,
+                groupValue: defaults.askWith,
+                onChanged: (v) => notifier.update(defaults.copyWith(askWith: v)),
+              ),
+              const Divider(height: 24),
+              _dialogRadioRow<TestFormat>(
+                label: t.modeSelectionScreen.writtenAnswer,
+                value: TestFormat.written,
+                groupValue: defaults.testFormat,
+                onChanged: (v) =>
+                    notifier.update(defaults.copyWith(testFormat: v)),
+              ),
+              _dialogRadioRow<TestFormat>(
+                label: t.modeSelectionScreen.multipleChoice,
+                value: TestFormat.mc,
+                groupValue: defaults.testFormat,
+                onChanged: (v) =>
+                    notifier.update(defaults.copyWith(testFormat: v)),
+              ),
+              const Divider(height: 24),
+              _StudyLengthField(
+                initialValue: defaults.studyLength,
+                onCommit: (value) => notifier.update(
+                  value == null
+                      ? defaults.copyWith(clearStudyLength: true)
+                      : defaults.copyWith(studyLength: value),
+                ),
+              ),
+              const Divider(height: 24),
+              SwitchListTile(
+                title: Text(t.modeSelectionScreen.ignoreBrackets),
+                subtitle: Text(t.modeSelectionScreen.ignoreBracketsSubtitle),
+                value: defaults.ignoreBrackets,
+                onChanged: (v) =>
+                    notifier.update(defaults.copyWith(ignoreBrackets: v)),
+              ),
+              SwitchListTile(
+                title: Text(t.modeSelectionScreen.requireOnlyOneAnswer),
+                subtitle:
+                    Text(t.modeSelectionScreen.requireOnlyOneAnswerSubtitle),
+                value: defaults.allowAnswerSubstring,
+                onChanged: (v) =>
+                    notifier.update(defaults.copyWith(allowAnswerSubstring: v)),
+              ),
+            ],
+          ),
+        ),
+      ),
+      actions: [
+        OutlinedButton(
+          onPressed: confirmApplyToAll,
+          child: Text(t.settingsScreen.studyDefaultsDialog.applyToAll),
+        ),
+        FilledButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: Text(t.settingsScreen.studyDefaultsDialog.close),
+        ),
+      ],
+    );
+  }
+
+  Widget _dialogRadioRow<T>({
+    required String label,
+    required T value,
+    required T groupValue,
+    required ValueChanged<T> onChanged,
+  }) {
+    return RadioGroup<T>(
+      groupValue: groupValue,
+      onChanged: (v) {
+        if (v != null) onChanged(v);
+      },
+      child: RadioListTile<T>(
+        title: Text(label),
+        value: value,
+        dense: true,
+        mouseCursor: SystemMouseCursors.click,
+      ),
+    );
+  }
+}
+
+class _StudyLengthField extends StatefulWidget {
+  const _StudyLengthField({required this.initialValue, required this.onCommit});
+
+  final int? initialValue;
+  final ValueChanged<int?> onCommit;
+
+  @override
+  State<_StudyLengthField> createState() => _StudyLengthFieldState();
+}
+
+class _StudyLengthFieldState extends State<_StudyLengthField> {
+  late final TextEditingController _controller = TextEditingController(
+    text: widget.initialValue?.toString() ?? '',
+  );
+  final FocusNode _focusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode.addListener(() {
+      if (!_focusNode.hasFocus) _commit();
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  void _commit() {
+    final raw = _controller.text.trim();
+    final value = raw.isEmpty ? null : int.tryParse(raw);
+    widget.onCommit(value);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final t = Translations.of(context);
+    return Row(
+      children: [
+        Text(t.modeSelectionScreen.studyLength),
+        const SizedBox(width: 16),
+        Expanded(
+          child: TextField(
+            controller: _controller,
+            focusNode: _focusNode,
+            keyboardType: TextInputType.number,
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+            onEditingComplete: _commit,
+            decoration: InputDecoration(
+              hintText: t.general.all,
+              border: const OutlineInputBorder(),
+              isDense: true,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

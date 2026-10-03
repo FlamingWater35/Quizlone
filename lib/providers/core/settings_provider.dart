@@ -3,7 +3,11 @@ import 'package:logging/logging.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../models/enums/enums.dart';
+import '../../models/study_defaults.dart';
 import '../../services/smooth_scroll.dart';
+import '../study/study_list_providers.dart';
+import 'auth_provider.dart';
 import 'core_providers.dart';
 
 part 'settings_provider.g.dart';
@@ -336,9 +340,9 @@ class ScrollDurationNotifier extends _$ScrollDurationNotifier {
 }
 
 @riverpod
-class DisableFlashcardAnimations extends _$DisableFlashcardAnimations {
+class ReduceMotion extends _$ReduceMotion {
   Future<void> toggle(bool disabled) async {
-    _log.fine("[DisableFlashcardAnimations] Setting disabled to $disabled");
+    _log.fine("[ReduceMotion] Setting disabled to $disabled");
     await ref
         .read(databaseServiceProvider)
         .saveFlashcardAnimationsDisabled(disabled);
@@ -351,9 +355,166 @@ class DisableFlashcardAnimations extends _$DisableFlashcardAnimations {
     final disabled = ref
         .watch(databaseServiceProvider)
         .getFlashcardAnimationsDisabled();
-    _log.fine(
-      "[DisableFlashcardAnimations] Initializing with disabled: $disabled",
-    );
+    _log.fine("[ReduceMotion] Initializing with disabled: $disabled");
     return disabled;
   }
+}
+
+@riverpod
+class StudyDefaultsNotifier extends _$StudyDefaultsNotifier {
+  Future<void> update(StudyDefaults defaults) async {
+    _log.fine("[StudyDefaultsNotifier] Updating defaults");
+    await ref.read(databaseServiceProvider).saveStudyDefaults(defaults);
+    if (!ref.mounted) return;
+    state = defaults;
+  }
+
+  /// Applies the current defaults to every existing list. Returns the number
+  /// of lists updated so the UI can confirm.
+  Future<int> applyToAllLists() async {
+    final db = ref.read(databaseServiceProvider);
+    final defaults = state;
+    final lists = await db.getAllStudyLists();
+    for (final list in lists) {
+      list
+        ..flashcardShowTermFirst =
+            defaults.flashcardStartSide == FlashcardStartSide.term
+        ..studyShowDefinitionAskTerm =
+            defaults.askWith == StudyQuestionType.definition
+        ..testFormat = defaults.testFormat
+        ..testStudyLength = defaults.studyLength
+        ..ignoreBrackets = defaults.ignoreBrackets
+        ..allowAnswerSubstring = defaults.allowAnswerSubstring;
+      await db.saveStudyList(list);
+    }
+    if (!ref.mounted) return lists.length;
+    ref.invalidate(studyListsProvider);
+    ref.invalidate(activeStudyListProvider);
+    return lists.length;
+  }
+
+  @override
+  StudyDefaults build() {
+    return ref.watch(databaseServiceProvider).getStudyDefaults();
+  }
+}
+
+@riverpod
+class AutoAdvanceEnabled extends _$AutoAdvanceEnabled {
+  Future<void> toggle(bool enabled) async {
+    await ref.read(databaseServiceProvider).saveAutoAdvanceEnabled(enabled);
+    if (!ref.mounted) return;
+    state = enabled;
+  }
+
+  @override
+  bool build() => ref.watch(databaseServiceProvider).getAutoAdvanceEnabled();
+}
+
+@riverpod
+class AutoAdvanceDelayMs extends _$AutoAdvanceDelayMs {
+  Future<void> set(int ms) async {
+    await ref.read(databaseServiceProvider).saveAutoAdvanceDelayMs(ms);
+    if (!ref.mounted) return;
+    state = ms;
+  }
+
+  @override
+  int build() => ref.watch(databaseServiceProvider).getAutoAdvanceDelayMs();
+}
+
+@riverpod
+class GradingIgnorePunctuation extends _$GradingIgnorePunctuation {
+  Future<void> toggle(bool enabled) async {
+    await ref
+        .read(databaseServiceProvider)
+        .saveGradingIgnorePunctuation(enabled);
+    if (!ref.mounted) return;
+    state = enabled;
+  }
+
+  @override
+  bool build() =>
+      ref.watch(databaseServiceProvider).getGradingIgnorePunctuation();
+}
+
+@riverpod
+class GradingAccentInsensitive extends _$GradingAccentInsensitive {
+  Future<void> toggle(bool enabled) async {
+    await ref
+        .read(databaseServiceProvider)
+        .saveGradingAccentInsensitive(enabled);
+    if (!ref.mounted) return;
+    state = enabled;
+  }
+
+  @override
+  bool build() =>
+      ref.watch(databaseServiceProvider).getGradingAccentInsensitive();
+}
+
+@riverpod
+class AutoSyncEnabled extends _$AutoSyncEnabled {
+  Future<void> toggle(bool enabled) async {
+    await ref.read(databaseServiceProvider).saveAutoSyncEnabled(enabled);
+    if (!ref.mounted) return;
+    state = enabled;
+    // Re-enabling while signed in should resume syncing promptly.
+    if (enabled && ref.read(authControllerProvider).value != null) {
+      await ref.read(authControllerProvider.notifier).resetCircuitAndSync();
+    }
+  }
+
+  @override
+  bool build() => ref.watch(databaseServiceProvider).getAutoSyncEnabled();
+}
+
+@riverpod
+class MatchPairs extends _$MatchPairs {
+  Future<void> set(int pairs) async {
+    await ref.read(databaseServiceProvider).saveMatchPairs(pairs);
+    if (!ref.mounted) return;
+    state = pairs;
+  }
+
+  @override
+  int build() => ref.watch(databaseServiceProvider).getMatchPairs();
+}
+
+@riverpod
+class MatchPenaltyEnabled extends _$MatchPenaltyEnabled {
+  Future<void> toggle(bool enabled) async {
+    await ref.read(databaseServiceProvider).saveMatchPenaltyEnabled(enabled);
+    if (!ref.mounted) return;
+    state = enabled;
+  }
+
+  @override
+  bool build() => ref.watch(databaseServiceProvider).getMatchPenaltyEnabled();
+}
+
+@riverpod
+class AutoUpdateCheckEnabled extends _$AutoUpdateCheckEnabled {
+  Future<void> toggle(bool enabled) async {
+    await ref.read(databaseServiceProvider).saveAutoUpdateCheckEnabled(enabled);
+    if (!ref.mounted) return;
+    state = enabled;
+  }
+
+  @override
+  bool build() =>
+      ref.watch(databaseServiceProvider).getAutoUpdateCheckEnabled();
+}
+
+@riverpod
+class SystemTextScale extends _$SystemTextScale {
+  Future<void> toggle(bool enabled) async {
+    await ref.read(databaseServiceProvider).saveSystemTextScaleEnabled(enabled);
+    if (!ref.mounted) return;
+    state = enabled;
+  }
+
+  @override
+  bool build() =>
+      ref.watch(databaseServiceProvider).getSystemTextScaleEnabled();
 }

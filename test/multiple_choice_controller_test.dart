@@ -221,5 +221,103 @@ void main() {
         expect(state.currentQuestion, isNull);
       });
     });
+
+    test('auto-advance off holds the answer until advance() is called', () {
+      fakeAsync((async) async {
+        fakeDb.settings['autoAdvanceEnabled'] = false;
+
+        final container = createControllerContainer(
+          db: fakeDb,
+          activeListId: listId,
+        );
+        addTearDown(container.dispose);
+
+        await awaitProviderValue(container, multipleChoiceControllerProvider);
+        final notifier = container.read(
+          multipleChoiceControllerProvider.notifier,
+        );
+
+        final correct = container
+            .read(multipleChoiceControllerProvider)
+            .value!
+            .currentQuestion!
+            .correctAnswer;
+        notifier.submitAnswer(correct);
+        async.flushMicrotasks();
+
+        async.elapse(const Duration(seconds: 5));
+        var state = container.read(multipleChoiceControllerProvider).value!;
+        expect(state.currentIndex, 0);
+        expect(state.isAnswerProcessed, isTrue);
+
+        notifier.advance();
+        async.flushMicrotasks();
+        state = container.read(multipleChoiceControllerProvider).value!;
+        expect(state.currentIndex, 1);
+        expect(state.isAnswerProcessed, isFalse);
+      });
+    });
+
+    test('advance() is a no-op before an answer is processed', () {
+      fakeAsync((async) async {
+        fakeDb.settings['autoAdvanceEnabled'] = false;
+
+        final container = createControllerContainer(
+          db: fakeDb,
+          activeListId: listId,
+        );
+        addTearDown(container.dispose);
+
+        await awaitProviderValue(container, multipleChoiceControllerProvider);
+        final notifier = container.read(
+          multipleChoiceControllerProvider.notifier,
+        );
+
+        notifier.advance();
+        async.flushMicrotasks();
+
+        expect(
+          container
+              .read(multipleChoiceControllerProvider)
+              .value!
+              .currentIndex,
+          0,
+        );
+      });
+    });
+
+    test('honours a custom auto-advance delay', () {
+      fakeAsync((async) async {
+        fakeDb.settings['autoAdvanceDelayMs'] = 100;
+
+        final container = createControllerContainer(
+          db: fakeDb,
+          activeListId: listId,
+        );
+        addTearDown(container.dispose);
+
+        await awaitProviderValue(container, multipleChoiceControllerProvider);
+        final notifier = container.read(
+          multipleChoiceControllerProvider.notifier,
+        );
+
+        final correct = container
+            .read(multipleChoiceControllerProvider)
+            .value!
+            .currentQuestion!
+            .correctAnswer;
+        notifier.submitAnswer(correct);
+        async.flushMicrotasks();
+
+        async.elapse(const Duration(milliseconds: 100));
+        expect(
+          container
+              .read(multipleChoiceControllerProvider)
+              .value!
+              .currentIndex,
+          1,
+        );
+      });
+    });
   });
 }

@@ -10,6 +10,8 @@ import '../../i18n/generated/translations.g.dart';
 import '../../models/enums/enums.dart';
 import '../../models/study_list.dart';
 import '../../models/term.dart';
+import '../../services/answer_grading.dart';
+import '../core/settings_provider.dart';
 import '../study/study_list_providers.dart';
 import '../study/study_options_provider.dart';
 
@@ -149,40 +151,21 @@ class TestController extends _$TestController {
 
     final allowSubstring = ref.read(allowAnswerSubstringProvider);
     final ignoreBrackets = ref.read(ignoreBracketsProvider);
-
-    String processAnswer(String ans) {
-      if (ignoreBrackets) {
-        ans = ans.replaceAll(RegExp(r'\[[\s\S]*?\]'), '').trim();
-      }
-      return ans;
-    }
+    final ignorePunctuation = ref.read(gradingIgnorePunctuationProvider);
+    final ignoreAccents = ref.read(gradingAccentInsensitiveProvider);
 
     List<TestQuestion> gradedQuestions = [];
     List<TestAnswerRecord> answerRecords = [];
 
     for (var q in currentState.questions) {
-      bool correct = false;
-      final rawUserAnswer = q.userAnswerText?.trim() ?? "";
-      final rawCorrectAnswer = q.correctAnswerText.trim();
-
-      final userAnswer = processAnswer(rawUserAnswer).toLowerCase();
-      final correctAnswer = processAnswer(rawCorrectAnswer).toLowerCase();
-
-      if (userAnswer.isNotEmpty) {
-        final uaLower = userAnswer;
-        final caLower = correctAnswer;
-
-        // Supports comma-separated accepted answers for flexible grading.
-        if (allowSubstring && caLower.contains(',')) {
-          final correctParts = caLower
-              .split(',')
-              .map((p) => p.trim())
-              .where((p) => p.isNotEmpty);
-          correct = (uaLower == caLower) || correctParts.contains(uaLower);
-        } else {
-          correct = uaLower == caLower;
-        }
-      }
+      final bool correct = isAnswerCorrect(
+        userAnswer: q.userAnswerText ?? "",
+        correctAnswer: q.correctAnswerText,
+        allowSubstring: allowSubstring,
+        ignoreBrackets: ignoreBrackets,
+        ignorePunctuation: ignorePunctuation,
+        ignoreAccents: ignoreAccents,
+      );
 
       gradedQuestions.add(q.copyWith(isCorrect: correct));
       answerRecords.add(

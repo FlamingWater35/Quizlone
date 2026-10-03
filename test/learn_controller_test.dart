@@ -248,5 +248,155 @@ void main() {
         expect(state.currentQuestion, isNull);
       });
     });
+
+    test('auto-advance off holds the feedback until advance() is called', () {
+      fakeAsync((async) async {
+        fakeDb.settings['autoAdvanceEnabled'] = false;
+
+        final container = createControllerContainer(
+          db: fakeDb,
+          activeListId: listId,
+        );
+        addTearDown(container.dispose);
+
+        await awaitProviderValue(container, learnControllerProvider);
+        final notifier = container.read(learnControllerProvider.notifier);
+
+        final expected = container
+            .read(learnControllerProvider)
+            .value!
+            .currentQuestion!
+            .expectedAnswer;
+        notifier.updateUserAnswer(expected);
+        notifier.submitAnswer();
+        async.flushMicrotasks();
+
+        // Well past the longest possible feedback delay.
+        async.elapse(const Duration(seconds: 5));
+        var state = container.read(learnControllerProvider).value!;
+        expect(state.currentTermIndexInCycle, 0);
+        expect(state.currentQuestion!.answerSubmitted, isTrue);
+
+        notifier.advance();
+        async.flushMicrotasks();
+        state = container.read(learnControllerProvider).value!;
+        expect(state.currentTermIndexInCycle, 1);
+      });
+    });
+
+    test('advance() is a no-op before the answer is submitted', () {
+      fakeAsync((async) async {
+        fakeDb.settings['autoAdvanceEnabled'] = false;
+
+        final container = createControllerContainer(
+          db: fakeDb,
+          activeListId: listId,
+        );
+        addTearDown(container.dispose);
+
+        await awaitProviderValue(container, learnControllerProvider);
+        final notifier = container.read(learnControllerProvider.notifier);
+
+        notifier.advance();
+        async.flushMicrotasks();
+
+        expect(
+          container.read(learnControllerProvider).value!.currentTermIndexInCycle,
+          0,
+        );
+      });
+    });
+
+    test('honours a custom auto-advance delay', () {
+      fakeAsync((async) async {
+        fakeDb.settings['autoAdvanceDelayMs'] = 100;
+
+        final container = createControllerContainer(
+          db: fakeDb,
+          activeListId: listId,
+        );
+        addTearDown(container.dispose);
+
+        await awaitProviderValue(container, learnControllerProvider);
+        final notifier = container.read(learnControllerProvider.notifier);
+
+        notifier.updateUserAnswer(
+          container
+              .read(learnControllerProvider)
+              .value!
+              .currentQuestion!
+              .expectedAnswer,
+        );
+        notifier.submitAnswer();
+        async.flushMicrotasks();
+
+        async.elapse(const Duration(milliseconds: 100));
+        final state = container.read(learnControllerProvider).value!;
+        expect(state.currentTermIndexInCycle, 1);
+      });
+    });
+
+    test('grading flags make answers punctuation/accents insensitive', () {
+      fakeAsync((async) async {
+        fakeDb.settings['autoAdvanceEnabled'] = false;
+        fakeDb.settings['gradingIgnorePunctuation'] = true;
+        fakeDb.settings['gradingAccentInsensitive'] = true;
+
+        final container = createControllerContainer(
+          db: fakeDb,
+          activeListId: listId,
+        );
+        addTearDown(container.dispose);
+
+        await awaitProviderValue(container, learnControllerProvider);
+        final notifier = container.read(learnControllerProvider.notifier);
+
+        final expected = container
+            .read(learnControllerProvider)
+            .value!
+            .currentQuestion!
+            .expectedAnswer;
+
+        // Apple -> accented + trailing punctuation; Café-like answers would
+        // also match, but here we only need the punctuation path.
+        notifier.updateUserAnswer('$expected!');
+        notifier.submitAnswer();
+        async.flushMicrotasks();
+
+        final state = container.read(learnControllerProvider).value!;
+        expect(state.currentQuestion!.feedbackType, LearnFeedbackType.correct);
+        expect(state.termsIncorrectThisCycle, isEmpty);
+      });
+    });
+
+    test('strict grading still rejects punctuation when the flags are off', () {
+      fakeAsync((async) async {
+        fakeDb.settings['autoAdvanceEnabled'] = false;
+
+        final container = createControllerContainer(
+          db: fakeDb,
+          activeListId: listId,
+        );
+        addTearDown(container.dispose);
+
+        await awaitProviderValue(container, learnControllerProvider);
+        final notifier = container.read(learnControllerProvider.notifier);
+
+        final expected = container
+            .read(learnControllerProvider)
+            .value!
+            .currentQuestion!
+            .expectedAnswer;
+        notifier.updateUserAnswer('$expected!');
+        notifier.submitAnswer();
+        async.flushMicrotasks();
+
+        final state = container.read(learnControllerProvider).value!;
+        expect(
+          state.currentQuestion!.feedbackType,
+          LearnFeedbackType.incorrect,
+        );
+      });
+    });
   });
 }

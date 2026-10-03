@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizlone/models/match_record.dart';
 import 'package:quizlone/models/settings_app_data.dart';
+import 'package:quizlone/models/study_defaults.dart';
 import 'package:quizlone/models/study_group.dart';
 import 'package:quizlone/models/study_list.dart';
 import 'package:quizlone/models/test_record.dart';
@@ -381,6 +382,78 @@ class FakeDatabaseService implements DatabaseService {
 
   @override
   String? getActiveListId() => settings['activeListId'] as String?;
+
+  // --- New settings added for the study/behavior options --------------------
+
+  StudyDefaults? _studyDefaults;
+
+  @override
+  Future<void> saveStudyDefaults(StudyDefaults defaults) async =>
+      _studyDefaults = defaults;
+
+  @override
+  StudyDefaults getStudyDefaults() => _studyDefaults ?? const StudyDefaults();
+
+  @override
+  Future<void> saveAutoAdvanceEnabled(bool enabled) async =>
+      settings['autoAdvanceEnabled'] = enabled;
+  @override
+  bool getAutoAdvanceEnabled() =>
+      settings['autoAdvanceEnabled'] as bool? ?? true;
+
+  @override
+  Future<void> saveAutoAdvanceDelayMs(int ms) async =>
+      settings['autoAdvanceDelayMs'] = ms;
+  @override
+  int getAutoAdvanceDelayMs() =>
+      settings['autoAdvanceDelayMs'] as int? ?? 1500;
+
+  @override
+  Future<void> saveGradingIgnorePunctuation(bool enabled) async =>
+      settings['gradingIgnorePunctuation'] = enabled;
+  @override
+  bool getGradingIgnorePunctuation() =>
+      settings['gradingIgnorePunctuation'] as bool? ?? false;
+
+  @override
+  Future<void> saveGradingAccentInsensitive(bool enabled) async =>
+      settings['gradingAccentInsensitive'] = enabled;
+  @override
+  bool getGradingAccentInsensitive() =>
+      settings['gradingAccentInsensitive'] as bool? ?? false;
+
+  @override
+  Future<void> saveAutoSyncEnabled(bool enabled) async =>
+      settings['autoSyncEnabled'] = enabled;
+  @override
+  bool getAutoSyncEnabled() => settings['autoSyncEnabled'] as bool? ?? true;
+
+  @override
+  Future<void> saveMatchPairs(int pairs) async =>
+      settings['matchPairs'] = pairs;
+  @override
+  int getMatchPairs() => settings['matchPairs'] as int? ?? 10;
+
+  @override
+  Future<void> saveMatchPenaltyEnabled(bool enabled) async =>
+      settings['matchPenaltyEnabled'] = enabled;
+  @override
+  bool getMatchPenaltyEnabled() =>
+      settings['matchPenaltyEnabled'] as bool? ?? true;
+
+  @override
+  Future<void> saveAutoUpdateCheckEnabled(bool enabled) async =>
+      settings['autoUpdateCheckEnabled'] = enabled;
+  @override
+  bool getAutoUpdateCheckEnabled() =>
+      settings['autoUpdateCheckEnabled'] as bool? ?? true;
+
+  @override
+  Future<void> saveSystemTextScaleEnabled(bool enabled) async =>
+      settings['systemTextScaleEnabled'] = enabled;
+  @override
+  bool getSystemTextScaleEnabled() =>
+      settings['systemTextScaleEnabled'] as bool? ?? true;
 
   // --- Skipped update version ---
 

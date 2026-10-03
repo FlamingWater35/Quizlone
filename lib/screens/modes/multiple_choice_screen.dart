@@ -11,6 +11,7 @@ import 'package:quizlone/widgets/centered_view.dart';
 import 'package:quizlone/widgets/web_aware_back_button.dart';
 
 import '../../providers/controllers/multiple_choice_controller.dart';
+import '../../providers/core/settings_provider.dart';
 import '../../providers/study/study_list_providers.dart';
 
 final _log = Logger("MultipleChoiceScreen");
@@ -80,6 +81,7 @@ class _MCGameViewState extends ConsumerState<_MCGameView> {
     final mcStateAsync = ref.watch(multipleChoiceControllerProvider);
     final t = Translations.of(context);
     final scrollController = SmoothScrollController();
+    final reduceMotion = ref.watch(reduceMotionProvider);
 
     ref.listen<AsyncValue<MultipleChoiceState>>(
       multipleChoiceControllerProvider,
@@ -107,6 +109,37 @@ class _MCGameViewState extends ConsumerState<_MCGameView> {
 
         final options = question.options;
         final rows = (options.length / 2).ceil();
+
+        final questionCard = ConstrainedBox(
+          constraints: const BoxConstraints(maxHeight: 200),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surfaceContainer,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            padding: const EdgeInsets.symmetric(vertical: 12.0),
+            child: Scrollbar(
+              controller: _questionScrollController,
+              thumbVisibility: true,
+              child: SmoothSingleChildScrollView(
+                controller: _questionScrollController,
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Container(
+                  width: double.infinity,
+                  alignment: Alignment.center,
+                  constraints: const BoxConstraints(
+                    minHeight: 200 - 24,
+                  ),
+                  child: Text(
+                    question.questionText,
+                    style: Theme.of(context).textTheme.headlineSmall,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
 
         return CenteredView(
           child: SmoothSingleChildScrollView(
@@ -139,36 +172,12 @@ class _MCGameViewState extends ConsumerState<_MCGameView> {
 
                 const SizedBox(height: 32),
 
-                ConstrainedBox(
-                  constraints: const BoxConstraints(maxHeight: 200),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.surfaceContainer,
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    padding: const EdgeInsets.symmetric(vertical: 12.0),
-                    child: Scrollbar(
-                      controller: _questionScrollController,
-                      thumbVisibility: true,
-                      child: SmoothSingleChildScrollView(
-                        controller: _questionScrollController,
-                        padding: const EdgeInsets.symmetric(horizontal: 24),
-                        child: Container(
-                          width: double.infinity,
-                          alignment: Alignment.center,
-                          constraints: const BoxConstraints(
-                            minHeight: 200 - 24,
-                          ),
-                          child: Text(
-                            question.questionText,
-                            style: Theme.of(context).textTheme.headlineSmall,
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ).animate(key: ValueKey(question)).fadeIn().scale(),
+                reduceMotion
+                    ? questionCard
+                    : questionCard
+                          .animate(key: ValueKey(question))
+                          .fadeIn()
+                          .scale(),
 
                 const SizedBox(height: 32),
 
@@ -222,6 +231,18 @@ class _MCGameViewState extends ConsumerState<_MCGameView> {
                     ],
                   ],
                 ),
+                if (state.isAnswerProcessed &&
+                    !ref.watch(autoAdvanceEnabledProvider))
+                  Padding(
+                    padding: const EdgeInsets.only(top: 24),
+                    child: FilledButton.icon(
+                      icon: const Icon(Icons.arrow_forward),
+                      label: Text(t.general.next),
+                      onPressed: () => ref
+                          .read(multipleChoiceControllerProvider.notifier)
+                          .advance(),
+                    ),
+                  ),
               ],
             ),
           ),
@@ -234,7 +255,7 @@ class _MCGameViewState extends ConsumerState<_MCGameView> {
   }
 }
 
-class _OptionButton extends StatefulWidget {
+class _OptionButton extends ConsumerStatefulWidget {
   const _OptionButton({
     required this.text,
     required this.state,
@@ -246,10 +267,10 @@ class _OptionButton extends StatefulWidget {
   final String text;
 
   @override
-  State<_OptionButton> createState() => _OptionButtonState();
+  ConsumerState<_OptionButton> createState() => _OptionButtonState();
 }
 
-class _OptionButtonState extends State<_OptionButton> {
+class _OptionButtonState extends ConsumerState<_OptionButton> {
   final _scrollController = SmoothScrollController();
 
   @override
@@ -300,7 +321,9 @@ class _OptionButtonState extends State<_OptionButton> {
             : SystemMouseCursors.click,
         borderRadius: BorderRadius.circular(12),
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 300),
+          duration: ref.watch(reduceMotionProvider)
+              ? Duration.zero
+              : const Duration(milliseconds: 300),
           width: double.infinity,
           height: double.infinity,
           decoration: BoxDecoration(

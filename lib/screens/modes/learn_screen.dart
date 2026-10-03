@@ -10,6 +10,7 @@ import 'package:quizlone/services/smooth_scroll.dart';
 import 'package:quizlone/widgets/web_aware_back_button.dart';
 
 import '../../providers/controllers/learn_controller.dart';
+import '../../providers/core/settings_provider.dart';
 import '../../providers/study/study_list_providers.dart';
 import '../../widgets/centered_view.dart';
 
@@ -163,6 +164,12 @@ class _LearnViewState extends ConsumerState<_LearnView>
   ) {
     final t = Translations.of(context);
     final theme = Theme.of(context);
+    final reduceMotion = ref.watch(reduceMotionProvider);
+
+    // Wraps a widget in its flutter_animate chain unless the user asked the
+    // app to reduce motion, in which case it is rendered as-is.
+    Widget anim(Widget child, Widget Function(Widget) build) =>
+        reduceMotion ? child : build(child);
 
     return Center(
       child: CenteredView(
@@ -171,54 +178,72 @@ class _LearnViewState extends ConsumerState<_LearnView>
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                t.learnScreen.progress.sessionComplete,
-                style: theme.textTheme.headlineMedium,
-                textAlign: TextAlign.center,
-              ).animate().fadeIn(duration: 400.ms).slideY(begin: -0.2, end: 0),
+              anim(
+                Text(
+                  t.learnScreen.progress.sessionComplete,
+                  style: theme.textTheme.headlineMedium,
+                  textAlign: TextAlign.center,
+                ),
+                (w) => w.animate().fadeIn(duration: 400.ms).slideY(
+                  begin: -0.2,
+                  end: 0,
+                ),
+              ),
               const SizedBox(height: 40),
-              Icon(
-                Icons.check_circle_outline,
-                size: 100,
-                color: theme.colorScheme.primary,
-              ).animate().scale(
-                delay: 200.ms,
-                duration: 500.ms,
-                curve: Curves.elasticOut,
+              anim(
+                Icon(
+                  Icons.check_circle_outline,
+                  size: 100,
+                  color: theme.colorScheme.primary,
+                ),
+                (w) => w.animate().scale(
+                  delay: 200.ms,
+                  duration: 500.ms,
+                  curve: Curves.elasticOut,
+                ),
               ),
               const SizedBox(height: 24),
-              Text(
-                state.progressMessage,
-                style: theme.textTheme.bodyLarge,
-                textAlign: TextAlign.center,
-              ).animate(delay: 400.ms).fadeIn(),
+              anim(
+                Text(
+                  state.progressMessage,
+                  style: theme.textTheme.bodyLarge,
+                  textAlign: TextAlign.center,
+                ),
+                (w) => w.animate(delay: 400.ms).fadeIn(),
+              ),
               const SizedBox(height: 60),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  OutlinedButton(
-                    onPressed: _returnToModeSelection,
-                    style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 24,
-                        vertical: 12,
+              anim(
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    OutlinedButton(
+                      onPressed: _returnToModeSelection,
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 12,
+                        ),
                       ),
+                      child: Text(t.learnScreen.backToOptions),
                     ),
-                    child: Text(t.learnScreen.backToOptions),
-                  ),
-                  const SizedBox(width: 16),
-                  FilledButton(
-                    onPressed: notifier.refreshAndRestart,
-                    style: FilledButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 24,
-                        vertical: 12,
+                    const SizedBox(width: 16),
+                    FilledButton(
+                      onPressed: notifier.refreshAndRestart,
+                      style: FilledButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 12,
+                        ),
                       ),
+                      child: Text(t.learnScreen.restartSession),
                     ),
-                    child: Text(t.learnScreen.restartSession),
-                  ),
-                ],
-              ).animate(delay: 600.ms).fadeIn().slideY(begin: 0.2, end: 0),
+                  ],
+                ),
+                (w) => w
+                    .animate(delay: 600.ms)
+                    .fadeIn()
+                    .slideY(begin: 0.2, end: 0),
+              ),
             ],
           ),
         ),
@@ -263,6 +288,8 @@ class _LearnViewState extends ConsumerState<_LearnView>
     final learnNotifier = ref.read(learnControllerProvider.notifier);
     final textTheme = Theme.of(context).textTheme;
     final t = Translations.of(context);
+    final autoAdvanceEnabled = ref.watch(autoAdvanceEnabledProvider);
+    final reduceMotion = ref.watch(reduceMotionProvider);
 
     // Listen for question changes to clear the input field and reset focus.
     ref.listen<AsyncValue<LearnModeScreenState>>(learnControllerProvider, (
@@ -328,6 +355,48 @@ class _LearnViewState extends ConsumerState<_LearnView>
             ? 0.0
             : (state.currentTermIndexInCycle + 1) /
                   state.termsToLearnThisCycle.length;
+
+        final feedbackBox = questionState.feedbackMessage.isNotEmpty
+            ? Padding(
+                padding: const EdgeInsets.only(top: 20.0),
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(12.0),
+                  decoration: BoxDecoration(
+                    color: _getFeedbackColor(
+                      context,
+                      questionState.feedbackType,
+                    ).withAlpha(40),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    children: [
+                      if (_getFeedbackIcon(questionState.feedbackType) != null)
+                        Icon(
+                          _getFeedbackIcon(questionState.feedbackType),
+                          color: _getFeedbackColor(
+                            context,
+                            questionState.feedbackType,
+                          ),
+                          size: 20,
+                        ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          questionState.feedbackMessage,
+                          style: textTheme.titleMedium?.copyWith(
+                            color: _getFeedbackColor(
+                              context,
+                              questionState.feedbackType,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            : const SizedBox(width: double.infinity);
 
         return CenteredView(
           child: SmoothSingleChildScrollView(
@@ -404,65 +473,30 @@ class _LearnViewState extends ConsumerState<_LearnView>
                           readOnly: questionState.answerSubmitted,
                           autofocus: false,
                         ),
-                        AnimatedSize(
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.easeInOut,
-                          child: questionState.feedbackMessage.isNotEmpty
-                              ? Padding(
-                                  padding: const EdgeInsets.only(top: 20.0),
-                                  child: Container(
-                                    width: double.infinity,
-                                    padding: const EdgeInsets.all(12.0),
-                                    decoration: BoxDecoration(
-                                      color: _getFeedbackColor(
-                                        context,
-                                        questionState.feedbackType,
-                                      ).withAlpha(40),
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        if (_getFeedbackIcon(
-                                              questionState.feedbackType,
-                                            ) !=
-                                            null)
-                                          Icon(
-                                            _getFeedbackIcon(
-                                              questionState.feedbackType,
-                                            ),
-                                            color: _getFeedbackColor(
-                                              context,
-                                              questionState.feedbackType,
-                                            ),
-                                            size: 20,
-                                          ),
-                                        const SizedBox(width: 8),
-                                        Expanded(
-                                          child: Text(
-                                            questionState.feedbackMessage,
-                                            style: textTheme.titleMedium
-                                                ?.copyWith(
-                                                  color: _getFeedbackColor(
-                                                    context,
-                                                    questionState.feedbackType,
-                                                  ),
-                                                ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                )
-                              : const SizedBox(width: double.infinity),
-                        ),
+                        // AnimatedSize must not be built with a zero duration:
+                        // its controller completes synchronously and marks the
+                        // render object dirty from inside its own performLayout,
+                        // which Flutter rejects. Under reduce-motion the widget
+                        // is dropped entirely so the box just snaps.
+                        reduceMotion
+                            ? feedbackBox
+                            : AnimatedSize(
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.easeInOut,
+                                child: feedbackBox,
+                              ),
                       ],
                     ),
                   ),
                 ),
                 const SizedBox(height: 20),
                 AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 400),
-                  reverseDuration: const Duration(milliseconds: 200),
+                  duration: reduceMotion
+                      ? Duration.zero
+                      : const Duration(milliseconds: 400),
+                  reverseDuration: reduceMotion
+                      ? Duration.zero
+                      : const Duration(milliseconds: 200),
                   switchInCurve: Curves.easeOutCubic,
                   switchOutCurve: Curves.easeInCubic,
                   transitionBuilder:
@@ -523,7 +557,17 @@ class _LearnViewState extends ConsumerState<_LearnView>
                             ),
                           ],
                         )
-                      : const SizedBox.shrink(key: ValueKey('buttons_hidden')),
+                      : autoAdvanceEnabled
+                      ? const SizedBox.shrink(key: ValueKey('buttons_hidden'))
+                      : FilledButton.icon(
+                          key: const ValueKey('next_visible'),
+                          icon: const Icon(Icons.arrow_forward),
+                          label: Text(t.general.next),
+                          style: FilledButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                          ),
+                          onPressed: learnNotifier.advance,
+                        ),
                 ),
               ],
             ),

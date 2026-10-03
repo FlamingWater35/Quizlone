@@ -5,6 +5,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '/providers/core/core_providers.dart';
 import '../../i18n/generated/translations.g.dart';
+import '../../models/enums/enums.dart';
 import '../../models/study_list.dart';
 import '../../models/term.dart';
 import '../immutables/study_list_form_state.dart';
@@ -166,6 +167,20 @@ class StudyListFormNotifier extends _$StudyListFormNotifier {
 
   @override
   StudyListFormState build() {
-    return StudyListFormState.initial();
+    final formState = StudyListFormState.initial();
+    // Stamp the user's global study defaults onto newly created lists.
+    // Per-list values still win once a list exists; defaults only seed
+    // creation and the explicit "apply to all" action.
+    final defaults = ref.watch(databaseServiceProvider).getStudyDefaults();
+    formState.studyList
+      ..flashcardShowTermFirst =
+          defaults.flashcardStartSide == FlashcardStartSide.term
+      ..studyShowDefinitionAskTerm =
+          defaults.askWith == StudyQuestionType.definition
+      ..testFormat = defaults.testFormat
+      ..testStudyLength = defaults.studyLength
+      ..ignoreBrackets = defaults.ignoreBrackets
+      ..allowAnswerSubstring = defaults.allowAnswerSubstring;
+    return formState;
   }
 }

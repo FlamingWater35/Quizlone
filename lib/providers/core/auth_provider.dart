@@ -166,6 +166,7 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
+      if (!ref.read(databaseServiceProvider).getAutoSyncEnabled()) return;
       _log.info("App resumed. Requesting cloud sync check.");
       requestCloudSync();
     }
@@ -291,6 +292,8 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
   }
 
   Future<bool> _performInitialSync() async {
+    // Deliberately NOT gated by autoSyncEnabled: signing in should always
+    // establish a baseline with the cloud, even if background sync is off.
     try {
       await requestCloudSync(isInitialSync: true);
       return ref.read(syncHealthProvider) == null;
@@ -407,10 +410,10 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
 
   void _startPolling() {
     _stopPolling();
-    _syncTimer = Timer.periodic(
-      const Duration(seconds: 30),
-      (timer) => requestCloudSync(),
-    );
+    _syncTimer = Timer.periodic(const Duration(seconds: 30), (timer) {
+      if (!ref.read(databaseServiceProvider).getAutoSyncEnabled()) return;
+      requestCloudSync();
+    });
   }
 
   void _stopPolling() {
@@ -430,6 +433,7 @@ class AuthController extends _$AuthController with WidgetsBindingObserver {
     ) {
       if (previous?.value == ConnectivityResult.none &&
           next.value != ConnectivityResult.none) {
+        if (!ref.read(databaseServiceProvider).getAutoSyncEnabled()) return;
         requestCloudSync();
       }
     });

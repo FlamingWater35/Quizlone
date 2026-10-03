@@ -241,6 +241,7 @@ class _MyAppState extends ConsumerState<MyApp> {
 
     final themeMode = ref.watch(appThemeProvider);
     final uiScale = ref.watch(uiScaleProvider);
+    final systemTextScale = ref.watch(systemTextScaleProvider);
     final seedArgb = ref.watch(seedColorProvider);
 
     // Falls back to the app default when the user has not picked a custom
@@ -383,7 +384,11 @@ class _MyAppState extends ConsumerState<MyApp> {
         ),
         themeMode: themeMode,
         builder: (context, child) {
-          return AppScaler(scale: uiScale, child: child!);
+          return AppScaler(
+            scale: uiScale,
+            followSystemScale: systemTextScale,
+            child: child!,
+          );
         },
         debugShowCheckedModeBanner: false,
         routerConfig: _appRouter.config(

@@ -7,6 +7,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../i18n/generated/translations.g.dart';
 import '../../models/enums/enums.dart';
 import '../../models/term.dart';
+import '../../services/answer_grading.dart';
+import '../core/settings_provider.dart';
 import '../study/study_list_providers.dart';
 import '../study/study_options_provider.dart';
 
@@ -157,34 +159,15 @@ class LearnController extends _$LearnController {
     }
 
     final questionState = currentVal.currentQuestion!;
-    final allowSubstring = ref.read(allowAnswerSubstringProvider);
-    final ignoreBrackets = ref.read(ignoreBracketsProvider);
 
-    String processAnswer(String ans) {
-      if (ignoreBrackets) {
-        ans = ans.replaceAll(RegExp(r'\[[\s\S]*?\]'), '').trim();
-      }
-      return ans;
-    }
-
-    final userAnswer = processAnswer(
-      questionState.userAnswer.trim().toLowerCase(),
+    final bool isCorrect = isAnswerCorrect(
+      userAnswer: questionState.userAnswer,
+      correctAnswer: questionState.expectedAnswer,
+      allowSubstring: ref.read(allowAnswerSubstringProvider),
+      ignoreBrackets: ref.read(ignoreBracketsProvider),
+      ignorePunctuation: ref.read(gradingIgnorePunctuationProvider),
+      ignoreAccents: ref.read(gradingAccentInsensitiveProvider),
     );
-    final correctAnswer = processAnswer(
-      questionState.expectedAnswer.trim().toLowerCase(),
-    );
-
-    bool isCorrect;
-    if (allowSubstring && correctAnswer.contains(',')) {
-      final correctParts = correctAnswer
-          .split(',')
-          .map((p) => p.trim())
-          .where((p) => p.isNotEmpty);
-      isCorrect =
-          (userAnswer == correctAnswer) || correctParts.contains(userAnswer);
-    } else {
-      isCorrect = userAnswer == correctAnswer;
-    }
 
     List<Term> updatedIncorrect = List.from(currentVal.termsIncorrectThisCycle);
     if (!isCorrect) updatedIncorrect.add(questionState.term);
@@ -206,9 +189,27 @@ class LearnController extends _$LearnController {
       ),
     );
 
-    await Future.delayed(const Duration(milliseconds: learnFeedbackDelayMS));
-    // CRITICAL: Prevent state update if the user navigated away during the delay.
-    if (!ref.mounted) return;
+    final autoAdvance = ref.read(autoAdvanceEnabledProvider);
+    if (autoAdvance) {
+      final delayMs = ref.read(autoAdvanceDelayMsProvider);
+      await Future.delayed(Duration(milliseconds: delayMs));
+      // CRITICAL: Prevent state update if the user navigated away during the delay.
+      if (!ref.mounted) return;
+      _moveToNextStep();
+    }
+    // When auto-advance is disabled, feedback stays on screen until the
+    // user explicitly taps "Next" (see advance()).
+  }
+
+  /// Manually advances to the next question/cycle when auto-advance is off.
+  void advance() {
+    final currentVal = state.value;
+    if (currentVal == null ||
+        currentVal.isLoading ||
+        currentVal.currentQuestion == null ||
+        !currentVal.currentQuestion!.answerSubmitted) {
+      return;
+    }
     _moveToNextStep();
   }
 
@@ -262,11 +263,14 @@ class LearnController extends _$LearnController {
       ),
     );
 
-    await Future.delayed(
-      const Duration(milliseconds: learnFeedbackDelayMS + 500),
-    );
-    if (!ref.mounted) return;
-    _moveToNextStep();
+    final autoAdvance = ref.read(autoAdvanceEnabledProvider);
+    if (autoAdvance) {
+      final delayMs = ref.read(autoAdvanceDelayMsProvider) + 500;
+      await Future.delayed(Duration(milliseconds: delayMs));
+      // CRITICAL: Prevent state update if the user navigated away during the delay.
+      if (!ref.mounted) return;
+      _moveToNextStep();
+    }
   }
 
   /// Completely resets the provider, forcing a rebuild and a new shuffled set.

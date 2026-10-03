@@ -8,6 +8,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../i18n/generated/translations.g.dart';
 import '../../models/enums/enums.dart';
 import '../../models/term.dart';
+import '../core/settings_provider.dart';
 import '../study/study_list_providers.dart';
 import '../study/study_options_provider.dart';
 
@@ -113,11 +114,26 @@ class MultipleChoiceController extends _$MultipleChoiceController {
       ),
     );
 
-    // Delay allows the user to see the green/red highlight before the screen changes.
-    await Future.delayed(const Duration(seconds: 1, milliseconds: 500));
+    final autoAdvance = ref.read(autoAdvanceEnabledProvider);
+    if (autoAdvance) {
+      final delayMs = ref.read(autoAdvanceDelayMsProvider);
+      await Future.delayed(Duration(milliseconds: delayMs));
+      // CRITICAL: Prevent navigation/state update if the user left during delay.
+      if (!ref.mounted) return;
+      _nextQuestion();
+    }
+    // When auto-advance is off the screen shows a "Next" button that calls
+    // advance() instead.
+  }
 
-    // CRITICAL: Prevent navigation/state update if the user left the screen during the delay.
-    if (!ref.mounted) return;
+  /// Manually advances when auto-advance is disabled.
+  void advance() {
+    final currentState = state.value;
+    if (currentState == null ||
+        !currentState.isAnswerProcessed ||
+        currentState.isSessionComplete) {
+      return;
+    }
     _nextQuestion();
   }
 

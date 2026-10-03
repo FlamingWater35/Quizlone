@@ -10,6 +10,7 @@ import 'package:quizlone/widgets/centered_view.dart';
 
 import '../../models/study_list.dart';
 import '../../providers/controllers/match_controller.dart';
+import '../../providers/core/settings_provider.dart';
 import '../../providers/study/study_list_providers.dart';
 
 final matchRecordsProvider = FutureProvider.family<List<MatchRecord>, String>((
@@ -61,10 +62,15 @@ class _MatchLeaderboardScreenState extends ConsumerState<MatchLeaderboardScreen>
       return;
     }
 
+    // Same targeting as always; reduce motion just makes it instant.
+    final duration = ref.read(reduceMotionProvider)
+        ? Duration.zero
+        : const Duration(milliseconds: 600);
+
     if (newRecordDisplayIndex < 5) {
       _scrollController.animateTo(
         0,
-        duration: const Duration(milliseconds: 600),
+        duration: duration,
         curve: Curves.easeInOut,
       );
       return;
@@ -75,7 +81,7 @@ class _MatchLeaderboardScreenState extends ConsumerState<MatchLeaderboardScreen>
     if (context != null) {
       Scrollable.ensureVisible(
         context,
-        duration: const Duration(milliseconds: 600),
+        duration: duration,
         curve: Curves.easeInOut,
         alignment: 0.5,
       );
@@ -86,7 +92,7 @@ class _MatchLeaderboardScreenState extends ConsumerState<MatchLeaderboardScreen>
         if (newContext != null && newContext.mounted) {
           Scrollable.ensureVisible(
             newContext,
-            duration: const Duration(milliseconds: 600),
+            duration: duration,
             curve: Curves.easeInOut,
             alignment: 0.5,
           );
@@ -104,6 +110,7 @@ class _MatchLeaderboardScreenState extends ConsumerState<MatchLeaderboardScreen>
     final activeListAsync = ref.watch(activeStudyListProvider);
     final t = Translations.of(context);
     final theme = Theme.of(context);
+    final reduceMotion = ref.watch(reduceMotionProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -233,6 +240,36 @@ class _MatchLeaderboardScreenState extends ConsumerState<MatchLeaderboardScreen>
                                 ),
                               );
 
+                              final rowCard = Card(
+                                key: isNewRecord ? _newRecordKey : null,
+                                color: isNewRecord
+                                    ? theme.colorScheme.tertiaryContainer
+                                    : null,
+                                child: ListTile(
+                                  leading: Text(
+                                    rankText,
+                                    style: theme.textTheme.titleLarge
+                                        ?.copyWith(
+                                          color: theme.colorScheme.secondary,
+                                        ),
+                                  ),
+                                  title: Text(
+                                    t.matchScreen.leaderboard.time(
+                                      time: timeString,
+                                    ),
+                                    style: theme.textTheme.titleMedium,
+                                  ),
+                                  trailing: isNewRecord
+                                      ? Icon(
+                                          Icons.star,
+                                          color: theme.colorScheme.tertiary,
+                                        )
+                                      : null,
+                                ),
+                              );
+
+                              if (reduceMotion) return rowCard;
+
                               return FadeTransition(
                                 opacity: animation,
                                 child: SlideTransition(
@@ -240,34 +277,7 @@ class _MatchLeaderboardScreenState extends ConsumerState<MatchLeaderboardScreen>
                                     begin: const Offset(0.3, 0),
                                     end: Offset.zero,
                                   ).animate(animation),
-                                  child: Card(
-                                    key: isNewRecord ? _newRecordKey : null,
-                                    color: isNewRecord
-                                        ? theme.colorScheme.tertiaryContainer
-                                        : null,
-                                    child: ListTile(
-                                      leading: Text(
-                                        rankText,
-                                        style: theme.textTheme.titleLarge
-                                            ?.copyWith(
-                                              color:
-                                                  theme.colorScheme.secondary,
-                                            ),
-                                      ),
-                                      title: Text(
-                                        t.matchScreen.leaderboard.time(
-                                          time: timeString,
-                                        ),
-                                        style: theme.textTheme.titleMedium,
-                                      ),
-                                      trailing: isNewRecord
-                                          ? Icon(
-                                              Icons.star,
-                                              color: theme.colorScheme.tertiary,
-                                            )
-                                          : null,
-                                    ),
-                                  ),
+                                  child: rowCard,
                                 ),
                               );
                             },

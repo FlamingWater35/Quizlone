@@ -308,5 +308,59 @@ void main() {
       expect(state.isSubmitted, isFalse);
       expect(state.questions, hasLength(4));
     });
+
+    test('grading flags relax punctuation and accents when enabled', () async {
+      fakeDb.settings['gradingIgnorePunctuation'] = true;
+      fakeDb.settings['gradingAccentInsensitive'] = true;
+
+      final container = createControllerContainer(
+        db: fakeDb,
+        activeListId: listId,
+      );
+      addTearDown(container.dispose);
+
+      await awaitProviderValue(container, testControllerProvider);
+      final notifier = container.read(testControllerProvider.notifier);
+
+      final questions = container.read(testControllerProvider).value!.questions;
+      final appleIndex = questions.indexWhere(
+        (q) => q.correctAnswerText == 'Apple',
+      );
+      final bananaIndex = questions.indexWhere(
+        (q) => q.correctAnswerText == 'Banana',
+      );
+      expect(appleIndex, greaterThanOrEqualTo(0));
+      expect(bananaIndex, greaterThanOrEqualTo(0));
+
+      notifier.updateUserAnswer(appleIndex, 'apple!');
+      notifier.updateUserAnswer(bananaIndex, 'bananá');
+      await notifier.submitTest();
+
+      final state = container.read(testControllerProvider).value!;
+      expect(state.questions[appleIndex].isCorrect, isTrue);
+      expect(state.questions[bananaIndex].isCorrect, isTrue);
+      expect(state.score, 2);
+    });
+
+    test('strict grading rejects punctuation when the flags are off', () async {
+      final container = createControllerContainer(
+        db: fakeDb,
+        activeListId: listId,
+      );
+      addTearDown(container.dispose);
+
+      await awaitProviderValue(container, testControllerProvider);
+      final notifier = container.read(testControllerProvider.notifier);
+
+      final questions = container.read(testControllerProvider).value!.questions;
+      final appleIndex = questions.indexWhere(
+        (q) => q.correctAnswerText == 'Apple',
+      );
+      notifier.updateUserAnswer(appleIndex, 'apple!');
+      await notifier.submitTest();
+
+      final state = container.read(testControllerProvider).value!;
+      expect(state.questions[appleIndex].isCorrect, isFalse);
+    });
   });
 }
