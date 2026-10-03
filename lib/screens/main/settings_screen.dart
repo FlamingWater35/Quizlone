@@ -1596,6 +1596,9 @@ class _StudyDefaultsDialog extends ConsumerWidget {
       content: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 480),
         child: SmoothSingleChildScrollView(
+          // Keeps the content clear of the auto-shown desktop/web
+          // scrollbar so the thumb no longer overlaps the rows.
+          padding: const EdgeInsets.only(right: 16),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -1656,6 +1659,9 @@ class _StudyDefaultsDialog extends ConsumerWidget {
                 title: Text(t.modeSelectionScreen.ignoreBrackets),
                 subtitle: Text(t.modeSelectionScreen.ignoreBracketsSubtitle),
                 value: defaults.ignoreBrackets,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
                 onChanged: (v) =>
                     notifier.update(defaults.copyWith(ignoreBrackets: v)),
               ),
@@ -1664,6 +1670,9 @@ class _StudyDefaultsDialog extends ConsumerWidget {
                 subtitle:
                     Text(t.modeSelectionScreen.requireOnlyOneAnswerSubtitle),
                 value: defaults.allowAnswerSubstring,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
                 onChanged: (v) =>
                     notifier.update(defaults.copyWith(allowAnswerSubstring: v)),
               ),
@@ -1700,6 +1709,9 @@ class _StudyDefaultsDialog extends ConsumerWidget {
         value: value,
         dense: true,
         mouseCursor: SystemMouseCursors.click,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
       ),
     );
   }
@@ -1749,17 +1761,23 @@ class _StudyLengthFieldState extends State<_StudyLengthField> {
       children: [
         Text(t.modeSelectionScreen.studyLength),
         const SizedBox(width: 16),
-        Expanded(
+        SizedBox(
+          width: 120,
           child: TextField(
             controller: _controller,
             focusNode: _focusNode,
             keyboardType: TextInputType.number,
             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             onEditingComplete: _commit,
+            textAlign: TextAlign.center,
             decoration: InputDecoration(
               hintText: t.general.all,
               border: const OutlineInputBorder(),
               isDense: true,
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 10,
+                vertical: 8,
+              ),
             ),
           ),
         ),
