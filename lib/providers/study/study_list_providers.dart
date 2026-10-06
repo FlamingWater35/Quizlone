@@ -14,6 +14,14 @@ part 'study_list_providers.g.dart';
 
 final _log = Logger("StudyListProviders");
 
+/// The [limit] most recently opened lists, newest first.
+/// Lists that have never been opened are excluded.
+List<StudyList> recentStudyLists(Iterable<StudyList> lists, {int limit = 3}) {
+  final opened = lists.where((l) => l.lastOpenedAt != null).toList()
+    ..sort((a, b) => b.lastOpenedAt!.compareTo(a.lastOpenedAt!));
+  return opened.take(limit).toList();
+}
+
 @riverpod
 class StudyLists extends _$StudyLists {
   StreamSubscription? _subscription;
@@ -90,7 +98,11 @@ class StudyListFormNotifier extends _$StudyListFormNotifier {
     }
 
     final dbService = ref.read(databaseServiceProvider);
-    final listToSave = state.studyList..groupId = state.selectedGroupId;
+    final listToSave = state.studyList
+      ..groupId = state.selectedGroupId
+      // The user lands on mode selection right after saving, so the list
+      // counts as just-opened and shows up under "Recent" on the start screen.
+      ..lastOpenedAt = DateTime.now();
 
     try {
       _log.fine("Saving list (create/update): ${listToSave.name}");

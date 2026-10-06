@@ -289,39 +289,50 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
                 ),
               ),
             ),
-            ListTile(
-              leading: const Icon(Icons.settings_outlined),
-              title: Text(t.drawer.settings),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+            // Inset the nav tiles so they read as buttons rather than
+            // full-bleed rows.
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: ListTile(
+                leading: const Icon(Icons.settings_outlined),
+                title: Text(t.drawer.settings),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  AppNavigator.pushSettings(context);
+                },
               ),
-              onTap: () {
-                Navigator.pop(context);
-                AppNavigator.pushSettings(context);
-              },
             ),
-            ListTile(
-              leading: const Icon(Icons.gamepad_outlined),
-              title: Text(t.drawer.controls),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: ListTile(
+                leading: const Icon(Icons.gamepad_outlined),
+                title: Text(t.drawer.controls),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  AppNavigator.pushControls(context);
+                },
               ),
-              onTap: () {
-                Navigator.pop(context);
-                AppNavigator.pushControls(context);
-              },
             ),
             const Divider(indent: 16, endIndent: 16),
-            ListTile(
-              leading: const Icon(Icons.info_outline),
-              title: Text(t.drawer.about),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: ListTile(
+                leading: const Icon(Icons.info_outline),
+                title: Text(t.drawer.about),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  AppNavigator.pushAbout(context);
+                },
               ),
-              onTap: () {
-                Navigator.pop(context);
-                AppNavigator.pushAbout(context);
-              },
             ),
             const Divider(indent: 16, endIndent: 16),
             Padding(

@@ -67,6 +67,9 @@
     "welcome": "Benvenuto!",
     "createNewList": "Crea Nuova Lista",
     "openSavedList": "Apri Lista Salvata",
+    "createNewListSubtitle": "Crea un nuovo set digitando o incollando i termini.",
+    "openSavedListSubtitle": "Sfoglia e gestisci le tue liste di studio salvate.",
+    "recent": "Recenti",
     "loadSavedList": "Carica Lista Salvata",
     "noLists": "Nessuna lista salvata ancora.",
     "termCount(param=count)": {

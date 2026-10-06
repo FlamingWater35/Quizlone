@@ -67,6 +67,9 @@
     "welcome": "欢迎！",
     "createNewList": "创建新列表",
     "openSavedList": "打开已保存列表",
+    "createNewListSubtitle": "输入或粘贴术语以创建新词集。",
+    "openSavedListSubtitle": "浏览并管理已保存的学习列表。",
+    "recent": "最近",
     "loadSavedList": "加载已保存列表",
     "noLists": "尚无保存的列表。",
     "termCount(param=count)": {

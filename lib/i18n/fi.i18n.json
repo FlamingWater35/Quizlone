@@ -67,6 +67,9 @@
     "welcome": "Tervetuloa!",
     "createNewList": "Luo uusi lista",
     "openSavedList": "Avaa tallennettu lista",
+    "createNewListSubtitle": "Luo uusi sarja kirjoittamalla tai liittämällä termejä.",
+    "openSavedListSubtitle": "Selaa ja hallitse tallennettuja listoja.",
+    "recent": "Viimeisimmät",
     "loadSavedList": "Lataa tallennettu lista",
     "noLists": "Ei tallennettuja listoja vielä.",
     "termCount(param=count)": {

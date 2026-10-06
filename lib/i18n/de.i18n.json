@@ -67,6 +67,9 @@
     "welcome": "Willkommen!",
     "createNewList": "Neue Liste erstellen",
     "openSavedList": "Gespeicherte Liste öffnen",
+    "createNewListSubtitle": "Erstelle ein neues Set durch Eingabe oder Einfügen von Begriffen.",
+    "openSavedListSubtitle": "Durchsuche und verwalte deine gespeicherten Listen.",
+    "recent": "Zuletzt verwendet",
     "loadSavedList": "Gespeicherte Liste laden",
     "noLists": "Noch keine Listen gespeichert.",
     "termCount(param=count)": {

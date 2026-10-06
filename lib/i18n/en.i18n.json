@@ -66,7 +66,10 @@
     "title": "Quizlone",
     "welcome": "Welcome!",
     "createNewList": "Create New List",
+    "createNewListSubtitle": "Create a new set by typing or pasting terms.",
     "openSavedList": "Open Saved List",
+    "openSavedListSubtitle": "Browse and manage your saved study lists.",
+    "recent": "Recent",
     "loadSavedList": "Load Saved List",
     "noLists": "No lists saved yet.",
     "termCount(param=count)": {

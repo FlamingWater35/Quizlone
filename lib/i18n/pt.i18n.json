@@ -67,6 +67,9 @@
     "welcome": "Bem-vindo!",
     "createNewList": "Criar Nova Lista",
     "openSavedList": "Abrir Lista Salva",
+    "createNewListSubtitle": "Crie um novo conjunto digitando ou colando termos.",
+    "openSavedListSubtitle": "Navegue e gerencie suas listas de estudo salvas.",
+    "recent": "Recentes",
     "loadSavedList": "Carregar Lista Salva",
     "noLists": "Nenhuma lista salva ainda.",
     "termCount(param=count)": {

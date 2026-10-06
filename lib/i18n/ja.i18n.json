@@ -67,6 +67,9 @@
     "welcome": "ようこそ！",
     "createNewList": "新しいリストを作成",
     "openSavedList": "保存済みリストを開く",
+    "createNewListSubtitle": "用語を入力または貼り付けて新しいセットを作成します。",
+    "openSavedListSubtitle": "保存された学習リストを参照・管理します。",
+    "recent": "最近",
     "loadSavedList": "保存済みリストを読み込む",
     "noLists": "まだ保存されたリストはありません。",
     "termCount(param=count)": {

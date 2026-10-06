@@ -67,6 +67,9 @@
     "welcome": "Välkommen!",
     "createNewList": "Skapa Ny Lista",
     "openSavedList": "Öppna Sparad Lista",
+    "createNewListSubtitle": "Skapa ett nytt set genom att skriva eller klistra in termer.",
+    "openSavedListSubtitle": "Bläddra och hantera dina sparade listor.",
+    "recent": "Senaste",
     "loadSavedList": "Ladda Sparad Lista",
     "noLists": "Inga listor sparade än.",
     "termCount(param=count)": {

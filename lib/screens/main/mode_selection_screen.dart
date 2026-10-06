@@ -240,9 +240,9 @@ class _WideLayoutState extends State<_WideLayout> {
               thumbVisibility: true,
               child: SmoothSingleChildScrollView(
                 controller: _actionScrollController,
-                // Extra right padding keeps the mode cards clear of the
-                // scrollbar thumb rendered along this column's edge.
-                padding: const EdgeInsets.only(left: 10, right: 20),
+                // Keep the mode cards clear of the scrollbar thumb rendered
+                // along this column's edge without wasting horizontal room.
+                padding: const EdgeInsets.only(left: 10, right: 16),
                 child: _ActionPanel(list: widget.list, isWide: true),
               ),
             ),
@@ -255,7 +255,9 @@ class _WideLayoutState extends State<_WideLayout> {
               thumbVisibility: true,
               child: SmoothSingleChildScrollView(
                 controller: widget.controller,
-                padding: const EdgeInsets.symmetric(horizontal: 10),
+                // Keep the options cards clear of
+                // the scrollbar along the right edge.
+                padding: const EdgeInsets.only(left: 10, right: 13),
                 child: const _OptionsPanel(),
               ),
             ),
@@ -299,16 +301,13 @@ class _ListHeader extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
 
-    // Same subtle surface as the mode cards so the header reads as part of
-    // the card column instead of floating text.
+    // Same subtle surface as the mode cards (a shade lighter, no border) so
+    // the header reads as part of the card column instead of floating text.
     return Card(
       margin: EdgeInsets.zero,
       elevation: 0,
-      color: colorScheme.surfaceContainerLow,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: BorderSide(color: colorScheme.outlineVariant.withAlpha(70)),
-      ),
+      color: colorScheme.surfaceContainerLowest,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
         child: Column(
@@ -316,10 +315,9 @@ class _ListHeader extends StatelessWidget {
           children: [
             Text(
               list.name,
-              style: (isWide
-                      ? textTheme.headlineMedium
-                      : textTheme.headlineSmall)
-                  ?.copyWith(fontWeight: FontWeight.bold),
+              style:
+                  (isWide ? textTheme.headlineMedium : textTheme.headlineSmall)
+                      ?.copyWith(fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 4),

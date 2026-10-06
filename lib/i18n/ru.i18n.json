@@ -67,6 +67,9 @@
     "welcome": "Добро пожаловать!",
     "createNewList": "Создать новый список",
     "openSavedList": "Открыть сохраненный список",
+    "createNewListSubtitle": "Создайте новый набор, введя или вставив термины.",
+    "openSavedListSubtitle": "Просматривайте и управляйте сохранёнными списками.",
+    "recent": "Недавние",
     "loadSavedList": "Загрузить сохраненный список",
     "noLists": "Пока нет сохраненных списков.",
     "termCount(param=count)": {
