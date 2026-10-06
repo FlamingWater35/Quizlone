@@ -181,6 +181,29 @@
     "test": "测试",
     "match": "配对",
     "backToWelcome": "返回欢迎屏幕",
+    "modeDescriptions": {
+      "flashcards": "浏览卡片，翻面查看答案。",
+      "learn": "回答输入式问题，附带提示和重试。",
+      "multipleChoice": "从四个选项中选出正确答案。",
+      "test": "参加计分测验并查看结果。",
+      "match": "限时配对术语与定义。"
+    },
+    "modeMeta": {
+      "questions(param=count)": {
+        "one": "1 个问题",
+        "other": "$count 个问题"
+      },
+      "pairs(param=count)": {
+        "one": "1 对",
+        "other": "$count 对"
+      },
+      "bestTime": "最佳：${time}秒",
+      "lastScore": "上次：${percent}%"
+    },
+    "perListOptionsHint": "以下选项仅适用于此列表。",
+    "resetToDefaults": "恢复默认设置",
+    "defaultsApplied": "选项已恢复为学习默认设置。",
+    "studyLengthHelper": "留空表示使用全部术语；超过列表长度的值将被截断。",
     "errors": {
       "saveSettingFailed": "保存设置失败：$error"
     }

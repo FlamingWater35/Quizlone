@@ -181,6 +181,29 @@
     "test": "Testaa",
     "match": "Yhdistä",
     "backToWelcome": "Takaisin alkunäkymään",
+    "modeDescriptions": {
+      "flashcards": "Selaa kortteja ja käännä ne nähdäksesi vastauksen.",
+      "learn": "Vastaa kirjoitettaviin kysymyksiin vinkkejä ja uusintoja käyttäen.",
+      "multipleChoice": "Valitse oikea vastaus neljästä vaihtoehdosta.",
+      "test": "Suorita arvioitava kysely ja tarkista tulokset.",
+      "match": "Yhdistä termit ja määritelmät aikaa vastaan."
+    },
+    "modeMeta": {
+      "questions(param=count)": {
+        "one": "1 kysymys",
+        "other": "$count kysymystä"
+      },
+      "pairs(param=count)": {
+        "one": "1 pari",
+        "other": "$count paria"
+      },
+      "bestTime": "Paras: ${time}s",
+      "lastScore": "Viimeisin: ${percent}%"
+    },
+    "perListOptionsHint": "Tämän listan asetukset koskevat vain tätä listaa.",
+    "resetToDefaults": "Palauta oletusasetukset",
+    "defaultsApplied": "Asetukset palautettu oletusarvoisiin.",
+    "studyLengthHelper": "Jätä tyhjäksi käyttääksesi kaikki termit; listan kokoa suuremmat arvot rajoitetaan.",
     "errors": {
       "saveSettingFailed": "Asetuksen tallennus epäonnistui: $error"
     }

@@ -12,8 +12,8 @@ import 'package:quizlone/widgets/web_aware_back_button.dart';
 import '../../providers/controllers/match_controller.dart';
 import '../../providers/core/settings_provider.dart';
 import '../../providers/study/study_list_providers.dart';
+import '../../providers/study/study_stats_providers.dart';
 import '../../widgets/centered_view.dart';
-import 'match_leaderboard_screen.dart';
 
 final _log = Logger("MatchScreen");
 

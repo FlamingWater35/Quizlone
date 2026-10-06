@@ -181,6 +181,29 @@
     "test": "Test",
     "match": "Match",
     "backToWelcome": "Back to Welcome Screen",
+    "modeDescriptions": {
+      "flashcards": "Browse cards and flip to reveal the answer.",
+      "learn": "Answer typed questions with hints and retries.",
+      "multipleChoice": "Pick the correct answer from four options.",
+      "test": "Take a graded quiz and review the results.",
+      "match": "Race the clock pairing terms with definitions."
+    },
+    "modeMeta": {
+      "questions(param=count)": {
+        "one": "1 question",
+        "other": "$count questions"
+      },
+      "pairs(param=count)": {
+        "one": "1 pair",
+        "other": "$count pairs"
+      },
+      "bestTime": "Best: ${time}s",
+      "lastScore": "Last: ${percent}%"
+    },
+    "perListOptionsHint": "Options below apply only to this list.",
+    "resetToDefaults": "Reset to defaults",
+    "defaultsApplied": "Options reset to your study defaults.",
+    "studyLengthHelper": "Leave empty for all terms; values above the list size are capped.",
     "errors": {
       "saveSettingFailed": "Failed to save setting: $error"
     }

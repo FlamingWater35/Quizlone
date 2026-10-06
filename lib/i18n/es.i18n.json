@@ -181,6 +181,29 @@
     "test": "Probar",
     "match": "Emparejar",
     "backToWelcome": "Volver a la Pantalla de Bienvenida",
+    "modeDescriptions": {
+      "flashcards": "Recorre las tarjetas y pócalas para revelar la respuesta.",
+      "learn": "Responde a preguntas escritas con pistas y reintentos.",
+      "multipleChoice": "Elige la respuesta correcta entre cuatro opciones.",
+      "test": "Haz un cuestionario con nota y revisa los resultados.",
+      "match": "Empareja términos y definiciones contrarreloj."
+    },
+    "modeMeta": {
+      "questions(param=count)": {
+        "one": "1 pregunta",
+        "other": "$count preguntas"
+      },
+      "pairs(param=count)": {
+        "one": "1 par",
+        "other": "$count pares"
+      },
+      "bestTime": "Mejor: ${time}s",
+      "lastScore": "Última: ${percent}%"
+    },
+    "perListOptionsHint": "Las opciones de abajo se aplican solo a esta lista.",
+    "resetToDefaults": "Restablecer valores predeterminados",
+    "defaultsApplied": "Opciones restablecidas a tus valores de estudio predeterminados.",
+    "studyLengthHelper": "Déjalo vacío para usar todos los términos; los valores que superen el tamaño de la lista se limitan.",
     "errors": {
       "saveSettingFailed": "Error al guardar la configuración: $error"
     }

@@ -181,6 +181,29 @@
     "test": "Test",
     "match": "Abbina",
     "backToWelcome": "Torna alla Schermata di Benvenuto",
+    "modeDescriptions": {
+      "flashcards": "Sfoglia le schede e girale per rivelare la risposta.",
+      "learn": "Rispondi a domande scritte con suggerimenti e nuovi tentativi.",
+      "multipleChoice": "Scegli la risposta corretta tra quattro opzioni.",
+      "test": "Svolgi un quiz con voto e rivedi i risultati.",
+      "match": "Abbina termini e definizioni contro il tempo."
+    },
+    "modeMeta": {
+      "questions(param=count)": {
+        "one": "1 domanda",
+        "other": "$count domande"
+      },
+      "pairs(param=count)": {
+        "one": "1 coppia",
+        "other": "$count coppie"
+      },
+      "bestTime": "Migliore: ${time}s",
+      "lastScore": "Ultimo: ${percent}%"
+    },
+    "perListOptionsHint": "Le opzioni sotto si applicano solo a questo elenco.",
+    "resetToDefaults": "Ripristina valori predefiniti",
+    "defaultsApplied": "Opzioni ripristinate ai tuoi valori di studio predefiniti.",
+    "studyLengthHelper": "Lascia vuoto per tutti i termini; i valori superiori alla lunghezza dell'elenco vengono limitati.",
     "errors": {
       "saveSettingFailed": "Salvataggio impostazione fallito: $error"
     }

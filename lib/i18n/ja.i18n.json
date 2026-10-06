@@ -181,6 +181,29 @@
     "test": "テスト",
     "match": "マッチ",
     "backToWelcome": "ウェルカム画面に戻る",
+    "modeDescriptions": {
+      "flashcards": "カードをめくって答えを確認します。",
+      "learn": "ヒントや再挑戦つきで入力型の問題に回答します。",
+      "multipleChoice": "4つの選択肢から正しい答えを選びます。",
+      "test": "採点テストを受けて結果を確認します。",
+      "match": "制限時間内に用語と定義をペアにします。"
+    },
+    "modeMeta": {
+      "questions(param=count)": {
+        "one": "1問",
+        "other": "$count 問"
+      },
+      "pairs(param=count)": {
+        "one": "1組",
+        "other": "$count 組"
+      },
+      "bestTime": "ベスト: ${time}秒",
+      "lastScore": "前回: ${percent}%"
+    },
+    "perListOptionsHint": "以下のオプションはこのリストにのみ適用されます。",
+    "resetToDefaults": "デフォルトに戻す",
+    "defaultsApplied": "オプションを学習デフォルトに戻しました。",
+    "studyLengthHelper": "空欄ですべての用語を使用します。リストの長さを超える値は制限されます。",
     "errors": {
       "saveSettingFailed": "設定の保存に失敗しました: $error"
     }

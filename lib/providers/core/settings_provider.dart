@@ -360,7 +360,10 @@ class ReduceMotion extends _$ReduceMotion {
   }
 }
 
-@riverpod
+// keepAlive: transient UI (mode-selection reset, settings dialog) reads the
+// notifier without watching it; disposal mid-await would skip provider
+// invalidation and leave stale option state on screen.
+@Riverpod(keepAlive: true)
 class StudyDefaultsNotifier extends _$StudyDefaultsNotifier {
   Future<void> update(StudyDefaults defaults) async {
     _log.fine("[StudyDefaultsNotifier] Updating defaults");
@@ -391,6 +394,29 @@ class StudyDefaultsNotifier extends _$StudyDefaultsNotifier {
     ref.invalidate(studyListsProvider);
     ref.invalidate(activeStudyListProvider);
     return lists.length;
+  }
+
+  /// Stamps the current defaults onto the active list only (the mode-selection
+  /// screen's "reset to defaults" action). Returns false when there is no
+  /// active list; save failures propagate to the caller.
+  Future<bool> applyToActiveList() async {
+    final activeList = await ref.read(activeStudyListProvider.future);
+    if (activeList == null) return false;
+
+    final defaults = state;
+    activeList
+      ..flashcardShowTermFirst =
+          defaults.flashcardStartSide == FlashcardStartSide.term
+      ..studyShowDefinitionAskTerm =
+          defaults.askWith == StudyQuestionType.definition
+      ..testFormat = defaults.testFormat
+      ..testStudyLength = defaults.studyLength
+      ..ignoreBrackets = defaults.ignoreBrackets
+      ..allowAnswerSubstring = defaults.allowAnswerSubstring;
+    await ref.read(databaseServiceProvider).saveStudyList(activeList);
+    if (!ref.mounted) return false;
+    ref.invalidate(activeStudyListProvider);
+    return true;
   }
 
   @override

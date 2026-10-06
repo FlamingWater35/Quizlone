@@ -14,6 +14,7 @@ import '../../services/answer_grading.dart';
 import '../core/settings_provider.dart';
 import '../study/study_list_providers.dart';
 import '../study/study_options_provider.dart';
+import '../study/study_stats_providers.dart';
 
 part 'test_controller.g.dart';
 
@@ -194,6 +195,9 @@ class TestController extends _$TestController {
     try {
       await ref.read(databaseServiceProvider).saveTestRecord(record);
       _log.fine("[TestController] Test record saved successfully.");
+      // Mode-selection (and any other mounted consumer) caches the previous
+      // "no record yet" value; refresh it so the last-score preview appears.
+      ref.invalidate(latestTestRecordProvider);
     } catch (e, s) {
       _log.severe("[TestController] Failed to save test record to DB", e, s);
       // Degrade gracefully: Show results but warn user that history wasn't saved.

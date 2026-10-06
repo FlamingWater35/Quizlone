@@ -181,6 +181,29 @@
     "test": "Testa",
     "match": "Matcha",
     "backToWelcome": "Tillbaka till Välkomstskärmen",
+    "modeDescriptions": {
+      "flashcards": "Bläddra i korten och vänd dem för att avslöja svaret.",
+      "learn": "Svara på skrivna frågor med tips och försök igen.",
+      "multipleChoice": "Välj rätt svar bland fyra alternativ.",
+      "test": "Gör ett betygsatt quiz och granska resultaten.",
+      "match": "Koppla termer och definitioner mot klockan."
+    },
+    "modeMeta": {
+      "questions(param=count)": {
+        "one": "1 fråga",
+        "other": "$count frågor"
+      },
+      "pairs(param=count)": {
+        "one": "1 par",
+        "other": "$count par"
+      },
+      "bestTime": "Bäst: ${time}s",
+      "lastScore": "Senaste: ${percent}%"
+    },
+    "perListOptionsHint": "Alternativen nedan gäller bara denna lista.",
+    "resetToDefaults": "Återställ till standard",
+    "defaultsApplied": "Alternativen har återställts till dina studiestandarder.",
+    "studyLengthHelper": "Lämna tomt för att använda alla termer; värden över listans storlek begränsas.",
     "errors": {
       "saveSettingFailed": "Misslyckades med att spara inställning: $error"
     }

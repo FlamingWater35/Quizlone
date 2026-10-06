@@ -181,6 +181,29 @@
     "test": "Testar",
     "match": "Corresponder",
     "backToWelcome": "Voltar à Tela de Boas-vindas",
+    "modeDescriptions": {
+      "flashcards": "Navegue pelos cartões e vire-os para revelar a resposta.",
+      "learn": "Responda a perguntas digitadas com dicas e novas tentativas.",
+      "multipleChoice": "Escolha a resposta correta entre quatro opções.",
+      "test": "Faça um questionário com nota e revise os resultados.",
+      "match": "Pareie termos e definições contra o tempo."
+    },
+    "modeMeta": {
+      "questions(param=count)": {
+        "one": "1 pergunta",
+        "other": "$count perguntas"
+      },
+      "pairs(param=count)": {
+        "one": "1 par",
+        "other": "$count pares"
+      },
+      "bestTime": "Melhor: ${time}s",
+      "lastScore": "Última: ${percent}%"
+    },
+    "perListOptionsHint": "As opções abaixo se aplicam apenas a esta lista.",
+    "resetToDefaults": "Redefinir para os padrões",
+    "defaultsApplied": "Opções redefinidas para seus padrões de estudo.",
+    "studyLengthHelper": "Deixe vazio para usar todos os termos; valores acima do tamanho da lista são limitados.",
     "errors": {
       "saveSettingFailed": "Falha ao salvar a configuração: $error"
     }

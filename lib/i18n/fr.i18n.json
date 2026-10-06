@@ -181,6 +181,29 @@
     "test": "Tester",
     "match": "Associer",
     "backToWelcome": "Retour à l'Écran de Bienvenue",
+    "modeDescriptions": {
+      "flashcards": "Parcourez les cartes et retournez-les pour révéler la réponse.",
+      "learn": "Répondez à des questions tapées, avec indices et nouvelles tentatives.",
+      "multipleChoice": "Choisissez la bonne réponse parmi quatre propositions.",
+      "test": "Passez un quiz noté et examinez les résultats.",
+      "match": "Associez termes et définitions contre la montre."
+    },
+    "modeMeta": {
+      "questions(param=count)": {
+        "one": "1 question",
+        "other": "$count questions"
+      },
+      "pairs(param=count)": {
+        "one": "1 paire",
+        "other": "$count paires"
+      },
+      "bestTime": "Meilleur : ${time}s",
+      "lastScore": "Dernier : ${percent}%"
+    },
+    "perListOptionsHint": "Les options ci-dessous s'appliquent uniquement à cette liste.",
+    "resetToDefaults": "Rétablir les valeurs par défaut",
+    "defaultsApplied": "Options rétablies sur vos paramètres d'étude par défaut.",
+    "studyLengthHelper": "Laissez vide pour tous les termes ; les valeurs supérieures à la taille de la liste sont limitées.",
     "errors": {
       "saveSettingFailed": "Échec de la sauvegarde du paramètre : $error"
     }

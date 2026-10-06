@@ -28,8 +28,8 @@ import '../../providers/core/core_providers.dart';
 import '../../providers/core/settings_provider.dart';
 import '../../providers/core/updater_provider.dart';
 import '../../providers/study/study_list_providers.dart';
+import '../../providers/study/study_stats_providers.dart';
 import '../../widgets/centered_view.dart';
-import '../modes/match_leaderboard_screen.dart';
 
 /// Top-level settings destinations shown in the sidebar.
 enum _SettingsSection {
@@ -675,7 +675,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     children: [
                       Expanded(
                         child: Slider(
-                          value: ref.watch(autoAdvanceDelayMsProvider).toDouble(),
+                          value: ref
+                              .watch(autoAdvanceDelayMsProvider)
+                              .toDouble(),
                           min: 500,
                           max: 3000,
                           divisions: 10,
@@ -761,8 +763,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         max: 10,
                         divisions: 6,
                         label: "${ref.watch(matchPairsProvider)}",
-                        onChanged: (value) =>
-                            ref.read(matchPairsProvider.notifier).set(value.round()),
+                        onChanged: (value) => ref
+                            .read(matchPairsProvider.notifier)
+                            .set(value.round()),
                       ),
                     ),
                     SizedBox(
@@ -1622,13 +1625,15 @@ class _StudyDefaultsDialog extends ConsumerWidget {
                 label: t.modeSelectionScreen.askForTerm,
                 value: StudyQuestionType.definition,
                 groupValue: defaults.askWith,
-                onChanged: (v) => notifier.update(defaults.copyWith(askWith: v)),
+                onChanged: (v) =>
+                    notifier.update(defaults.copyWith(askWith: v)),
               ),
               _dialogRadioRow<StudyQuestionType>(
                 label: t.modeSelectionScreen.askForDef,
                 value: StudyQuestionType.term,
                 groupValue: defaults.askWith,
-                onChanged: (v) => notifier.update(defaults.copyWith(askWith: v)),
+                onChanged: (v) =>
+                    notifier.update(defaults.copyWith(askWith: v)),
               ),
               const Divider(height: 24),
               _dialogRadioRow<TestFormat>(
@@ -1667,8 +1672,9 @@ class _StudyDefaultsDialog extends ConsumerWidget {
               ),
               SwitchListTile(
                 title: Text(t.modeSelectionScreen.requireOnlyOneAnswer),
-                subtitle:
-                    Text(t.modeSelectionScreen.requireOnlyOneAnswerSubtitle),
+                subtitle: Text(
+                  t.modeSelectionScreen.requireOnlyOneAnswerSubtitle,
+                ),
                 value: defaults.allowAnswerSubstring,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -1709,9 +1715,7 @@ class _StudyDefaultsDialog extends ConsumerWidget {
         value: value,
         dense: true,
         mouseCursor: SystemMouseCursors.click,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
   }

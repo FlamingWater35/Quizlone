@@ -636,144 +636,153 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
   }) {
     final colorScheme = Theme.of(context).colorScheme;
     final isSelected = _selectedListIds.contains(list.id);
-    final card = RepaintBoundary(
-      child: Card(
-        margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-        elevation: isSelected ? 4 : 2, // 2 matches the global theme
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-          side: isSelected
-              ? BorderSide(color: colorScheme.primary, width: 2)
-              : BorderSide(
-                  color: colorScheme.outlineVariant.withAlpha(
-                    colorScheme.brightness == Brightness.dark ? 80 : 50,
-                  ),
-                ),
-        ),
-        color: isSelected
-            ? colorScheme.primaryContainer.withAlpha(80)
-            : colorScheme.surfaceContainerLow,
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          mouseCursor: SystemMouseCursors.click,
-          onTap: () {
-            if (_isSelectMode) {
-              _onListSelected(list.id, !isSelected);
-            } else {
-              ref.read(activeStudyListIdProvider.notifier).set(list.id);
-              AppNavigator.pushModeSelection(context);
-              list.lastOpenedAt = DateTime.now();
-              ref.read(databaseServiceProvider).saveStudyList(list).ignore();
-            }
-          },
-          onLongPress: () {
-            if (!_isSelectMode) {
-              _toggleSelectMode();
-              _onListSelected(list.id, true);
-            }
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Row(
-              children: [
-                if (_isSelectMode)
-                  Padding(
-                    padding: const EdgeInsets.only(right: 12),
-                    child: Checkbox(
-                      value: isSelected,
-                      onChanged: (val) => _onListSelected(list.id, val),
-                    ),
-                  )
-                else
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: colorScheme.primaryContainer,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.article_outlined,
-                      color: colorScheme.onPrimaryContainer,
-                      size: 20,
+    // Matching source hero for ModeSelectionScreen's `Hero(tag: list.id)`.
+    // Each list id appears exactly once per view (grouped XOR flat), so the
+    // tag is unique on this route.
+    final card = Hero(
+      tag: list.id,
+      child: RepaintBoundary(
+        child: Card(
+          margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+          elevation: isSelected ? 4 : 2, // 2 matches the global theme
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+            side: isSelected
+                ? BorderSide(color: colorScheme.primary, width: 2)
+                : BorderSide(
+                    color: colorScheme.outlineVariant.withAlpha(
+                      colorScheme.brightness == Brightness.dark ? 80 : 50,
                     ),
                   ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        list.name,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
+          ),
+          color: isSelected
+              ? colorScheme.primaryContainer.withAlpha(80)
+              : colorScheme.surfaceContainerLow,
+          clipBehavior: Clip.antiAlias,
+          child: InkWell(
+            mouseCursor: SystemMouseCursors.click,
+            onTap: () {
+              if (_isSelectMode) {
+                _onListSelected(list.id, !isSelected);
+              } else {
+                ref.read(activeStudyListIdProvider.notifier).set(list.id);
+                AppNavigator.pushModeSelection(context);
+                list.lastOpenedAt = DateTime.now();
+                ref.read(databaseServiceProvider).saveStudyList(list).ignore();
+              }
+            },
+            onLongPress: () {
+              if (!_isSelectMode) {
+                _toggleSelectMode();
+                _onListSelected(list.id, true);
+              }
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Row(
+                children: [
+                  if (_isSelectMode)
+                    Padding(
+                      padding: const EdgeInsets.only(right: 12),
+                      child: Checkbox(
+                        value: isSelected,
+                        onChanged: (val) => _onListSelected(list.id, val),
+                      ),
+                    )
+                  else
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: colorScheme.primaryContainer,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        Icons.article_outlined,
+                        color: colorScheme.onPrimaryContainer,
+                        size: 20,
+                      ),
+                    ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          list.name,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        t.startScreen.termCount(count: list.terms.length),
-                        style: TextStyle(color: colorScheme.onSurfaceVariant),
-                      ),
-                    ],
+                        const SizedBox(height: 4),
+                        Text(
+                          t.startScreen.termCount(count: list.terms.length),
+                          style: TextStyle(color: colorScheme.onSurfaceVariant),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                if (!_isSelectMode)
-                  PopupMenuButton<_ListItemMenuAction>(
-                    onSelected: (action) {
-                      switch (action) {
-                        case _ListItemMenuAction.rename:
-                          _showRenameDialog(context, list);
-                          break;
-                        case _ListItemMenuAction.move:
-                          _showMoveDialog([list.id]);
-                          break;
-                        case _ListItemMenuAction.delete:
-                          _handleSingleDelete(list);
-                          break;
-                      }
-                    },
-                    itemBuilder: (context) => [
-                      PopupMenuItem(
-                        value: _ListItemMenuAction.rename,
-                        child: Row(
-                          children: [
-                            const Icon(Icons.edit_outlined, size: 20),
-                            const SizedBox(width: 12),
-                            Text(t.startScreen.renameListDialog.rename),
-                          ],
+                  if (!_isSelectMode)
+                    PopupMenuButton<_ListItemMenuAction>(
+                      onSelected: (action) {
+                        switch (action) {
+                          case _ListItemMenuAction.rename:
+                            _showRenameDialog(context, list);
+                            break;
+                          case _ListItemMenuAction.move:
+                            _showMoveDialog([list.id]);
+                            break;
+                          case _ListItemMenuAction.delete:
+                            _handleSingleDelete(list);
+                            break;
+                        }
+                      },
+                      itemBuilder: (context) => [
+                        PopupMenuItem(
+                          value: _ListItemMenuAction.rename,
+                          child: Row(
+                            children: [
+                              const Icon(Icons.edit_outlined, size: 20),
+                              const SizedBox(width: 12),
+                              Text(t.startScreen.renameListDialog.rename),
+                            ],
+                          ),
                         ),
-                      ),
-                      PopupMenuItem(
-                        value: _ListItemMenuAction.move,
-                        child: Row(
-                          children: [
-                            const Icon(Icons.drive_file_move_outline, size: 20),
-                            const SizedBox(width: 12),
-                            Text(t.loadListScreen.move),
-                          ],
+                        PopupMenuItem(
+                          value: _ListItemMenuAction.move,
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.drive_file_move_outline,
+                                size: 20,
+                              ),
+                              const SizedBox(width: 12),
+                              Text(t.loadListScreen.move),
+                            ],
+                          ),
                         ),
-                      ),
-                      const PopupMenuDivider(),
-                      PopupMenuItem(
-                        value: _ListItemMenuAction.delete,
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.delete_outline,
-                              color: colorScheme.error,
-                              size: 20,
-                            ),
-                            const SizedBox(width: 12),
-                            Text(
-                              t.general.delete,
-                              style: TextStyle(color: colorScheme.error),
-                            ),
-                          ],
+                        const PopupMenuDivider(),
+                        PopupMenuItem(
+                          value: _ListItemMenuAction.delete,
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.delete_outline,
+                                color: colorScheme.error,
+                                size: 20,
+                              ),
+                              const SizedBox(width: 12),
+                              Text(
+                                t.general.delete,
+                                style: TextStyle(color: colorScheme.error),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-              ],
+                      ],
+                    ),
+                ],
+              ),
             ),
           ),
         ),
@@ -1036,9 +1045,7 @@ class _LoadListScreenState extends ConsumerState<LoadListScreen> {
       ...sortedGroups.map((group) {
         final groupLists = _sortLists(grouped[group.id] ?? []);
         final tile = _buildGroupTile(group.name, group.id, groupLists, t);
-        return reduce
-            ? tile
-            : tile.animate().fadeIn(duration: 300.ms);
+        return reduce ? tile : tile.animate().fadeIn(duration: 300.ms);
       }),
     ];
 

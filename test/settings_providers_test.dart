@@ -167,9 +167,9 @@ void main() {
       expect(container.read(gradingIgnorePunctuationProvider), isTrue);
       expect(fakeDb.settings['gradingIgnorePunctuation'], isTrue);
 
-      await container.read(gradingAccentInsensitiveProvider.notifier).toggle(
-        true,
-      );
+      await container
+          .read(gradingAccentInsensitiveProvider.notifier)
+          .toggle(true);
       expect(container.read(gradingAccentInsensitiveProvider), isTrue);
       expect(fakeDb.settings['gradingAccentInsensitive'], isTrue);
 
@@ -236,7 +236,9 @@ void main() {
       final container = createContainer();
       addTearDown(container.dispose);
 
-      await container.read(studyDefaultsProvider.notifier).update(
+      await container
+          .read(studyDefaultsProvider.notifier)
+          .update(
             const StudyDefaults(
               flashcardStartSide: FlashcardStartSide.definition,
               askWith: StudyQuestionType.term,
@@ -260,6 +262,90 @@ void main() {
         expect(list.ignoreBrackets, isFalse);
         expect(list.allowAnswerSubstring, isTrue);
       }
+    });
+
+    test(
+      'applyToActiveList stamps defaults onto the active list only',
+      () async {
+        const activeId = 'active-list';
+        const otherId = 'other-list';
+        fakeDb.studyLists[activeId] = listWithTerms('Active', [
+          term('t1', 'd1'),
+          term('t2', 'd2'),
+        ], id: activeId);
+        fakeDb.studyLists[otherId] = listWithTerms('Other', [
+          term('t3', 'd3'),
+        ], id: otherId);
+        fakeDb.settings['activeListId'] = activeId;
+
+        final container = createContainer();
+        addTearDown(container.dispose);
+
+        await container
+            .read(studyDefaultsProvider.notifier)
+            .update(
+              const StudyDefaults(
+                flashcardStartSide: FlashcardStartSide.definition,
+                askWith: StudyQuestionType.term,
+                testFormat: TestFormat.mc,
+                studyLength: 5,
+                ignoreBrackets: false,
+                allowAnswerSubstring: true,
+              ),
+            );
+
+        final applied = await container
+            .read(studyDefaultsProvider.notifier)
+            .applyToActiveList();
+        expect(applied, isTrue);
+
+        final active = fakeDb.studyLists[activeId]!;
+        expect(active.flashcardShowTermFirst, isFalse);
+        expect(active.studyShowDefinitionAskTerm, isFalse);
+        expect(active.testFormat, TestFormat.mc);
+        expect(active.testStudyLength, 5);
+        expect(active.ignoreBrackets, isFalse);
+        expect(active.allowAnswerSubstring, isTrue);
+
+        // The other list must be untouched.
+        final other = fakeDb.studyLists[otherId]!;
+        expect(other.flashcardShowTermFirst, isTrue);
+        expect(other.studyShowDefinitionAskTerm, isTrue);
+        expect(other.testFormat, TestFormat.written);
+        expect(other.testStudyLength, isNull);
+        expect(other.ignoreBrackets, isTrue);
+        expect(other.allowAnswerSubstring, isFalse);
+      },
+    );
+
+    test(
+      'applyToActiveList returns false when there is no active list',
+      () async {
+        final container = createContainer();
+        addTearDown(container.dispose);
+
+        final applied = await container
+            .read(studyDefaultsProvider.notifier)
+            .applyToActiveList();
+        expect(applied, isFalse);
+      },
+    );
+
+    test('applyToActiveList propagates save failures', () async {
+      const activeId = 'active-list';
+      fakeDb.studyLists[activeId] = listWithTerms('Active', [
+        term('t1', 'd1'),
+      ], id: activeId);
+      fakeDb.settings['activeListId'] = activeId;
+      fakeDb.failOnWrite = true;
+
+      final container = createContainer();
+      addTearDown(container.dispose);
+
+      await expectLater(
+        container.read(studyDefaultsProvider.notifier).applyToActiveList(),
+        throwsA(isA<StateError>()),
+      );
     });
   });
 }

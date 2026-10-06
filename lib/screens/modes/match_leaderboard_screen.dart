@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizlone/i18n/generated/translations.g.dart';
 import 'package:quizlone/models/match_record.dart';
-import 'package:quizlone/providers/core/core_providers.dart';
 import 'package:quizlone/routing/app_navigator.dart';
 import 'package:quizlone/services/smooth_scroll.dart';
 import 'package:quizlone/widgets/centered_view.dart';
@@ -12,14 +11,7 @@ import '../../models/study_list.dart';
 import '../../providers/controllers/match_controller.dart';
 import '../../providers/core/settings_provider.dart';
 import '../../providers/study/study_list_providers.dart';
-
-final matchRecordsProvider = FutureProvider.family<List<MatchRecord>, String>((
-  ref,
-  studyListId,
-) {
-  final dbService = ref.watch(databaseServiceProvider);
-  return dbService.getRecordsForList(studyListId);
-});
+import '../../providers/study/study_stats_providers.dart';
 
 @RoutePage()
 class MatchLeaderboardScreen extends ConsumerStatefulWidget {
@@ -248,10 +240,9 @@ class _MatchLeaderboardScreenState extends ConsumerState<MatchLeaderboardScreen>
                                 child: ListTile(
                                   leading: Text(
                                     rankText,
-                                    style: theme.textTheme.titleLarge
-                                        ?.copyWith(
-                                          color: theme.colorScheme.secondary,
-                                        ),
+                                    style: theme.textTheme.titleLarge?.copyWith(
+                                      color: theme.colorScheme.secondary,
+                                    ),
                                   ),
                                   title: Text(
                                     t.matchScreen.leaderboard.time(

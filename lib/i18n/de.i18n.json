@@ -181,6 +181,29 @@
     "test": "Testen",
     "match": "Zuordnen",
     "backToWelcome": "Zurück zum Begrüßungsbildschirm",
+    "modeDescriptions": {
+      "flashcards": "Durchsuche Karten und drehe sie um, um die Antwort zu sehen.",
+      "learn": "Beantworte getippte Fragen mit Hinweisen und weiteren Versuchen.",
+      "multipleChoice": "Wähle die richtige Antwort aus vier Optionen.",
+      "test": "Bearbeite einen benoteten Quiz und überprüfe die Ergebnisse.",
+      "match": "Ordne Begriffe und Definitionen gegen die Uhr zu."
+    },
+    "modeMeta": {
+      "questions(param=count)": {
+        "one": "1 Frage",
+        "other": "$count Fragen"
+      },
+      "pairs(param=count)": {
+        "one": "1 Paar",
+        "other": "$count Paare"
+      },
+      "bestTime": "Beste: ${time}s",
+      "lastScore": "Letztes: ${percent}%"
+    },
+    "perListOptionsHint": "Die folgenden Optionen gelten nur für diese Liste.",
+    "resetToDefaults": "Auf Standard zurücksetzen",
+    "defaultsApplied": "Optionen auf deine Lern-Standardeinstellungen zurückgesetzt.",
+    "studyLengthHelper": "Leer lassen, um alle Begriffe zu verwenden; Werte über die Listenlänge werden begrenzt.",
     "errors": {
       "saveSettingFailed": "Fehler beim Speichern der Einstellung: $error"
     }
