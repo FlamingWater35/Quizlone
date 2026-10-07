@@ -234,7 +234,7 @@ class _WideLayoutState extends State<_WideLayout> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Expanded(
-            flex: 2,
+            flex: 4,
             child: Scrollbar(
               controller: _actionScrollController,
               thumbVisibility: true,
@@ -249,7 +249,7 @@ class _WideLayoutState extends State<_WideLayout> {
           ),
           const SizedBox(width: 24),
           Expanded(
-            flex: 3,
+            flex: 4,
             child: Scrollbar(
               controller: widget.controller,
               thumbVisibility: true,
