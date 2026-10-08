@@ -249,7 +249,7 @@ class _WideLayoutState extends State<_WideLayout> {
           ),
           const SizedBox(width: 24),
           Expanded(
-            flex: 4,
+            flex: 5,
             child: Scrollbar(
               controller: widget.controller,
               thumbVisibility: true,
