@@ -61,84 +61,7 @@ Future<void> main() async {
   // Prevents the user from seeing a generic white screen of death.
   if (initError != null) {
     FlutterNativeSplash.remove();
-    final errorMessage = initError; // Non-null after check
-    runApp(
-      MaterialApp(
-        theme: ThemeData.dark(),
-        debugShowCheckedModeBanner: false,
-        home: Builder(
-          builder: (context) {
-            final t = Translations.of(context);
-            return Scaffold(
-              backgroundColor: const Color(0xFF121212),
-              body: SafeArea(
-                child: Center(
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 600),
-                    child: Padding(
-                      padding: const EdgeInsets.all(24.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(
-                            Icons.error_outline,
-                            color: Colors.redAccent,
-                            size: 64,
-                          ),
-                          const SizedBox(height: 16),
-                          Text(
-                            t.criticalError.title,
-                            style: const TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                          const SizedBox(height: 24),
-                          Expanded(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.black26,
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(color: Colors.white10),
-                              ),
-                              child: Scrollbar(
-                                thumbVisibility: true,
-                                child: SmoothSingleChildScrollView(
-                                  primary: true,
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: Text(
-                                    errorMessage,
-                                    style: const TextStyle(
-                                      fontFamily: 'monospace',
-                                      fontSize: 13,
-                                      color: Colors.white70,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                          Text(
-                            t.criticalError.message,
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              color: Colors.white54,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            );
-          },
-        ),
-      ),
-    );
+    runApp(StartupErrorApp(errorMessage: initError));
     return;
   }
 
@@ -499,6 +422,105 @@ class _MyAppState extends ConsumerState<MyApp> {
               ],
             );
           },
+        ),
+      ),
+    );
+  }
+}
+
+/// Minimal app shown when startup fails before the main widget tree can boot.
+///
+/// Deliberately self-contained: it wires up its own [TranslationProvider] and
+/// must not depend on any provider, router, or database state, because those
+/// are exactly what may have failed. Splitting it out of [main] keeps that
+/// guarantee testable.
+class StartupErrorApp extends StatelessWidget {
+  const StartupErrorApp({super.key, required this.errorMessage});
+
+  /// The exception text plus stack trace captured during initialization.
+  final String errorMessage;
+
+  @override
+  Widget build(BuildContext context) {
+    return TranslationProvider(
+      child: MaterialApp(
+        theme: ThemeData.dark(),
+        debugShowCheckedModeBanner: false,
+        home: StartupErrorScreen(errorMessage: errorMessage),
+      ),
+    );
+  }
+}
+
+/// The critical-error body: a readable, scrollable dump of what went wrong.
+class StartupErrorScreen extends StatelessWidget {
+  const StartupErrorScreen({super.key, required this.errorMessage});
+
+  final String errorMessage;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = Translations.of(context);
+    return Scaffold(
+      backgroundColor: const Color(0xFF121212),
+      body: SafeArea(
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 600),
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.error_outline,
+                    color: Colors.redAccent,
+                    size: 64,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    t.criticalError.title,
+                    style: const TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.black26,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: Colors.white10),
+                      ),
+                      child: Scrollbar(
+                        thumbVisibility: true,
+                        child: SmoothSingleChildScrollView(
+                          primary: true,
+                          padding: const EdgeInsets.all(16.0),
+                          child: Text(
+                            errorMessage,
+                            style: const TextStyle(
+                              fontFamily: 'monospace',
+                              fontSize: 13,
+                              color: Colors.white70,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Text(
+                    t.criticalError.message,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(color: Colors.white54, fontSize: 14),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
       ),
     );
