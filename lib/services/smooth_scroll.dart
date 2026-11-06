@@ -62,12 +62,10 @@ class SmoothScrollController extends ScrollController {
 /// Widgets that call [SmoothScrollScope.of] rebuild only when these values change.
 class SmoothScrollData extends ChangeNotifier {
   SmoothScrollData({
-    required bool enabled,
-    required double speed,
-    required int durationMs,
-  }) : _enabled = enabled,
-       _speed = speed,
-       _durationMs = durationMs;
+    required this._enabled,
+    required this._speed,
+    required this._durationMs,
+  });
 
   bool _enabled;
   double _speed;
