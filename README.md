@@ -14,7 +14,7 @@ Cloud sync keeps your progress up to date without sacrificing offline usability.
 
 ## 🌐 Try It Online
 
-👉 **[Visit the Web App](https://flamingwater35.github.io/Quizlone/)**
+👉 **[Visit the Web version](https://quizlone.vercel.app/)**
 
 ---
 
