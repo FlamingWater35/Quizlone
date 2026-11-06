@@ -47,7 +47,9 @@ static void my_application_activate(GApplication* application) {
     gtk_window_set_title(window, "quizlone");
   }
 
-  gtk_window_set_default_size(window, 1280, 720);
+  // Match the app's window size so the window does not visibly resize once
+  // window_manager applies its own geometry after the first frame.
+  gtk_window_set_default_size(window, 1000, 700);
   gtk_widget_show(GTK_WIDGET(window));
 
   g_autoptr(FlDartProject) project = fl_dart_project_new();

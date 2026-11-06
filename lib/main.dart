@@ -61,7 +61,12 @@ Future<void> main() async {
   // Prevents the user from seeing a generic white screen of death.
   if (initError != null) {
     FlutterNativeSplash.remove();
-    runApp(StartupErrorApp(errorMessage: initError));
+    // A ProviderScope is still required at the root (riverpod_lint's
+    // missing_provider_scope); it stays empty on purpose, since the providers
+    // are exactly what may have failed to initialise.
+    runApp(
+      ProviderScope(child: StartupErrorApp(errorMessage: initError)),
+    );
     return;
   }
 

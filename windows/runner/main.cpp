@@ -26,7 +26,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
 
   FlutterWindow window(project);
   Win32Window::Point origin(10, 10);
-  Win32Window::Size size(1280, 720);
+  // Match the app's window size so the window does not visibly resize once
+  // window_manager applies its own geometry after the first frame.
+  Win32Window::Size size(1000, 700);
   if (!window.Create(L"quizlone", origin, size)) {
     return EXIT_FAILURE;
   }

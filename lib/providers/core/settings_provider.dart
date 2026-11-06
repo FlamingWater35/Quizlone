@@ -400,7 +400,16 @@ class StudyDefaultsNotifier extends _$StudyDefaultsNotifier {
   /// screen's "reset to defaults" action). Returns false when there is no
   /// active list; save failures propagate to the caller.
   Future<bool> applyToActiveList() async {
-    final activeList = await ref.read(activeStudyListProvider.future);
+    // Read the active list straight from the database rather than through
+    // activeStudyListProvider: this notifier is keepAlive, and depending on an
+    // auto-dispose provider would pin that provider alive for the app's
+    // lifetime (riverpod_lint's only_use_keep_alive_inside_keep_alive). A fresh
+    // read also avoids stamping defaults onto a stale cached instance.
+    final activeId = ref.read(activeStudyListIdProvider);
+    if (activeId == null) return false;
+    final activeList = await ref
+        .read(databaseServiceProvider)
+        .getStudyListById(activeId);
     if (activeList == null) return false;
 
     final defaults = state;
