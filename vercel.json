@@ -1,6 +1,12 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": null,
+  "git": {
+    "deploymentEnabled": {
+      "**": false,
+      "main": true
+    }
+  },
   "installCommand": "echo 'No install step (Dart project)'",
   "buildCommand": "bash scripts/vercel_build.sh",
   "outputDirectory": "build/web",
