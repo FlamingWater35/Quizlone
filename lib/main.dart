@@ -6,6 +6,11 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
+// Flutter 3.47 split Material into its own package. auto_route (and any other
+// dependency built against the new Material) resolves Theme.of through this
+// package, which is a *different* inherited widget than flutter/material.dart's.
+// See buildModernTheme below.
+import 'package:material_ui/material_ui.dart' as modern;
 import 'package:quizlone/i18n/generated/translations.g.dart';
 import 'package:quizlone/models/update_info.dart';
 import 'package:quizlone/providers/core/auth_provider.dart';
@@ -115,6 +120,76 @@ void _setupLogging() {
   });
 }
 
+/// Route transitions for the app's own `flutter/material.dart` theme.
+///
+/// Kept in sync with [buildModernPageTransitionsTheme] so a page pushed through
+/// either Material implementation animates the same way.
+PageTransitionsTheme buildAppPageTransitionsTheme() {
+  return const PageTransitionsTheme(
+    builders: {
+      TargetPlatform.windows: ZoomPageTransitionsBuilder(
+        allowSnapshotting: false,
+        allowEnterRouteSnapshotting: false,
+      ),
+      TargetPlatform.linux: ZoomPageTransitionsBuilder(
+        allowSnapshotting: false,
+        allowEnterRouteSnapshotting: false,
+      ),
+    },
+  );
+}
+
+/// Mirrors the app's [ThemeData] into `package:material_ui`'s [modern.ThemeData].
+///
+/// Flutter 3.47 moved Material into `package:material_ui`, and auto_route
+/// navigates with that package. Its `Theme.of` is a *different* inherited
+/// widget than `flutter/material.dart`'s, so the theme `MaterialApp` installs is
+/// invisible to it: the router falls back to `ThemeData.fallback()`, which is a
+/// light theme. The desktop page transition paints its scrim with
+/// `colorScheme.surface`, so on a dark app that fallback washed the screen with
+/// near-white for the length of every transition — the "white flash".
+///
+/// Only the properties a transition can consult are carried over. The rest stay
+/// at their defaults because this theme exists for the navigator, not for the
+/// app's own widgets, which keep using the `flutter/material.dart` theme.
+modern.ThemeData buildModernTheme(ThemeData theme) {
+  final scheme = theme.colorScheme;
+  return modern.ThemeData(
+    brightness: theme.brightness,
+    useMaterial3: theme.useMaterial3,
+    colorScheme: modern.ColorScheme.fromSeed(
+      seedColor: scheme.primary,
+      brightness: theme.brightness,
+    ).copyWith(
+      // `_drawScrim` reads exactly this value.
+      surface: scheme.surface,
+      onSurface: scheme.onSurface,
+    ),
+    pageTransitionsTheme: buildModernPageTransitionsTheme(),
+  );
+}
+
+/// The desktop transition, with page snapshotting turned off.
+///
+/// The zoom transition normally animates a rasterised copy of each route. On
+/// Impeller a snapshot can come back blank for a frame, and the transition then
+/// animates an empty image. Painting the live tree costs some extra work during
+/// the ~300ms animation and cannot render blank.
+modern.PageTransitionsTheme buildModernPageTransitionsTheme() {
+  return const modern.PageTransitionsTheme(
+    builders: {
+      TargetPlatform.windows: modern.ZoomPageTransitionsBuilder(
+        allowSnapshotting: false,
+        allowEnterRouteSnapshotting: false,
+      ),
+      TargetPlatform.linux: modern.ZoomPageTransitionsBuilder(
+        allowSnapshotting: false,
+        allowEnterRouteSnapshotting: false,
+      ),
+    },
+  );
+}
+
 /// Root widget that sets up routing, theming, localization, and global state listeners.
 /// Acts as the bridge between Riverpod providers and the Flutter rendering tree.
 class MyApp extends ConsumerStatefulWidget {
@@ -200,6 +275,20 @@ class _MyAppState extends ConsumerState<MyApp> {
       );
     }
 
+    // Route transitions that snapshot the outgoing/incoming page.
+    //
+    // The default desktop transition (ZoomPageTransitionsBuilder) rasterises
+    // both routes through SnapshotWidget -> OffsetLayer.toImageSync and animates
+    // those images. Flutter 3.47 turned Impeller on by default for Windows,
+    // Linux and macOS, and a snapshot taken on that path can come back blank
+    // for a frame — the animated image is empty, so the page underneath flashes
+    // through as a solid block of white before the real content is drawn again.
+    //
+    // Turning snapshotting off makes the transition paint the live widget tree
+    // instead of a rasterised copy, which removes the blank frame at the cost of
+    // re-painting both routes during the ~300ms animation.
+    // See buildAppPageTransitionsTheme() and buildModernTheme() above.
+
     // Generates consistent Snackbar styling across both light and dark themes.
     SnackBarThemeData buildSnackBarTheme(ColorScheme colorScheme) {
       return SnackBarThemeData(
@@ -255,6 +344,7 @@ class _MyAppState extends ConsumerState<MyApp> {
         theme: ThemeData(
           colorScheme: buildColorScheme(Brightness.light),
           useMaterial3: true,
+          pageTransitionsTheme: buildAppPageTransitionsTheme(),
           cardTheme: buildCardTheme(buildColorScheme(Brightness.light)),
           snackBarTheme: buildSnackBarTheme(buildColorScheme(Brightness.dark)),
           elevatedButtonTheme: ElevatedButtonThemeData(
@@ -284,6 +374,7 @@ class _MyAppState extends ConsumerState<MyApp> {
         darkTheme: ThemeData(
           colorScheme: buildColorScheme(Brightness.dark),
           useMaterial3: true,
+          pageTransitionsTheme: buildAppPageTransitionsTheme(),
           cardTheme: buildCardTheme(buildColorScheme(Brightness.dark)),
           snackBarTheme: buildSnackBarTheme(buildColorScheme(Brightness.light)),
           elevatedButtonTheme: ElevatedButtonThemeData(
@@ -312,10 +403,28 @@ class _MyAppState extends ConsumerState<MyApp> {
         ),
         themeMode: themeMode,
         builder: (context, child) {
-          return AppScaler(
-            scale: uiScale,
-            followSystemScale: systemTextScale,
-            child: child!,
+          // Route transitions (and the UI scaler) do not cover every pixel of
+          // every frame, so whatever sits behind them shows through for a few
+          // frames. Painting the active theme's surface here — and mirroring it
+          // onto the native window below — keeps those gaps from flashing the
+          // default white on a dark theme.
+          final theme = Theme.of(context);
+          final surfaceColor = theme.colorScheme.surface;
+          syncWindowBackground(surfaceColor);
+          // `child` is the navigator, so this theme sits above every route.
+          // auto_route navigates with package:material_ui and reads its own
+          // Theme inherited widget; without this it falls back to a light
+          // default theme and paints a near-white scrim over the dark UI.
+          return modern.Theme(
+            data: buildModernTheme(theme),
+            child: ColoredBox(
+              color: surfaceColor,
+              child: AppScaler(
+                scale: uiScale,
+                followSystemScale: systemTextScale,
+                child: child!,
+              ),
+            ),
           );
         },
         debugShowCheckedModeBanner: false,
