@@ -24,21 +24,23 @@ import 'helpers/fake_database_service.dart';
 void main() {
   setUpAll(initLocaleSettings);
 
-  Widget buildApp() {
-    return ProviderScope(
-      overrides: [
-        FakeDatabaseService.asOverride(FakeDatabaseService()),
-        authControllerProvider.overrideWithValue(AsyncData<User?>(null)),
-        appThemeProvider.overrideWith(_DarkTheme.new),
-      ],
-      child: TranslationProvider(child: const MyApp()),
-    );
-  }
-
   testWidgets('the router sees the app dark theme, not a light fallback', (
     tester,
   ) async {
-    await tester.pumpWidget(buildApp());
+    // The ProviderScope is built inline (rather than via buildApp()) because
+    // riverpod_lint treats any ProviderScope that is not a direct argument of
+    // pumpWidget/runApp as "scoped", and then requires every overridden
+    // provider to declare dependencies.
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          FakeDatabaseService.asOverride(FakeDatabaseService()),
+          authControllerProvider.overrideWithValue(AsyncData<User?>(null)),
+          appThemeProvider.overrideWith(_DarkTheme.new),
+        ],
+        child: TranslationProvider(child: const MyApp()),
+      ),
+    );
     await tester.pumpAndSettle();
     await tester.pump(const Duration(seconds: 3));
     await tester.pumpAndSettle();

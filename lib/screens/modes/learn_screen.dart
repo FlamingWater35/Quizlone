@@ -121,6 +121,12 @@ class _LearnView extends ConsumerStatefulWidget {
 
 class _LearnViewState extends ConsumerState<_LearnView>
     with TickerProviderStateMixin {
+  /// Shared by the Submit and Next buttons so the two stay the same height and
+  /// weight when they swap places in the AnimatedSwitcher below.
+  static final ButtonStyle _actionButtonStyle = FilledButton.styleFrom(
+    padding: const EdgeInsets.symmetric(vertical: 16),
+  );
+
   late TextEditingController _answerController;
   final FocusNode _focusNode = FocusNode();
   final _questionScrollController = SmoothScrollController();
@@ -490,6 +496,12 @@ class _LearnViewState extends ConsumerState<_LearnView>
                   ),
                 ),
                 const SizedBox(height: 20),
+                // Submit and Next must look identical: same fill, same height,
+                // same full width. They are defined once here so the two cannot
+                // drift apart. The width matters because AnimatedSwitcher lays
+                // its child out in a loosely-constrained Stack — a bare button
+                // would shrink to its label and sit centred instead of
+                // matching Submit's stretched width.
                 AnimatedSwitcher(
                   duration: reduceMotion
                       ? Duration.zero
@@ -522,11 +534,7 @@ class _LearnViewState extends ConsumerState<_LearnView>
                               icon: const Icon(Icons.check),
                               onPressed: () => _onSubmit(learnNotifier, state),
                               label: Text(t.general.submit),
-                              style: FilledButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 16,
-                                ),
-                              ),
+                              style: _actionButtonStyle,
                             ),
                             const SizedBox(height: 12),
                             Row(
@@ -559,14 +567,15 @@ class _LearnViewState extends ConsumerState<_LearnView>
                         )
                       : autoAdvanceEnabled
                       ? const SizedBox.shrink(key: ValueKey('buttons_hidden'))
-                      : FilledButton.icon(
+                      : SizedBox(
                           key: const ValueKey('next_visible'),
-                          icon: const Icon(Icons.arrow_forward),
-                          label: Text(t.general.next),
-                          style: FilledButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 16),
+                          width: double.infinity,
+                          child: FilledButton.icon(
+                            icon: const Icon(Icons.arrow_forward),
+                            label: Text(t.general.next),
+                            style: _actionButtonStyle,
+                            onPressed: learnNotifier.advance,
                           ),
-                          onPressed: learnNotifier.advance,
                         ),
                 ),
               ],
