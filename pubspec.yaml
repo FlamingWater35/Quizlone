@@ -7,12 +7,11 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 version: 1.2.26+1
 
 environment:
-  # Matches the floor in pubspec.lock (dart >=3.13.0, flutter >=3.47.0).
-  # Declaring it makes an out-of-date SDK fail fast with a clear message
-  # instead of a confusing transitive constraint error such as
-  # "flutter_test ... is incompatible with file_saver 0.7.0".
-  sdk: ^3.13.0
-  flutter: ">=3.47.0"
+  # Flutter 3.50.x ships Dart 3.14.0. Declaring the floor makes an out-of-date
+  # SDK fail fast with a clear message instead of a confusing transitive
+  # constraint error such as "flutter_test ... is incompatible with file_saver".
+  sdk: ^3.14.0
+  flutter: ">=3.50.0"
 
 dependencies:
   flutter:
@@ -21,8 +20,8 @@ dependencies:
     sdk: flutter
 
   # Data management
-  flutter_riverpod: ^3.3.2
-  riverpod_annotation: ^4.0.3
+  flutter_riverpod: ^3.5.0
+  riverpod_annotation: ^4.0.8
   hive_ce: ^2.19.3
   hive_ce_flutter: ^2.3.4
 
@@ -61,7 +60,9 @@ dependencies:
   animations: ^3.0.0
 
   # Platform-specific
-  window_manager: ^0.6.0
+  # window_manager 0.7.x pulls nativeapi 0.6.x, which is the first release that
+  # compiles on Dart 3.14 (0.5.x uses the removed Isolate.create).
+  window_manager: ^0.7.1
   share_plus: ^13.1.0
   flutter_file_dialog: ^3.3.2
   file_saver: ^0.7.0
@@ -98,8 +99,8 @@ dev_dependencies:
 
   # Code generation
   build_runner: ^2.15.1
-  riverpod_generator: ^4.0.4
-  hive_ce_generator: ^1.10.0
+  riverpod_generator: ^4.0.10
+  hive_ce_generator: 1.11.2
   auto_route_generator: ^10.6.0
   json_serializable: ^6.15.2
 
@@ -107,7 +108,25 @@ dev_dependencies:
   fake_async: ^1.3.3
 
   # Custom linting
-  riverpod_lint: ^3.1.4
+  riverpod_lint: ^3.2.0
+
+# analyzer is pinned to 13.x for one reason: the three code generators each
+# demand a different major, and 13.x is the only lane where two of them agree.
+#
+#   auto_route_generator 10.6.0   analyzer >=10.0.0 <14.0.0   (no 11.x exists)
+#   riverpod_generator  4.0.10    analyzer >=13.0.0 <15.0.0
+#   hive_ce_generator             no release supports 13.x at all
+#
+# hive_ce_generator 1.11.2 declares analyzer ^12 but its generated output is
+# byte-identical to 1.12.1's (verified by regenerating every adapter from
+# scratch), so it is pinned there and the analyzer major is overridden to 13.3.0
+# to satisfy riverpod. build_runner 2.15.1 is the newest release that still
+# compiles against analyzer 13.
+#
+# Remove all of this once auto_route_generator ships analyzer 14 support
+# (https://github.com/Milad-Akarie/auto_route_library/issues).
+dependency_overrides:
+  analyzer: 13.3.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
