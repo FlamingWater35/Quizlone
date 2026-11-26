@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Pin: must satisfy pubspec.lock (dart >=3.13.0, flutter >=3.47.0) and match
-# local dev (3.47.9). Bumping this is required whenever a dependency raises the
-# SDK floor — e.g. file_saver 0.7.0 needs meta 1.19.0, which only Flutter 3.47
-# ships, so an older SDK fails at `flutter pub get`.
-FLUTTER_VERSION="3.47.9"
+# Pin: must satisfy pubspec.yaml's `environment:` block and match local dev.
+# Keep in sync with the `flutter-version` in .github/workflows/create-draft-release.yml
+# and with `flutter: ">=3.50.0"` / `sdk: ^3.14.0` in pubspec.yaml. Bumping is
+# required whenever a dependency raises the SDK floor — an older SDK then fails
+# at `flutter pub get` with "The current Dart SDK version is X".
+FLUTTER_VERSION="3.50.1"
 FLUTTER_HOME="$HOME/flutter"
 ARCHIVE="flutter_linux_${FLUTTER_VERSION}-stable.tar.xz"
 URL="https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/${ARCHIVE}"
